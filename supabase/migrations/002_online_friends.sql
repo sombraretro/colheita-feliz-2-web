@@ -107,13 +107,13 @@ returns table (friend_code text, display_name text)
 language sql
 security definer
 set search_path = public, pg_temp
-as $ 
+as $$
   select p.friend_code, p.display_name
   from public.player_profiles p
   where auth.uid() is not null
     and p.friend_code = upper(trim(coalesce(p_friend_code, '')))
   limit 1;
-$;
+$$;
 
 -- Solicitação por código público. A escrita é feita por função controlada,
 -- nunca por INSERT/UPDATE direto do navegador.
