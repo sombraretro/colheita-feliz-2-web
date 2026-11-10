@@ -315,6 +315,7 @@ async function handleAuthSession(session){
   cloudSyncing=false;updateConnectionLabel();if(currentModal==='account')renderModal();
  }
  await syncOnlinePlayerProfile();
+ try{await publishPublicFarmSnapshot()}catch(error){console.error('Cloud public farm snapshot:',error)}
  if(currentModal==='friends')await refreshOnlineFriends();
 }
 async function syncOnlinePlayerProfile(){
@@ -331,6 +332,7 @@ async function syncOnlinePlayerProfile(){
  console.info('Nome público sincronizado:',data.display_name);
 }
 let onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};
+let friendVisitData=null;
 function onlineFriendError(error){return error?.message||'Não foi possível concluir a operação. Tente novamente.'}
 async function loadOnlineFriends(){
  if(!supabaseClient||!cloudUser){onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};return}
@@ -361,8 +363,64 @@ function renderOnlineFriends(){
  <h3>➕ Adicionar amigo</h3><p>Digite o código de amizade de outro jogador.</p><div class="actions"><input id="friend-code-input" maxlength="12" autocomplete="off" placeholder="Código do amigo" style="flex:1;min-width:150px;text-transform:uppercase"><button class="modal-action" data-send-friend="true">Enviar solicitação</button></div>
  ${onlineFriendsCache.error?`<p class="historical-note">${safe(onlineFriendsCache.error)}</p>`:''}
  <h3>📨 Solicitações recebidas (${incoming.length})</h3>${incoming.length?incoming.map(x=>`<div class="list-line"><span><b>${safe(x.profile?.display_name||'Fazendeiro')}</b><br/><small>Código: ${safe(x.profile?.friend_code||'—')}</small></span><span class="actions"><button class="modal-action compact" data-respond-friend="${x.id}" data-accept="true">Aceitar</button><button class="modal-action alt compact" data-respond-friend="${x.id}" data-accept="false">Recusar</button></span></div>`).join(''):'<p>Nenhuma solicitação recebida.</p>'}
- <h3>🌾 Seus amigos (${fs.length})</h3>${fs.length?fs.map(x=>`<div class="list-line"><span><b>👨‍🌾 ${safe(x.profile?.display_name||'Fazendeiro')}</b><br/><small>Código: ${safe(x.profile?.friend_code||'—')}</small></span><button class="modal-action alt compact" data-remove-friend="${x.userId}">Remover</button></div>`).join(''):'<p>Você ainda não tem amigos online.</p>'}
+ <h3>🌾 Seus amigos (${fs.length})</h3>${fs.length?fs.map(x=>`<div class="list-line"><span><b>👨‍🌾 ${safe(x.profile?.display_name||'Fazendeiro')}</b><br/><small>Código: ${safe(x.profile?.friend_code||'—')}</small></span><span class="actions"><button class="modal-action compact" data-visit-friend="${x.userId}">Visitar</button><button class="modal-action alt compact" data-remove-friend="${x.userId}">Remover</button></span></div>`).join(''):'<p>Você ainda não tem amigos online.</p>'}
  <h3>⏳ Solicitações enviadas (${outgoing.length})</h3>${outgoing.length?outgoing.map(x=>`<div class="list-line"><span><b>${safe(x.profile?.display_name||'Fazendeiro')}</b><br/><small>Aguardando resposta · ${safe(x.profile?.friend_code||'—')}</small></span></div>`).join(''):'<p>Nenhuma solicitação pendente.</p>'}`;
+}
+function buildPublicFarmSnapshot(){
+ const pick=(obj,keys)=>Object.fromEntries(keys.filter(key=>obj&&obj[key]!==undefined).map(key=>[key,obj[key]]));
+ return {
+  plots:(state.plots||[]).map(p=>pick(p,['status','soil','crop','plantedAt','wateredAt','weed','pest','harvestsRemaining','regrowing','initialGift','weedCleared','pestCleared'])),
+  animals:(state.animals||[]).map(a=>pick(a,['type','breed','slot'])),
+  farmTheme:state.farmTheme||'classic',
+  expansions:{orchard:!!state.expansions?.orchard,pond:!!state.expansions?.pond},
+  orchardTrees:(state.orchardTrees||[]).map(t=>pick(t,['type','status','plantedAt','harvestsRemaining','regrowing'])),
+  grill:{owned:!!state.grill?.owned,assembled:!!state.grill?.assembled},
+  placedDecorations:(state.placedDecorations||[]).map(d=>pick(d,['id','slot'])),
+  xp:Math.max(0,Number(state.xp)||0)
+ };
+}
+async function publishPublicFarmSnapshot(){
+ if(!supabaseClient||!cloudUser||!state)return;
+ const row={owner_id:cloudUser.id,farm_name:String(state.farmName||'Minha fazenda').slice(0,40),level:farmLevel(),popularity:Math.max(0,Number(state.popularity)||0),snapshot:buildPublicFarmSnapshot(),updated_at:new Date().toISOString()};
+ const {error}=await supabaseClient.from('farm_public_snapshots').upsert(row,{onConflict:'owner_id'});
+ if(error)throw error;
+}
+function renderFriendVisitWorld(){
+ if(!friendVisitData?.snapshot)return '<p>Dados visuais da fazenda não disponíveis.</p>';
+ const originalState=state,originalLock=writeLocked,world=$('world');
+ const layerIds=['garden-layer','crop-layer','animal-layer','decoration-layer','theme-ground-layer','theme-overlay-layer'];
+ const originalLayers=Object.fromEntries(layerIds.map(id=>[id,$(id)?.innerHTML||'']));
+ const originalTheme=world?.getAttribute('data-farm-theme')||'classic';
+ const snap=friendVisitData.snapshot;
+ state={
+  farmName:friendVisitData.farm_name||'Minha fazenda',xp:Math.max(0,Number(snap.xp)||0),popularity:Math.max(0,Number(friendVisitData.popularity)||0),
+  plots:Array.isArray(snap.plots)?snap.plots:[],animals:Array.isArray(snap.animals)?snap.animals:[],
+  farmTheme:snap.farmTheme||'classic',expansions:snap.expansions||{orchard:false,pond:false},
+  orchardTrees:Array.isArray(snap.orchardTrees)?snap.orchardTrees:[],
+  grill:snap.grill||{owned:false,assembled:false},placedDecorations:Array.isArray(snap.placedDecorations)?snap.placedDecorations:[]
+ };
+ try{
+  writeLocked=true;renderPlots();renderAnimals(false);renderFarmAddons();
+  const visitorLayers=Object.fromEntries(layerIds.map(id=>[id,$(id)?.innerHTML||'']));
+  const clone=world.cloneNode(true);clone.removeAttribute('id');clone.setAttribute('viewBox','-1400 -300 5800 980');clone.setAttribute('preserveAspectRatio','xMidYMid meet');clone.style.cssText='display:block;width:100%;min-width:1100px;height:auto;pointer-events:none';
+  for(const id of layerIds){const target=clone.querySelector('#'+id);if(target)target.innerHTML=visitorLayers[id]}
+  clone.querySelectorAll('[id]').forEach(node=>node.removeAttribute('id'));
+  return '<div class="friend-visit-scene">'+clone.outerHTML+'</div>';
+ }finally{
+  state=originalState;writeLocked=originalLock;
+  for(const id of layerIds){const target=$(id);if(target)target.innerHTML=originalLayers[id]}
+  if(world)world.setAttribute('data-farm-theme',originalTheme);
+ }
+}
+async function visitOnlineFriend(userId){
+ if(!cloudUser)return notify('Entre na sua conta para visitar fazendas.');
+ const friend=onlineFriendsCache.friends.find(x=>x.userId===userId);
+ if(!friend)return notify('Somente amigos confirmados podem ser visitados.');
+ notify('Carregando fazenda do amigo...');
+ const {data,error}=await supabaseClient.from('farm_public_snapshots').select('owner_id,farm_name,level,popularity,snapshot,updated_at').eq('owner_id',userId).single();
+ if(error){console.error('Visita de fazenda:',error);return notify(error.code==='PGRST116'?'Este amigo ainda não publicou uma fazenda para visita.':'Não foi possível carregar esta fazenda.')}
+ if(!data||!data.snapshot)return notify('Este amigo ainda não publicou uma fazenda para visita.');
+ friendVisitData=data;currentModal='friend-visit';renderModal();$('modal-body').scrollTop=0;
 }
 async function refreshOnlineFriends(){
  if(!cloudUser)return notify('Entre na sua conta para acessar os amigos online.');
@@ -607,7 +665,7 @@ function blinkMarkup(animal){
  };
  return lids[animal]||'';
 }
-function renderAnimals(){
+function renderAnimals(scheduleBlink=true){
  if(!state||!Array.isArray(state.animals))return;
  let markup='';
  const animals=[...state.animals].sort((a,b)=>(a.slot??99)-(b.slot??99));
@@ -627,7 +685,7 @@ function renderAnimals(){
   markup+=`<g class="animal-wrap animal-${a.type}" data-animal="${a.type}" data-animal-id="${safe(a.id)}" data-world-x="${x}" data-world-y="${y}" data-world-w="${w}" data-world-h="${h}" data-world-ground-y="${baseY}"><rect class="animal-hitbox" x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="${x+w*.5}" cy="${baseY-1}" rx="${shadowRx*1.05}" ry="${Math.max(7,w*.045)}" fill="#18380f" opacity=".3"/><ellipse class="animal-shadow-core" cx="${x+w*.5}" cy="${baseY}" rx="${shadowRx*.62}" ry="${Math.max(4,w*.026)}" fill="#18380f" opacity=".22"/><g transform="translate(${x} ${y}) scale(${scaleX} ${scaleY})"><image class="animal-sprite" href="/assets/${assetName}.${assetExt}" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>${sheepEyes}<g class="blink-overlay">${blinkMarkup(a.type)}</g></g></g>`;
  }
  $('animal-layer').innerHTML=markup;
- scheduleAnimalBlinking();
+ if(scheduleBlink)scheduleAnimalBlinking();
 }
 
 const FIELD_OFFSET_X=-100;
@@ -1005,6 +1063,7 @@ async function save(){if(!dirty)return saving;dirty=false;const payload=JSON.str
  if(cloudUser){
   try{await saveCloud()}catch(error){console.error('Cloud save:',error);cloudDirty=true}
   try{await syncOnlinePlayerProfile()}catch(error){console.error('Cloud profile sync:',error)}
+  try{await publishPublicFarmSnapshot()}catch(error){console.error('Cloud public farm snapshot:',error)}
  }
  if(!dirty){$('save-status').textContent=cloudUser?(cloudDirty?'Salvo localmente · nuvem pendente':'Salvo localmente e na nuvem'):(localTarget==='computador'?'Salvo no computador':'Salvo neste navegador');$('save-dot').className=cloudDirty?'savedot error':'savedot'}
  }).catch(e=>{console.error(e);dirty=true;$('save-status').textContent='Falha ao salvar localmente';$('save-dot').className='savedot error'});return saving}
@@ -1169,6 +1228,7 @@ case 'decor':title='Árvores e decoração';html=`<div class="gift-summary"><spa
 case 'grill':title='Churrasqueira';const partRows=Object.entries(GRILL_PARTS).map(([id,p])=>`<div class="list-line"><span>${p.icon} ${p.name} — ${fmt(state.grill.parts[id]||0)}/${GRILL_PARTS_REQUIRED}</span><button class="modal-action alt" data-buy-grill-part="${id}" ${!state.grill.owned||state.grill.assembled||(state.grill.parts[id]||0)>=GRILL_PARTS_REQUIRED||state.greenCoins<1?'disabled':''}>Comprar 1 · 🟢 1</button></div>`).join('');if(!state.grill.assembled){html=state.grill.owned?`<div class="gift-summary"><span class="symbol">🧰</span><div><b>Churrasqueira desmontada</b><small>Reúna 10 peças de ferro, 10 parafusos e 10 baldes de tinta para montá-la.</small></div></div>${partRows}<button class="modal-action" data-assemble-grill="true" ${Object.keys(GRILL_PARTS).some(k=>(state.grill.parts[k]||0)<GRILL_PARTS_REQUIRED)?'disabled':''}>Montar churrasqueira</button><p class="historical-note">No jogo original, os componentes podiam ser enviados por vizinhos ou comprados com moedas verdes. A compra local de 1 moeda verde por componente é uma adaptação offline.</p>`:`<div class="daily-reward"><span>🔥</span><b>Churrasqueira da fazenda</b><p>Compre a churrasqueira desmontada por 1.000 moedas amarelas. Depois, reúna os três tipos de componentes.</p><button class="modal-action" data-buy-grill="true" ${state.coins<1000?'disabled':''}>Comprar churrasqueira · 🟡 1.000</button></div>`;}else{const now=Date.now(),queue=state.grill.queue||[],readyCount=queue.filter(j=>j.readyAt<=now).length;const queueHtml=queue.length?queue.map(j=>{const r=GRILL_RECIPES[j.recipe],ready=j.readyAt<=now,progress=Math.max(0,Math.min(1,(now-j.startedAt)/Math.max(1,j.readyAt-j.startedAt)));return `<div class="queue-line"><div class="queue-icon">${r.icon}</div><div class="queue-main"><b>${r.name}</b><small>${ready?'Pronto para recolher':`Termina em ${formatHours((j.readyAt-now)/3600000)}`}</small><div class="animal-progress"><i style="width:${Math.round(ready?100:progress*100)}%"></i></div></div><span class="queue-state ${ready?'ready':''}">${ready?'✓':'⏳'}</span></div>`}).join(''):'<p>Nenhum preparo na fila.</p>';html=`<div class="gift-summary"><span class="symbol">🔥</span><div><b>Churrasqueira montada e pronta para produzir</b><small>Os ingredientes são consumidos ao iniciar. A fila continua avançando mesmo quando o jogo está fechado. Os tempos desta réplica foram reduzidos para 1/5.</small></div></div><h3>📖 Livro de receitas</h3><div class="grid-cards grill-recipes">${Object.entries(GRILL_RECIPES).map(([id,r])=>{const missing=recipeMissing(r),need=recipeNeedText(r),time=formatHours(r.minutes*GRILL_TIME_FACTOR/60),disabled=missing.length>0;return `<div class="store-card grill-recipe-card"><span class="symbol">${r.icon}</span><strong>${r.name}</strong><small>Ingredientes: ${need}<br/>Tempo: ${time} · Rendimento: ${r.yield}<br/>Em depósito: ${fmt(state.processedWarehouse[id]||0)}</small><b>🟡 ${fmt(r.salePrice)} / unidade · +${r.xp} XP</b><button data-produce-grill="${id}" ${disabled?'disabled':''}>Produzir 1</button>${disabled?`<small class="missing-ingredients">Faltam: ${missing.map(([t,k,q])=>`${q} ${ingredientName(t,k)}`).join(', ')}</small>`:''}</div>`}).join('')}</div><h3>⏳ Fila da churrasqueira (${queue.length})</h3>${queueHtml}<div class="actions"><button class="modal-action" data-collect-grill="true" ${readyCount?'':'disabled'}>Recolher pratos prontos (${readyCount})</button><button class="modal-action alt" data-open="warehouse">Abrir depósito</button><button class="modal-action alt" data-open="animals">Gerenciar animais</button><button class="modal-action alt" data-open="shop">Comprar temperos e mel</button></div><p class="historical-note">O guia de 2010 confirma a churrasqueira, o botão Produzir e o livro de receitas. Os nomes dos pratos são históricos; como as quantidades e os tempos da tabela original não puderam ser recuperados em texto legível, os ingredientes, custos, rendimentos e tempos exibidos aqui são balanceamento explícito desta reconstrução, não valores originais confirmados.</p>`;}break;
 case 'assistant':title='Assistente da fazenda';html=`<p>Registro das atividades recentes da sua propriedade.</p>${renderHistory()}`;break;
 case 'friends':title='Amigos online';html=renderOnlineFriends();break;
+case 'friend-visit':title='Visitando: '+safe(friendVisitData?.farm_name||'Fazenda do amigo');html=`<p><b>Nível ${Math.max(1,Number(friendVisitData?.level)||1)}</b> · Popularidade ${fmt(friendVisitData?.popularity||0)} · <span class="historical-note">Modo somente leitura</span></p>${renderFriendVisitWorld()}<p class="historical-note">Você está apenas visitando. Nenhuma ação pode alterar esta fazenda.</p>`;break;
 case 'inbox':title='Caixa de entrada';html=`<div class="actions"><button class="modal-action alt" data-export-message="true">Escrever mensagem</button><button class="modal-action alt" data-import-social="true">Importar arquivo social</button><button class="modal-action alt" data-open="friends">Meus amigos</button></div><input type="file" id="social-import-file" accept="application/json,.json" hidden><h3>📨 Correspondências recebidas</h3>${renderInbox()}`;break;
 case 'daily':title='Recompensa diária';html=dailyRewardAvailable()?`<div class="daily-reward"><span>🎁</span><b>Seu presente de hoje está esperando!</b><p>Receba sementes, fertilizantes ou flores. A quantidade cresce com sua sequência de visitas (até 5 itens nesta adaptação offline).</p><p><b>Sequência atual: ${fmt((state.dailyRewardDate===yesterdayKey()?(state.dailyStreak||0)+1:1))} dia(s)</b></p><button class="modal-action" data-claim-daily="true">Resgatar recompensa</button></div>`:`<div class="daily-reward claimed"><span>🌟</span><b>Recompensa de hoje já recebida!</b><p>Sequência atual: ${fmt(state.dailyStreak||1)} dia(s). Volte amanhã para receber outra recompensa.</p></div>`;break;
 case 'help':title='Como jogar';html='<p><b>Animais:</b> abra Animais, compre o alimento correspondente e alimente cada animal. Galinhas, vacas e porcos também podem receber rações históricas de melhoria (4, 10 e 2 moedas verdes, respectivamente), elevando o nível até 5; a fórmula de aumento de produção é um balanceamento local. O canil inclui dez raças históricas permanentes e dois cães temporários do evento de Dia dos Namorados (30 dias); os preços das raças permanentes são estimados. Galinhas, vacas, ovelhas, patos, pombos e pavões produzem itens para o depósito; porcos, burros e o iaque crescem em cinco etapas e podem ser vendidos quando adultos. Pato, Pombo e Pavão têm parâmetros estimados; o Iaque conserva o preço histórico de 55 moedas verdes, mas duração, ração e venda são estimadas. O cão pode ser alimentado para ativar a proteção local preparada para o modo online.</p><p><b>1.</b> Escolha sementes no inventário e clique na terra disponível.<br/><b>2.</b> Aguarde o crescimento (os ciclos desta edição duram 1/5 do tempo-base).<br/><b>3.</b> Selecione a mão e colha plantas maduras.<br/><b>4.</b> Use fertilizantes de 2h30, 5h50, 5h30, 6h, 8h, 15h ou 20h (reduções ajustadas para 1/5); os tempos/preços sem confirmação estão identificados como estimativas. O Surf Líquido Concentrado só funciona em flores. O Fertilizante do Amor foi adaptado para uso local porque originalmente era destinado às fazendas de amigos.<br/><b>5.</b> Venda a produção no depósito e use a enxada para preparar a terra.</p><p><b>Flores:</b> compre sementes de crisântemo, peônia, cravo ou rosa vermelha; plante e colha. As flores vão para a aba própria do depósito e começam bloqueadas contra venda acidental. <b>Fábrica:</b> use as quantidades indicadas para produzir buquês. <b>Popularidade:</b> aumenta ao fabricar buquês e concede bônus nas vendas nesta adaptação offline. <b>Casa de presentes:</b> guarda buquês e uma coleção local de itens históricos; o envio real depende do modo online. <b>Pomar:</b> libere a expansão, plante árvores usando sementes do inventário e colha seus frutos em oito espaços. <b>Lago:</b> libere a área visual nas Expansões.</p><p><b>Recompensa diária:</b> resgate um presente uma vez por dia. <b>Humor:</b> escolha um emoticon diário; a segunda troca custa 1.000 moedas. <b>Presentes grátis:</b> itens liberados por nível ficam disponíveis para envio quando houver modo online. <b>Churrasqueira:</b> compre por 1.000 moedas, reúna os componentes, abata opcionalmente animais para obter carne, compre mel/tempero e produza receitas. Os tempos de preparo da réplica são 1/5 do balanceamento-base; os valores exatos históricos não foram recuperados em texto legível. <b>Decoração:</b> compre e instale objetos em pontos seguros. Ao subir de nível, receba 1 moeda verde.</p><p><b>Terra vermelha:</b> compre a Varinha da Terra Vermelha por 2 moedas verdes (compra única e reutilizável). A primeira aplicação custa 15.000 moedas amarelas; a segunda, 60.000 amarelas + 1 verde. As aplicações seguintes usam uma progressão local porque a tabela histórica completa não foi recuperada. Sementes avançadas só crescem nesse solo; sementes comuns também podem ser plantadas nele. A Varinha de Restauração custa 3.000 moedas amarelas por uso e não devolve o valor gasto na terra vermelha. <b>Expansão:</b> libere canteiros bloqueados na Loja; os seis primeiros custam 1.500 moedas cada e os seis adicionais custam 2.200, com nível 10 exigido para a segunda faixa. <b>Atalhos:</b> Colheita rápida recolhe todas as plantas maduras; Escavada rápida limpa todos os canteiros colhidos. Com a ferramenta Selecionar, clicar em uma planta madura colhe automaticamente e clicar em um animal faminto alimenta-o se houver ração.</p><p><b>Zoom:</b> botões + / −, roda do mouse ou teclas + e −. <b>Câmera:</b> Alt + arrastar ou arrastar com botão central. Tecla 0 restaura a vista.</p><p>Os gráficos são objetos próprios, sem capturas de tela como fundo.</p>';break;
@@ -1208,7 +1268,7 @@ if(currentModal==='shop'){
   if(target){target.scrollIntoView({behavior:'smooth',block:'start'});nav.querySelectorAll('.shop-jump').forEach(item=>item.classList.toggle('active',item===button));}
  });
 }
-$('dialog').classList.toggle('wide',['shop','inventory','warehouse','factory','decor','grill','free-gifts','mood','gifts','areas','orchard','animals'].includes(currentModal));
+$('dialog').classList.toggle('wide',['shop','inventory','warehouse','factory','decor','grill','free-gifts','mood','gifts','areas','orchard','animals','friend-visit'].includes(currentModal));
 }
 function popularityBonusRate(){return Math.min(.25,Math.floor((state.popularity||0)/100)*.01)}
 function saleWithPopularity(base){return Math.floor(base*(1+popularityBonusRate()))}
@@ -1232,7 +1292,7 @@ document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
 $('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
-if(d.refreshFriends)refreshOnlineFriends();if(d.sendFriend)sendOnlineFriendRequest();if(d.respondFriend)respondOnlineFriendRequest(d.respondFriend,d.accept==='true');if(d.removeFriend)removeOnlineFriend(d.removeFriend);if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand);if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
+if(d.refreshFriends)refreshOnlineFriends();if(d.visitFriend)visitOnlineFriend(d.visitFriend);if(d.sendFriend)sendOnlineFriendRequest();if(d.respondFriend)respondOnlineFriendRequest(d.respondFriend,d.accept==='true');if(d.removeFriend)removeOnlineFriend(d.removeFriend);if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand);if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
 if(d.setMood)setMood(d.setMood);if(d.buyGrill)buyGrill();if(d.buyGrillPart)buyGrillPart(d.buyGrillPart);if(d.buyGrillIngredient)buyGrillSupply(d.buyGrillIngredient);if(d.buyTurkeyMeat)buyTurkeyMeat();if(d.butcherAnimal)butcherAnimal(d.butcherAnimal);if(d.produceGrill)produceGrillRecipe(d.produceGrill);if(d.collectGrill)collectGrill();if(d.toggleMeatLock)toggleMeatLock(d.toggleMeatLock);if(d.sellMeat)sellMeat(d.sellMeat);if(d.toggleProcessedLock)toggleProcessedLock(d.toggleProcessedLock);if(d.sellProcessed)sellProcessed(d.sellProcessed);if(d.assembleGrill)assembleGrill();if(d.buyTheme)buyFarmTheme(d.buyTheme);if(d.applyTheme)applyFarmTheme(d.applyTheme);if(d.buyDecoration)buyDecoration(d.buyDecoration);if(d.placeDecoration)placeDecoration(d.placeDecoration);if(d.removeDecoration!==undefined)removeDecoration(d.removeDecoration);
 if(d.buy){if(writeLocked)return notify('Gravação bloqueada para proteger seu salvamento.');const c=CROPS[d.buy];if(!c||!cropLevelAllowed(c))return;const wallet=cropCurrency(c);if(state[wallet]<c.price)return notify(`Moedas insuficientes para comprar ${c.name}.`);state[wallet]-=c.price;state.inventory[d.buy]=(state.inventory[d.buy]||0)+1;remember('Comprou '+c.name);markDirty();refresh();notify('Semente comprada!')}
 if(d.buyAnimal)buyAnimal(d.buyAnimal);if(d.buyFeed)buyAnimalFeed(d.buyFeed);if(d.feedAnimal)feedAnimal(d.feedAnimal);if(d.collectAnimal)collectAnimal(d.collectAnimal);if(d.sellAnimal)sellAnimal(d.sellAnimal);if(d.sellAnimalProduct)sellAnimalProduct(d.sellAnimalProduct);if(d.makeBouquet)makeBouquet(d.makeBouquet);if(d.sellFlower)sellFlower(d.sellFlower);if(d.toggleFlowerLock)toggleFlowerLock(d.toggleFlowerLock);
