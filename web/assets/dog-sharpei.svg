@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Cachorro sharpei">
+<defs><linearGradient id="coat" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#b98255"/><stop offset=".6" stop-color="#b98255"/><stop offset="1" stop-color="#4b3329"/></linearGradient><linearGradient id="chest" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e3bd9a"/><stop offset="1" stop-color="#4b3329"/></linearGradient></defs>
+<ellipse cx="760" cy="1035" rx="520" ry="32" fill="#18380f" opacity=".16"/>
+<path d="M330 600Q180 500 220 330Q285 410 395 520" fill="none" stroke="url(#coat)" stroke-width="75" stroke-linecap="round"/>
+<path d="M420 740L405 980Q405 1020 470 1020L515 1000L500 730M780 760L770 1000Q770 1030 835 1025L870 1005L850 735M960 730L990 990Q1000 1030 1060 1015L1080 990L1030 700" fill="url(#coat)" stroke="#3b281d" stroke-width="22" stroke-linejoin="round"/>
+<ellipse cx="700" cy="650" rx="430" ry="245" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
+<path d="M820 500Q920 520 980 690Q925 850 780 900Q690 810 700 690Z" fill="url(#chest)" opacity=".95"/>
+<path d="M1000 370q90 25 190 0m-205 50q105 28 220 0m-200 45q90 25 185 0" stroke="#6d4835" stroke-width="14" fill="none" opacity=".7"/>
+<ellipse cx="1110" cy="370" rx="245" ry="205" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
+<path d="M930 315Q850 145 900 125Q1035 130 1060 345Z" fill="url(#coat)" stroke="#5b3e2b" stroke-width="18"/><path d="M1205 315Q1280 145 1350 155Q1395 280 1290 365Z" fill="url(#coat)" stroke="#5b3e2b" stroke-width="18"/>
+<ellipse cx="1260" cy="465" rx="150" ry="105" fill="url(#chest)" stroke="#3b281d" stroke-width="16"/><ellipse cx="1360" cy="430" rx="35" ry="26" fill="#201c1b"/>
+<ellipse cx="1090" cy="315" rx="35" ry="44" fill="#fff9eb"/><ellipse cx="1186" cy="285" rx="34" ry="43" fill="#fff9eb"/>
+<circle cx="1098" cy="319" r="17" fill="#211b18"/><circle cx="1193" cy="289" r="17" fill="#211b18"/><circle cx="1092" cy="311" r="6" fill="#fff"/><circle cx="1187" cy="281" r="6" fill="#fff"/>
+<path d="M900 500Q1080 570 1220 500" fill="none" stroke="#3569a8" stroke-width="32" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#efc94f" stroke="#986d27" stroke-width="9"/>
+<path d="M1160 545Q1190 590 1235 565" stroke="#3b251d" stroke-width="12" fill="none" stroke-linecap="round"/>
+</svg>

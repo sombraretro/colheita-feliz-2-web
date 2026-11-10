@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 215 190" width="215" height="190"><defs><radialGradient id="white" cx="32%" cy="18%" r="90%"><stop stop-color="#fffdfa"/><stop offset=".56" stop-color="#f5eee2"/><stop offset="1" stop-color="#baa998"/></radialGradient><radialGradient id="pink" cx="28%" cy="20%" r="95%"><stop stop-color="#ffdbd0"/><stop offset=".65" stop-color="#f6a6aa"/><stop offset="1" stop-color="#ca6c7a"/></radialGradient><linearGradient id="brown" x2=".9" y2="1"><stop stop-color="#c3793b"/><stop offset=".43" stop-color="#8e4a28"/><stop offset="1" stop-color="#5b2d1c"/></linearGradient><linearGradient id="black" x2="0.4" y2="1"><stop stop-color="#58616b"/><stop offset=".6" stop-color="#252a30"/><stop offset="1" stop-color="#131a20"/></linearGradient><linearGradient id="gold" x2=".4" y2="1"><stop stop-color="#ffe4a2"/><stop offset="1" stop-color="#d98530"/></linearGradient></defs><style>
+@keyframes breath{0%,100%{transform:scale(1,1)}50%{transform:scale(1.013,.99)}}
+@keyframes nod{0%,17%,55%,100%{transform:rotate(0deg)}23%,42%{transform:rotate(10deg)}34%{transform:rotate(7deg)}}
+@keyframes swish{0%,22%,60%,100%{transform:rotate(-4deg)}30%,42%{transform:rotate(17deg)}48%{transform:rotate(-20deg)}}
+@keyframes blink{0%,7%,9%,50%,53%,100%{transform:scaleY(1)}8%,51%{transform:scaleY(.12)}}
+@keyframes nibble{0%,35%,100%{transform:translateY(0)}40%,55%{transform:translateY(4px)}}
+@keyframes step{0%,70%,100%{transform:translateY(0)}76%,82%{transform:translateY(-7px)}}
+@keyframes peck{0%,20%,60%,100%{transform:rotate(0deg)}27%,46%{transform:rotate(35deg)}}
+@keyframes ear{0%,80%,100%{transform:rotate(0deg)}84%,88%{transform:rotate(9deg)}}
+.body{transform-origin:105px 115px;animation:breath 3.7s ease-in-out infinite}
+.head{transform-box:fill-box;transform-origin:20% 80%;animation:nod 5.1s ease-in-out infinite}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 6.2s linear infinite}
+.tail{transform-box:fill-box;transform-origin:12% 18%;animation:swish 3.8s ease-in-out infinite}
+.step{animation:step 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 5%}
+.pecker{transform-origin:30% 60%;animation:peck 3.4s ease-in-out infinite}
+.ear{transform-origin:40% 80%;animation:ear 2.9s ease-in-out infinite}
+</style><ellipse cx="116" cy="166" rx="94" ry="13" fill="#254b15" opacity=".19"/><g class="body"><path d="M66 112Q33 92 37 56Q56 64 66 75Q44 46 57 24Q77 43 85 68Q77 34 95 19Q108 49 98 77Q130 54 151 80Q170 117 143 139Q113 151 88 137Q73 131 66 112" fill="url(#white)" stroke="#b4a79a" stroke-width="3"/><path d="M88 131L83 164M123 133L126 164M75 161h26m14 0h27" stroke="#d88b30" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M93 94q17-7 37 10q3 18-17 26q-20-4-20-36" fill="#e5ddd3" stroke="#bfb7ac" stroke-width="2.7"/><path d="M101 107q10 6 21 4" stroke="white" stroke-width="4" fill="none"/></g><g class="pecker"><g class="head"><path d="M132 83Q125 46 148 42Q181 37 187 78Q185 116 157 123Q135 113 132 83" fill="url(#white)" stroke="#b8a99b" stroke-width="3"/><path d="M149 45Q143 25 155 19Q164 23 164 38Q172 15 180 28L172 47" fill="#d62d26" stroke="#972221" stroke-width="2.5"/><path d="M166 90l32-8l-30 21" fill="#f6ba43" stroke="#bc772f" stroke-width="2.5"/><path d="M159 97q-4 20 7 21q16-12 0-19" fill="#d83126"/><ellipse cx="158" cy="72" rx="8" ry="10" fill="white"/><g class="eye"><circle cx="159" cy="73" r="4" fill="#292929"/></g></g></g></svg>

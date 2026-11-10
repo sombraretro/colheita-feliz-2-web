@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086">
+<defs>
+ <linearGradient id="fur" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#8d5835"/><stop offset=".45" stop-color="#57351f"/><stop offset="1" stop-color="#2d2119"/></linearGradient>
+ <linearGradient id="mane" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a46b42"/><stop offset=".5" stop-color="#694027"/><stop offset="1" stop-color="#3c2b20"/></linearGradient>
+ <linearGradient id="face" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f1e1c9"/><stop offset=".5" stop-color="#c8b29b"/><stop offset="1" stop-color="#8b7664"/></linearGradient>
+ <linearGradient id="horn" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3e7c7"/><stop offset="1" stop-color="#9b8666"/></linearGradient>
+ <linearGradient id="hoof" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#655044"/><stop offset="1" stop-color="#30251f"/></linearGradient>
+</defs>
+<ellipse cx="735" cy="1000" rx="405" ry="44" fill="#254c17" opacity=".24"/>
+<!-- long legs -->
+<g stroke="#34241a" stroke-width="14" stroke-linejoin="round">
+ <path d="M420 770Q420 860 405 944L390 972Q388 993 420 995H505Q528 985 508 963L488 930L510 780Z" fill="url(#fur)"/>
+ <path d="M630 800Q625 875 628 948L610 972Q606 995 640 997H722Q745 985 724 964L698 942L710 805Z" fill="url(#fur)"/>
+ <path d="M875 795Q890 875 880 950L860 974Q860 996 892 998H972Q994 985 972 964L946 940L955 790Z" fill="url(#fur)"/>
+ <path d="M1040 755Q1060 850 1050 938L1030 968Q1027 991 1060 995H1140Q1163 982 1142 960L1116 930L1118 740Z" fill="url(#fur)"/>
+</g>
+<g fill="url(#hoof)" stroke="#2b211c" stroke-width="9"><path d="M390 962H512Q540 985 516 1002H405Q378 992 390 962Z"/><path d="M610 965H730Q755 987 730 1003H626Q595 992 610 965Z"/><path d="M860 966H977Q1000 987 976 1004H875Q846 992 860 966Z"/><path d="M1030 958H1145Q1170 984 1140 1003H1046Q1018 988 1030 958Z"/></g>
+<!-- tail -->
+<path d="M365 575Q260 555 250 650Q286 705 390 655Z" fill="url(#mane)" stroke="#39271c" stroke-width="14"/>
+<path d="M270 642Q228 682 250 732" fill="none" stroke="#57351f" stroke-width="18" stroke-linecap="round"/>
+<!-- heavy body -->
+<path d="M300 675Q290 515 420 420Q570 315 790 365Q1000 400 1115 560Q1180 665 1085 800Q1010 910 790 900Q540 915 390 820Q315 770 300 675Z" fill="url(#fur)" stroke="#342319" stroke-width="18"/>
+<!-- shaggy belly -->
+<path d="M385 725Q480 650 575 720Q660 650 735 730Q820 655 910 720Q990 680 1050 735Q1000 860 835 875Q625 900 460 835Z" fill="url(#mane)" stroke="#342319" stroke-width="12"/>
+<g fill="none" stroke="#c08a5b" stroke-width="13" stroke-linecap="round" opacity=".7">
+ <path d="M420 750l-22 74m68-86l-12 95m78-95l-6 95m75-105l-8 110m82-100l-7 105m82-112l-6 110m83-100l-8 100m82-95l-12 82"/>
+</g>
+<!-- hump and mane -->
+<path d="M430 495Q480 330 660 315Q850 285 970 425Q1050 500 1000 640Q900 700 770 630Q625 700 490 630Z" fill="url(#mane)" stroke="#38251b" stroke-width="16"/>
+<g fill="#a97449" opacity=".65"><path d="M470 510q-35 70-12 126q38-28 44-93Z"/><path d="M550 425q-34 76-10 140q42-32 42-105Z"/><path d="M660 370q-35 85-5 150q45-40 40-112Z"/><path d="M770 372q-25 88 10 150q40-46 28-112Z"/><path d="M870 420q-12 72 36 125q28-51 5-103Z"/></g>
+<!-- neck and head -->
+<path d="M785 545Q790 430 835 340Q900 245 1040 270Q1160 295 1170 425Q1180 555 1070 645Q960 710 855 640Z" fill="url(#fur)" stroke="#342319" stroke-width="17"/>
+<path d="M875 465Q900 335 1010 315Q1120 305 1145 425Q1160 540 1060 600Q965 650 890 580Z" fill="url(#face)" stroke="#594535" stroke-width="14"/>
+<!-- forehead fringe -->
+<path d="M845 370Q850 270 945 245Q1040 210 1120 285Q1070 315 1035 365Q1000 325 970 382Q925 330 900 402Z" fill="url(#mane)" stroke="#342319" stroke-width="12"/>
+<g fill="#b77c4d" opacity=".65"><path d="M900 295q-18 56 7 83q28-32 20-70Z"/><path d="M968 270q-16 55 8 84q30-36 20-75Z"/><path d="M1030 275q-6 46 24 72q20-35 5-64Z"/></g>
+<!-- horns -->
+<path d="M865 325Q760 270 720 180Q700 140 735 126Q780 150 790 207Q825 250 900 258Z" fill="url(#horn)" stroke="#75634d" stroke-width="13"/>
+<path d="M1090 315Q1195 265 1228 180Q1248 142 1214 126Q1172 152 1163 210Q1130 248 1060 255Z" fill="url(#horn)" stroke="#75634d" stroke-width="13"/>
+<path d="M728 145Q740 190 786 228M1220 145Q1205 190 1165 228" fill="none" stroke="#fff3d8" stroke-width="9" opacity=".7"/>
+<!-- muzzle -->
+<path d="M990 505Q1080 460 1140 520Q1170 565 1130 610Q1060 665 990 615Q955 570 990 505Z" fill="#e2d0bd" stroke="#8e7864" stroke-width="12"/>
+<ellipse cx="1082" cy="555" rx="54" ry="36" fill="#9b8270" opacity=".55"/>
+<ellipse cx="1055" cy="548" rx="12" ry="9" fill="#4a3830"/><ellipse cx="1110" cy="548" rx="12" ry="9" fill="#4a3830"/>
+<path d="M1035 602Q1080 620 1120 600" fill="none" stroke="#6f5546" stroke-width="9" stroke-linecap="round"/>
+<!-- eyes -->
+<ellipse cx="965" cy="418" rx="36" ry="44" fill="#fffdf5" stroke="#6f5845" stroke-width="8"/><ellipse cx="974" cy="426" rx="18" ry="27" fill="#28231f"/><circle cx="981" cy="414" r="7" fill="#fff"/>
+<path d="M927 375Q965 347 1002 376" fill="none" stroke="#3b2a20" stroke-width="12" stroke-linecap="round"/>
+<!-- shaggy beard -->
+<path d="M1000 625Q1020 680 1080 680Q1060 740 1015 725Q995 705 980 680Z" fill="#68432b" stroke="#342319" stroke-width="10"/>
+</svg>

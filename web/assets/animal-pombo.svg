@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086">
+<defs>
+ <linearGradient id="pBody" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#eef1ef"/><stop offset=".42" stop-color="#b8c2c7"/><stop offset="1" stop-color="#687781"/></linearGradient>
+ <linearGradient id="pWing" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5f6f1"/><stop offset=".55" stop-color="#aeb9bf"/><stop offset="1" stop-color="#6f7c86"/></linearGradient>
+ <linearGradient id="pNeck" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#28a77c"/><stop offset=".35" stop-color="#277c9d"/><stop offset=".7" stop-color="#684d91"/><stop offset="1" stop-color="#9a6d8d"/></linearGradient>
+ <linearGradient id="pFeet" x2="0" y2="1"><stop stop-color="#f59b93"/><stop offset="1" stop-color="#b84d58"/></linearGradient>
+ <radialGradient id="pHead"><stop stop-color="#f4f5f1"/><stop offset="1" stop-color="#9daab2"/></radialGradient>
+</defs>
+<ellipse cx="760" cy="1005" rx="390" ry="34" fill="#244b1d" opacity=".18"/>
+<!-- tail -->
+<g stroke="#66757d" stroke-width="13" stroke-linejoin="round">
+ <path d="M560 705Q350 675 250 820Q410 870 610 810Z" fill="#75838b"/>
+ <path d="M560 715Q390 735 300 820M570 740Q420 770 350 835M585 760Q470 795 410 850" fill="none" stroke="#c7d0d2" stroke-width="9"/>
+</g>
+<!-- feet -->
+<g fill="none" stroke="url(#pFeet)" stroke-width="19" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M680 880L670 955M670 955l-43 20m43-20l37 22m-37-22l-8 31"/>
+ <path d="M870 875L885 955M885 955l-42 19m42-19l43 20m-43-20l-2 32"/>
+</g>
+<!-- body -->
+<ellipse cx="720" cy="680" rx="390" ry="260" fill="url(#pBody)" stroke="#65727b" stroke-width="18"/>
+<!-- chest -->
+<path d="M830 500Q1040 530 1060 760Q1010 900 850 910Q760 825 780 690Z" fill="#dce2e1" opacity=".9"/>
+<!-- wing -->
+<path d="M390 650Q570 470 835 570Q1000 640 960 805Q800 900 565 850Q420 800 390 650Z" fill="url(#pWing)" stroke="#64727b" stroke-width="17"/>
+<g fill="none" stroke="#7f8d95" stroke-width="12" opacity=".8">
+ <path d="M450 650Q640 555 900 650"/><path d="M455 700Q650 615 930 710"/><path d="M485 755Q690 680 900 770"/><path d="M535 800Q700 750 850 830"/>
+</g>
+<!-- neck and head -->
+<path d="M880 640Q905 490 950 405Q1000 315 1090 390Q1160 460 1090 575Q1050 660 1035 730Z" fill="url(#pNeck)" stroke="#536875" stroke-width="15"/>
+<ellipse cx="1035" cy="365" rx="155" ry="145" fill="url(#pHead)" stroke="#687781" stroke-width="17"/>
+<path d="M975 440Q1030 480 1110 440Q1090 520 1030 550Q985 510 975 440Z" fill="url(#pNeck)" opacity=".9"/>
+<!-- beak -->
+<path d="M1155 370Q1265 340 1325 395Q1280 450 1160 430Z" fill="#d99b47" stroke="#91622f" stroke-width="13"/>
+<path d="M1170 410Q1260 422 1310 402" fill="none" stroke="#f6c875" stroke-width="7"/>
+<!-- eye -->
+<ellipse cx="1080" cy="330" rx="48" ry="55" fill="#fff" stroke="#687781" stroke-width="9"/>
+<circle cx="1092" cy="336" r="26" fill="#211e1b"/><circle cx="1102" cy="325" r="10" fill="#fff"/>
+<path d="M1000 282Q1055 240 1118 270" fill="none" stroke="#7b858c" stroke-width="12" stroke-linecap="round"/>
+</svg>

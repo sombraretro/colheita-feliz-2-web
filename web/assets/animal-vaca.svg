@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 190" width="240" height="190"><defs><radialGradient id="white" cx="32%" cy="18%" r="90%"><stop stop-color="#fffdfa"/><stop offset=".56" stop-color="#f5eee2"/><stop offset="1" stop-color="#baa998"/></radialGradient><radialGradient id="pink" cx="28%" cy="20%" r="95%"><stop stop-color="#ffdbd0"/><stop offset=".65" stop-color="#f6a6aa"/><stop offset="1" stop-color="#ca6c7a"/></radialGradient><linearGradient id="brown" x2=".9" y2="1"><stop stop-color="#c3793b"/><stop offset=".43" stop-color="#8e4a28"/><stop offset="1" stop-color="#5b2d1c"/></linearGradient><linearGradient id="black" x2="0.4" y2="1"><stop stop-color="#58616b"/><stop offset=".6" stop-color="#252a30"/><stop offset="1" stop-color="#131a20"/></linearGradient><linearGradient id="gold" x2=".4" y2="1"><stop stop-color="#ffe4a2"/><stop offset="1" stop-color="#d98530"/></linearGradient></defs><style>
+@keyframes breath{0%,100%{transform:scale(1,1)}50%{transform:scale(1.013,.99)}}
+@keyframes nod{0%,17%,55%,100%{transform:rotate(0deg)}23%,42%{transform:rotate(10deg)}34%{transform:rotate(7deg)}}
+@keyframes swish{0%,22%,60%,100%{transform:rotate(-4deg)}30%,42%{transform:rotate(17deg)}48%{transform:rotate(-20deg)}}
+@keyframes blink{0%,7%,9%,50%,53%,100%{transform:scaleY(1)}8%,51%{transform:scaleY(.12)}}
+@keyframes nibble{0%,35%,100%{transform:translateY(0)}40%,55%{transform:translateY(4px)}}
+@keyframes step{0%,70%,100%{transform:translateY(0)}76%,82%{transform:translateY(-7px)}}
+@keyframes peck{0%,20%,60%,100%{transform:rotate(0deg)}27%,46%{transform:rotate(35deg)}}
+@keyframes ear{0%,80%,100%{transform:rotate(0deg)}84%,88%{transform:rotate(9deg)}}
+.body{transform-origin:105px 115px;animation:breath 3.7s ease-in-out infinite}
+.head{transform-box:fill-box;transform-origin:20% 80%;animation:nod 5.1s ease-in-out infinite}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 6.2s linear infinite}
+.tail{transform-box:fill-box;transform-origin:12% 18%;animation:swish 3.8s ease-in-out infinite}
+.step{animation:step 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 5%}
+.pecker{transform-origin:30% 60%;animation:peck 3.4s ease-in-out infinite}
+.ear{transform-origin:40% 80%;animation:ear 2.9s ease-in-out infinite}
+</style><ellipse cx="116" cy="166" rx="94" ry="13" fill="#254b15" opacity=".19"/><g class="tail"><path d="M51 82Q29 80 29 112Q31 129 20 136" stroke="#686767" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M13 127Q27 126 26 148Q10 149 13 127" fill="#353439"/></g>
+<g class="body"><path d="M55 121Q61 143 54 163L42 165Q43 142 38 127Z" fill="url(#white)" stroke="#746f69" stroke-width="2.6"/><path d="M145 115Q150 146 148 166L135 166Q129 143 124 125Z" fill="#e8e7e4" stroke="#706b68" stroke-width="2.4"/><path d="M102 117Q108 149 101 168L88 168Q89 136 86 124Z" fill="#efede8" stroke="#706b68" stroke-width="2.4"/><path d="M48 163h18v7H44zM133 164h18v7h-18zM88 166h18v6H87z" fill="#34353a"/>
+<path d="M32 72Q32 41 73 40L151 45Q188 58 172 118Q156 141 93 137Q43 139 32 113Z" fill="url(#white)" stroke="#77736d" stroke-width="3.3"/>
+<path d="M54 51Q32 62 47 91Q59 108 80 98Q97 80 83 57Z" fill="#292b31"/><path d="M122 53Q111 63 132 89Q146 100 165 91Q173 62 150 54Z" fill="#38393b"/><path d="M75 106Q83 101 93 113Q105 120 100 135Q82 139 68 129Z" fill="#3b3d3f"/>
+<path d="M102 115Q111 133 104 147Q110 158 124 146Q137 136 128 115" fill="#e7a0a9" stroke="#b76f7c" stroke-width="2"/><path d="M110 135Q111 150 104 150M119 133Q124 145 119 150" stroke="#b97886" stroke-width="3" fill="none"/>
+<path d="M52 43Q74 35 113 41" stroke="white" stroke-opacity=".58" stroke-width="5" fill="none"/></g>
+<g class="head"><path d="M148 56Q158 28 191 33Q222 41 217 73Q217 101 192 114L158 111Q137 92 148 56" fill="url(#white)" stroke="#7a716a" stroke-width="3"/><path d="M149 45L131 30Q121 19 133 18Q150 20 164 37Z" fill="#f5eae2" stroke="#796e68" stroke-width="3"/><path d="M151 43Q137 24 133 27Q134 36 151 49" fill="#f4aeb4"/><path d="M205 45L226 32Q240 25 233 45L214 58Z" fill="#f8eade" stroke="#736b64" stroke-width="3"/><path d="M218 43Q227 36 231 38Q227 47 216 52" fill="#e9a5b2"/><path d="M160 32L155 16L165 12L176 34M197 32L206 17L215 23L209 46" fill="#e6ddc6" stroke="#a49b85" stroke-width="3"/><path d="M158 50Q159 43 177 47Q183 66 173 76Q158 73 158 50" fill="#38363a"/><path d="M188 48Q201 40 213 54Q213 69 207 77Q191 73 188 48" fill="#37383b"/>
+<ellipse cx="187" cy="91" rx="34" ry="25" fill="#f8a9a9" stroke="#b57a7a" stroke-width="2.5"/><ellipse cx="170" cy="91" rx="5" ry="7" fill="#ba777e"/><ellipse cx="204" cy="91" rx="5" ry="7" fill="#ba777e"/><path d="M180 107Q188 112 196 107" stroke="#a3646d" stroke-width="2.2" fill="none"/>
+<ellipse cx="175" cy="64" rx="7" ry="11" fill="white"/><ellipse cx="204" cy="64" rx="7" ry="11" fill="white"/><g class="eye"><ellipse cx="176" cy="65" rx="3.5" ry="6" fill="#302928"/><ellipse cx="205" cy="65" rx="3.5" ry="6" fill="#302928"/></g><circle cx="177" cy="61" r="1.5" fill="white"/><circle cx="206" cy="61" r="1.5" fill="white"/>
+<path d="M156 105Q166 125 174 127" stroke="#b68e41" stroke-width="5" fill="none"/><path d="M170 121Q176 115 183 121L180 135H172Z" fill="#f3c540" stroke="#886127" stroke-width="2"/></g></svg>

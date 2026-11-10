@@ -1,0 +1,238 @@
+:root{font-family:Verdana,Tahoma,Arial,sans-serif;color:#543713;font-synthesis:none;--cream:#fff3ce;--green:#438e19;--brown:#955f2d}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#55a92a}.app{height:100%;display:flex;flex-direction:column;min-height:390px}.topbar{height:65px;flex-shrink:0;display:flex;align-items:stretch;padding:0 16px;background:linear-gradient(#fff7df,#eacb92);border-bottom:4px solid #824b1e;box-shadow:0 2px 5px #3150108f;gap:15px;z-index:8}.brand{display:flex;align-items:center;gap:6px;min-width:310px;position:relative;padding-bottom:7px}.brand-flower{font-size:38px;color:#f5a815;text-shadow:1px 2px #ad7316}.brand-name{font-weight:900;letter-spacing:-1px;color:#368b26;font-size:29px;font-style:italic;text-shadow:2px 2px #fefade,-1px -1px #fefade}.brand-name em{color:#d27b27}.brand-two{font-weight:900;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(#a8d95f,#479d28);border:2px solid #f4e6a2;box-shadow:0 2px 2px #6e492a;color:white;font-size:24px}.brand small{position:absolute;bottom:2px;left:51px;font-size:8px;color:#83683e;letter-spacing:1px}.tabs{display:flex;align-items:end;gap:5px;min-width:0}.tabs button,.side-menu button,.iconbtn{cursor:pointer;font-weight:bold;color:#6b421c}.tabs button{font-size:13px;border-radius:9px 9px 0 0;padding:13px 19px 14px;background:linear-gradient(#fffae9,#f6d9a3);border:1px solid #be995e;border-bottom:0;box-shadow:inset 0 1px white;white-space:nowrap}.tabs button.active{color:white;background:linear-gradient(#9fca54,#3a931a);border-color:#49852f;text-shadow:0 1px 1px #35701b}.tabs button:hover{filter:brightness(1.05)}.topright{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:bold;color:#36802c}.offline-dot{height:10px;width:10px;border-radius:50%;background:#66c029;box-shadow:0 0 4px #7de839}.iconbtn{height:34px;width:34px;border:1px solid #cf9d62;background:#f8e8c3;border-radius:9px;margin-left:10px;font-size:22px}.playfield{position:relative;min-height:0;flex:1;overflow:hidden;background:#75bc35;user-select:none;touch-action:none;background-image:radial-gradient(circle at top,#93d44d 0,#6fb733 52%,#63a92d 100%)}#world{display:block;width:100%;height:100%;position:absolute;inset:0;pointer-events:all}.farm-stats{position:absolute;top:13px;left:16px;background:linear-gradient(#fff8df,#f5ddb0);box-shadow:0 4px 0 #b17b46a8,0 5px 8px #3c4c1477;border:2px solid #c28d4d;border-radius:13px;display:flex;align-items:center;width:290px;height:104px;padding:9px;gap:9px;pointer-events:none}.avatar{display:grid;place-items:center;width:62px;height:78px;border:3px solid #d7a660;background:linear-gradient(#88d1eb,#dff6ff);border-radius:10px;font-size:39px;box-shadow:0 2px 4px #99724566}.stats-body{flex:1;min-width:0}.farm-name{font-weight:900;font-family:Georgia,serif;font-size:16px;margin-bottom:9px}.farm-name span{color:#e7a323}.xp-line{display:flex;align-items:center;gap:5px;font-size:10px}.xp-line b{white-space:nowrap;color:#347f23}.xp-track{height:10px;border:1px solid #bc964d;border-radius:20px;flex:1;background:#e3caa4;overflow:hidden}.xp-track>div{background:linear-gradient(#bfea61,#76b33f);height:100%;width:0}.xp-line small{font-size:9px;color:#926c35}.currencies{display:flex;margin-top:12px;gap:12px;font-size:12px;white-space:nowrap}.currencies b{font-weight:800}.currencies small{font-size:8px;color:#9a7547}.side-menu{position:absolute;right:16px;top:15px;display:flex;flex-direction:column;gap:7px}.side-menu button{font-size:12px;text-align:left;width:145px;border:2px solid #c79045;border-radius:12px;background:linear-gradient(#fff2cf,#efcf90);padding:10px 12px;box-shadow:0 3px #926525}.side-menu button:hover{background:#fff6d5;transform:translateY(-1px)}.tool-bar{position:absolute;bottom:33px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:space-around;gap:4px;width:min(660px,calc(100% - 210px));height:69px;background:linear-gradient(#22640cdd,#0c460de9);border:3px solid #62a023;border-radius:17px;box-shadow:0 4px 1px #10390a99,inset 0 1px 3px #b3e76f77;padding:5px 13px}.tool{width:65px;height:53px;cursor:pointer;border:2px solid transparent;border-radius:13px;background:transparent;color:#ffdf97;font-size:33px;filter:drop-shadow(1px 2px 1px #162e16);transition:.1s}.tool.active{background:linear-gradient(#7cc32988,#2f962555);border-color:#8fda50;box-shadow:0 0 8px #afe34aaa}.tool:hover{background:#69b83b88;transform:translateY(-3px)}.tool-bar[data-era=two]{left:auto;right:16px;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;width:77px;height:480px;padding:9px 5px}.tool-bar[data-era=two] .tool{height:56px}.tip{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);padding:7px 13px;border:1px solid #7bc157;background:#235b13c9;border-radius:14px;color:#fffbd7;white-space:nowrap;font-size:11px;text-shadow:0 1px #234c1c;pointer-events:none;max-width:85%;overflow:hidden;text-overflow:ellipsis}.zoom-ui{position:absolute;right:18px;bottom:45px;display:flex;align-items:center;gap:5px}.zoom-ui button{width:38px;height:38px;background:linear-gradient(#fffefa,#c5d0d4);border:2px solid #788686;border-radius:50%;font-size:26px;font-weight:800;color:#405151;box-shadow:0 3px 3px #364e3080;cursor:pointer}.zoom-ui button:hover{background:white}.zoom-ui output{font-size:11px;background:#faf7d9ed;color:#426037;padding:7px;border-radius:8px;font-weight:bold}.zoom-ui .reset{font-size:20px;width:31px;height:31px}.footer{position:absolute;bottom:5px;left:12px;right:12px;display:flex;justify-content:space-between;color:#fff8d8;font-size:10px;text-shadow:0 1px 2px #225519;pointer-events:none}.savedot{width:8px;height:8px;display:inline-block;background:#b7fd71;border-radius:50%;margin-right:6px}.savedot.error{background:#ff6050}.savedot.saving{background:#f9bf28}.toast{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);background:#fff5d9;border:2px solid #bb7a33;border-radius:12px;box-shadow:0 6px 20px #2547169e;padding:14px 22px;font-weight:bold;max-width:85%;opacity:0;pointer-events:none;transition:opacity .25s;z-index:11;text-align:center}.toast.show{opacity:1}.overlay{position:fixed;inset:0;z-index:20;background:#13270dbd;display:flex;align-items:center;justify-content:center;padding:18px}.overlay.hidden{display:none}.dialog{width:min(680px,96vw);max-height:85vh;display:flex;flex-direction:column;background:linear-gradient(#fff8e3,#eddaaa);border:5px solid #9f692e;border-radius:18px;box-shadow:0 20px 50px #0c2100ba;overflow:hidden}.dialog-head{background:linear-gradient(#c4dc76,#69ab2c);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #a1763d}.dialog-head h2{margin:0;font-family:Georgia,serif;color:#3d6621;font-size:23px;text-shadow:1px 1px #f5edbf}.dialog-head button{width:34px;height:34px;background:#fff5d6;border-radius:10px;border:2px solid #ad834a;font-size:27px;cursor:pointer}.modal-body{overflow:auto;min-height:90px;max-height:62vh;padding:14px}.modal-body p{margin:6px 0 14px}.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}.store-card{background:#fffdf0;border:2px solid #d5b779;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:7px;min-height:145px}.store-card .symbol{font-size:31px}.store-card strong{font-size:14px}.store-card small{font-size:10px;color:#836239;line-height:1.5}.store-card button,.modal-action{cursor:pointer;background:linear-gradient(#bfe16d,#75b82d);color:#2a4d1d;border:2px solid #6c9b2d;border-radius:10px;font-weight:bold;padding:8px 13px}.store-card button:disabled{opacity:.48;cursor:not-allowed}.actions{display:flex;flex-wrap:wrap;gap:9px;margin:10px 0}.modal-action.alt{background:linear-gradient(#ffe9b6,#efbf74);border-color:#c48a4c}.modal-action.danger{background:#fbd4c5;border-color:#c47860}.list-line{border-bottom:1px dashed #ba986c;padding:8px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}.modal-body input[type=file]{display:none}#garden-layer .plot-hit{cursor:pointer;pointer-events:all;fill-opacity:0}.plot-hit:hover{fill:#ffec9d;fill-opacity:.18;stroke:#ffe085;stroke-width:3}.plot-selected{stroke:#ffe36e;stroke-width:3}.animal-sprite{pointer-events:none;filter:drop-shadow(0 2px 2px rgba(25,48,12,.18));transform-box:fill-box;transform-origin:center}.animal-wrap{pointer-events:none;animation:none!important;transform:none!important}.sway{animation:sway 5s ease-in-out infinite;transform-origin:bottom;transform-box:fill-box}@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}@media(max-width:900px){.brand{min-width:220px}.brand-name{font-size:21px}.brand-two{height:26px;width:26px;font-size:20px}.brand-flower{font-size:30px}.brand small{display:none}.topbar{gap:5px;padding:0 7px}.tabs button{padding:15px 8px;font-size:11px}.topright{font-size:10px}.farm-stats{transform:scale(.83);transform-origin:top left}.side-menu{transform:scale(.83);transform-origin:top right}.tool-bar{height:59px;bottom:31px}.tool{font-size:26px;width:46px;height:46px}.zoom-ui{bottom:100px;right:8px;gap:2px}.zoom-ui button{width:31px;height:31px;font-size:21px}.footer span:last-child{display:none}}@media(max-width:550px){.brand{min-width:150px}.brand-name{font-size:16px}.brand-flower{display:none}.tabs button{font-size:10px;padding:12px 4px}.tabs button:nth-child(n+3){display:none}.tool-bar{width:calc(100% - 20px);max-width:420px}.tip{display:none}.topright .iconbtn{display:none}}
+
+/* 0.5.2: grounded animals, natural eye-only blinking, precise plot selection and expanded farm canvas */
+.animal-wrap{animation:none!important;transform:none!important;pointer-events:none}
+.animal-sprite{filter:drop-shadow(0 2px 2px rgba(25,48,12,.18));pointer-events:none}
+.animal-shadow{opacity:.34!important;filter:blur(5px);pointer-events:none}.animal-shadow-core{opacity:.24;filter:blur(2px);pointer-events:none}
+.blink-overlay{opacity:0;pointer-events:none;transition:opacity .035s linear}
+.animal-wrap.blinking .blink-overlay{opacity:1}
+.sheep-open-eyes{pointer-events:none}
+#garden-layer .plot-hit{fill:transparent;fill-opacity:0;stroke:transparent;stroke-width:1;pointer-events:all;cursor:pointer}
+#garden-layer .plot-hit:hover{fill:#fff1a1;fill-opacity:.2;stroke:#fff0a1;stroke-width:3}
+#garden-layer .plot-selection{fill:#ffe07a;fill-opacity:.22;stroke:#ffdf64;stroke-width:5;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(94,55,10,.5))}
+.history-list{display:flex;flex-direction:column;gap:6px}.history-entry{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 10px;background:#fff8e5;border:1px solid #dec18b;border-radius:8px;font-size:12px}.history-entry small{white-space:nowrap;color:#9a7746;font-size:10px}
+.gift-summary{display:flex;align-items:center;gap:14px;padding:14px;background:#fff6dd;border:1px solid #d9b977;border-radius:12px;margin-bottom:12px}.gift-summary .symbol{font-size:42px}.gift-summary div{display:flex;flex-direction:column;gap:5px}.gift-summary small{color:#9a7746}
+.offline-feature,.daily-reward{padding:20px;text-align:center;background:#fff7df;border:2px solid #d6b675;border-radius:14px}.offline-feature>span,.daily-reward>span{font-size:42px;display:block;margin-bottom:8px}.offline-feature p,.daily-reward p{line-height:1.6;color:#76562f}.daily-reward .modal-action{margin-top:8px}
+.currencies{gap:8px}.currencies span{font-size:11px}.currencies small{font-size:7px}
+.side-menu{gap:6px}.side-menu button{padding:8px 10px}
+@media(max-width:900px){.side-menu{max-height:55%;overflow:auto}.side-menu button{font-size:10px;padding:7px 9px}.currencies{gap:5px}.currencies span{font-size:10px}}
+
+/* 0.5.2: crop overlays are visual only; clicks resolve against the exact native isometric plot polygon. */
+#crop-layer{pointer-events:none}
+#garden-layer .plot-item{pointer-events:none}
+#garden-layer .plot-hit{pointer-events:all}
+#animal-layer{pointer-events:none}
+#foreground-layer{pointer-events:none}
+
+/* 0.6.0 — sistemas clássicos de criação e manejo animal */
+.animal-summary{display:flex;flex-direction:column;gap:5px;padding:12px 14px;background:#fff5d9;border:1px solid #d8b879;border-radius:11px;margin-bottom:12px}
+.animal-summary small,.historical-note{font-size:11px;line-height:1.55;color:#87653b}
+.animal-list{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.animal-card{display:flex;gap:12px;align-items:flex-start;padding:11px;background:#fffdf0;border:2px solid #d5b779;border-radius:12px}
+.animal-card-icon{display:grid;place-items:center;flex:0 0 48px;height:48px;background:#e5f0c8;border:1px solid #b9cf83;border-radius:12px;font-size:29px}
+.animal-card-main{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.animal-card-main>b{font-family:Georgia,serif;font-size:15px}
+.animal-card-main>small{font-size:10px;color:#80613a;line-height:1.4}
+.animal-card-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.animal-card-actions .compact{padding:6px 9px;font-size:10px}
+.animal-progress{height:8px;border-radius:9px;background:#e6d5b0;overflow:hidden;border:1px solid #c5a46d}
+.animal-progress i{display:block;height:100%;background:linear-gradient(#a7d85d,#5e9e2b);border-radius:9px}
+.animal-state{font-size:11px;color:#628a2f;font-weight:bold;padding:7px 0}
+.historical-note{padding:10px;background:#f7edcf;border-left:3px solid #c99a4d;border-radius:4px}
+.modal-body h3{font-family:Georgia,serif;color:#6d4c22;font-size:16px;margin:17px 0 9px}
+@media(max-width:900px){.side-menu{max-height:68%;overflow:auto}.animal-card-actions .modal-action{font-size:10px;padding:6px 8px}}
+
+
+/* 0.7.0 — flores, fábrica de buquês, popularidade e depósito organizado */
+.sale-bonus-line{margin-top:5px;padding-top:4px;border-top:1px dashed #d5b77f;color:#8a6a3c;font-size:9px;white-space:nowrap}
+.sale-bonus-line b{color:#4c8528;font-size:11px}
+.flower-store-card{background:linear-gradient(145deg,#fffdf2,#fff0f4);border-color:#d8a4ae}
+.flower-stock-line{align-items:center;flex-wrap:wrap}
+.flower-stock-line .actions{margin:0;justify-content:flex-end}
+.flower-stock-line small{color:#8b6d4a;font-size:10px}
+.bouquet-recipes .store-card{min-height:185px}
+.bouquet-card{background:linear-gradient(145deg,#fffdf2,#fff0f4);border-color:#d9a1b2}
+.bouquet-card .symbol{font-size:38px}
+.bouquet-card b{color:#7b4a75;font-size:11px}
+#flower-factory-building{filter:drop-shadow(0 4px 3px rgba(35,62,18,.15))}
+@media(max-width:900px){.sale-bonus-line{font-size:8px}.flower-stock-line .actions{width:100%;justify-content:flex-start}.side-menu{max-height:72%;overflow:auto}}
+
+.dialog.wide{width:min(900px,96vw)}
+.modal-action:disabled,.list-line button:disabled{opacity:.42;filter:saturate(.45);cursor:not-allowed;box-shadow:none}
+
+/* 0.8.0 — humor, presentes por nível, churrasqueira, decoração e ações rápidas */
+.farm-stats{pointer-events:auto}
+.farm-name{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.mood-button{width:25px;height:25px;padding:0;display:inline-grid;place-items:center;border:1px solid #c79a54;border-radius:50%;background:linear-gradient(#fff9e8,#f1d59f);font-size:16px;cursor:pointer;box-shadow:0 1px 2px #76502a55}
+#mood-label{font:normal 9px Arial,sans-serif;color:#8b6b40;margin-left:2px}
+.quick-actions{position:absolute;right:17px;bottom:100px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.quick-actions button{min-width:154px;padding:8px 10px;border:2px solid #9a6c35;border-radius:11px;background:linear-gradient(#fff1ce,#e8c17c);color:#69451f;font-size:11px;font-weight:800;box-shadow:0 3px 4px #23481766;cursor:pointer;text-align:left}
+.quick-actions button:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.quick-actions button:disabled{opacity:.46;filter:grayscale(.4);cursor:not-allowed}
+.mood-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.mood-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:84px;background:#fffdf0;border:2px solid #d5b779;border-radius:12px;color:#6b4a27;cursor:pointer}
+.mood-choice span{font-size:31px}.mood-choice b{font-size:11px}.mood-choice.selected{border-color:#6a9e32;background:linear-gradient(#f6ffdf,#d9edaa);box-shadow:inset 0 0 0 2px #a4ca64}
+.decor-card{background:linear-gradient(145deg,#fffdf2,#f0f6dc);border-color:#b7ca80}
+.free-gift-line small{font-size:10px;color:#8b6b40}
+#grill-building{filter:drop-shadow(0 4px 4px rgba(28,56,16,.22))}
+#decoration-layer{pointer-events:none}
+.animal-wrap{pointer-events:all;cursor:pointer}
+@media(max-width:900px){.quick-actions{right:7px;bottom:139px}.quick-actions button{min-width:128px;font-size:9px;padding:6px 7px}.mood-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.farm-stats{pointer-events:auto}}
+@media(max-width:550px){.quick-actions{bottom:165px}.quick-actions button{min-width:112px}.farm-name{gap:3px}.mood-button{width:22px;height:22px}}
+#animal-layer{pointer-events:all}
+@media(max-width:1450px){.tabs [data-modal="mood"],.tabs [data-modal="free-gifts"],.tabs [data-modal="decor"],.tabs [data-modal="grill"]{display:none}.side-menu{max-height:72%;overflow-y:auto;scrollbar-width:thin}}
+@media(max-width:1450px){.quick-actions{left:14px;right:auto;bottom:100px}.quick-actions button{min-width:145px}}
+
+/* 0.9.0 — churrasqueira: receitas, fila de preparo, carnes e bloqueio do depósito */
+.grill-recipes{grid-template-columns:repeat(auto-fit,minmax(205px,1fr));align-items:stretch}
+.grill-recipe-card{background:linear-gradient(145deg,#fffdf1,#ffefdc);border-color:#d6a46b;min-height:245px}
+.grill-recipe-card .symbol{font-size:36px}
+.grill-recipe-card small{line-height:1.55}
+.grill-recipe-card .missing-ingredients{display:block;color:#9b4b35;font-weight:700;background:#fff0e7;border:1px solid #e2b39c;border-radius:7px;padding:6px;margin-top:4px}
+.queue-line{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#fff9e9;border:1px solid #dfc18d;border-radius:10px;margin:7px 0}
+.queue-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:#f6e2bb;font-size:26px;flex:0 0 42px}
+.queue-main{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.queue-main>b{font-family:Georgia,serif;color:#6d4c22;font-size:13px}
+.queue-main>small{color:#87653b;font-size:10px}
+.queue-state{font-size:21px;color:#ad843f}
+.queue-state.ready{color:#4f942d}
+.animal-card-actions .danger{background:linear-gradient(#ffe2d5,#e9a58b);border-color:#c77d5c;color:#713c2c}
+@media(max-width:600px){.grill-recipes{grid-template-columns:1fr}.queue-line{gap:8px}.queue-icon{width:34px;height:34px;flex-basis:34px}}
+
+
+/* v1.0.0 — cartão de informações reorganizado e perfil personalizável (mantido) */
+.farm-stats{width:min(390px,calc(100vw - 24px));min-height:132px;height:auto;align-items:stretch;padding:10px 12px;gap:11px;z-index:7;pointer-events:auto;overflow:visible}
+.avatar-frame{display:flex;align-items:center;flex:0 0 72px}
+.avatar{position:relative;display:grid;place-items:center;width:72px;height:88px;flex:0 0 72px;padding:0;overflow:hidden;border:3px solid #d7a660;background:linear-gradient(#88d1eb,#dff6ff);border-radius:11px;font-size:39px;box-shadow:0 2px 4px #99724566;cursor:pointer}
+.avatar img{display:block;width:100%;height:100%;object-fit:cover}
+.avatar img[hidden],.avatar span[hidden]{display:none}
+.avatar-edit{position:absolute;right:3px;bottom:3px;display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#fff1c9;border:1px solid #b9833d;font-size:13px;box-shadow:0 1px 3px #60411e88}
+.stats-body{display:flex;flex:1;min-width:0;flex-direction:column;justify-content:center;gap:5px}
+.farm-title-row{display:flex;align-items:center;min-width:0}
+.farm-name{display:flex;align-items:center;gap:5px;min-width:0;width:100%;margin:0;font-family:Georgia,serif;font-size:16px;line-height:1.15;font-weight:900}
+#farm-name-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.farm-star{flex:0 0 auto;color:#e7a323}
+.farm-edit-button{display:inline-grid;place-items:center;flex:0 0 21px;width:21px;height:21px;padding:0;border:1px solid #c79a54;border-radius:6px;background:linear-gradient(#fff9e8,#f1d59f);font: bold 13px Arial;color:#805323;cursor:pointer}
+.mood-button{flex:0 0 25px}
+.mood-label-row{height:11px;margin-top:-3px}
+#mood-label{font:normal 9px Arial,sans-serif;color:#8b6b40;margin:0}
+.xp-line{display:grid;grid-template-columns:auto minmax(55px,1fr) auto;align-items:center;gap:6px;font-size:10px;min-width:0}
+.xp-track{min-width:0}
+.xp-line small{white-space:nowrap;font-size:9px}
+.currencies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:2px;min-width:0}
+.currencies span{display:flex;align-items:baseline;gap:3px;min-width:0;white-space:nowrap;font-size:11px}
+.currencies span i{font-style:normal;flex:0 0 auto}
+.currencies b{font-size:11px;overflow:hidden;text-overflow:clip}
+.currencies small{font-size:8px;overflow:hidden;text-overflow:clip}
+.sale-bonus-line{margin-top:0;padding-top:3px;font-size:8px;line-height:1.15;white-space:normal;overflow:visible}
+.profile-editor{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:start}
+.profile-editor-preview{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;padding:12px 8px;background:#fff5dc;border:1px solid #d8bd87;border-radius:12px}
+.profile-photo-preview{width:112px;height:112px;display:grid;place-items:center;overflow:hidden;border:4px solid #d5a35e;border-radius:14px;background:linear-gradient(#88d1eb,#e4f8ff);font-size:54px;box-shadow:0 3px 5px #8b633b55}
+.profile-photo-preview img{width:100%;height:100%;object-fit:cover}
+.profile-editor-preview small,.profile-editor-fields small{font-size:10px;color:#8b6b40;line-height:1.45}
+.profile-editor-fields{display:flex;flex-direction:column;align-items:stretch;gap:7px;min-width:0}
+.profile-editor-fields>label:not(.upload-button){font-weight:800;font-size:12px;color:#684820}
+.profile-editor-fields input[type=text]{width:100%;min-width:0;padding:10px 11px;border:2px solid #d2ad70;border-radius:9px;background:#fffdf3;color:#543713;font:13px Verdana,Arial,sans-serif;outline:none}
+.profile-editor-fields input[type=text]:focus{border-color:#76a83d;box-shadow:0 0 0 2px #a7d36b55}
+.profile-save-name{align-self:flex-start}
+.profile-divider{height:1px;background:#d8bd87;margin:5px 0}
+.upload-button{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;padding:9px 12px;border:2px solid #c48a4c;border-radius:9px;background:linear-gradient(#fff0c9,#efc982);font-size:11px;font-weight:800;color:#69451f;cursor:pointer}
+.upload-button:hover{filter:brightness(1.04)}
+.profile-photo-actions{margin:2px 0 0}
+.profile-photo-actions button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:550px){.farm-stats{width:min(390px,calc(100vw - 16px));min-height:138px;padding:8px;gap:8px}.avatar-frame{flex-basis:58px}.avatar{width:58px;height:76px;flex-basis:58px;font-size:32px}.avatar-edit{width:20px;height:20px;font-size:11px}.farm-name{font-size:14px;gap:3px}.mood-button{width:22px;height:22px;flex-basis:22px;font-size:14px}.currencies{gap:4px}.currencies span{font-size:10px;gap:2px}.currencies b{font-size:10px}.currencies small{font-size:7px}.sale-bonus-line{font-size:7px}.profile-editor{grid-template-columns:1fr}.profile-editor-preview{flex-direction:row;text-align:left;justify-content:flex-start}.profile-photo-preview{width:76px;height:76px;flex:0 0 76px}.profile-editor-preview small{max-width:180px}}
+@media(min-width:551px) and (max-width:900px){.farm-stats{width:370px;min-height:128px}}
+@media(max-width:380px){
+ .farm-stats{left:8px;width:calc(100vw - 16px);min-height:146px}
+ .avatar-frame{flex-basis:54px}.avatar{width:54px;height:72px;flex-basis:54px}
+ .currencies{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:3px}
+ .currencies span:last-child{grid-column:1/-1}
+ .currencies span{font-size:10px}
+ .currencies small{font-size:8px}
+}
+.farm-name{flex-wrap:nowrap}
+
+
+/* 1.1.0 — terra vermelha, sementes avançadas, expansão de canteiros e pomar */
+.advanced-seed-card{background:linear-gradient(145deg,#fff8ed,#f8e1d5);border-color:#bd7864}
+.advanced-seed-card .symbol{filter:drop-shadow(0 1px 1px #a45b3c33)}
+.soil-tool-card{background:linear-gradient(145deg,#fffaf0,#f5e2d2);border-color:#bb8060}
+.soil-tool-card.restore{background:linear-gradient(145deg,#f5fff0,#e1efcf);border-color:#8aaf62}
+.land-expansion-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px;background:linear-gradient(120deg,#f3f8dc,#fff4d8);border:2px solid #b9c77a;border-radius:12px}
+.land-expansion-card>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.land-expansion-card small{font-size:11px;color:#80613a;line-height:1.5}
+.land-expansion-card button{flex:0 0 auto}
+#garden-layer .plot-item[data-plot-index] polygon{transition:filter .15s ease}
+.advanced-seed-card button{background:linear-gradient(#f5d0bd,#d88b6e);border-color:#ad654d;color:#5d2e23}
+@media(max-width:600px){.land-expansion-card{align-items:stretch;flex-direction:column}.land-expansion-card button{width:100%}}
+
+.data-origin{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.1px}.data-origin.estimated{color:#8d4b19}.data-origin.adapted{color:#6c5c9a}.data-origin.historic{color:#397b2b}.historical-seed-grid .store-card{min-height:190px}.advanced-seed-grid .store-card{min-height:205px}.store-card small small{display:block;margin-top:3px;line-height:1.35}
+
+/* v1.4.0 — catálogo de evento, raças históricas, VIP e alimentos animais */
+.orchard-seed-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:7px}
+.orchard-seed-list button{min-width:0;font-size:9px;padding:6px 7px;white-space:normal;line-height:1.3}
+#decoration-layer .orchard-tree,#decoration-layer .orchard-tree-slot{pointer-events:all;cursor:pointer}
+#decoration-layer .orchard-tree:hover,#decoration-layer .orchard-tree-slot:hover{filter:brightness(1.08)}
+.data-origin.estimated{white-space:normal;line-height:1.35}
+@media(max-width:600px){.orchard-seed-list{grid-template-columns:1fr}.side-menu{max-height:72%;overflow-y:auto}}
+
+/* Keep the expanded side menu scrollable above the quick-action overlay on desktop too. */
+.side-menu{max-height:72%;overflow-y:auto;scrollbar-width:thin}
+
+/* v1.4.0 — catálogo do evento, VIP, raças históricas e melhorias animais */
+.event-seed-card{background:linear-gradient(145deg,#fff7ef,#f8e2e9);border-color:#d39aab}
+.event-seed-card .data-origin.estimated{color:#99506c}
+.vip-card{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px 12px;padding:14px;background:linear-gradient(120deg,#fff3c9,#f9df9b);border:2px solid #d4a94d;border-radius:12px}
+.vip-card .symbol{grid-row:span 3;font-size:34px}
+.vip-card strong,.vip-card small,.vip-card b{display:block}
+.vip-card button{grid-column:1/-1}
+.dog-breed-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dog-breed-card{min-height:145px;background:linear-gradient(145deg,#fff8e9,#f3e4c8)}
+.dog-breed-card .symbol{font-size:27px}
+.animal-card-main .data-origin{line-height:1.35}
+.animal-card-actions{flex-wrap:wrap}
+.animal-card-actions button{max-width:100%}
+@media(max-width:700px){.dog-breed-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vip-card{grid-template-columns:auto 1fr}}
+@media(max-width:390px){.dog-breed-grid{grid-template-columns:1fr}}
+.dog-breed-preview{display:block;width:100%;height:110px;object-fit:contain;background:linear-gradient(#eef8df,#fff8e9);border-radius:8px;margin-bottom:5px}
+
+
+/* v1.5.0 — navegação por categorias da loja */
+.shop-jump-nav{position:sticky;top:-14px;z-index:5;display:flex;flex-wrap:wrap;gap:7px;padding:10px;margin:-14px -14px 14px;background:linear-gradient(180deg,#fff8e3 82%,rgba(255,248,227,.94));border-bottom:2px solid #d5b779;box-shadow:0 4px 9px rgba(86,57,20,.12)}
+.shop-jump{flex:1 1 145px;min-height:38px;padding:7px 10px;border:1px solid #c49b5b;border-radius:10px;background:#fffdf0;color:#65451e;font-weight:700;font-size:12px;cursor:pointer;text-align:left}
+.shop-jump::before{content:'›';display:inline-block;margin-right:7px;color:#6b9c2d;font-size:17px}
+.shop-jump:hover,.shop-jump.active{background:#e4f0bd;border-color:#83a943;color:#365d20}
+.shop-section{scroll-margin-top:78px;margin:0 0 20px;padding:14px;background:rgba(255,250,230,.72);border:1px solid #d9bd83;border-radius:14px;box-shadow:0 3px 9px rgba(87,58,24,.08)}
+.shop-section>h3{margin:0 0 10px;padding:0 0 9px;border-bottom:2px solid #e1cb9d;color:#52772a;font-family:Georgia,serif;font-size:17px}
+.shop-section>p{margin:0 0 12px}
+.shop-section .grid-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
+.shop-section .store-card{min-width:0}
+@media(max-width:520px){.shop-jump-nav{gap:6px;padding:8px;margin:-14px -14px 12px}.shop-jump{flex-basis:calc(50% - 6px);font-size:11px;min-height:42px}.shop-section{padding:10px;margin-bottom:14px}.shop-section>h3{font-size:15px}.shop-section .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.shop-section .store-card{padding:9px;min-height:130px}.shop-section .store-card .symbol{font-size:26px}.shop-section .store-card strong{font-size:12px}}
+
+/* Progressão v1.6.0: livro tutorial e conquistas */
+.task-card,.achievement-card{display:flex;align-items:flex-start;gap:13px;padding:14px;margin:12px 0;border:1px solid #d8c69a;border-radius:13px;background:linear-gradient(135deg,#fffdf5,#f7efd9);box-shadow:0 2px 7px #563b1710}.task-card.active{border-color:#c79a42;background:linear-gradient(135deg,#fff9df,#f8edc7)}.task-icon,.achievement-icon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:12px;background:#ead9a9;font-size:25px}.task-main,.achievement-main{display:flex;flex:1;min-width:0;flex-direction:column;gap:6px}.task-main p{margin:0;color:#65573e;font-size:13px;line-height:1.45}.task-main small,.achievement-main small{font-size:12px;color:#776b56}.task-main .modal-action{align-self:flex-start;margin-top:5px}.achievement-list{display:grid;gap:4px}.achievement-card{align-items:center;padding:10px 12px;background:#fbf8ee}.achievement-card.unlocked{border-color:#c8a44e;background:#fff9e5}.achievement-card .achievement-icon{flex-basis:38px;width:38px;height:38px;font-size:21px}.achievement-main b{font-size:13px}.achievement-main small{line-height:1.3}.achievement-card>span:last-child{font-size:18px;color:#8c7848}
+/* v1.7.0 — cartões e estados dos temas completos da fazenda */
+.theme-grid{grid-template-columns:repeat(auto-fill,minmax(205px,1fr));}
+.theme-card{position:relative;min-height:205px;border-color:#bfa36b;background:linear-gradient(155deg,#fffef4,#f4e5c1);}
+.theme-card .symbol{font-size:38px;line-height:1.15;}
+.theme-card small{min-height:40px;}
+.theme-card.theme-selected{border-color:#4b9a32;box-shadow:inset 0 0 0 2px #83bd56,0 3px 8px #4b762d33;background:linear-gradient(155deg,#f7ffe9,#e5f2cb);}
+.theme-card.theme-selected:after{content:'EM USO';position:absolute;right:9px;top:9px;border-radius:9px;padding:4px 7px;background:#438e19;color:white;font-size:9px;font-weight:900;letter-spacing:.5px;}
+#world[data-farm-theme="christmas"] #ground-layer{filter:saturate(.88) brightness(1.035);}
+#world[data-farm-theme="autumn"] #ground-layer{filter:saturate(.93) sepia(.12);}
+#world[data-farm-theme="van_gogh"] #ground-layer{filter:saturate(1.18) contrast(1.035);}
+#world[data-farm-theme="greek"] #ground-layer{filter:saturate(.9) brightness(1.025);}
+#world[data-farm-theme="science"] #ground-layer{filter:saturate(.85) hue-rotate(5deg);}
+@media(max-width:760px){.theme-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.theme-card{min-height:220px;padding:9px;}.theme-card strong{font-size:12px;}}
+
+.audio-settings{display:grid;gap:10px;padding:14px;margin:12px 0;border:1px solid #d9c39a;border-radius:12px;background:#fff9e9}.audio-settings h3{margin:0}.audio-settings label{display:flex;align-items:center;gap:9px;font-weight:600}.audio-settings small{color:#76664f}
+
+.account-card{padding:15px;border-radius:12px;background:#edf7e8;border:1px solid #b9d3a8}.account-card p{margin:6px 0}.auth-field{display:grid;gap:6px;margin:12px 0;font-weight:700}.auth-field input{width:100%;padding:11px;border:1px solid #c7b58e;border-radius:9px;font:inherit;background:#fffdf7}.offline-dot.online{background:#38a85a;box-shadow:0 0 0 3px #38a85a22}
+
+/* Próxima etapa: navegação lateral recolhível e ferramentas com ícones aprimorados. Só ativa com data-cf2-next-ui=enabled. */
+html[data-cf2-next-ui="enabled"] .side-menu{transition:transform .22s ease,opacity .22s ease;will-change:transform}
+html[data-cf2-next-ui="enabled"] .side-menu:not(.is-open){transform:translateX(calc(100% + 18px));opacity:0;pointer-events:none}
+html[data-cf2-next-ui="enabled"] .side-menu.is-open{transform:translateX(0);opacity:1;pointer-events:auto}
+html[data-cf2-next-ui="enabled"] .sidebar-toggle{display:inline-flex;align-items:center;justify-content:center}
+html[data-cf2-next-ui="enabled"] .tool-icon-ready{transition:transform .14s ease,filter .14s ease}
+html[data-cf2-next-ui="enabled"] .tool-icon-ready:hover{transform:translateY(-2px);filter:brightness(1.12)}

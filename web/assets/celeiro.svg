@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086">
+<defs>
+ <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e15a43"/><stop offset=".55" stop-color="#b93b2f"/><stop offset="1" stop-color="#7e2827"/></linearGradient>
+ <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4d5660"/><stop offset=".5" stop-color="#303943"/><stop offset="1" stop-color="#20272d"/></linearGradient>
+ <linearGradient id="trim" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff8e8"/><stop offset="1" stop-color="#cfc8b6"/></linearGradient>
+ <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d79b56"/><stop offset="1" stop-color="#86502b"/></linearGradient>
+</defs>
+<ellipse cx="740" cy="1005" rx="590" ry="48" fill="#254a1b" opacity=".22"/>
+<!-- rear side wall -->
+<path d="M930 300L1260 425V900L930 800Z" fill="#8f302b" stroke="#642822" stroke-width="20"/>
+<path d="M980 375L1210 465M980 465L1210 555M980 555L1210 645M980 645L1210 735" stroke="#e37b5d" stroke-width="13" opacity=".55"/>
+<!-- main wall -->
+<path d="M250 405L755 180L1120 365V900L250 900Z" fill="url(#wall)" stroke="#6d2925" stroke-width="24" stroke-linejoin="round"/>
+<!-- vertical boards -->
+<g stroke="#7f2b29" stroke-width="11" opacity=".65"><path d="M330 420V875M420 380V875M510 340V875M600 300V875M690 260V875M780 270V875M870 310V875M960 350V875M1050 395V875"/></g>
+<!-- roof planes -->
+<path d="M170 410L740 120L1190 360L1120 420L745 220L255 480Z" fill="url(#roof)" stroke="#1e252a" stroke-width="25" stroke-linejoin="round"/>
+<path d="M170 410L740 120L745 220L255 480Z" fill="#414b54" opacity=".9"/>
+<g stroke="#69727a" stroke-width="10" opacity=".7"><path d="M260 390L760 155M350 420L850 190M450 445L950 235M550 465L1050 285M650 480L1150 335"/></g>
+<!-- front gable -->
+<path d="M250 405L755 180L1120 365" fill="none" stroke="url(#trim)" stroke-width="30" stroke-linejoin="round"/>
+<path d="M570 265L755 180L930 270" fill="none" stroke="#fff8e8" stroke-width="18"/>
+<!-- loft window -->
+<path d="M670 310L755 270L840 310V395H670Z" fill="#293b4b" stroke="#f6ead5" stroke-width="17"/>
+<path d="M755 278V388M678 350H832" stroke="#f6ead5" stroke-width="12"/>
+<!-- barn doors -->
+<path d="M430 520Q430 485 465 470L755 340L1040 485Q1075 505 1075 540V900H430Z" fill="#9e302b" stroke="#f5ead5" stroke-width="20"/>
+<path d="M470 530L755 400L755 900H470Z" fill="#b94435" stroke="#f7ead6" stroke-width="13"/>
+<path d="M755 400L1035 540V900H755Z" fill="#a9342d" stroke="#f7ead6" stroke-width="13"/>
+<path d="M490 555L740 445V870L490 870Z" fill="none" stroke="#f8eee0" stroke-width="23"/>
+<path d="M1020 565L770 445V870L1020 870Z" fill="none" stroke="#f8eee0" stroke-width="23"/>
+<path d="M500 560L735 865M1010 570L775 865" stroke="#fff7e8" stroke-width="25"/>
+<!-- door handles -->
+<circle cx="740" cy="690" r="12" fill="#f4d58c"/><circle cx="770" cy="690" r="12" fill="#f4d58c"/>
+<!-- foundation and hay -->
+<path d="M270 900H1110" stroke="#e9d8bd" stroke-width="28"/>
+<path d="M1110 825Q1210 790 1290 850L1320 930L1120 930Z" fill="#d6a54e" stroke="#9b7136" stroke-width="12"/>
+<path d="M1160 845q65-45 110 5m-95 25q60-30 100 10" fill="none" stroke="#f1d18b" stroke-width="10"/>
+<!-- side lantern -->
+<path d="M1120 490V560" stroke="#4b3b2b" stroke-width="14"/><path d="M1085 560H1155L1145 630H1095Z" fill="#eacb7c" stroke="#6b4b2c" stroke-width="10"/>
+</svg>

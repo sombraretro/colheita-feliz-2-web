@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086">
+<defs>
+ <linearGradient id="pBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#39b8a6"/><stop offset=".48" stop-color="#167f87"/><stop offset="1" stop-color="#104d68"/></linearGradient>
+ <linearGradient id="pFeather" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#36b6a0"/><stop offset=".45" stop-color="#176f8a"/><stop offset="1" stop-color="#163d68"/></linearGradient>
+ <radialGradient id="eyeFeather"><stop stop-color="#f6df70"/><stop offset=".2" stop-color="#34a78b"/><stop offset=".5" stop-color="#176c9c"/><stop offset=".8" stop-color="#142d61"/><stop offset="1" stop-color="#0d233f"/></radialGradient>
+ <linearGradient id="pLeg" x2="0" y2="1"><stop stop-color="#d6a35c"/><stop offset="1" stop-color="#80502c"/></linearGradient>
+</defs>
+<ellipse cx="755" cy="1000" rx="430" ry="35" fill="#244b1d" opacity=".18"/>
+<!-- long fan tail, individual eye feathers -->
+<g stroke="#164d63" stroke-width="13" stroke-linejoin="round">
+ <path d="M720 720Q370 610 190 250Q360 110 560 350Q650 120 790 110Q920 145 930 420Q1080 150 1210 270Q1190 570 880 770Z" fill="url(#pFeather)"/>
+ <path d="M730 710Q470 530 330 250M750 700Q600 430 565 190M790 690Q760 400 790 150M830 700Q960 420 1050 250M860 720Q1100 530 1170 340" fill="none" stroke="#48b9a4" stroke-width="11"/>
+</g>
+<g stroke="#0d435b" stroke-width="9">
+ <ellipse cx="330" cy="270" rx="67" ry="102" fill="url(#eyeFeather)" transform="rotate(-34 330 270)"/>
+ <ellipse cx="565" cy="215" rx="70" ry="108" fill="url(#eyeFeather)" transform="rotate(-12 565 215)"/>
+ <ellipse cx="790" cy="185" rx="72" ry="112" fill="url(#eyeFeather)"/>
+ <ellipse cx="1040" cy="285" rx="68" ry="104" fill="url(#eyeFeather)" transform="rotate(22 1040 285)"/>
+ <ellipse cx="1170" cy="395" rx="65" ry="95" fill="url(#eyeFeather)" transform="rotate(35 1170 395)"/>
+</g>
+<g fill="none" stroke="#f2d66c" stroke-width="9" opacity=".9"><path d="M285 300q45-70 92-25M525 250q45-80 90-25M748 230q42-88 85-10M1000 325q48-65 88-12M1130 430q48-55 75-8"/></g>
+<!-- body and wing -->
+<path d="M630 590Q690 470 840 500Q1020 530 1030 740Q1000 920 810 930Q640 900 600 760Z" fill="url(#pBody)" stroke="#0e4d60" stroke-width="18"/>
+<path d="M700 690Q790 610 930 680Q1000 735 960 830Q820 885 690 820Z" fill="#1b7181" stroke="#0c4d65" stroke-width="12"/>
+<g fill="none" stroke="#64c8b2" stroke-width="11"><path d="M720 720Q820 665 945 725"/><path d="M720 770Q830 730 950 785"/><path d="M745 815Q835 785 925 835"/></g>
+<!-- neck -->
+<path d="M840 650Q850 475 905 370Q950 285 1025 330Q1090 385 1050 510Q1025 590 1000 690Z" fill="url(#pBody)" stroke="#0d4c61" stroke-width="16"/>
+<!-- head -->
+<ellipse cx="1000" cy="300" rx="105" ry="100" fill="url(#pBody)" stroke="#0d4c61" stroke-width="15"/>
+<!-- crest -->
+<g stroke="#1b6b86" stroke-width="9" stroke-linecap="round"><path d="M1000 215L985 135"/><path d="M1015 218L1035 132"/><path d="M990 220L945 160"/></g>
+<g fill="#f2d66c" stroke="#1b6b86" stroke-width="7"><ellipse cx="984" cy="128" rx="13" ry="23"/><ellipse cx="1037" cy="125" rx="13" ry="23"/><ellipse cx="940" cy="155" rx="13" ry="22"/></g>
+<!-- beak and eye -->
+<path d="M1080 300Q1165 280 1210 320L1090 350Z" fill="#d5a13e" stroke="#865b2b" stroke-width="10"/>
+<ellipse cx="1030" cy="280" rx="27" ry="34" fill="#fff"/><circle cx="1038" cy="286" r="17" fill="#15191b"/><circle cx="1044" cy="278" r="7" fill="#fff"/>
+<!-- legs -->
+<g stroke="url(#pLeg)" stroke-width="17" fill="none" stroke-linecap="round"><path d="M760 875L748 970M748 970l-35 22m35-22l35 24m-35-24l-5 31"/><path d="M900 875L910 970M910 970l-35 22m35-22l35 24m-35-24l-5 31"/></g>
+</svg>

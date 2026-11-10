@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Cachorro robo">
+<defs><linearGradient id="coat" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#aebdc7"/><stop offset=".6" stop-color="#aebdc7"/><stop offset="1" stop-color="#202d38"/></linearGradient><linearGradient id="chest" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#596c7b"/><stop offset="1" stop-color="#202d38"/></linearGradient></defs>
+<ellipse cx="760" cy="1035" rx="520" ry="32" fill="#18380f" opacity=".16"/>
+<path d="M330 600Q180 500 220 330Q285 410 395 520" fill="none" stroke="url(#coat)" stroke-width="75" stroke-linecap="round"/>
+<path d="M420 740L405 980Q405 1020 470 1020L515 1000L500 730M780 760L770 1000Q770 1030 835 1025L870 1005L850 735M960 730L990 990Q1000 1030 1060 1015L1080 990L1030 700" fill="url(#coat)" stroke="#3b281d" stroke-width="22" stroke-linejoin="round"/>
+<ellipse cx="700" cy="650" rx="430" ry="245" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
+<path d="M820 500Q920 520 980 690Q925 850 780 900Q690 810 700 690Z" fill="url(#chest)" opacity=".95"/>
+<path d="M420 520L520 470L600 520L580 640L460 650Z M700 470L830 470L900 560L850 660L710 650Z" fill="#7e929f" stroke="#344956" stroke-width="16"/><path d="M520 570H585M735 560H820" stroke="#dce9ee" stroke-width="16"/>
+<ellipse cx="1110" cy="370" rx="245" ry="205" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
+<path d="M920 300L920 95L1065 280Z" fill="#8298a6" stroke="#394c5a" stroke-width="20"/><path d="M1195 275L1300 90L1310 345Z" fill="#8298a6" stroke="#394c5a" stroke-width="20"/>
+<path d="M1170 390L1350 410L1390 520L1210 555L1135 480Z" fill="#c7d4db" stroke="#394c5a" stroke-width="20"/><circle cx="1360" cy="440" r="27" fill="#1c2932"/>
+<ellipse cx="1090" cy="315" rx="35" ry="44" fill="#fff9eb"/><ellipse cx="1186" cy="285" rx="34" ry="43" fill="#fff9eb"/>
+<circle cx="1098" cy="319" r="17" fill="#211b18"/><circle cx="1193" cy="289" r="17" fill="#211b18"/><circle cx="1092" cy="311" r="6" fill="#fff"/><circle cx="1187" cy="281" r="6" fill="#fff"/>
+<path d="M900 500Q1080 570 1220 500" fill="none" stroke="#3569a8" stroke-width="32" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#efc94f" stroke="#986d27" stroke-width="9"/>
+<path d="M1160 545Q1190 590 1235 565" stroke="#3b251d" stroke-width="12" fill="none" stroke-linecap="round"/>
+</svg>

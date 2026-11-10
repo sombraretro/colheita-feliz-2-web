@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086">
+<defs>
+ <linearGradient id="dBody" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f4f0df"/><stop offset=".5" stop-color="#aeb8b2"/><stop offset="1" stop-color="#65746f"/></linearGradient>
+ <linearGradient id="dHead" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2e9b61"/><stop offset=".55" stop-color="#17684a"/><stop offset="1" stop-color="#0d4738"/></linearGradient>
+ <linearGradient id="dBreast" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b96b37"/><stop offset="1" stop-color="#713b26"/></linearGradient>
+ <linearGradient id="dBill" x2="0" y2="1"><stop stop-color="#ffc24d"/><stop offset="1" stop-color="#df771c"/></linearGradient>
+ <linearGradient id="dWing" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e4e7d8"/><stop offset="1" stop-color="#7e8c86"/></linearGradient>
+</defs>
+<ellipse cx="740" cy="1000" rx="390" ry="34" fill="#244b1d" opacity=".18"/>
+<!-- feet with webbing -->
+<g stroke="#d97822" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="#e68a28">
+ <path d="M650 860L640 965M640 965L585 990L650 980L690 1000L670 968Z"/>
+ <path d="M900 855L915 960M915 960L870 990L930 978L970 995L948 960Z"/>
+</g>
+<!-- tail feathers -->
+<path d="M390 700Q270 640 225 720Q315 790 440 800Z" fill="#4b5550" stroke="#37423d" stroke-width="14"/>
+<!-- body -->
+<ellipse cx="715" cy="690" rx="420" ry="245" fill="url(#dBody)" stroke="#65716b" stroke-width="18"/>
+<!-- chestnut breast -->
+<path d="M760 510Q1010 515 1065 720Q1050 900 850 930Q720 830 710 700Z" fill="url(#dBreast)" stroke="#78482c" stroke-width="12"/>
+<!-- wing and blue speculum -->
+<path d="M370 650Q520 520 775 575Q950 620 930 790Q770 885 550 835Q410 790 370 650Z" fill="url(#dWing)" stroke="#68766f" stroke-width="16"/>
+<path d="M520 760Q675 680 860 755L900 800Q735 860 565 830Z" fill="#24769a" stroke="#e9e4d2" stroke-width="12"/>
+<path d="M550 780Q700 720 860 780" fill="none" stroke="#62a9c4" stroke-width="10"/>
+<g fill="none" stroke="#7d8981" stroke-width="10"><path d="M430 660Q610 570 850 660"/><path d="M455 710Q640 635 885 720"/><path d="M500 765Q665 710 850 790"/></g>
+<!-- neck -->
+<path d="M850 620Q875 490 930 405Q985 300 1080 365Q1150 420 1105 540Q1080 620 1050 700Z" fill="url(#dHead)" stroke="#174d3d" stroke-width="15"/>
+<path d="M900 560Q990 615 1090 550Q1080 655 1015 710Q930 690 900 560Z" fill="#f4eee0"/>
+<!-- head -->
+<ellipse cx="1030" cy="350" rx="150" ry="145" fill="url(#dHead)" stroke="#174d3d" stroke-width="16"/>
+<path d="M930 445Q1010 480 1110 435Q1100 505 1030 535Q960 505 930 445Z" fill="#1b6a4d"/>
+<!-- bill -->
+<path d="M1150 370Q1280 345 1350 395Q1300 455 1150 425Q1130 400 1150 370Z" fill="url(#dBill)" stroke="#a75b1d" stroke-width="14"/>
+<path d="M1165 410Q1260 425 1330 400" fill="none" stroke="#ffdf8a" stroke-width="7"/>
+<!-- eye -->
+<ellipse cx="1080" cy="320" rx="47" ry="55" fill="#fff" stroke="#194d3d" stroke-width="9"/>
+<circle cx="1090" cy="330" r="27" fill="#251d16"/><circle cx="1100" cy="319" r="10" fill="#fff"/>
+<!-- neck iridescence -->
+<path d="M940 450Q1010 470 1095 438" fill="none" stroke="#67b17b" stroke-width="12" opacity=".75"/>
+</svg>

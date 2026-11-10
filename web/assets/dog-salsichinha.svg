@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Cachorro salsichinha">
+<defs><linearGradient id="coat" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#8d542f"/><stop offset=".6" stop-color="#8d542f"/><stop offset="1" stop-color="#38241b"/></linearGradient><linearGradient id="chest" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d8b58b"/><stop offset="1" stop-color="#38241b"/></linearGradient></defs>
+<ellipse cx="760" cy="1035" rx="520" ry="32" fill="#18380f" opacity=".16"/>
+<path d="M330 600Q180 500 220 330Q285 410 395 520" fill="none" stroke="url(#coat)" stroke-width="75" stroke-linecap="round"/>
+<path d="M420 730L430 950Q435 985 495 980L520 955L500 725M820 735L825 955Q830 985 885 980L905 955L895 725M1040 720L1050 950Q1055 985 1110 975L1130 950L1110 705" fill="url(#coat)" stroke="#3b281d" stroke-width="20" stroke-linejoin="round"/>
+<ellipse cx="700" cy="650" rx="500" ry="210" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
+<path d="M820 500Q920 520 980 690Q925 850 780 900Q690 810 700 690Z" fill="url(#chest)" opacity=".95"/>
+
+<ellipse cx="1110" cy="370" rx="245" ry="205" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
+<path d="M925 330Q835 140 890 115Q1010 130 1060 340Z" fill="url(#coat)" stroke="#3b281d" stroke-width="18"/><path d="M1210 325Q1315 120 1370 150Q1410 275 1280 370Z" fill="url(#coat)" stroke="#3b281d" stroke-width="18"/>
+<ellipse cx="1260" cy="465" rx="150" ry="105" fill="url(#chest)" stroke="#3b281d" stroke-width="16"/><ellipse cx="1360" cy="430" rx="35" ry="26" fill="#201c1b"/>
+<ellipse cx="1090" cy="315" rx="35" ry="44" fill="#fff9eb"/><ellipse cx="1186" cy="285" rx="34" ry="43" fill="#fff9eb"/>
+<circle cx="1098" cy="319" r="17" fill="#211b18"/><circle cx="1193" cy="289" r="17" fill="#211b18"/><circle cx="1092" cy="311" r="6" fill="#fff"/><circle cx="1187" cy="281" r="6" fill="#fff"/>
+<path d="M900 500Q1080 570 1220 500" fill="none" stroke="#3569a8" stroke-width="32" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#efc94f" stroke="#986d27" stroke-width="9"/>
+<path d="M1160 545Q1190 590 1235 565" stroke="#3b251d" stroke-width="12" fill="none" stroke-linecap="round"/>
+</svg>
