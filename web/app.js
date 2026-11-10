@@ -314,6 +314,14 @@ async function handleAuthSession(session){
  }finally{
   cloudSyncing=false;updateConnectionLabel();if(currentModal==='account')renderModal();
  }
+ await syncOnlinePlayerProfile();
+ if(currentModal==='friends')await refreshOnlineFriends();
+}
+async function syncOnlinePlayerProfile(){
+ if(!supabaseClient||!cloudUser||!state)return;
+ const displayName=String(state.farmName||'Minha fazenda').trim().slice(0,40)||'Minha fazenda';
+ const {error}=await supabaseClient.from('player_profiles').update({display_name:displayName,updated_at:new Date().toISOString()}).eq('user_id',cloudUser.id);
+ if(error)console.warn('Não foi possível atualizar o nome público do jogador:',error);
 }
 let onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};
 function onlineFriendError(error){return error?.message||'Não foi possível concluir a operação. Tente novamente.'}
