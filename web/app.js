@@ -497,7 +497,7 @@ async function helpFriendFarmPlot(plotIndex,action){
  else if(action==='pest'){p.pest=false;p.pestCleared=true;playSfx('pest')}
  else if(action==='water'){p.wateredAt=Number(result.acted_at_ms)||Date.now();playSfx('water')}
  if(result.helper_id===cloudUser.id&&!state.friendHelpRewardIds.includes(result.action_id)){
-  state.friendHelpRewardIds.push(result.action_id);state.greenCoins+=Number(result.reward)||1;markDirty();
+  state.friendHelpRewardIds.push(result.action_id);state.greenCoins+=Number(result.reward)||1;updateHud();markDirty();
   notify('Ajuda enviada! Você recebeu 1 moeda verde 🟢');
  }else notify('Ajuda registrada na fazenda do amigo!');
  renderModal();
