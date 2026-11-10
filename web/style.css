@@ -236,3 +236,5 @@ html[data-cf2-next-ui="enabled"] .side-menu.is-open{transform:translateX(0);opac
 html[data-cf2-next-ui="enabled"] .sidebar-toggle{display:inline-flex;align-items:center;justify-content:center}
 html[data-cf2-next-ui="enabled"] .tool-icon-ready{transition:transform .14s ease,filter .14s ease}
 html[data-cf2-next-ui="enabled"] .tool-icon-ready:hover{transform:translateY(-2px);filter:brightness(1.12)}
+
+.friend-visit-scene{width:100%;overflow-x:auto;overflow-y:hidden;background:#76b83b;border:3px solid #9f692e;border-radius:12px;padding:6px}.friend-visit-scene svg{max-height:58vh}.friend-visit-scene svg *{cursor:default!important}
