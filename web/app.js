@@ -995,7 +995,7 @@ function claimAchievement(id){const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a||sta
 function markDirty(){if(writeLocked){notify('O salvamento não foi carregado. Por segurança, nenhuma gravação será feita.');return}dirty=true;state.updatedAt=Date.now();$('save-status').textContent='Salvando...';$('save-dot').className='savedot saving';clearTimeout(saveTimer);saveTimer=setTimeout(save,160)}
 async function save(){if(!dirty)return saving;dirty=false;const payload=JSON.stringify({version:1,state});saving=saving.then(async()=>{
  const localTarget=await saveLocalPayload(payload);localSaveExists=true;
- if(cloudUser){try{await saveCloud()}catch(error){console.error('Cloud save:',error);cloudDirty=true}}
+ if(cloudUser){try{await saveCloud();await syncOnlinePlayerProfile()}catch(error){console.error('Cloud save:',error);cloudDirty=true}}
  if(!dirty){$('save-status').textContent=cloudUser?(cloudDirty?'Salvo localmente · nuvem pendente':'Salvo localmente e na nuvem'):(localTarget==='computador'?'Salvo no computador':'Salvo neste navegador');$('save-dot').className=cloudDirty?'savedot error':'savedot'}
  }).catch(e=>{console.error(e);dirty=true;$('save-status').textContent='Falha ao salvar localmente';$('save-dot').className='savedot error'});return saving}
 function progress(p){return Math.max(0,Math.min(1,(Date.now()-p.plantedAt)/(cropHours(p.crop,p.regrowing)*HOUR)))}
