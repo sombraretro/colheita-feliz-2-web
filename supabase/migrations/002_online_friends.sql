@@ -31,10 +31,18 @@ create unique index if not exists friendships_unique_pair
 alter table public.player_profiles enable row level security;
 
 drop policy if exists "Authenticated players can view public profiles" on public.player_profiles;
-create policy "Authenticated players can view public profiles"
+drop policy if exists "Players can view own or related profiles" on public.player_profiles;
+create policy "Players can view own or related profiles"
   on public.player_profiles for select
   to authenticated
-  using (true);
+  using (
+    user_id = (select auth.uid())
+    or exists (
+      select 1 from public.friendships f
+      where (f.requester_id = (select auth.uid()) and f.addressee_id = user_id)
+         or (f.addressee_id = (select auth.uid()) and f.requester_id = user_id)
+    )
+  );
 
 drop policy if exists "Players can update their own public name" on public.player_profiles;
 create policy "Players can update their own public name"
@@ -92,6 +100,20 @@ create policy "Players can view their own friendship rows"
 
 revoke all on public.friendships from anon, authenticated;
 grant select on public.friendships to authenticated;
+
+-- Busca exata por código: retorna apenas nome e código, sem expor UUID nem listar jogadores.
+create or replace function public.lookup_player_by_code(p_friend_code text)
+returns table (friend_code text, display_name text)
+language sql
+security definer
+set search_path = public, pg_temp
+as $
+  select p.friend_code, p.display_name
+  from public.player_profiles p
+  where auth.uid() is not null
+    and p.friend_code = upper(trim(coalesce(p_friend_code, '')))
+  limit 1;
+$;
 
 -- Solicitação por código público. A escrita é feita por função controlada,
 -- nunca por INSERT/UPDATE direto do navegador.
@@ -262,9 +284,11 @@ create policy "Players can delete their own farm snapshot"
 grant select, insert, update, delete on public.farm_public_snapshots to authenticated;
 
 -- As funções são executáveis apenas por usuários autenticados.
+revoke all on function public.lookup_player_by_code(text) from public, anon;
 revoke all on function public.request_friend(text) from public, anon;
 revoke all on function public.respond_friend_request(uuid, boolean) from public, anon;
 revoke all on function public.remove_friend(uuid) from public, anon;
+grant execute on function public.lookup_player_by_code(text) to authenticated;
 grant execute on function public.request_friend(text) to authenticated;
 grant execute on function public.respond_friend_request(uuid, boolean) to authenticated;
 grant execute on function public.remove_friend(uuid) to authenticated;
