@@ -242,3 +242,10 @@ html[data-cf2-next-ui="enabled"] .tool-icon-ready:hover{transform:translateY(-2p
 /* Indicador de novas solicitações de amizade */
 .side-menu button[data-modal="friends"]{position:relative;padding-right:34px}
 .side-menu button[data-modal="friends"][data-pending]:not([data-pending=""])::after{content:attr(data-pending);position:absolute;top:-7px;right:-7px;min-width:22px;height:22px;padding:0 5px;display:grid;place-items:center;border:2px solid #fff8df;border-radius:20px;background:linear-gradient(#ff7770,#d92f27);color:#fff;font-size:11px;font-weight:900;line-height:1;box-shadow:0 2px 4px #54310c99;z-index:2}
+
+
+/* Ajuda entre amigos nas visitas de fazenda */
+.friend-help-panel{margin-top:16px;padding:13px;border:1px solid #a9c987;border-radius:12px;background:linear-gradient(145deg,#f5ffe9,#e9f5dc)}
+.friend-help-panel h3{margin:0 0 7px;color:#426c2d}.friend-help-panel>p{font-size:12px;line-height:1.45;color:#536b45;margin:0 0 12px}
+.friend-help-list{display:grid;gap:8px}.friend-help-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border:1px solid #c5d9ad;border-radius:9px;background:#fffdf4}.friend-help-item>span{display:grid;gap:3px;min-width:0}.friend-help-item small{font-size:11px;color:#6c765e}.friend-help-item button{flex:0 0 auto;white-space:nowrap}.friend-help-empty{padding:12px;border:1px dashed #a9c987;border-radius:9px;background:#ffffff99;color:#59734a;font-size:13px;text-align:center}
+@media(max-width:480px){.friend-help-item{align-items:stretch;flex-direction:column}.friend-help-item button{width:100%}}
