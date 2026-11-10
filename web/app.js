@@ -320,8 +320,15 @@ async function handleAuthSession(session){
 async function syncOnlinePlayerProfile(){
  if(!supabaseClient||!cloudUser||!state)return;
  const displayName=String(state.farmName||'Minha fazenda').trim().slice(0,40)||'Minha fazenda';
- const {error}=await supabaseClient.from('player_profiles').update({display_name:displayName,updated_at:new Date().toISOString()}).eq('user_id',cloudUser.id);
- if(error)console.warn('Não foi possível atualizar o nome público do jogador:',error);
+ const {data,error}=await supabaseClient.from('player_profiles')
+  .update({display_name:displayName,updated_at:new Date().toISOString()})
+  .eq('user_id',cloudUser.id)
+  .select('user_id,display_name')
+  .maybeSingle();
+ if(error)throw error;
+ if(!data)throw new Error('Perfil público não encontrado para esta conta. O nome da fazenda não foi sincronizado.');
+ if(data.display_name!==displayName)throw new Error('O Supabase não confirmou o nome público atualizado.');
+ console.info('Nome público sincronizado:',data.display_name);
 }
 let onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};
 function onlineFriendError(error){return error?.message||'Não foi possível concluir a operação. Tente novamente.'}
@@ -995,7 +1002,10 @@ function claimAchievement(id){const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a||sta
 function markDirty(){if(writeLocked){notify('O salvamento não foi carregado. Por segurança, nenhuma gravação será feita.');return}dirty=true;state.updatedAt=Date.now();$('save-status').textContent='Salvando...';$('save-dot').className='savedot saving';clearTimeout(saveTimer);saveTimer=setTimeout(save,160)}
 async function save(){if(!dirty)return saving;dirty=false;const payload=JSON.stringify({version:1,state});saving=saving.then(async()=>{
  const localTarget=await saveLocalPayload(payload);localSaveExists=true;
- if(cloudUser){try{await saveCloud();await syncOnlinePlayerProfile()}catch(error){console.error('Cloud save:',error);cloudDirty=true}}
+ if(cloudUser){
+  try{await saveCloud()}catch(error){console.error('Cloud save:',error);cloudDirty=true}
+  try{await syncOnlinePlayerProfile()}catch(error){console.error('Cloud profile sync:',error)}
+ }
  if(!dirty){$('save-status').textContent=cloudUser?(cloudDirty?'Salvo localmente · nuvem pendente':'Salvo localmente e na nuvem'):(localTarget==='computador'?'Salvo no computador':'Salvo neste navegador');$('save-dot').className=cloudDirty?'savedot error':'savedot'}
  }).catch(e=>{console.error(e);dirty=true;$('save-status').textContent='Falha ao salvar localmente';$('save-dot').className='savedot error'});return saving}
 function progress(p){return Math.max(0,Math.min(1,(Date.now()-p.plantedAt)/(cropHours(p.crop,p.regrowing)*HOUR)))}
