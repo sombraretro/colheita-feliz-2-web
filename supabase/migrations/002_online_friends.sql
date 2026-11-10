@@ -107,7 +107,7 @@ returns table (friend_code text, display_name text)
 language sql
 security definer
 set search_path = public, pg_temp
-as $
+as $ 
   select p.friend_code, p.display_name
   from public.player_profiles p
   where auth.uid() is not null
