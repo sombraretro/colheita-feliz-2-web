@@ -332,11 +332,36 @@ async function syncOnlinePlayerProfile(){
  console.info('Nome público sincronizado:',data.display_name);
 }
 let onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};
+let onlineFriendsKnownIncoming=null,onlineFriendsPolling=false;
 let friendVisitData=null;
 function onlineFriendError(error){return error?.message||'Não foi possível concluir a operação. Tente novamente.'}
+function updateOnlineFriendBadge(){
+ const button=document.querySelector('[data-modal="friends"]');if(!button)return;
+ const count=onlineFriendsCache.incoming?.length||0;
+ button.dataset.pending=count?String(count):'';
+ button.classList.toggle('has-pending',count>0);
+ button.setAttribute('aria-label',count?`Amigos, ${count} solicitação(ões) pendente(s)`:'Amigos');
+}
+function trackOnlineFriendRequests(){
+ const incoming=onlineFriendsCache.incoming||[],current=new Set(incoming.map(item=>item.id));
+ if(onlineFriendsKnownIncoming){
+  const added=incoming.filter(item=>!onlineFriendsKnownIncoming.has(item.id));
+  if(added.length){
+   const name=added[0].profile?.display_name||'um jogador';
+   notify(added.length===1?`Nova solicitação de amizade de ${name}!`:`Você recebeu ${added.length} novas solicitações de amizade!`);
+  }
+ }
+ onlineFriendsKnownIncoming=current;updateOnlineFriendBadge();
+}
+async function pollOnlineFriendRequests(){
+ if(!cloudUser||!supabaseClient||onlineFriendsPolling)return;
+ onlineFriendsPolling=true;
+ try{await loadOnlineFriends();if(!onlineFriendsCache.error&&currentModal==='friends')renderModal()}
+ finally{onlineFriendsPolling=false}
+}
 async function loadOnlineFriends(){
- if(!supabaseClient||!cloudUser){onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};return}
- onlineFriendsCache.loading=true;
+ if(!supabaseClient||!cloudUser){onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};onlineFriendsKnownIncoming=null;updateOnlineFriendBadge();return}
+ onlineFriendsCache.loading=true;onlineFriendsCache.error=null;
  try{
   const [profileResult,friendResult]=await Promise.all([
    supabaseClient.from('player_profiles').select('user_id,friend_code,display_name').eq('user_id',cloudUser.id).single(),
@@ -352,6 +377,7 @@ async function loadOnlineFriends(){
   onlineFriendsCache.friends=rows.filter(r=>r.status==='accepted').map(r=>({id:r.id,userId:r.requester_id===cloudUser.id?r.addressee_id:r.requester_id,profile:byId.get(r.requester_id===cloudUser.id?r.addressee_id:r.requester_id)}));
   onlineFriendsCache.incoming=rows.filter(r=>r.status==='pending'&&r.addressee_id===cloudUser.id).map(r=>({id:r.id,userId:r.requester_id,profile:byId.get(r.requester_id)}));
   onlineFriendsCache.outgoing=rows.filter(r=>r.status==='pending'&&r.requester_id===cloudUser.id).map(r=>({id:r.id,userId:r.addressee_id,profile:byId.get(r.addressee_id)}));
+  trackOnlineFriendRequests();
  }catch(error){console.error('Amigos online:',error);onlineFriendsCache.error=onlineFriendError(error)}
  finally{onlineFriendsCache.loading=false}
 }
@@ -464,7 +490,7 @@ async function authenticate(mode){
 async function disconnectCloud(){
  if(!supabaseClient)return;
  const {error}=await supabaseClient.auth.signOut();if(error)return notify(error.message||'Não foi possível sair da conta.');
- cloudUser=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;updateConnectionLabel();notify('Sessão encerrada. Sua fazenda continua salva localmente.');renderModal();
+ cloudUser=null;onlineFriendsKnownIncoming=null;onlineFriendsCache={profile:null,friends:[],incoming:[],outgoing:[],loading:false};updateOnlineFriendBadge();cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;updateConnectionLabel();notify('Sessão encerrada. Sua fazenda continua salva localmente.');renderModal();
 }
 
 let soundEnabled=true,musicEnabled=true;
@@ -1324,5 +1350,6 @@ async function start(){
   catch(error){console.error('Auth session:',error);$('save-status').textContent='Salvo localmente · nuvem indisponível'}
  }
  setInterval(()=>{infest();expireDecorations();expireFarmTheme();expireTemporaryDogBreeds();const animalsChanged=syncAnimalCycles(),treesChanged=syncOrchardTrees();if(animalsChanged)renderAnimals();if(treesChanged)renderFarmAddons();renderPlots();if(currentModal)renderModal()},5000);
+ setInterval(()=>{pollOnlineFriendRequests().catch(error=>console.error('Notificações de amizade:',error))},15000);
 }
 start();
