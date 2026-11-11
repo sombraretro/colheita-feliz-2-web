@@ -593,7 +593,8 @@ scenery+=fencePath([[1260,-150],[1780,-150]],'rear');
 scenery+=fencePath([[1260,-150],[1260,430]],'side');
 scenery+=fencePath([[1780,-150],[1780,430]],'side');
 
-$('scenery-layer').innerHTML=scenery;$('scenery-layer').innerHTML=scenery;
+scenery+=`<g id="building-hitboxes" pointer-events="all"><rect data-house-cook="true" x="780" y="35" width="440" height="430" fill="transparent" pointer-events="all"/><rect data-carpentry="true" x="785" y="-345" width="430" height="350" fill="transparent" pointer-events="all"/></g>`;
+$('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
 front+=fencePath([[1260,430],[1430,430]],'front');
@@ -1376,7 +1377,7 @@ $('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
 $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i){e.preventDefault();plotAction(Number(e.target.dataset.i))}});
 document.querySelectorAll('[data-modal]').forEach(b=>b.addEventListener('click',()=>openModal(b.dataset.modal)));
- $('world').addEventListener('click',e=>{const house=e.target.closest?.('[data-house-cook]'),barn=e.target.closest?.('[data-carpentry]');if(house){e.preventDefault();e.stopPropagation();openModal('kitchen')}else if(barn){e.preventDefault();e.stopPropagation();openModal('carpentry')}},{capture:true});
+
 document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab[data-era]').forEach(x=>x.classList.toggle('active',x===b));$('tools').dataset.era=b.dataset.era==='two'?'two':'classic';notify(b.dataset.era==='two'?'Interface 2.0 (organização em reconstrução)':'Interface clássica Orkut')}));
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
 $('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
@@ -1393,7 +1394,7 @@ $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
 window.addEventListener('resize',updateView);
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.15);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.15)});
-$('playfield').addEventListener('pointerdown',e=>{if(!e.target.closest('#world'))return;const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');const requested=e.altKey||e.button===1;const freeDrag=e.button===0&&!interactive;if(!requested&&!freeDrag)return;e.preventDefault();drag={x:e.clientX,y:e.clientY,cx:view.cx,cy:view.cy,moved:false};$('playfield').setPointerCapture(e.pointerId)});
+$('playfield').addEventListener('pointerdown',e=>{if(!e.target.closest('#world'))return;const building=e.target.closest('[data-house-cook],[data-carpentry]');if(building){e.preventDefault();e.stopPropagation();drag=null;openModal(building.hasAttribute('data-house-cook')?'kitchen':'carpentry');return;}const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');const requested=e.altKey||e.button===1;const freeDrag=e.button===0&&!interactive;if(!requested&&!freeDrag)return;e.preventDefault();drag={x:e.clientX,y:e.clientY,cx:view.cx,cy:view.cy,moved:false};$('playfield').setPointerCapture(e.pointerId)});
 $('playfield').addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height),ratioX=visibleW/rect.width,ratioY=visibleH/rect.height;view.cx=drag.cx-dx*ratioX;view.cy=drag.cy-dy*ratioY;updateView()});
 $('playfield').addEventListener('pointerup',e=>{drag=null});$('playfield').addEventListener('pointercancel',()=>drag=null);
 window.addEventListener('beforeunload',()=>{if(dirty)save()});
