@@ -458,7 +458,7 @@ function brickWalkwayMarkup(){
  'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
  'M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770',
  'M532 890C510 830 500 760 500 720',
- 'M1255 470C1300 520 1340 600 1370 690C1400 770 1420 845 1390 900'];
+ 'M1120 455C1185 455 1210 470 1240 505C1285 560 1330 650 1370 740C1400 820 1410 865 1390 900'];
  const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
  return `<g id="farm-road-network" pointer-events="none">${layers(82,'#77512e',.22)}${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 21" opacity=".48"/>`).join('')}</g>`;
 }
@@ -499,7 +499,7 @@ let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[1255,470],[1300,520],[1340,600],[1370,690],[1400,770],[1420,845],[1390,900]]];
+const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
  if(insidePoly(x,y,fieldOutline))return true;
@@ -540,10 +540,10 @@ for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[
 scenery+=svgImage('casa',780,35,440,430);
 scenery+=svgImage('celeiro',785,-345,430,350);
 scenery+=`<g pointer-events="none">
- <path d="M790 10Q845 1 900 10T1015 9T1110 10T1210 8" fill="none" stroke="#477d2d" stroke-width="8" stroke-linecap="round"/>
- <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="12" rx="12" ry="6"/><ellipse cx="866" cy="13" rx="9" ry="5"/><ellipse cx="930" cy="11" rx="14" ry="6"/><ellipse cx="1080" cy="12" rx="11" ry="5"/><ellipse cx="1150" cy="10" rx="13" ry="6"/><ellipse cx="1198" cy="13" rx="9" ry="5"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 12q-3-13-9-16m9 16q8-12 15-13M970 11q-3-14-10-17m10 17q8-12 15-13M1120 11q-3-13-9-16m9 16q8-12 15-13"/></g>
- <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 16l12-9 17 7-7 8Z"/><path d="M1035 15l11-8 15 7-8 8Z"/></g>
+ <path d="M790 -13Q845 -22 900 -13T1015 -14T1110 -13T1210 -15" fill="none" stroke="#477d2d" stroke-width="10" stroke-linecap="round"/>
+ <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="-10" rx="12" ry="6"/><ellipse cx="866" cy="-9" rx="9" ry="5"/><ellipse cx="930" cy="-12" rx="14" ry="6"/><ellipse cx="1080" cy="-11" rx="11" ry="5"/><ellipse cx="1150" cy="-13" rx="13" ry="6"/><ellipse cx="1198" cy="-9" rx="9" ry="5"/></g>
+ <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 -12q-3-13-9-16m9 16q8-12 15-13M970 -13q-3-14-10-17m10 17q8-12 15-13M1120 -13q-3-13-9-16m9 16q8-12 15-13"/></g>
+ <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 -7l12-9 17 7-7 8Z"/><path d="M1035 -8l11-8 15 7-8 8Z"/></g>
  </g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
  <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
@@ -974,12 +974,36 @@ function renderPondArea(){
    <path d="M-1370 45q65-28 115 5m-100 18q60-20 105 8M-1245 330q65-22 115 10m-115 18q58-18 110 8M-1125 690q60-25 112 5m-102 20q56-18 105 8" fill="none" stroke="#d5f2e9" stroke-width="6" stroke-linecap="round" opacity=".24"/>
    <ellipse cx="-1190" cy="230" rx="72" ry="150" fill="#b8e7d8" opacity=".1"/><ellipse cx="-1080" cy="740" rx="55" ry="125" fill="#c2f0e4" opacity=".1"/>
   </g>
-  <g class="river-reeds sway" fill="none" stroke="#438b32" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-   <path d="M-1350 5v-24m0 24q-12-20-25-24m25 24q12-22 26-26M-1245 300v-27m0 27q-14-20-27-24m27 24q13-22 28-25M-1160 520v-25m0 25q-11-18-23-22m23 22q13-20 25-23M-1110 930v-27m0 27q-13-21-27-25m27 25q13-22 27-25M-930 110v-22m0 22q-11-17-23-20m23 20q12-18 24-21M-850 480v-24m0 24q-12-18-24-22m24 22q12-19 25-22M-900 1030v-25m0 25q-12-18-25-22m25 22q13-19 25-22"/>
+  <g class="river-reeds" fill="none" stroke="#438b32" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M-1350 5v-24M-1245 300v-27M-1160 520v-25M-1110 930v-27M-930 110v-22M-850 480v-24M-900 1030v-25" stroke-width="5"/>
+   <path class="river-leaf" d="M-1350 -19q-12-20-25-24q-3 18 25 24Z" fill="#65a943" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1350 -19q12-22 26-26q5 18-26 26Z" fill="#83bd50" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1245 273q-14-20-27-24q-3 18 27 24Z" fill="#72b84b" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1245 273q13-22 28-25q5 18-28 25Z" fill="#91c95a" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1160 495q-11-18-23-22q-3 16 23 22Z" fill="#6da947" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1160 495q13-20 25-23q5 17-25 23Z" fill="#8fc45a" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1110 903q-13-21-27-25q-3 18 27 25Z" fill="#72b84b" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-1110 903q13-22 27-25q5 18-27 25Z" fill="#91c95a" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-930 88q-11-17-23-20q-3 15 23 20Z" fill="#72b84b" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-930 88q12-18 24-21q5 16-24 21Z" fill="#91c95a" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-850 456q-12-18-24-22q-3 16 24 22Z" fill="#6da947" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-850 456q12-19 25-22q5 16-25 22Z" fill="#91c95a" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-900 1005q-12-18-25-22q-3 16 25 22Z" fill="#72b84b" stroke="#397b2e"/>
+   <path class="river-leaf" d="M-900 1005q13-19 25-22q5 16-25 22Z" fill="#91c95a" stroke="#397b2e"/>
   </g>
-  <g class="river-bank-plants sway" opacity=".96" stroke="#397b2e" stroke-width="3" stroke-linecap="round">
-   <g fill="#72b84b"><path d="M-1370 -75v-24q-20-12-24 4q7 15 24 20q3-23 20-26q8 18-20 26Z"/><path d="M-1270 265v-26q-18-12-24 4q7 15 24 22q5-23 22-27q8 17-22 27Z"/><path d="M-1190 610v-23q-19-11-23 4q7 14 23 19q4-22 21-25q8 17-21 25Z"/><path d="M-1125 1010v-26q-20-12-25 4q8 16 25 22q4-24 23-27q8 18-23 27Z"/></g>
-   <g fill="#91c95a"><path d="M-900 55v-23q-18-10-22 4q6 13 22 19q4-21 20-24q7 16-20 24Z"/><path d="M-830 540v-24q-18-11-23 4q7 15 23 20q4-21 21-25q8 17-21 25Z"/></g>
+  <g class="river-bank-plants" opacity=".96" stroke="#397b2e" stroke-width="3" stroke-linecap="round">
+   <g fill="#72b84b">
+    <path d="M-1370 -75v-24M-1270 265v-26M-1190 610v-23M-1125 1010v-26"/>
+    <path class="river-leaf" d="M-1370 -99q-20-12-24 4q7 15 24 20Z"/><path class="river-leaf" d="M-1370 -99q17-22 20-26q8 18-20 26Z"/>
+    <path class="river-leaf" d="M-1270 239q-18-12-24 4q7 15 24 22Z"/><path class="river-leaf" d="M-1270 239q18-23 22-27q8 17-22 27Z"/>
+    <path class="river-leaf" d="M-1190 587q-19-11-23 4q7 14 23 19Z"/><path class="river-leaf" d="M-1190 587q17-22 21-25q8 17-21 25Z"/>
+    <path class="river-leaf" d="M-1125 984q-20-12-25 4q8 16 25 22Z"/><path class="river-leaf" d="M-1125 984q19-24 23-27q8 18-23 27Z"/>
+   </g>
+   <g fill="#91c95a">
+    <path d="M-900 55v-23M-830 540v-24"/>
+    <path class="river-leaf" d="M-900 32q-18-10-22 4q6 13 22 19Z"/><path class="river-leaf" d="M-900 32q16-21 20-24q7 16-20 24Z"/>
+    <path class="river-leaf" d="M-830 516q-18-11-23 4q7 15 23 20Z"/><path class="river-leaf" d="M-830 516q17-21 21-25q8 17-21 25Z"/>
+   </g>
   </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   <g transform="translate(-825 760)">
