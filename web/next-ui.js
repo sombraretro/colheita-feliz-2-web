@@ -1,5 +1,4 @@
-/* Colheita Feliz 2 · base de interface da próxima etapa.
-   Permanece desativada na 1.9.0: a navegação atual não é alterada. */
+/* Colheita Feliz 2 · menu lateral recolhível e ferramentas acessíveis. */
 (() => {
   const labels = {
     inspect: 'Selecionar / inspecionar',
@@ -16,16 +15,26 @@
     const menu = document.querySelector('.side-menu');
     const toggle = document.querySelector('[data-sidebar-toggle]');
     if (menu && toggle) {
-      const close = () => {
+      const close = ({restoreFocus = false} = {}) => {
         menu.classList.remove('is-open');
         toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Abrir menu lateral');
+        if (restoreFocus) toggle.focus();
+      };
+      const open = () => {
+        menu.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Fechar menu lateral');
       };
       toggle.addEventListener('click', () => {
-        const open = menu.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', String(open));
+        if (menu.classList.contains('is-open')) close();
+        else open();
+      });
+      menu.addEventListener('click', event => {
+        if (event.target.closest('button')) close();
       });
       document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') close();
+        if (event.key === 'Escape' && menu.classList.contains('is-open')) close({restoreFocus: true});
       });
       document.addEventListener('click', event => {
         if (!menu.contains(event.target) && !toggle.contains(event.target)) close();
