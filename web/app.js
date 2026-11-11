@@ -650,7 +650,7 @@ const ground=`<defs>
 <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
 </defs>
 <rect x="-2600" y="-400" width="7000" height="1700" fill="#70bb36"/>
-<rect x="-1400" y="-400" width="5800" height="1700" fill="url(#grass)" opacity=".9"/>
+<rect x="-2600" y="-400" width="7000" height="1700" fill="url(#grass)" opacity=".9"/>
 <path d="M-2600 210Q-1900 150 -480 225T220 205Q620 150 980 210T1710 190Q2420 135 3100 220T4400 180V-200H-2600Z" fill="#319322" opacity=".2"/>
 <path d="M-2600 740Q-1900 665 -520 780T120 785Q520 730 860 805T1600 800Q2400 740 3100 790T4400 760V1300H-2600Z" fill="#93c93f" opacity=".17"/>
 <path d="M-2600 330Q-1900 270 -480 340T180 320Q650 260 1020 310T1780 300Q2450 240 3100 325T4400 285" fill="none" stroke="#8acb4c" stroke-width="42" opacity=".13"/>
@@ -1407,10 +1407,10 @@ function renderDecorationMarkup(id,x,y){
 function renderThemeScenery(id){
  if(!id||id==='classic')return '';
  const tint={valentine:'#e58ca8',christmas:'#c8e1f0',science:'#7fb9d4',autumn:'#d99a48',van_gogh:'#d4a74f',pelourinho:'#e2a1a0',greek:'#79a9c8',japan:'#e8a9c0',future_city:'#4d79bd',paris:'#c7b4dc'}[id]||'#ffffff';
- let art=`<g id="farm-theme-art" pointer-events="none"><rect x="-1400" y="-400" width="5800" height="1700" fill="${tint}" opacity=".075"/>`;
+ let art=`<g id="farm-theme-art" pointer-events="none"><rect x="-2600" y="-400" width="7000" height="1700" fill="${tint}" opacity=".075"/>`;
  if(id==='christmas'){
   // Camada de neve sobre o cenário inteiro; os flocos e as copas acumulam neve sem criar arcos artificiais.
-  art+=`<rect x="-1400" y="-400" width="5800" height="1700" fill="#edf6fa" opacity=".48"/>
+  art+=`<rect x="-2600" y="-400" width="7000" height="1700" fill="#edf6fa" opacity=".48"/>
    <path d="M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" stroke-dasharray="18 34" opacity=".62"/>`;
   const snowyTrees=[[-430,20,235,285],[-360,620,225,270],[-160,265,205,245],[120,-190,210,255],[600,-205,225,270],[1810,-190,255,300],[1900,115,210,250],[3420,20,235,275],[3820,45,250,290],[4300,30,250,290]];
   for(const [x,y,w,h] of snowyTrees){
@@ -1447,7 +1447,7 @@ function updateDayNight(){
  const now=new Date(),hour=now.getHours()+now.getMinutes()/60;
  const night=hour>=19||hour<6,twilight=(hour>=5&&hour<7)||(hour>=17&&hour<20);
  const opacity=night?(twilight?.30:.42):(twilight?.12:0);
- layer.innerHTML=opacity>0?`<rect x="-1400" y="-400" width="5800" height="1700" fill="#071b3c" opacity="${opacity}"/>
+ layer.innerHTML=opacity>0?`<rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="${opacity}"/>
  <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
  `:''; 
 }
