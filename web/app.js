@@ -837,7 +837,24 @@ function advancedFruitArt(type,color){
   default: return [-21,8,25].map((x,i)=>circle(x,-12+(i%2)*9,17+(i===1?4:0),color)).join('');
  }
 }
-function cropArt(type,progress){const v=CROPS[type],hasFruit=progress>.68,bloom=progress>.45&&progress<.78,leaves=progress>.55?7:progress>.22?5:3,leaf=['#1b8d39','#38ab3f','#58bd43','#2b9d35','#74c84a','#90d362','#4ea83e'];
+function modernCropArt(type,progress){
+ const v=CROPS[type],leafCount=progress>.62?7:progress>.25?5:3,fruitReady=progress>.7,leafColors=['#4b9462','#6eae70','#8fc47c','#397d55'];
+ let art='<g stroke-linecap="round" stroke-linejoin="round"><path d="M0 4Q-4-30 2-72Q8-93 4-108" fill="none" stroke="#477d52" stroke-width="6"/>';
+ for(let i=0;i<leafCount;i++){const side=i%2?-1:1,yy=-18-i*10,xx=side*(17+Math.floor(i/2)*7);art+='<path d="M0 '+yy+'Q'+(xx*.35)+' '+(yy-17)+' '+xx+' '+(yy-10)+'Q'+(xx*.7)+' '+(yy+5)+' 0 '+(yy+5)+'Z" fill="'+leafColors[i%leafColors.length]+'" stroke="#326b4b" stroke-width="2"/><path d="M0 '+yy+'L'+xx+' '+(yy-10)+'" stroke="#c5e0a4" stroke-width="1.5"/>'}
+ if(v.kind==='flower'){
+  const size=progress>.75?15:progress>.45?11:0;
+  if(size){art+=flowerBloomMarkup(type,-12,-72,size,v.flower)+flowerBloomMarkup(type,18,-52,size*.82,v.flower)}
+ }else if(fruitReady){
+  const color=v.fruit||'#d5a34e';
+  if(type==='milho'||type==='trigo'||type==='arroz')art+='<path d="M-16-40Q-27-70-8-91Q15-73 8-39Z" fill="'+color+'" stroke="#9b7a39" stroke-width="3"/><path d="M-10-48L-3-83M-3-47L4-79" stroke="#f4df8c" stroke-width="3"/>';
+  else if(type==='cenoura'||type==='nabo'||type==='beterraba'||type==='batata_doce')art+='<path d="M-24-20Q0-43 24-20Q15 4 0 34Q-14 6-24-20Z" fill="'+color+'" stroke="#8d6247" stroke-width="3"/>';
+  else if(type==='coco')art+='<ellipse cx="-16" cy="-38" rx="17" ry="23" fill="#94623f" stroke="#60442e" stroke-width="3"/><ellipse cx="17" cy="-36" rx="17" ry="23" fill="#a9784c" stroke="#60442e" stroke-width="3"/>';
+  else art+='<g fill="'+color+'" stroke="#8b6543" stroke-width="3"><ellipse cx="-18" cy="-34" rx="17" ry="23"/><ellipse cx="18" cy="-42" rx="18" ry="24"/><ellipse cx="0" cy="-12" rx="16" ry="21"/></g><g fill="#fff3d2" opacity=".6"><circle cx="-23" cy="-42" r="4"/><circle cx="13" cy="-50" r="4"/></g>';
+ }
+ art+='<path d="M-34 5Q0-2 34 5" stroke="#9d7a4c" stroke-width="4" fill="none" opacity=".7"/></g>';
+ return art;
+}
+function cropArt(type,progress){const v=CROPS[type];if(isModernFarm())return modernCropArt(type,progress);const hasFruit=progress>.68,bloom=progress>.45&&progress<.78,leaves=progress>.55?7:progress>.22?5:3,leaf=['#1b8d39','#38ab3f','#58bd43','#2b9d35','#74c84a','#90d362','#4ea83e'];
 let a='';
 if(v.kind==='flower'){
  const leafPairs=progress>.35?4:2;
