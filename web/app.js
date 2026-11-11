@@ -546,7 +546,7 @@ let front='';
 front+=fencePath([[1260,430],[1430,430]],'front');
 front+=fencePath([[1560,430],[1780,430]],'front');
 front+=`<g transform="translate(1430 430)"><path d="M0 -58V10M130 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L130 -48M0 -15L130 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L122 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H148" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
-front+=`<g transform="translate(1495 445) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
+front+=`<g transform="translate(1495 325) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
 front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
 for(let i=0;i<38;i++){
