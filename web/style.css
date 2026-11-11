@@ -501,3 +501,7 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 
 /* Otimização: janelas internas pausam animações do cenário que está atrás do modal. */
 .app.modal-open #world *{animation-play-state:paused!important}
+
+/* Campos compactos para escolher quantidades de venda no depósito. */
+.sale-qty-input{box-sizing:border-box;width:72px;min-width:58px;padding:7px 5px;border:1px solid #b58b55;border-radius:7px;background:#fffaf0;color:#49331d;font:600 13px inherit;text-align:center}
+.list-line .actions{align-items:center;margin:4px 0}
