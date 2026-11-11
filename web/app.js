@@ -549,12 +549,13 @@ scenery+=svgImage('casinha-cachorro',1770,155,145,140);
 scenery+=fencePath([[220,-150],[710,-150]],'rear');
 scenery+=fencePath([[220,-150],[220,360]],'side');
 scenery+=fencePath([[710,-150],[710,360]],'side');
-scenery+=fencePath([[220,360],[400,360]],'front');
-scenery+=fencePath([[530,360],[710,360]],'front');
-scenery+=`<g transform="translate(400 360)"><path d="M0 -58V10M130 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L130 -48M0 -15L130 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L122 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H148" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
+
 $('scenery-layer').innerHTML=scenery;$('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
+front+=fencePath([[220,360],[400,360]],'front');
+front+=fencePath([[530,360],[710,360]],'front');
+front+=`<g transform="translate(400 360)"><path d="M0 -58V10M130 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L130 -48M0 -15L130 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L122 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H148" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
 // Identificação do curral, próxima ao portão.
 front+=`<g transform="translate(465 375) scale(.52)"><ellipse cx="42" cy="69" rx="42" ry="7" fill="#315e1b" opacity=".25"/><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
@@ -590,7 +591,7 @@ function renderAnimals(){
  for(const a of animals){
   if(!ANIMALS[a.type])continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=420;y=198;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=1790;y=175;w=150;h=112.5;}
   else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
