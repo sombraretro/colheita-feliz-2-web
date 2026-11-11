@@ -348,7 +348,7 @@ const WORLD={left:-1400,right:4400,top:-300,bottom:1140,w:5800,h:980}, view={zoo
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false;
 const SUPABASE_URL='https://osmoolsywhlorgqqybhk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable__pNF0EfJMbM_a6Jdmpylvg_HY3nzRpo';
-let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,localSaveExists=false,cloudDirty=false,supabaseAuthSubscription=null;
+let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,localSaveExists=false,cloudDirty=false,supabaseAuthSubscription=null,cloudSessionReadyUserId=null;
 function initSupabase(){
  if(!supabaseClient){
   if(!window.supabase||typeof window.supabase.createClient!=='function')return false;
@@ -356,10 +356,10 @@ function initSupabase(){
  }
  if(!supabaseAuthSubscription){
   const listener=supabaseClient.auth.onAuthStateChange((event,session)=>{
-   if(session&&['SIGNED_IN','INITIAL_SESSION','TOKEN_REFRESHED','USER_UPDATED'].includes(event)){
+   if(session&&['SIGNED_IN','INITIAL_SESSION'].includes(event)){
     window.setTimeout(()=>{if(state)handleAuthSession(session).catch(error=>console.error('Falha ao concluir autenticação:',error));},0);
    }else if(event==='SIGNED_OUT'){
-    cloudUser=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;updateConnectionLabel();
+    cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;updateConnectionLabel();
    }
   });
   supabaseAuthSubscription=listener?.data?.subscription||true;
@@ -424,8 +424,10 @@ async function saveCloud(){
 }
 async function handleAuthSession(session){
  if(!session?.user||!supabaseClient)return;
- if(cloudSyncing)return;
- cloudSyncing=true;if(cloudUser?.id!==session.user.id){onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null}cloudUser=session.user;updateConnectionLabel();
+ if(cloudSessionReadyUserId===session.user.id||cloudSyncing)return;
+ cloudSyncing=true;let syncSucceeded=false;
+ if(cloudUser?.id!==session.user.id){onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null}
+ cloudUser=session.user;updateConnectionLabel();
  try{
   const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();
   if(error)throw error;
@@ -436,23 +438,34 @@ async function handleAuthSession(session){
   }else{
    cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;
    const localStamp=Number(state?.updatedAt)||0,cloudStamp=Date.parse(data.updated_at||'')||0;
-   let useCloud=!localSaveExists||localStamp<=cloudStamp+1000;
-   if(localSaveExists&&localStamp>cloudStamp+1000)useCloud=window.confirm('Encontramos uma fazenda salva na nuvem e outra mais recente neste dispositivo.\\n\\nOK: carregar a fazenda da nuvem.\\nCancelar: manter a fazenda deste dispositivo e enviá-la para a nuvem.');
+   const restored=normalize(data.state);
+   if(!restored)throw new Error('A fazenda da nuvem está em um formato inválido.');
+   const localNormalized=normalize(state);
+   const sameFarm=JSON.stringify(localNormalized)===JSON.stringify(restored);
+   let useCloud=!localSaveExists||sameFarm||localStamp<=cloudStamp+1000;
+   if(localSaveExists&&!sameFarm&&localStamp>cloudStamp+1000)useCloud=window.confirm('Encontramos uma fazenda salva na nuvem e outra mais recente neste dispositivo.\\n\\nOK: carregar a fazenda da nuvem.\\nCancelar: manter a fazenda deste dispositivo e enviá-la para a nuvem.');
    if(useCloud){
-    const restored=normalize(data.state);if(!restored)throw new Error('A fazenda da nuvem está em um formato inválido.');
-    state=restored;dirty=false;cloudDirty=false;refresh();
-    const payload=JSON.stringify({version:1,state});await saveLocalPayload(payload);localSaveExists=true;
-    $('save-status').textContent='Sincronizado com a nuvem';
-    notify('Fazenda carregada da nuvem e salva também neste dispositivo.');
+    if(!sameFarm){
+     state=restored;dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;refresh();
+     const payload=JSON.stringify({version:1,state});await saveLocalPayload(payload);localSaveExists=true;
+     $('save-status').textContent='Sincronizado com a nuvem';
+     notify('Fazenda carregada da nuvem e salva também neste dispositivo.');
+    }else{
+     dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;
+     $('save-status').textContent='Sincronizado com a nuvem';
+     $('save-dot').className='savedot';
+    }
    }else{
     await saveCloud();$('save-status').textContent='Fazenda local enviada para a nuvem';
     notify('Fazenda deste dispositivo enviada para a nuvem.');
    }
   }
+  syncSucceeded=true;
  }catch(error){
   console.error('Supabase:',error);cloudDirty=true;$('save-status').textContent='Salvo localmente · nuvem pendente';
   notify('A conta conectou, mas a sincronização falhou: '+(error.message||'verifique a configuração do Supabase.'));
  }finally{
+  if(syncSucceeded)cloudSessionReadyUserId=session.user.id;
   cloudSyncing=false;updateConnectionLabel();if(cloudUser)publishSocialProfile().catch(error=>console.error('Perfil social:',error));if(currentModal==='account')renderModal();
  }
 }
@@ -470,7 +483,7 @@ async function authenticate(mode){
 async function disconnectCloud(){
  if(!supabaseClient)return;
  const {error}=await supabaseClient.auth.signOut();if(error)return notify(error.message||'Não foi possível sair da conta.');
- cloudUser=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineSocialLoaded=false;onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();notify('Sessão encerrada. Sua fazenda continua salva localmente.');renderModal();
+ cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineSocialLoaded=false;onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();notify('Sessão encerrada. Sua fazenda continua salva localmente.');renderModal();
 }
 
 let soundEnabled=true,musicEnabled=true;
