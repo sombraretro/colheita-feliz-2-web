@@ -240,7 +240,7 @@ html[data-cf2-next-ui="enabled"] .tool-icon-ready:hover{transform:translateY(-2p
 
 /* Menu lateral suspenso — navegação recolhível da fazenda */
 html[data-cf2-next-ui="enabled"] .sidebar-toggle{
-  position:absolute;left:auto;right:16px;top:128px;z-index:12;
+  position:absolute;left:auto;right:16px;top:86px;z-index:12;
   display:inline-flex;align-items:center;justify-content:center;
   width:46px;height:42px;padding:0;
   border:2px solid #c79045;border-radius:12px;
@@ -280,8 +280,8 @@ html[data-cf2-next-ui="enabled"] .side-menu button:hover{background:linear-gradi
   html[data-cf2-next-ui="enabled"] .side-menu{left:auto;right:10px;top:203px;width:min(235px,calc(100vw - 20px));max-height:calc(100% - 225px)}
 }
 @media(max-height:560px){
-  html[data-cf2-next-ui="enabled"] .side-menu{max-height:calc(100% - 120px);top:160px}
-  html[data-cf2-next-ui="enabled"] .sidebar-toggle{top:112px}
+  html[data-cf2-next-ui="enabled"] .side-menu{max-height:calc(100% - 120px);top:118px}
+  html[data-cf2-next-ui="enabled"] .sidebar-toggle{top:76px}
 }
 
 /* Navegação livre entre as áreas da fazenda */
@@ -315,3 +315,5 @@ html[data-cf2-next-ui="enabled"] .side-menu button:hover{background:linear-gradi
 
 /* O ciclo visual acompanha o relógio local do computador. */
 #day-night-layer{transition:opacity 1.2s ease;pointer-events:none}
+
+.topbar .tabs{gap:5px;flex-wrap:wrap}.topbar .tabs .tab{white-space:nowrap}.sea-cast{background:linear-gradient(#67b8cf,#236b8c)}@media(max-width:900px){.topbar{align-items:flex-start}.topbar .tabs{max-width:100%;justify-content:center}}
