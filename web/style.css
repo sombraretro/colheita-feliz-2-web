@@ -301,3 +301,13 @@ html[data-cf2-next-ui="enabled"] .side-menu button:hover{background:linear-gradi
 .fishing-rod-card{min-width:0}
 .fishing-rod-card .actions{display:flex;gap:6px}
 .fishing-rod-card .actions button{flex:1;min-width:0;padding:8px 5px}
+
+
+/* Vento e correnteza: animação sutil no rio e na vegetação das margens. */
+.river-flow{animation:river-current 4.2s linear infinite;will-change:transform}
+.river-reeds{transform-box:fill-box;transform-origin:50% 100%;animation:river-reeds-sway 3.1s ease-in-out infinite alternate}
+.river-bank-plants{transform-box:fill-box;transform-origin:50% 80%;animation:river-bank-sway 4.4s ease-in-out infinite alternate}
+@keyframes river-current{from{transform:translateY(-26px)}to{transform:translateY(26px)}}
+@keyframes river-reeds-sway{from{transform:rotate(-2deg)}to{transform:rotate(2.5deg)}}
+@keyframes river-bank-sway{from{transform:rotate(1.4deg)}to{transform:rotate(-1.8deg)}}
+@media(prefers-reduced-motion:reduce){.river-flow,.river-reeds,.river-bank-plants{animation:none}}
