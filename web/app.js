@@ -379,10 +379,11 @@ function startFarmMusic(){
  if(!musicEnabled||musicPlaying)return;const ctx=ensureAudio();if(!ctx)return;musicPlaying=true;musicIndex=0;
  const step=()=>{if(!musicEnabled){musicPlaying=false;return}
   const beat=musicIndex%FARM_MELODY.length,note=FARM_MELODY[beat],bar=Math.floor(beat/4)%FARM_CHORDS.length;
-  playTone(note,.23,'triangle',.027);
-  if(beat%2===0)playTone(note*2,.12,'sine',.006);
-  if(beat%4===0){playTone(FARM_BASS[bar],.38,'sine',.017);FARM_CHORDS[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.3,'triangle',.0065),i*18))}
-  if(beat%8===7){setTimeout(()=>playTone(1175,.08,'sine',.009,-220),55);setTimeout(()=>playTone(1568,.07,'sine',.008,-260),125)}
+  // Volume reforçado para a música se destacar dos sons ambientes do navegador.
+  playTone(note,.23,'triangle',.058);
+  if(beat%2===0)playTone(note*2,.12,'sine',.012);
+  if(beat%4===0){playTone(FARM_BASS[bar],.38,'sine',.034);FARM_CHORDS[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.3,'triangle',.012),i*18))}
+  if(beat%8===7){setTimeout(()=>playTone(1175,.08,'sine',.016,-220),55);setTimeout(()=>playTone(1568,.07,'sine',.014,-260),125)}
   musicIndex++;musicTimer=setTimeout(step,280)
  };
  step();
