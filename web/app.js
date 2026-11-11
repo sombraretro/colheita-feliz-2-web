@@ -1825,8 +1825,8 @@ if(currentModal==='herb-mix'){
   const section=document.createElement('section');section.className='shop-section herb-mix-section';section.id='herb-mix-section-'+index;
   const toggle=document.createElement('button');toggle.type='button';toggle.className='shop-category-toggle';toggle.setAttribute('aria-expanded',index===0?'true':'false');toggle.innerHTML='<span>'+heading.textContent.trim()+'</span><b class="shop-category-chevron">'+(index===0?'−':'＋')+'</b>';
   const content=document.createElement('div');content.className='shop-section-content';if(index!==0)content.hidden=true;
-  let cursor=heading.nextSibling;while(cursor&&cursor.tagName!=='H3'){const next=cursor.nextSibling;content.appendChild(cursor);cursor=next;}
-  section.append(toggle,content);body.insertBefore(section,heading);
+  let cursor=heading.nextSibling;while(cursor&&cursor.tagName!=='H3'&&!(index===1&&cursor.classList?.contains('list-line'))){const next=cursor.nextSibling;content.appendChild(cursor);cursor=next;}
+  section.append(toggle,content);body.insertBefore(section,heading);heading.remove();
   toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));content.hidden=open;toggle.querySelector('.shop-category-chevron').textContent=open?'＋':'−';});
  });
 }
