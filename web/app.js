@@ -698,9 +698,11 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330
  <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
  <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
  <path d="M4 108L205 -4L406 108L385 125L205 29L25 125Z" fill="#a95f3d" stroke="#70432c" stroke-width="8"/>
- <path d="M38 112H372V236H38Z" fill="#e6d8b7" stroke="#795a3c" stroke-width="6"/>
- <path d="M52 116V231M95 116V231M138 116V231M181 116V231M224 116V231M267 116V231M310 116V231M353 116V231" stroke="#80684a" stroke-width="4"/>
- <path d="M38 145H372M38 181H372M38 216H372" stroke="#80684a" stroke-width="3"/>
+ <path d="M38 112H372V236H38Z" fill="#9bdcf0" fill-opacity=".19" stroke="#795a3c" stroke-width="7"/>
+ <path d="M43 117H367V231H43Z" fill="#c8f2fb" fill-opacity=".12" stroke="#e9f8f5" stroke-opacity=".78" stroke-width="2"/>
+ <path d="M52 116V231M116 116V231M180 116V231M244 116V231M308 116V231M353 116V231" stroke="#80684a" stroke-width="4" stroke-opacity=".72"/>
+ <path d="M38 151H372M38 194H372" stroke="#80684a" stroke-width="3" stroke-opacity=".62"/>
+ <path d="M54 121L112 121L78 226H54Z M255 121H290L326 226H300Z" fill="#ffffff" fill-opacity=".13"/>
  <path d="M168 236V150Q205 119 242 150V236Z" fill="#6d4930" stroke="#563720" stroke-width="6"/>
  <path d="M177 168H233M177 184H233M177 200H233" stroke="#c79b63" stroke-width="3"/>
  <g font-size="31"><text x="75" y="158">🕊️</text><text x="285" y="160">🐦</text><text x="105" y="210">🦜</text><text x="310" y="210">🐤</text></g>
@@ -762,7 +764,7 @@ function renderAnimals(){
   if(a.type==='cachorro'){x=500;y=155;w=150;h=112.5;}
   else if(isBirdType(a.type)){
    const birdSlot=Math.max(0,Number.isInteger(a.aviarySlot)?a.aviarySlot:0),col=birdSlot%AVIARY_COLUMNS,row=Math.floor(birdSlot/AVIARY_COLUMNS);
-   w=50;h=37.5;x=370+col*54;y=-190+row*36;
+   w=46;h=34;x=368+col*54;y=-185+row*40;
   }else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
