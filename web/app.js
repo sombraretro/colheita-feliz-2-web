@@ -497,7 +497,7 @@ function startFarmMusic(){
  const step=()=>{if(!musicEnabled){musicPlaying=false;return}
   const modern=$('tools')?.dataset.era==='two';
   const melody=modern?MODERN_FARM_MELODY:FARM_MELODY,bass=modern?MODERN_FARM_BASS:FARM_BASS,chords=modern?MODERN_FARM_CHORDS:FARM_CHORDS;
-  const beat=musicIndex%melody.length,note=melody[beat],bar=Math.floor(beat/6)%chords.length;
+  const beat=musicIndex%melody.length,note=melody[beat],bar=modern?Math.floor(beat/6)%chords.length:Math.floor(beat/4)%chords.length;
   if(modern){
    playTone(note,.28,'sine',.038);
    if(beat%3===0)playTone(note*2,.13,'triangle',.009);
