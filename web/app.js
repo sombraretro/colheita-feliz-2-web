@@ -371,10 +371,20 @@ function playSfx(kind){
  };
  (patterns[kind]||(()=>{}))();
 }
-const FARM_MELODY=[392,440,523,587,659,587,523,440,392,330,392,440,523,440,392,349];
+// Tema campestre mais vivo: melodia em Sol maior, baixo macio e acordes leves.
+const FARM_MELODY=[392,494,587,659,587,494,440,494,523,587,659,784,659,587,494,440];
+const FARM_BASS=[196,147,165,131];
+const FARM_CHORDS=[[392,494,587],[294,370,440],[330,392,494],[262,330,392]];
 function startFarmMusic(){
  if(!musicEnabled||musicPlaying)return;const ctx=ensureAudio();if(!ctx)return;musicPlaying=true;musicIndex=0;
- const step=()=>{if(!musicEnabled){musicPlaying=false;return}const note=FARM_MELODY[musicIndex%FARM_MELODY.length];playTone(note,.26,'triangle',.018);if(musicIndex%4===0)playTone(note/2,.42,'sine',.012);if(musicIndex%8===3){setTimeout(()=>playTone(1250,.07,'sine',.007,-380),60);setTimeout(()=>playTone(1570,.06,'sine',.006,-520),140)}musicIndex++;musicTimer=setTimeout(step,330)};
+ const step=()=>{if(!musicEnabled){musicPlaying=false;return}
+  const beat=musicIndex%FARM_MELODY.length,note=FARM_MELODY[beat],bar=Math.floor(beat/4)%FARM_CHORDS.length;
+  playTone(note,.23,'triangle',.027);
+  if(beat%2===0)playTone(note*2,.12,'sine',.006);
+  if(beat%4===0){playTone(FARM_BASS[bar],.38,'sine',.017);FARM_CHORDS[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.3,'triangle',.0065),i*18))}
+  if(beat%8===7){setTimeout(()=>playTone(1175,.08,'sine',.009,-220),55);setTimeout(()=>playTone(1568,.07,'sine',.008,-260),125)}
+  musicIndex++;musicTimer=setTimeout(step,280)
+ };
  step();
 }
 function stopFarmMusic(){if(musicTimer)clearTimeout(musicTimer);musicTimer=null;musicPlaying=false}
