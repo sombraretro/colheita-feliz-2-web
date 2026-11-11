@@ -1292,6 +1292,18 @@ function updateNotificationBadges(){
   const label=count?base+' · '+count+' pronto(s)':base;
   if(button.hasAttribute('title'))button.title=label;else button.setAttribute('aria-label',label);
  });
+ const layer=$('notification-layer');
+ if(layer){
+  const marker=(x,y,emoji,count,label)=>count?'<g class="world-notification" transform="translate('+x+' '+y+')" pointer-events="none" aria-label="'+label+'"><circle r="24" fill="#fff8e7" stroke="#b52c22" stroke-width="5"/><text y="9" text-anchor="middle" font-size="25">'+emoji+'</text><circle cx="19" cy="-18" r="12" fill="#d92727" stroke="#fff8e7" stroke-width="3"/><text x="19" y="-14" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">'+(count>99?'99+':count)+'</text></g>':'';
+  const readyBirds=state.animals.filter(a=>a.status==='ready'&&isBirdType(a.type)).length,readyLivestock=counts.animals-readyBirds;
+  layer.innerHTML=marker(532,320,'🌾',counts.crops,'Plantação pronta para colher')+
+   marker(1060,55,'🍳',counts.kitchen,'Receita pronta na cozinha')+
+   marker(650,165,'🔥',counts.grill,'Receita pronta na churrasqueira')+
+   marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
+   marker(535,-55,'🐦',readyBirds,'Produção pronta no viveiro')+
+   marker(2750,-18,'🍎',counts.orchard,'Frutas prontas no pomar')+
+   marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
+ }
 }
 function notify(message){const e=$('toast');e.textContent=message;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),2500)}
 function remember(message){state.history.unshift({message,time:Date.now()});state.history=state.history.slice(0,40);const m=String(message);let event=null;if(/^Colheu\b/.test(m))event='harvest';else if(/^Plantou\b/.test(m))event='plant';else if(/^Regou\b/.test(m))event='water';else if(/^Vendeu\b/.test(m))event='sell';else if(/^Alimentou\b/.test(m))event='feed';else if(/^Recolheu \d+ /.test(m))event='produce';else if(/^Comprou .+\.$/.test(m)&&Object.values(ANIMALS).some(a=>a.name&&m===`Comprou ${a.name}.`))event='animal';if(event){state.progressCounters=state.progressCounters||{};state.progressCounters[event]=(state.progressCounters[event]||0)+1;const active=state.tutorial?.acceptedId,task=TUTORIAL_TASKS.find(t=>t.id===active);if(task&&task.event===event)state.taskProgress[task.id]=Math.min(task.goal,(state.taskProgress[task.id]||0)+1)}}
