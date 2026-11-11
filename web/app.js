@@ -1770,7 +1770,7 @@ if(currentModal==='shop'){
   if(target){target.scrollIntoView({behavior:'smooth',block:'start'});nav.querySelectorAll('.shop-jump').forEach(item=>item.classList.toggle('active',item===button));}
  });
 }
-$('dialog').classList.toggle('wide',['shop','inventory','warehouse','factory','decor','grill','kitchen','carpentry','free-gifts','mood','gifts','areas','orchard','animals'].includes(currentModal));
+$('dialog').classList.toggle('wide',['shop','inventory','warehouse','factory','decor','grill','kitchen','carpentry','free-gifts','mood','gifts','areas','orchard','animals','friend-farm'].includes(currentModal));
 }
 function popularityBonusRate(){return Math.min(.25,Math.floor((state.popularity||0)/100)*.01)}
 function saleWithPopularity(base){return Math.floor(base*(1+popularityBonusRate()))}
