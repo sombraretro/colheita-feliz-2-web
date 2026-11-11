@@ -1,15 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Doberman robótico">
-<defs><linearGradient id="coat" x2="0.8" y2="1"><stop stop-color="#272b31"/><stop offset=".65" stop-color="#111820"/><stop offset="1" stop-color="#080d13"/></linearGradient><linearGradient id="metal" x2="0" y2="1"><stop stop-color="#9be8f4"/><stop offset=".5" stop-color="#397e9d"/><stop offset="1" stop-color="#1b405b"/></linearGradient></defs>
-<ellipse cx="760" cy="1035" rx="500" ry="30" fill="#18380f" opacity=".16"/>
-<path d="M350 590Q180 520 215 350Q300 430 410 535" fill="none" stroke="#171c22" stroke-width="66" stroke-linecap="round"/>
-<path d="M445 735L425 985Q425 1025 490 1020L525 995L520 720M755 755L760 990Q765 1025 830 1020L865 995L845 730M950 720L1000 980Q1010 1020 1070 1005L1090 975L1025 680" fill="url(#coat)" stroke="#090e13" stroke-width="24" stroke-linejoin="round"/>
-<ellipse cx="700" cy="650" rx="425" ry="220" fill="url(#coat)" stroke="#080d12" stroke-width="24"/>
-<path d="M835 505Q940 555 980 700Q920 845 785 875Q720 790 715 685Z" fill="#9a4e31"/>
-<path d="M920 560L1010 590L1030 740L950 795L890 700Z" fill="url(#metal)" stroke="#193f57" stroke-width="18"/><path d="M950 620L1005 640M930 690L1015 710" stroke="#c5f8ff" stroke-width="13"/>
-<ellipse cx="1115" cy="365" rx="215" ry="190" fill="url(#coat)" stroke="#080d12" stroke-width="24"/>
-<path d="M960 270L965 55Q1025 110 1065 270Z" fill="#171d24" stroke="#080d12" stroke-width="18"/><path d="M1175 250L1270 55Q1300 160 1285 300Z" fill="#171d24" stroke="#080d12" stroke-width="18"/>
-<path d="M1010 380Q1125 350 1240 400L1370 455L1320 530Q1190 565 1080 500Z" fill="#171d24" stroke="#080d12" stroke-width="18"/><path d="M1080 440Q1190 415 1320 470" fill="none" stroke="#a45a37" stroke-width="30"/>
-<ellipse cx="1370" cy="465" rx="30" ry="23" fill="#05090d"/><path d="M1245 515Q1300 560 1350 525" fill="none" stroke="#b66b43" stroke-width="14"/>
-<ellipse cx="1080" cy="325" rx="32" ry="39" fill="#d5e8ed"/><ellipse cx="1185" cy="310" rx="31" ry="38" fill="#d5e8ed"/><circle cx="1088" cy="330" r="16" fill="#101820"/><circle cx="1190" cy="315" r="16" fill="#101820"/><circle cx="1083" cy="323" r="6" fill="#fff"/><circle cx="1185" cy="308" r="6" fill="#fff"/>
-<path d="M1000 555Q1110 600 1230 550" fill="none" stroke="#48b9d5" stroke-width="27" stroke-linecap="round"/><circle cx="1110" cy="575" r="28" fill="#b7f3ff" stroke="#256d8c" stroke-width="10"/><path d="M1110 557V593M1092 575H1128" stroke="#24627d" stroke-width="9"/>
+<defs>
+ <linearGradient id="armor" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#596674"/><stop offset=".22" stop-color="#252f3b"/><stop offset=".62" stop-color="#111923"/><stop offset="1" stop-color="#050a10"/></linearGradient>
+ <linearGradient id="steel" x1="0" y1="0" x2=".2" y2="1"><stop stop-color="#e2fbff"/><stop offset=".25" stop-color="#70c4dc"/><stop offset=".58" stop-color="#286783"/><stop offset="1" stop-color="#102c43"/></linearGradient>
+ <linearGradient id="copper" x2="0" y2="1"><stop stop-color="#ffbd78"/><stop offset=".5" stop-color="#b65c32"/><stop offset="1" stop-color="#54251c"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#b7f8ff" stop-opacity=".8"/><stop offset="1" stop-color="#28bde8" stop-opacity="0"/></radialGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="18"/></filter>
+</defs>
+<ellipse cx="760" cy="1020" rx="500" ry="34" fill="#122b37" opacity=".24" filter="url(#shadow)"/>
+<!-- articulated tail -->
+<path d="M390 590Q270 560 236 452Q211 375 246 329Q260 425 352 470Q410 497 455 530" fill="none" stroke="#090f17" stroke-width="70" stroke-linecap="round"/>
+<path d="M390 590Q270 560 236 452" fill="none" stroke="#536878" stroke-width="13" stroke-linecap="round"/>
+<path d="M253 400l-26 27 39 28M290 475l-22 26 41 19" fill="none" stroke="#73c8dc" stroke-width="8"/>
+<!-- legs -->
+<g stroke="#080e15" stroke-width="18" stroke-linejoin="round">
+ <path d="M440 742L423 956Q414 1001 455 1008L512 1002L531 978L510 930L535 758Z" fill="url(#armor)"/>
+ <path d="M730 755L744 955Q735 1000 781 1007L842 1000L862 975L833 932L826 740Z" fill="url(#armor)"/>
+ <path d="M946 732L1005 951Q1012 996 1054 1000L1111 983L1120 958L1080 919L1045 700Z" fill="url(#armor)"/>
+</g>
+<g fill="url(#steel)" stroke="#0b2537" stroke-width="10"><path d="M423 945l85 7-1 38-54 21-48-12z"/><path d="M744 945l91-2 19 42-51 24-56-12z"/><path d="M1003 940l82-18 30 39-43 38-57 2z"/></g>
+<g fill="none" stroke="#9deeff" stroke-width="7" opacity=".8"><path d="M444 785l57 13M752 790l62 9M972 770l57 8"/></g>
+<!-- torso -->
+<path d="M383 585Q430 488 592 481L815 492Q976 510 1041 635L1031 751Q1001 842 839 866L572 850Q412 829 366 725Z" fill="url(#armor)" stroke="#080e15" stroke-width="24"/>
+<path d="M430 594Q514 527 657 534L824 541Q925 551 976 638L946 725Q866 784 724 779L499 759Q420 731 410 670Z" fill="#202c38" stroke="#61798a" stroke-width="10"/>
+<path d="M465 595Q550 558 655 565L733 577L701 760Q570 766 469 715Z" fill="url(#steel)" stroke="#163d55" stroke-width="12"/>
+<path d="M747 572Q869 562 936 637L907 738Q830 778 729 761Z" fill="url(#armor)" stroke="#0b1722" stroke-width="12"/>
+<path d="M498 622l125 8-17 91-101-15zM786 606l102 26-20 91-93 15z" fill="none" stroke="#8edbed" stroke-width="8" opacity=".75"/>
+<path d="M560 808Q710 855 876 804" fill="none" stroke="#0a1119" stroke-width="24"/>
+<path d="M581 816Q719 850 858 813" fill="none" stroke="#b75b35" stroke-width="13"/>
+<!-- neck and shoulder plates -->
+<path d="M822 493Q890 439 1001 468L1064 591L1012 697L913 674L850 587Z" fill="url(#armor)" stroke="#080e15" stroke-width="20"/>
+<path d="M865 510L976 486L1026 580L982 642L891 620Z" fill="url(#steel)" stroke="#153e56" stroke-width="12"/>
+<path d="M886 535l82-18 29 58-84 27z" fill="#1a3446" stroke="#9cecff" stroke-width="6"/>
+<!-- head silhouette -->
+<path d="M1004 344Q1017 239 1120 211Q1220 184 1290 268Q1341 331 1318 422L1381 478Q1405 512 1364 542Q1313 580 1226 561L1122 539Q1024 519 984 448Z" fill="url(#armor)" stroke="#070d14" stroke-width="25"/>
+<!-- upright cropped ears -->
+<path d="M1052 296L1045 93Q1109 133 1151 250L1145 310Z" fill="url(#armor)" stroke="#080e15" stroke-width="20"/>
+<path d="M1073 230L1069 144Q1105 178 1124 251Z" fill="#a84d38" stroke="#15212d" stroke-width="9"/>
+<path d="M1202 247L1290 75Q1320 166 1294 302L1251 337Z" fill="url(#armor)" stroke="#080e15" stroke-width="20"/>
+<path d="M1247 257L1283 164Q1290 221 1270 279Z" fill="#a84d38" stroke="#17222d" stroke-width="9"/>
+<!-- muzzle -->
+<path d="M1117 389Q1218 347 1304 405L1400 474Q1384 545 1308 557Q1206 563 1137 508Q1097 468 1117 389Z" fill="#111a24" stroke="#050a10" stroke-width="18"/>
+<path d="M1163 413Q1250 389 1321 439L1370 479Q1315 512 1248 493Q1186 480 1163 413Z" fill="url(#copper)" opacity=".95"/>
+<path d="M1193 465Q1280 492 1364 477" fill="none" stroke="#f0a06a" stroke-width="9" opacity=".8"/>
+<path d="M1373 461Q1404 462 1406 485Q1394 507 1367 495Z" fill="#05090e" stroke="#738795" stroke-width="7"/>
+<path d="M1260 527Q1312 550 1361 522" fill="none" stroke="#05090e" stroke-width="12"/>
+<!-- eyes and brows -->
+<path d="M1072 338Q1110 302 1155 333L1150 373Q1105 389 1072 361Z" fill="#050b12" stroke="#668b9e" stroke-width="8"/>
+<path d="M1190 324Q1231 292 1267 325L1262 365Q1224 383 1190 351Z" fill="#050b12" stroke="#668b9e" stroke-width="8"/>
+<ellipse cx="1117" cy="347" rx="19" ry="24" fill="#7ceaff"/><ellipse cx="1233" cy="339" rx="19" ry="24" fill="#7ceaff"/>
+<ellipse cx="1117" cy="347" rx="8" ry="18" fill="#07111c"/><ellipse cx="1233" cy="339" rx="8" ry="18" fill="#07111c"/>
+<circle cx="1111" cy="338" r="6" fill="#fff"/><circle cx="1227" cy="330" r="6" fill="#fff"/>
+<path d="M1063 322Q1113 282 1165 312M1182 309Q1230 276 1274 306" fill="none" stroke="#93e9fa" stroke-width="11" stroke-linecap="round"/>
+<!-- temple circuitry -->
+<path d="M1018 389l39-29 31 22-23 43 34 26M1265 390l37-17 26 31-18 30" fill="none" stroke="#61cde8" stroke-width="9"/>
+<circle cx="1057" cy="360" r="11" fill="#c2f8ff"/><circle cx="1299" cy="373" r="10" fill="#c2f8ff"/>
+<!-- chest reactor -->
+<path d="M914 658Q963 621 1014 662L1022 720Q974 756 922 720Z" fill="#07131d" stroke="#5fc8e4" stroke-width="12"/>
+<circle cx="972" cy="690" r="47" fill="url(#glow)"/><circle cx="972" cy="690" r="24" fill="#8df1ff" stroke="#24617e" stroke-width="9"/><path d="M972 672v36M954 690h36" stroke="#123a50" stroke-width="8"/>
+<g fill="#a5efff"><circle cx="454" cy="610" r="8"/><circle cx="928" cy="580" r="8"/><circle cx="1008" cy="753" r="8"/></g>
 </svg>
