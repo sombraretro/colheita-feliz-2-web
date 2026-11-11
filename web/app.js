@@ -454,22 +454,13 @@ function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" tran
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#865128" stroke-width="12" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-32}L${b[0]} ${b[1]-32}M${a[0]} ${a[1]-13}L${b[0]} ${b[1]-13}" stroke="#e0a05a" fill="none" stroke-width="5" stroke-linecap="round"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="12" ry="6" fill="#336b1f" opacity=".35"/><path d="M${x-9} ${y-54}L${x+1} ${y-67}L${x+11} ${y-54}L${x+10} ${y+8}L${x-8} ${y+8}Z" fill="#aa6835" stroke="#694320" stroke-width="3"/><path d="M${x-6} ${y-53}L${x+1} ${y-60}L${x+7} ${y-52}" fill="none" stroke="#f2c17a" stroke-width="4"/><path d="M${x-4} ${y-43}V${y+1}" stroke="#c48d54" stroke-width="4"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none">${rails}${posts}</g>`}
 function brickWalkwayMarkup(){
- const d='M1018 388 C1035 425 1082 450 1120 474 C1150 493 1176 520 1188 548';
- const p0=[1018,388],p1=[1035,425],p2=[1082,450],p3=[1120,474],p6=[1188,548];
- const segments=[[p0,p1,p2,p3],[p3,[1150,493],[1176,520],p6]];
- const samples=[];
- for(const seg of segments){for(let i=0;i<=70;i++){if(samples.length&&i===0)continue;const t=i/70,u=1-t;const x=u*u*u*seg[0][0]+3*u*u*t*seg[1][0]+3*u*t*t*seg[2][0]+t*t*t*seg[3][0];const y=u*u*u*seg[0][1]+3*u*u*t*seg[1][1]+3*u*t*t*seg[2][1]+t*t*t*seg[3][1];samples.push([x,y])}}
- const lengths=[0];for(let i=1;i<samples.length;i++){const a=samples[i-1],b=samples[i];lengths.push(lengths[i-1]+Math.hypot(b[0]-a[0],b[1]-a[1]))}
- function at(distance){let i=1;while(i<lengths.length-1&&lengths[i]<distance)i++;const a=samples[i-1],b=samples[i],span=lengths[i]-lengths[i-1],t=span?(distance-lengths[i-1])/span:0;const tx=(b[0]-a[0])/(Math.hypot(b[0]-a[0],b[1]-a[1])||1),ty=(b[1]-a[1])/(Math.hypot(b[0]-a[0],b[1]-a[1])||1);return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,tx,ty]}
- const total=lengths[lengths.length-1],rows=[-16.5,-5.5,5.5,16.5],colors=['#c77b53','#b96d49','#d18a60','#bf714b'];let bricks='';let n=0;
- for(let row=0;row<rows.length;row++)for(let dist=10+(row%2)*10;dist<total-7;dist+=21){
-  const [x,y,tx,ty]=at(dist),nx=-ty,ny=tx,off=rows[row],cx=x+nx*off,cy=y+ny*off,hl=9.2,hw=4.65;
-  const pts=[[cx-tx*hl-nx*hw,cy-ty*hl-ny*hw],[cx+tx*hl-nx*hw,cy+ty*hl-ny*hw],[cx+tx*hl+nx*hw,cy+ty*hl+ny*hw],[cx-tx*hl+nx*hw,cy-ty*hl+ny*hw]].map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ');
-  const color=colors[(row+n)%colors.length];
-  bricks+=`<polygon points="${pts}" fill="${color}" stroke="#8e4e34" stroke-width="1.15"/><path d="M${(cx-tx*5-nx*2).toFixed(1)} ${(cy-ty*5-ny*2).toFixed(1)}L${(cx+tx*4-nx*2).toFixed(1)} ${(cy+ty*4-ny*2).toFixed(1)}" stroke="#e7ae83" stroke-width="1.1" opacity=".62"/>`;
-  n++;
- }
- return `<g id="brick-walkway" pointer-events="none"><path d="${d}" fill="none" stroke="#65402d" stroke-width="66" stroke-linecap="round" opacity=".20"/><path d="${d}" fill="none" stroke="#8c4f35" stroke-width="58" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#b66b48" stroke-width="49" stroke-linecap="round"/>${bricks}<path d="${d}" fill="none" stroke="#e6b18b" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></g>`;
+ const routes=[
+  'M1490 360 C1570 390 1735 395 1780 485 C1825 575 1770 690 1800 780 C1820 835 1920 875 2010 890',
+  'M910 940 C700 985 430 1005 180 980 C-90 955 -350 900 -535 825 C-630 787 -685 760 -735 735',
+  'M2010 890 C2100 855 2165 800 2225 720 C2290 640 2370 590 2470 550'
+ ];
+ const paths=routes.map(d=>`<g><path d="${d}" fill="none" stroke="#60402c" stroke-width="69" stroke-linecap="round" opacity=".24"/><path d="${d}" fill="none" stroke="#875039" stroke-width="62" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#b66b48" stroke-width="54" stroke-linecap="round"/><path d="${d}" fill="none" stroke="url(#brickPattern)" stroke-width="51" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#efc49a" stroke-width="2" stroke-linecap="round" opacity=".62"/></g>`).join('');
+ return `<g id="brick-walkway" pointer-events="none">${paths}</g>`;
 }
 function scheduleAnimalBlinking(){
  document.querySelectorAll('.animal-wrap').forEach(node=>{
@@ -491,6 +482,7 @@ const ground=`<defs>
 <linearGradient id="gardenGreen" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#abdf69"/><stop offset=".32" stop-color="#5eb42f"/><stop offset=".75" stop-color="#368e23"/><stop offset="1" stop-color="#256b20"/></linearGradient>
 <linearGradient id="soil" x1="0" y1="0" x2=".5" y2="1"><stop stop-color="#945b36"/><stop offset=".55" stop-color="#6d452b"/><stop offset="1" stop-color="#462b1a"/></linearGradient>
 <linearGradient id="farmRoad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ead7a7"/><stop offset=".46" stop-color="#c9a574"/><stop offset="1" stop-color="#a77d4d"/></linearGradient>
+<pattern id="brickPattern" patternUnits="userSpaceOnUse" width="32" height="18"><rect width="32" height="18" fill="#b66b48"/><path d="M0 0H32M0 9H32M16 0V9M0 9V18M32 9V18" fill="none" stroke="#81442f" stroke-width="1.5"/><path d="M2 2H14M18 11H30" stroke="#e5a17b" stroke-width="1.4" opacity=".7"/></pattern>
 <radialGradient id="blossom"><stop stop-color="#ffe7b4"/><stop offset="1" stop-color="#ee7cc4"/></radialGradient>
 <radialGradient id="animalShadow"><stop stop-color="#18390e" stop-opacity=".32"/><stop offset="1" stop-color="#18390e" stop-opacity="0"/></radialGradient>
 <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
@@ -548,17 +540,17 @@ scenery+=`<g pointer-events="none" fill="#1e4c15" opacity=".22" filter="url(#sha
 scenery+=svgImage('casa',890,70,360,350);
 scenery+=svgImage('celeiro',1280,-20,450,380);
 scenery+=svgImage('casinha-cachorro',245,180,145,140);
-// Cercado quadrado em perspectiva frontal, dimensionado para os nove espaços e separado da estrada.
-scenery+=fencePath([[1250,360],[1730,360]],'rear');
+// Cercado quadrado com portão central na parte superior; laterais e frente permanecem fechadas.
+scenery+=fencePath([[1250,360],[1435,360]],'rear');
+scenery+=fencePath([[1545,360],[1730,360]],'rear');
 scenery+=fencePath([[1250,360],[1250,840]],'side');
 scenery+=fencePath([[1730,360],[1730,840]],'side');
+scenery+=`<g transform="translate(1435 360)"><path d="M0 -58V10M110 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L110 -48M0 -15L110 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L102 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H128" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
-// Frente do cercado com abertura central para a entrada, alinhada ao caminho da estrada.
-front+=fencePath([[1250,840],[1435,840]],'front');
-front+=fencePath([[1545,840],[1730,840]],'front');
-front+=`<g transform="translate(1435 840)"><path d="M0 -58V10M110 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L110 -48M0 -15L110 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L102 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H128" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
+// Frente inferior do curral agora contínua; o acesso fica na parte superior.
+front+=fencePath([[1250,840],[1730,840]],'front');
 // Plaquinha identificando o curral, fora do espaço útil dos animais.
 front+=`<g transform="translate(1170 760) scale(.52)"><ellipse cx="42" cy="69" rx="42" ry="7" fill="#315e1b" opacity=".25"/><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
@@ -944,19 +936,29 @@ function renderOrchardArea(){
 function renderPondArea(){
  if(!state?.expansions?.pond)return '';
  return `<g id="pond-area" pointer-events="none">
-  <path d="M-1260 555Q-1220 345-1010 330Q-760 300-635 490Q-575 610-690 760Q-865 845-1080 770Q-1250 700-1260 555Z" fill="#3f7c2d" opacity=".28"/>
-  <path d="M-1240 545Q-1190 365-1000 350Q-785 330-665 500Q-600 610-710 735Q-875 815-1070 750Q-1210 690-1240 545Z" fill="#cbb77e" stroke="#8d7445" stroke-width="18"/>
-  <path d="M-1205 535Q-1160 395-995 382Q-810 360-700 510Q-640 605-735 700Q-885 770-1055 715Q-1175 665-1205 535Z" fill="#55b8c7" stroke="#f2e8c8" stroke-width="10"/>
-  <path d="M-1160 520Q-1035 440-900 480T-720 525M-1120 585Q-980 525-855 570T-735 590M-1080 650Q-970 620-875 650T-785 660" fill="none" stroke="#bcece2" stroke-width="13" stroke-linecap="round" opacity=".65"/>
-  <path d="M-1115 475Q-1035 425-950 455M-930 610Q-845 575-760 615" fill="none" stroke="#e8ffff" stroke-width="7" stroke-linecap="round" opacity=".6"/>
-  <g fill="#3e9a4b" stroke="#286b39" stroke-width="5">
-   <ellipse cx="-1050" cy="565" rx="40" ry="18" transform="rotate(-18 -1050 565)"/><ellipse cx="-880" cy="665" rx="32" ry="14" transform="rotate(14 -880 665)"/><ellipse cx="-760" cy="545" rx="27" ry="12" transform="rotate(-20 -760 545)"/>
+  <defs>
+   <linearGradient id="pondBank" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#e2d09a"/><stop offset=".55" stop-color="#b79b65"/><stop offset="1" stop-color="#80633e"/></linearGradient>
+   <linearGradient id="pondWater" x1=".1" y1="0" x2=".8" y2="1"><stop stop-color="#9bd9d5"/><stop offset=".35" stop-color="#4eafbd"/><stop offset=".72" stop-color="#287f9c"/><stop offset="1" stop-color="#185d79"/></linearGradient>
+   <radialGradient id="pondShallow"><stop stop-color="#b5e6d8" stop-opacity=".8"/><stop offset="1" stop-color="#55b9bd" stop-opacity="0"/></radialGradient>
+   <clipPath id="pondWaterClip"><path d="M-1232 548 C-1214 478 -1174 405 -1092 378 C-1015 348 -931 357 -866 382 C-811 402 -766 440 -724 493 C-683 546 -656 600 -677 654 C-694 703 -743 741 -808 759 C-883 780 -956 772 -1025 757 C-1095 742 -1165 710 -1202 658 C-1232 615 -1246 582 -1232 548Z"/></clipPath>
+  </defs>
+  <path d="M-1270 554 C-1250 465 -1200 382 -1100 345 C-1015 314 -914 330 -847 358 C-773 389 -715 446 -674 511 C-631 570 -620 626 -654 681 C-686 735 -754 778 -831 800 C-922 827 -1018 802 -1094 781 C-1177 756 -1240 705 -1264 640 C-1280 605 -1282 578 -1270 554Z" fill="#315f28" opacity=".25"/>
+  <path d="M-1250 548 C-1232 465 -1188 390 -1092 354 C-1013 324 -918 339 -854 365 C-779 394 -722 450 -683 511 C-645 570 -635 622 -667 673 C-700 726 -760 765 -837 785 C-921 807 -1014 787 -1084 766 C-1164 741 -1220 696 -1245 638 C-1260 605 -1262 576 -1250 548Z" fill="url(#pondBank)" stroke="#80643e" stroke-width="12"/>
+  <path d="M-1232 548 C-1214 478 -1174 405 -1092 378 C-1015 348 -931 357 -866 382 C-811 402 -766 440 -724 493 C-683 546 -656 600 -677 654 C-694 703 -743 741 -808 759 C-883 780 -956 772 -1025 757 C-1095 742 -1165 710 -1202 658 C-1232 615 -1246 582 -1232 548Z" fill="url(#pondWater)" stroke="#d6c18c" stroke-width="7"/>
+  <g clip-path="url(#pondWaterClip)">
+   <ellipse cx="-1000" cy="465" rx="250" ry="100" fill="url(#pondShallow)"/>
+   <path d="M-1260 475 Q-1150 420 -1040 450 T-820 465 T-650 445 M-1270 530 Q-1130 490 -1010 520 T-800 540 T-650 520 M-1240 600 Q-1120 555 -1000 590 T-790 610 T-650 585 M-1190 670 Q-1070 630 -960 660 T-760 680" fill="none" stroke="#d0f3e9" stroke-width="7" stroke-linecap="round" opacity=".25"/>
+   <path d="M-1135 425 Q-1050 397 -965 420 M-900 700 Q-830 674 -760 696" fill="none" stroke="#f3ffff" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+   <ellipse cx="-1010" cy="560" rx="75" ry="20" fill="#d4f5e9" opacity=".12"/>
   </g>
-  <g fill="#f1d56c" stroke="#6c8e43" stroke-width="4"><path d="M-1050 565l0-18 10 18Z"/><path d="M-880 665l0-16 9 16Z"/></g>
-  <g fill="none" stroke="#3d8739" stroke-width="15" stroke-linecap="round"><path d="M-1180 625q-15-100-45-135m45 135q25-95 48-122M-720 645q-5-85 30-120m-30 120q42-66 70-72M-1030 735q-18-65-4-105"/></g>
-  <g fill="#e8d7b0" stroke="#9e8c64" stroke-width="5"><ellipse cx="-1195" cy="590" rx="23" ry="13"/><ellipse cx="-1145" cy="710" rx="17" ry="11"/><ellipse cx="-700" cy="680" rx="22" ry="13"/><ellipse cx="-755" cy="430" rx="18" ry="10"/></g>
+  <g fill="#3e9a4b" stroke="#286b39" stroke-width="5">
+   <ellipse cx="-1080" cy="565" rx="42" ry="19" transform="rotate(-18 -1080 565)"/><ellipse cx="-900" cy="665" rx="34" ry="15" transform="rotate(14 -900 665)"/><ellipse cx="-760" cy="545" rx="28" ry="13" transform="rotate(-20 -760 545)"/>
+  </g>
+  <g fill="#f1d56c" stroke="#6c8e43" stroke-width="4"><path d="M-1080 565l0-18 10 18Z"/><path d="M-900 665l0-16 9 16Z"/></g>
+  <g fill="none" stroke="#3d8739" stroke-width="13" stroke-linecap="round"><path d="M-1190 620q-15-95-43-132m43 132q25-88 48-116M-710 645q-5-82 30-117m-30 117q42-63 70-69M-1035 755q-18-65-4-105M-1160 700q-8-45-28-67"/></g>
+  <g fill="#e8d7b0" stroke="#9e8c64" stroke-width="5"><ellipse cx="-1200" cy="585" rx="23" ry="13"/><ellipse cx="-1160" cy="700" rx="17" ry="11"/><ellipse cx="-690" cy="680" rx="22" ry="13"/><ellipse cx="-760" cy="430" rx="18" ry="10"/><ellipse cx="-850" cy="760" rx="16" ry="9"/></g>
   <g transform="translate(-705 605)"><path d="M-90 0L-20 -25L95 -5L25 28Z" fill="#9c6337" stroke="#674422" stroke-width="7"/><path d="M-55 8V78M35 10V80M80 0V64" stroke="#80502e" stroke-width="12"/><path d="M-60 -4L25 25M-20 -18L65 12" stroke="#d5a36a" stroke-width="7"/></g>
-  <text x="-930" y="300" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">LAGO DA FAZENDA</text>
+  <text x="-950" y="300" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">LAGO DA FAZENDA</text>
  </g>`;
 }
 
