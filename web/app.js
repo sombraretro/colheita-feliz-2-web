@@ -457,11 +457,11 @@ function brickWalkwayMarkup(){
  const roads=[
  'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
  'M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770',
- 'M532 890C510 830 500 760 500 720','M910 940C900 835 900 675 1000 510','M1390 900C1450 780 1490 650 1500 485','M2010 890C2070 800 2140 710 2200 610'];
+ 'M532 890C510 830 500 760 500 720',
+ 'M1270 470C1305 535 1320 625 1345 730C1360 795 1375 855 1390 900',
+ 'M1390 900C1450 780 1490 650 1500 485','M2010 890C2070 800 2140 710 2200 610'];
  const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
- const junctions=[[532,890,39],[910,940,37],[1390,900,37],[2010,890,37]];
- const circles=(fill,stroke,width)=>junctions.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${width}"/>`).join('');
- return `<g id="farm-road-network" pointer-events="none">${layers(82,'#77512e',.22)}${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${circles('url(#farmRoad)','#9b7448',5)}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 21" opacity=".48"/>`).join('')}</g>`;
+ return `<g id="farm-road-network" pointer-events="none">${layers(82,'#77512e',.22)}${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 21" opacity=".48"/>`).join('')}</g>`;
 }
 function scheduleAnimalBlinking(){
  document.querySelectorAll('.animal-wrap').forEach(node=>{
@@ -500,12 +500,13 @@ let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[910,940],[900,835],[900,675],[1000,510]],[[1390,900],[1450,780],[1490,650],[1500,485]],[[2010,890],[2070,800],[2140,710],[2200,610]]];
+const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[1270,470],[1305,535],[1320,625],[1345,730],[1360,795],[1375,855],[1390,900]],[[1390,900],[1450,780],[1490,650],[1500,485]],[[2010,890],[2070,800],[2140,710],[2200,610]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
  if(insidePoly(x,y,fieldOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
  if(x>250&&x<720&&y>285&&y<700)return true;
+ if(x>755&&x<1240&&y>-390&&y<-5)return true;
  if(x>1240&&x<1800&&y>-180&&y<455)return true;
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
@@ -532,10 +533,10 @@ for(let i=0;i<95;i++){
 }
 // Bases orgânicas de grama substituem as sombras dos prédios.
 scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 285Q1870 276 1945 286L1935 310Q1870 315 1820 306Z" fill="#4d982d" opacity=".72"/></g>`;
-for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1825,302,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
+for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,300,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=svgImage('casa',780,35,440,430);
-scenery+=svgImage('celeiro',270,300,430,370);
-scenery+=svgImage('casinha-cachorro',1830,155,145,140);
+scenery+=svgImage('celeiro',785,-365,430,350);
+scenery+=svgImage('casinha-cachorro',1770,155,145,140);
 scenery+=fencePath([[1260,-150],[1780,-150]],'rear');
 scenery+=fencePath([[1260,-150],[1260,430]],'side');
 scenery+=fencePath([[1780,-150],[1780,430]],'side');
@@ -580,7 +581,7 @@ function renderAnimals(){
  for(const a of animals){
   if(!ANIMALS[a.type])continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=1850;y=175;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=1790;y=175;w=150;h=112.5;}
   else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
