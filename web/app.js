@@ -1569,17 +1569,17 @@ function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),hour=now.getHours()+now.getMinutes()/60;
  const night=hour>=19||hour<6,twilight=(hour>=5&&hour<7)||(hour>=17&&hour<20);
- const opacity=night?(twilight?.30:.42):(twilight?.12:0);
+ const opacity=night ? (twilight ? .30 : .42) : (twilight ? .12 : 0);
  layer.querySelector('#day-night-sky')?.remove();
- if(opacity>0)layer.insertAdjacentHTML('afterbegin',\`<g id="day-night-sky">
-  <rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="\${opacity}"/>
-  <g opacity="\${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
- </g>\`);
+ if(opacity>0)layer.insertAdjacentHTML('afterbegin',`<g id="day-night-sky">
+  <rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="${opacity}"/>
+  <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
+ </g>`);
  // A arte da casa tem três janelas retangulares e uma redonda. A luz é aplicada
  // somente aos vidros azuis, em quatro painéis separados por janela.
  let lights=layer.querySelector('#house-window-lights');
  if(!lights){
-  layer.insertAdjacentHTML('beforeend',\`<g id="house-window-lights" class="house-window-lights" transform="translate(780 84.8) scale(.7678883)" opacity="0" pointer-events="none">
+  layer.insertAdjacentHTML('beforeend',`<g id="house-window-lights" class="house-window-lights" transform="translate(780 84.8) scale(.7678883)" opacity="0" pointer-events="none">
    <defs>
     <linearGradient id="houseGlassWarm" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe8a0"/><stop offset=".55" stop-color="#f5c56b"/><stop offset="1" stop-color="#e8a94f"/></linearGradient>
     <clipPath id="houseLeftPane1"><path d="M61 294L86 297L86 316L61 314Z"/></clipPath>
@@ -1617,10 +1617,10 @@ function updateDayNight(){
     <circle cx="466" cy="175" r="16" clip-path="url(#houseRoundPane3)"/>
     <circle cx="466" cy="175" r="16" clip-path="url(#houseRoundPane4)"/>
    </g>
-  </g>\`);
+  </g>`);
   lights=layer.querySelector('#house-window-lights');
  }
- const lightLevel=hour>=19||hour<5?.62:hour>=18?.62*(hour-18):hour>=5&&hour<6?.62*(6-hour):0;
+ const lightLevel=hour>=19||hour<5 ? .62 : hour>=18 ? .62*(hour-18) : hour>=5&&hour<6 ? .62*(6-hour) : 0;
  lights.style.opacity=String(Math.max(0,Math.min(.62,lightLevel)));
 }
 function applyMenuThemeColors(){
