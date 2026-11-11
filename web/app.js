@@ -161,13 +161,13 @@ const GRILL_RECIPES={
  bacon_toast:{name:'Bacon tostado',icon:'🥓',minutes:90,yield:3,salePrice:510,xp:30,ingredients:[['meat','pork',1],['crop','milho',1],['supply','seasoning',1]]},
  turkey_roast:{name:'Peru assado',icon:'🦃',minutes:180,yield:2,salePrice:850,xp:44,ingredients:[['meat','turkey',1],['crop','batata',1],['supply','honey',1]]},
  lamb_grilled:{name:'Carneiro grelhado',icon:'🍖',minutes:120,yield:2,salePrice:790,xp:40,ingredients:[['meat','lamb',1],['crop','tomate',1],['supply','seasoning',1]]},
- tilapia_grilled:{name:'Tilápia na brasa',icon:'🐟',minutes:45,yield:2,salePrice:390,xp:22,ingredients:[['fish','tilapia',1],['supply','seasoning',1]]},
- pacu_grilled:{name:'Pacu na brasa',icon:'🐠',minutes:60,yield:2,salePrice:560,xp:30,ingredients:[['fish','pacu',1],['crop','pimenta',1],['supply','seasoning',1]]},
- tambaqui_roast:{name:'Tambaqui assado',icon:'🐟',minutes:75,yield:2,salePrice:680,xp:34,ingredients:[['fish','tambaqui',1],['crop','tomate',1],['supply','seasoning',1]]},
- traira_grilled:{name:'Traíra espalmada',icon:'🐟',minutes:55,yield:2,salePrice:470,xp:26,ingredients:[['fish','traira',1],['crop','tomate',1],['supply','seasoning',1]]},
- tucuna_grilled:{name:'Tucunaré grelhado',icon:'🐠',minutes:80,yield:2,salePrice:760,xp:38,ingredients:[['fish','tucunaré',1],['crop','pimenta',1],['supply','seasoning',1]]},
- dourado_grilled:{name:'Dourado na brasa',icon:'🐠',minutes:100,yield:2,salePrice:920,xp:46,ingredients:[['fish','dourado',1],['crop','tomate',1],['supply','seasoning',1]]},
- pirarucu_grilled:{name:'Pirarucu na brasa',icon:'🐟',minutes:130,yield:2,salePrice:1250,xp:60,ingredients:[['fish','pirarucu',1],['crop','pimenta',1],['supply','seasoning',1]]}
+ tilapia_grilled:{name:'Tilápia na Folha de Bananeira',icon:'🐟',minutes:45,yield:2,salePrice:390,xp:22,ingredients:[['fish','tilapia',1],['supply','seasoning',1]]},
+ pacu_grilled:{name:'Pacu à Moda Pantaneira',icon:'🐠',minutes:60,yield:2,salePrice:560,xp:30,ingredients:[['fish','pacu',1],['crop','pimenta',1],['supply','seasoning',1]]},
+ tambaqui_roast:{name:'Costelinha de Tambaqui Crocante',icon:'🐟',minutes:75,yield:2,salePrice:680,xp:34,ingredients:[['fish','tambaqui',1],['crop','tomate',1],['supply','seasoning',1]]},
+ traira_grilled:{name:'Traíra Recheada da Beira do Lago',icon:'🐟',minutes:55,yield:2,salePrice:470,xp:26,ingredients:[['fish','traira',1],['crop','tomate',1],['supply','seasoning',1]]},
+ tucuna_grilled:{name:'Filé de Tucunaré com Pimenta',icon:'🐠',minutes:80,yield:2,salePrice:760,xp:38,ingredients:[['fish','tucunaré',1],['crop','pimenta',1],['supply','seasoning',1]]},
+ dourado_grilled:{name:'Dourado ao Molho Campestre',icon:'🐠',minutes:100,yield:2,salePrice:920,xp:46,ingredients:[['fish','dourado',1],['crop','tomate',1],['supply','seasoning',1]]},
+ pirarucu_grilled:{name:'Pirarucu Amazônico na Brasa',icon:'🐟',minutes:130,yield:2,salePrice:1250,xp:60,ingredients:[['fish','pirarucu',1],['crop','pimenta',1],['supply','seasoning',1]]}
 };
 
 const FISH_TYPES={
