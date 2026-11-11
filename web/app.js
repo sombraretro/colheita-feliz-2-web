@@ -4,6 +4,8 @@
 const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1300;
 const CROPS={
  nabo:{name:'Nabo',icon:'🥬',price:300,hours:10,yield:36,unitPrice:13,xp:40,flower:'#a86ab5',fruit:'#eee1f4'},
+ cebola:{name:'Cebola',icon:'🧅',price:220,hours:8,yield:34,unitPrice:18,xp:32,minLevel:2,seasons:1,flower:'#e8c5a8',fruit:'#c99a72'},
+ alho:{name:'Alho',icon:'🧄',price:240,hours:9,yield:32,unitPrice:21,xp:34,minLevel:2,seasons:1,flower:'#eee5d2',fruit:'#d9ceb8'},
  cenoura:{name:'Cenoura',icon:'🥕',price:350,hours:15,yield:41,unitPrice:20,xp:40,flower:'#ff8a20',fruit:'#f47e25'},
  feijao:{name:'Feijão',icon:'🫘',price:400,hours:17,yield:42,unitPrice:24,xp:42,flower:'#8b9d54',fruit:'#9a7042'},
  arroz:{name:'Arroz',icon:'🍚',price:450,hours:18,yield:44,unitPrice:26,xp:44,flower:'#d9d2a0',fruit:'#d7c78b'},
@@ -1357,7 +1359,7 @@ Object.assign(GRILL_RECIPES,{
  kitchen_corvina:{name:'Corvina ao Forno',icon:'🐟',minutes:66,yield:2,salePrice:940,xp:48,kitchenOnly:true,ingredients:[['sea','corvina',1],['crop','batata',2],['crop','tomate',1]]},
  kitchen_pescada:{name:'Pescada-amarela Grelhada',icon:'🐟',minutes:70,yield:2,salePrice:1020,xp:52,kitchenOnly:true,ingredients:[['sea','pescada',1],['crop','pimenta',1],['supply','seasoning',1]]},
  kitchen_sardinha:{name:'Sardinha na Cebola',icon:'🐟',minutes:34,yield:3,salePrice:590,xp:30,kitchenOnly:true,ingredients:[['sea','sardinha',2],['crop','cebola',1],['crop','tomate',1]]},
- kitchen_camaroes:{name:'Camarão Cremoso',icon:'🍤',minutes:48,yield:2,salePrice:980,xp:50,kitchenOnly:true,ingredients:[['sea','camarao',2],['animal','milk',1],['crop','alho',1]]},
+ kitchen_camaroes:{name:'Camarão Cremoso',icon:'🍤',minutes:48,yield:2,salePrice:980,xp:50,kitchenOnly:true,ingredients:[['sea','camarao',2],['animal','milk',1],['crop','cebola',1],['crop','alho',1]]},
  kitchen_lula:{name:'Lula Recheada',icon:'🦑',minutes:72,yield:2,salePrice:1180,xp:58,kitchenOnly:true,ingredients:[['sea','lula',1],['crop','arroz',1],['crop','tomate',1]]},
  kitchen_polvo:{name:'Polvo ao Vinagrete',icon:'🐙',minutes:88,yield:2,salePrice:1450,xp:68,kitchenOnly:true,ingredients:[['sea','polvo',1],['crop','tomate',2],['crop','pimenta',1]]},
  kitchen_ostra:{name:'Ostras Gratinadas',icon:'🦪',minutes:54,yield:2,salePrice:1100,xp:56,kitchenOnly:true,ingredients:[['sea','ostra',3],['animal','milk',1],['supply','seasoning',1]]},
