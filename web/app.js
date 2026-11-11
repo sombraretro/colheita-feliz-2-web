@@ -507,7 +507,7 @@ function blocked(x,y){
  if(x>755&&x<1240&&y>20&&y<485)return true;
  if(x>250&&x<720&&y>285&&y<700)return true;
  if(x>755&&x<1240&&y>-365&&y<25)return true;
- if(x>275&&x<730&&y>-330&&y<-25)return true;
+ if(x>305&&x<755&&y>-330&&y<-25)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>510&&x<730&&y>125&&y<300)return true;
  if(x>1240&&x<1800&&y>-180&&y<455)return true;
@@ -540,7 +540,7 @@ scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T12
 for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,300,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=svgImage('casa',780,35,440,430);
 scenery+=svgImage('celeiro',785,-345,430,350);
-scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(300 -310)">
+scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
  <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
  <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
  <path d="M4 108L205 -4L406 108L385 125L205 29L25 125Z" fill="#a95f3d" stroke="#70432c" stroke-width="8"/>
