@@ -537,3 +537,7 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 .world-notification{filter:drop-shadow(0 3px 3px #38231388);animation:worldNoticePulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes worldNoticePulse{0%,100%{scale:1}50%{scale:1.09}}
 @media(prefers-reduced-motion:reduce){.world-notification{animation:none}}
+
+/* Ferramentas com pictogramas próprios e zoom de enquadramento total. */
+.tool-svg{display:block;width:31px;height:31px;overflow:visible;flex:0 0 auto}.tool{display:flex;align-items:center;justify-content:center}.zoom-ui .fit{font-size:20px;width:34px;height:34px}
+@media(max-width:700px){.tool-svg{width:27px;height:27px}.zoom-ui .fit{width:28px;height:28px;font-size:17px}}
