@@ -553,3 +553,7 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 
 /* Iluminação e ornamentos da casa alinhados ao viewBox 470×320 do SVG original. */
 .house-theme-decor{filter:drop-shadow(0 1.5px 1.8px #39231755)}.house-window-lights{filter:drop-shadow(0 0 7px #ffc95d)}
+
+/* Luz interna discreta: somente o vidro recebe o tom quente; transição suave ao amanhecer/anoitecer. */
+.house-window-lights{filter:none;transition:opacity 5s ease-in-out;}
+@media(prefers-reduced-motion:reduce){.house-window-lights{transition:none}}
