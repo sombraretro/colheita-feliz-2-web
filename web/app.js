@@ -169,12 +169,12 @@ const GRILL_RECIPES={
  dourado_grilled:{name:'Dourado ao Molho Campestre',icon:'🐠',minutes:100,yield:2,salePrice:920,xp:46,ingredients:[['fish','dourado',1],['crop','tomate',1],['supply','seasoning',1]]},
  pirarucu_grilled:{name:'Pirarucu Amazônico na Brasa',icon:'🐟',minutes:130,yield:2,salePrice:1250,xp:60,ingredients:[['fish','pirarucu',1],['crop','pimenta',1],['supply','seasoning',1]]},
  lambari_frito:{name:'Lambari Crocante da Beira do Rio',icon:'🍤',minutes:30,yield:3,salePrice:180,xp:10,ingredients:[['fish','lambari',2],['crop','milho',1],['supply','seasoning',1]]},
- cara_moqueca:{name:'Moquequinha de Cará com Ervas',icon:'🍲',minutes:45,yield:2,salePrice:260,xp:14,ingredients:[['fish','cara',2],['crop','tomate',1],['crop','cebola',1],['supply','seasoning',1]]},
+ cara_moqueca:{name:'Moquequinha de Cará com Ervas',icon:'🍲',minutes:45,yield:2,salePrice:260,xp:14,ingredients:[['fish','cara',2],['crop','tomate',1],['crop','batata',1],['supply','seasoning',1]]},
  mandi_frito:{name:'Mandi Dourado com Crosta de Milho',icon:'🍽️',minutes:50,yield:2,salePrice:330,xp:18,ingredients:[['fish','mandi',1],['crop','milho',2],['supply','seasoning',1]]},
  piau_assado:{name:'Piau Assado com Tempero da Roça',icon:'🐟',minutes:55,yield:2,salePrice:370,xp:20,ingredients:[['fish','piau',1],['crop','tomate',1],['crop','pimenta',1],['supply','seasoning',1]]},
- curimbata_recheado:{name:'Curimbatá Recheado à Caipira',icon:'🍴',minutes:65,yield:2,salePrice:450,xp:24,ingredients:[['fish','curimbata',1],['crop','batata',1],['crop','cebola',1],['supply','seasoning',1]]},
+ curimbata_recheado:{name:'Curimbatá Recheado à Caipira',icon:'🍴',minutes:65,yield:2,salePrice:450,xp:24,ingredients:[['fish','curimbata',1],['crop','batata',1],['crop','batata',1],['supply','seasoning',1]]},
  pintado_ao_molho:{name:'Pintado ao Molho de Tomate Rústico',icon:'🍲',minutes:85,yield:2,salePrice:780,xp:38,ingredients:[['fish','pintado',1],['crop','tomate',2],['crop','pimenta',1],['supply','seasoning',1]]},
- surubim_na_folha:{name:'Surubim na Folha com Ervas Aromáticas',icon:'🌿',minutes:95,yield:2,salePrice:860,xp:42,ingredients:[['fish','surubim',1],['crop','cebola',1],['crop','tomate',1],['supply','seasoning',1]]},
+ surubim_na_folha:{name:'Surubim na Folha com Ervas Aromáticas',icon:'🌿',minutes:95,yield:2,salePrice:860,xp:42,ingredients:[['fish','surubim',1],['crop','batata',1],['crop','tomate',1],['supply','seasoning',1]]},
  jau_assado:{name:'Jaú Assado de Festa',icon:'🔥',minutes:115,yield:2,salePrice:1080,xp:52,ingredients:[['fish','jau',1],['crop','batata',2],['crop','pimenta',1],['supply','seasoning',1]]},
  pirarara_especial:{name:'Pirarara Especial do Pescador',icon:'🍛',minutes:125,yield:2,salePrice:1180,xp:56,ingredients:[['fish','pirarara',1],['crop','tomate',1],['crop','milho',1],['supply','honey',1]]}
 };
