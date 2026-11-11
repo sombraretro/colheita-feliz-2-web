@@ -345,11 +345,22 @@ const WORLD={left:-1400,right:4400,top:-300,bottom:1140,w:5800,h:980}, view={zoo
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false;
 const SUPABASE_URL='https://osmoolsywhlorgqqybhk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable__pNF0EfJMbM_a6Jdmpylvg_HY3nzRpo';
-let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,localSaveExists=false,cloudDirty=false;
+let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,localSaveExists=false,cloudDirty=false,supabaseAuthSubscription=null;
 function initSupabase(){
- if(supabaseClient)return true;
- if(!window.supabase||typeof window.supabase.createClient!=='function')return false;
- supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ if(!supabaseClient){
+  if(!window.supabase||typeof window.supabase.createClient!=='function')return false;
+  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ }
+ if(!supabaseAuthSubscription){
+  const listener=supabaseClient.auth.onAuthStateChange((event,session)=>{
+   if(session&&['SIGNED_IN','INITIAL_SESSION','TOKEN_REFRESHED','USER_UPDATED'].includes(event)){
+    window.setTimeout(()=>{if(state)handleAuthSession(session).catch(error=>console.error('Falha ao concluir autenticação:',error));},0);
+   }else if(event==='SIGNED_OUT'){
+    cloudUser=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;updateConnectionLabel();
+   }
+  });
+  supabaseAuthSubscription=listener?.data?.subscription||true;
+ }
  return true;
 }
 function updateConnectionLabel(){
@@ -435,7 +446,7 @@ async function authenticate(mode){
  const email=$('auth-email')?.value.trim()||'',password=$('auth-password')?.value||'';
  if(!email||!password)return notify('Informe e-mail e senha.');
  const result=mode==='signup'
-  ?await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin}})
+  ?await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:new URL('/',window.location.origin).toString()}})
   :await supabaseClient.auth.signInWithPassword({email,password});
  if(result.error)return notify(result.error.message||'Não foi possível autenticar.');
  if(result.data.session){await handleAuthSession(result.data.session);if(currentModal==='account')renderModal();}
@@ -520,48 +531,7 @@ function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('c
 document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startFarmMusic()},{once:true});
 
 const seedNoise=n=>{const x=Math.sin(n*91.13+17.37)*29341.715;return x-Math.floor(x)};
-function isModernFarm(){return document.querySelector('.app')?.dataset.interface==='modern'}
-function modernAssetGraphic(name){
- if(name==='casa')return '<g stroke-linejoin="round"><ellipse cx="724" cy="1000" rx="570" ry="52" fill="#365d48" opacity=".22"/><path d="M260 430L720 100L1185 430V970H260Z" fill="#f0e9d8" stroke="#55766b" stroke-width="24"/><path d="M210 430L720 55L1235 430L1165 475L720 155L280 475Z" fill="#435e65" stroke="#263f49" stroke-width="28"/><path d="M420 520H625V735H420Z" fill="#a8d3d0" stroke="#547b7a" stroke-width="20"/><path d="M522 520V735M420 625H625" stroke="#f5f3e8" stroke-width="15"/><path d="M810 520H1015V735H810Z" fill="#a8d3d0" stroke="#547b7a" stroke-width="20"/><path d="M912 520V735M810 625H1015" stroke="#f5f3e8" stroke-width="15"/><path d="M640 970V740Q720 650 800 740V970Z" fill="#785b43" stroke="#4c4c3e" stroke-width="20"/><circle cx="770" cy="850" r="10" fill="#e9c77d"/><path d="M310 970H1135" stroke="#7b9b82" stroke-width="24"/></g>';
- if(name==='celeiro')return '<g stroke-linejoin="round"><ellipse cx="720" cy="1010" rx="590" ry="48" fill="#365d48" opacity=".2"/><path d="M210 340L720 55L1230 340V980H210Z" fill="#b95e4b" stroke="#743e39" stroke-width="28"/><path d="M160 350L720 10L1280 350L1215 405L720 115L225 405Z" fill="#445f69" stroke="#263f49" stroke-width="30"/><path d="M275 405H1165V950H275Z" fill="#d8b69a" stroke="#744c3f" stroke-width="22"/><path d="M430 950V535L720 360L1010 535V950Z" fill="#a64e45" stroke="#703c38" stroke-width="24"/><path d="M465 935V555L720 400L975 555V935Z" fill="#d5b28b" stroke="#6e4739" stroke-width="18"/><path d="M720 405V935M475 735H965" stroke="#985b43" stroke-width="18"/><path d="M540 590L700 490M900 590L740 490M540 900L700 790M900 900L740 790" stroke="#f0d5b3" stroke-width="20"/></g>';
- if(name==='casinha-cachorro')return '<g stroke-linejoin="round"><ellipse cx="720" cy="1000" rx="440" ry="55" fill="#355c46" opacity=".22"/><path d="M300 450L720 110L1140 450V930H300Z" fill="#d9c7a6" stroke="#607b70" stroke-width="24"/><path d="M250 455L720 65L1190 455L1125 510L720 180L315 510Z" fill="#405d65" stroke="#263f49" stroke-width="26"/><path d="M550 930V650Q720 440 890 650V930Z" fill="#493b31" stroke="#76543c" stroke-width="20"/><path d="M420 570H560V700H420Z" fill="#a5d0ca" stroke="#607d76" stroke-width="16"/></g>';
- if(name==='arvore')return '<g stroke-linejoin="round"><ellipse cx="720" cy="1030" rx="390" ry="40" fill="#315b3e" opacity=".18"/><path d="M660 1040Q635 750 690 480L780 480Q835 760 780 1040Z" fill="#825b3c" stroke="#61442f" stroke-width="22"/><path d="M705 740L505 510M765 690L970 455M720 560L635 360" fill="none" stroke="#825b3c" stroke-width="38" stroke-linecap="round"/><g fill="#397e58" stroke="#285f48" stroke-width="20"><circle cx="470" cy="380" r="210"/><circle cx="700" cy="245" r="235"/><circle cx="960" cy="370" r="220"/><circle cx="570" cy="550" r="205"/><circle cx="860" cy="555" r="220"/></g><g fill="#62a66d" opacity=".8"><circle cx="430" cy="325" r="100"/><circle cx="665" cy="180" r="120"/><circle cx="930" cy="310" r="115"/><circle cx="550" cy="500" r="90"/><circle cx="840" cy="500" r="105"/></g></g>';
- return '';
-}
-function modernAnimalGraphic(type){
- const colors={cachorro:['#b87b4d','#f0d8b8'],burro:['#8d8d83','#d5d0c0'],ovelha:['#eee7d8','#c9bca9'],vaca:['#eee8d9','#343b3c'],bufala:['#655c50','#ded1bd'],boi:['#a65e3d','#e4c49c'],cabra:['#d7c5a1','#76523a'],coelho:['#eee9df','#c99e9c'],porco:['#e7a7a0','#bd7372'],iaque:['#5c493c','#b49b7c'],galinha:['#f0e2c8','#c35e43'],pato:['#d8d0a0','#e0a044'],pombo:['#aeb8b8','#eef1e9'],pavao:['#397d77','#e1b94f'],peru:['#855b43','#d4a15f']};
- const c=colors[type]||['#c9ad84','#805d3c'],body=c[0],mark=c[1],bird=['galinha','pato','pombo','pavao','peru'].includes(type);
- if(bird){
-  let tail='',crest='',feet='';
-  if(type==='pavao')tail='<g fill="#3a9a91" stroke="#e5c15b" stroke-width="10"><path d="M630 620Q210 250 190 390Q180 580 560 740Z"/><path d="M650 610Q400 170 400 270Q360 460 600 730Z"/><path d="M700 600Q700 140 620 220Q540 430 670 730Z"/><path d="M760 610Q1010 170 1040 270Q1080 460 810 730Z"/><path d="M790 620Q1210 250 1250 390Q1260 580 860 740Z"/></g><g fill="#e4c45c"><circle cx="190" cy="390" r="24"/><circle cx="400" cy="270" r="24"/><circle cx="620" cy="220" r="24"/><circle cx="1040" cy="270" r="24"/><circle cx="1250" cy="390" r="24"/></g>';
-  if(type==='peru')tail='<path d="M560 680Q230 600 190 390Q390 370 620 650M590 700Q280 780 190 590Q390 500 650 670M850 670Q1080 500 1250 590Q1160 780 860 700M830 650Q1060 370 1250 390Q1210 600 890 680" fill="#9c4c39" stroke="#74402f" stroke-width="18"/>';
-  if(type==='galinha')crest='<path d="M1000 350Q960 245 1010 225Q1045 225 1050 285Q1090 205 1120 245Q1140 295 1085 355Z" fill="#c34c46" stroke="#823b35" stroke-width="10"/>';
-  if(type==='pombo')crest='<path d="M1000 355Q1030 290 1090 310L1110 360Z" fill="#e9eeee" stroke="#7e9295" stroke-width="8"/>';
-  if(type==='pato')feet='<path d="M540 940L510 995L570 995L535 970L600 985M850 940L820 995L880 995L845 970L910 985" fill="#e2a344" stroke="#99632e" stroke-width="8" stroke-linejoin="round"/>';
-  else feet='<path d="M550 930V985M860 930V985" stroke="#a96c3c" stroke-width="22" stroke-linecap="round"/>';
-  return '<g stroke-linejoin="round">'+tail+'<ellipse cx="720" cy="700" rx="320" ry="205" fill="'+body+'" stroke="#655947" stroke-width="20"/><ellipse cx="680" cy="670" rx="205" ry="150" fill="'+mark+'" opacity=".5"/><path d="M850 610Q930 480 1040 460" fill="none" stroke="'+body+'" stroke-width="135" stroke-linecap="round"/><circle cx="1060" cy="435" r="115" fill="'+body+'" stroke="#655947" stroke-width="18"/><path d="M1000 345Q980 220 1050 300L1080 350Z" fill="'+body+'" stroke="#655947" stroke-width="14"/><circle cx="1100" cy="420" r="15" fill="#24343a"/><path d="M1145 450L1235 480L1145 510Z" fill="'+(type==='pato'?'#e9a33d':'#d98b49')+'" stroke="#8b5b37" stroke-width="10"/><path d="M530 830L515 930M690 870L680 930M850 850L860 930M980 800L1000 930" stroke="#8a6542" stroke-width="24" stroke-linecap="round"/>'+feet+crest+'</g>';
- }
- const horns=['vaca','bufala','boi','cabra','iaque'].includes(type)?'<path d="M990 380Q900 255 840 330M1090 360Q1190 245 1250 325" fill="none" stroke="#d7c7a4" stroke-width="30" stroke-linecap="round"/>':'';
- const ears=type==='coelho'?'<path d="M1010 380Q930 80 990 75Q1070 100 1075 365M1090 370Q1120 60 1180 100Q1215 150 1145 400" fill="'+body+'" stroke="#a28c7b" stroke-width="18"/>':type==='burro'?'<path d="M980 400Q910 90 950 85Q1040 130 1035 395M1080 390Q1090 75 1150 100Q1200 155 1140 410" fill="'+body+'" stroke="#5e5d55" stroke-width="18"/>':'<path d="M970 420Q920 270 965 280M1100 410Q1160 260 1190 300" fill="none" stroke="'+body+'" stroke-width="48" stroke-linecap="round"/>';
- const patches=['vaca','boi','bufala'].includes(type)?'<path d="M480 560Q570 440 690 520L660 680Q540 750 465 650Z" fill="'+mark+'"/><path d="M790 620Q900 500 980 580L940 720Q830 770 790 690Z" fill="'+mark+'"/>':'';
- const snout=type==='porco'?'<ellipse cx="1170" cy="540" rx="64" ry="45" fill="#d77f7c" stroke="#a75e5c" stroke-width="14"/><ellipse cx="1148" cy="540" rx="9" ry="15" fill="#7b4446"/><ellipse cx="1190" cy="540" rx="9" ry="15" fill="#7b4446"/>':'<ellipse cx="1155" cy="540" rx="52" ry="34" fill="'+mark+'" stroke="#7d6250" stroke-width="12"/>';
- const wool=type==='ovelha'?'<g fill="'+body+'" stroke="#d1c6b6" stroke-width="13"><circle cx="480" cy="590" r="100"/><circle cx="620" cy="500" r="110"/><circle cx="770" cy="490" r="110"/><circle cx="900" cy="570" r="100"/><circle cx="560" cy="720" r="110"/><circle cx="740" cy="740" r="115"/><circle cx="900" cy="720" r="95"/></g>':'';
- const udder=['vaca','bufala'].includes(type)?'<path d="M720 810Q790 785 850 810L835 885Q785 915 735 880Z" fill="#d98d9b" stroke="#9e6770" stroke-width="12"/>':'';
- return '<g stroke-linejoin="round"><ellipse cx="720" cy="1010" rx="420" ry="35" fill="#334b3b" opacity=".13"/><path d="M420 620Q320 560 300 490" fill="none" stroke="'+body+'" stroke-width="26" stroke-linecap="round"/><path d="M420 640Q460 430 720 440Q980 430 1060 630L1010 820Q730 925 460 810Z" fill="'+body+'" stroke="#655947" stroke-width="20"/>'+patches+wool+'<path d="M480 790L465 1000M650 835L645 1000M835 835L850 1000M990 770L1015 1000" stroke="#795b43" stroke-width="36" stroke-linecap="round"/><path d="M430 1000h70m110 0h70m100 0h70m110 0h70" stroke="#54483d" stroke-width="15" stroke-linecap="round"/><path d="M850 610Q900 490 1035 455" fill="none" stroke="'+body+'" stroke-width="150" stroke-linecap="round"/>'+horns+ears+'<circle cx="1040" cy="465" r="125" fill="'+body+'" stroke="#655947" stroke-width="20"/>'+snout+'<circle cx="1070" cy="420" r="14" fill="#24343a"/><circle cx="1075" cy="415" r="5" fill="#fff"/>'+udder+(type==='cabra'?'<path d="M1080 570L1100 640L1120 570Z" fill="#9d795b"/>':'')+'</g>';
-}
-function modernTreeGraphic(treeType,fruitColor,progress,ready){
- const canopy=treeType==='pinheiro_natal'?'<path d="M0-280L-130-80H-65L-170 85H170L65-80H130Z" fill="#2d7952" stroke="#205d43" stroke-width="12"/>':treeType==='coco'?'<g fill="none" stroke="#438c55" stroke-width="20" stroke-linecap="round"><path d="M0-190Q-190-340-250-225M0-190Q-110-390-40-430M0-190Q70-405 160-360M0-190Q220-350 260-220M0-190Q260-140 270-40M0-190Q-250-120-280-35"/></g><g fill="#8c603d"><ellipse cx="-10" cy="-160" rx="27" ry="35"/><ellipse cx="35" cy="-165" rx="27" ry="35"/></g>':'<g fill="#3d895b" stroke="#2c704d" stroke-width="10"><circle cx="-62" cy="-185" r="108"/><circle cx="60" cy="-205" r="120"/><circle cx="-5" cy="-95" r="118"/><circle cx="100" cy="-115" r="98"/></g><g fill="#78b77a" opacity=".72"><circle cx="-90" cy="-210" r="42"/><circle cx="30" cy="-250" r="48"/><circle cx="105" cy="-140" r="38"/></g>';
- let fruits='';const count=ready?7:Math.max(0,Math.floor(progress*7)),xs=[-95,-35,60,112,-72,30,88],ys=[-155,-225,-180,-105,-75,-120,-235];
- for(let i=0;i<count;i++)fruits+='<circle cx="'+xs[i]+'" cy="'+ys[i]+'" r="13" fill="'+fruitColor+'" stroke="#855a36" stroke-width="4"/><path d="M'+xs[i]+' '+(ys[i]-13)+'l4-8" stroke="#5a8c49" stroke-width="6"/>';
- return '<g><ellipse cy="18" rx="118" ry="17" fill="#345e45" opacity=".18"/><path d="M-24 20Q-34-75-4-190L30-190Q48-70 26 20Z" fill="#8b6344" stroke="#62472f" stroke-width="10"/><path d="M0-100L-72-185M18-125L90-210" stroke="#8b6344" stroke-width="16" stroke-linecap="round"/>'+canopy+fruits+'</g>';
-}
-function modernGroundMarkup(){return '<defs><linearGradient id="modernGrassBase" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#a5c88e"/><stop offset=".48" stop-color="#83b483"/><stop offset="1" stop-color="#679879"/></linearGradient><pattern id="modernGrassTexture" width="130" height="120" patternUnits="userSpaceOnUse"><path d="M12 70q4-9 8-12m35 35q5-10 9-14m44-25q3-8 8-11" fill="none" stroke="#d4e4b7" stroke-width="2" opacity=".35"/><circle cx="72" cy="24" r="2" fill="#e8e9c8" opacity=".3"/></pattern></defs><rect x="-1400" y="-400" width="5800" height="1700" fill="url(#modernGrassBase)"/><rect x="-1400" y="-400" width="5800" height="1700" fill="url(#modernGrassTexture)"/><path d="M-1400 210Q-900 150-480 225T220 205Q620 150 980 210T1710 190Q2420 135 3100 220T4400 180" fill="none" stroke="#c2d8a4" stroke-width="70" opacity=".12"/><path d="M-1400 740Q-920 665-520 780T120 785Q520 730 860 805T1600 800Q2400 740 3100 790T4400 760V1300H-1400Z" fill="#456f58" opacity=".08"/>'}
-function modernRiverMarkup(){return '<g id="pond-area" pointer-events="none"><defs><linearGradient id="modernRiverBank" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9c7a1"/><stop offset=".5" stop-color="#b7a17b"/><stop offset="1" stop-color="#8b8065"/></linearGradient><linearGradient id="modernRiverWater" x1="0" y1="0" x2="1" y2=".2"><stop stop-color="#3c8990"/><stop offset=".45" stop-color="#69c4bc"/><stop offset="1" stop-color="#277b87"/></linearGradient><clipPath id="modernRiverClip"><path d="M-1390 -300 C-1285 -190 -1350 -45 -1250 105 C-1160 245 -1260 380 -1140 535 C-1030 675 -1160 825 -1040 1140 L-900 1140 C-1035 875 -900 735 -1000 575 C-1095 425 -970 270 -1080 115 C-1190 -35 -1100 -180 -1190 -300Z"/></clipPath></defs><path d="M-1400 -300 C-1300 -185 -1370 -35 -1270 115 C-1175 260 -1280 390 -1160 550 C-1050 690 -1180 850 -1060 1140 L-820 1140 C-945 860 -820 730 -925 585 C-1020 430 -890 265 -1000 105 C-1110 -50 -1020 -185 -1110 -300Z" fill="url(#modernRiverBank)" stroke="#8e8c72" stroke-width="12"/><path d="M-1390 -300 C-1285 -190 -1350 -45 -1250 105 C-1160 245 -1260 380 -1140 535 C-1030 675 -1160 825 -1040 1140 L-900 1140 C-1035 875 -900 735 -1000 575 C-1095 425 -970 270 -1080 115 C-1190 -35 -1100 -180 -1190 -300Z" fill="url(#modernRiverWater)" stroke="#d9d3b7" stroke-width="10"/><g clip-path="url(#modernRiverClip)"><path d="M-1350-250C-1240-70-1320 20-1210 160S-1250 430-1110 580S-1150 880-1000 1180" fill="none" stroke="#d7fff0" stroke-width="16" opacity=".4"/><path d="M-1280-200C-1170-20-1250 80-1140 220S-1180 490-1040 640S-1080 920-930 1180" fill="none" stroke="#e7fffa" stroke-width="5" opacity=".7"/></g><g fill="#527f4d" stroke="#3b6948" stroke-width="4"><path d="M-1365 0q-40-65-65-35q15 40 65 60q35-65 72-54q-10 48-72 54Z"/><path d="M-1200 380q-38-60-62-32q14 38 62 55q33-60 68-48q-10 45-68 48Z"/><path d="M-1100 740q-42-62-68-34q15 40 68 57q34-62 70-50q-11 47-70 50Z"/></g><g transform="translate(-825 760)"><path d="M8-4L-78-25L-218-8L-130 24Z" fill="#9b754c" stroke="#5c503e" stroke-width="8"/><path d="M8-13L-78-34L-218-17M5-2L-82-23L-222-6M2 10L-86-11L-226 6" fill="none" stroke="#e1c69a" stroke-width="8"/><path d="M-14-6V105M-95-25V112M-180-8V96" stroke="#6c5c45" stroke-width="14"/></g><text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#f3f8e8" stroke="#426d57" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text></g>'}
-function modernOrchardMarkup(){return '<g id="orchard-ground" pointer-events="none"><path d="M2195 5Q2325-90 2550-85L3125-70Q3290-35 3310 150L3285 455Q3240 560 3040 555L2330 545Q2165 510 2155 335L2160 130Q2165 45 2195 5Z" fill="#4f7f5d" stroke="#345d4b" stroke-width="18"/><path d="M2225 40Q2370-25 2540-25L3115-15Q3235 15 3250 155L3235 425Q3190 505 3030 505L2350 500Q2220 470 2210 325L2215 130Z" fill="#a9c99a" stroke="#d6e4c4" stroke-width="9"/><path d="M2220 300Q2500 270 2750 300T3245 295" fill="none" stroke="#d4c29b" stroke-width="60" stroke-linecap="round"/><g fill="#8a6b4d" stroke="#6e563f" stroke-width="6">'+ORCHARD_SLOTS.map(([x,y])=>'<ellipse cx="'+x+'" cy="'+(y+4)+'" rx="88" ry="23"/>').join('')+'</g></g>'}
-function modernForestBackground(){return '<g id="forest-area" pointer-events="none"><path d="M3430-20Q3500-120 3660-120H4240Q4360-80 4380 70V790Q4330 900 4200 900H3500Q3400 840 3400 700V100Q3400 10 3430-20Z" fill="#345e49" stroke="#244b3b" stroke-width="20"/><path d="M3470 20H4310V820H3470Z" fill="#93b88a" stroke="#c9dfb7" stroke-width="12"/><path d="M3470 435H4310" stroke="#d4c6a6" stroke-width="50"/><path d="M3470 435H4310" stroke="#f0e5d0" stroke-width="4" stroke-dasharray="3 22"/></g>'}
-function modernAviaryMarkup(){return '<g id="aviary-building" pointer-events="none" transform="translate(330 -310)"><ellipse cx="205" cy="258" rx="210" ry="22" fill="#315d48" opacity=".2"/><path d="M20 105L205 8L390 105V242H20Z" fill="#e8e5d7" stroke="#5f8277" stroke-width="9"/><path d="M4 108L205-4L406 108L385 125L205 29L25 125Z" fill="#42636a" stroke="#294b53" stroke-width="8"/><path d="M38 112H372V236H38Z" fill="#d9e5d6" stroke="#64887c" stroke-width="6"/><path d="M52 116V231M95 116V231M138 116V231M181 116V231M224 116V231M267 116V231M310 116V231M353 116V231M38 145H372M38 181H372M38 216H372" stroke="#66877a" stroke-width="4"/><path d="M168 236V150Q205 119 242 150V236Z" fill="#52675b" stroke="#3b5148" stroke-width="6"/></g>'}
-function modernGrillMarkup(assembled,x=700,y=280){return '<g id="grill-building" transform="translate('+x+' '+y+') scale(.92)"><ellipse cx="0" cy="66" rx="72" ry="15" fill="#315d48" opacity=".22"/><path d="M-54-2L-46-47H46L54-2V50H-54Z" fill="'+(assembled?'#a86b4b':'#a7aaa1')+'" stroke="#536b60" stroke-width="7"/><path d="M-58-46L-34-76H34L58-46Z" fill="#455f65" stroke="#2e484f" stroke-width="7"/><path d="M-39-36H39" stroke="#e6d7b9" stroke-width="7"/><path d="M-34-24H34V24H-34Z" fill="#28383a" stroke="#6d8177" stroke-width="6"/><path d="M-28-14H28M-28-3H28M-28 8H28" stroke="#d4c3a4" stroke-width="4"/><path d="M-28 30Q-15 7-4 30Q8 7 22 30" fill="none" stroke="#e88e54" stroke-width="6"/><path d="M-42 50V69M42 50V69" stroke="#5b5144" stroke-width="10"/></g>'}
-function svgImage(name,x,y,w,h,extra=''){if(isModernFarm()){const art=modernAssetGraphic(name);if(art)return `<g class="modern-asset modern-asset-${name}" data-asset="${name}" transform="translate(${x} ${y}) scale(${w/1448} ${h/1086})" pointer-events="none">${art}</g>`}return `<image data-asset="${name}" href="/assets/${name}.png" x="${x}" y="${y}" width="${w}" height="${h}" pointer-events="none" ${extra}/>`}
+function svgImage(name,x,y,w,h,extra=''){return `<image data-asset="${name}" href="/assets/${name}.png" x="${x}" y="${y}" width="${w}" height="${h}" pointer-events="none" ${extra}/>`}
 function cropHours(id,regrowing=false){const c=CROPS[id];return Math.max(.01,(regrowing&&c.regrowHours?c.regrowHours:c.hours)*CROP_TIME_FACTOR)}
 function cropCurrency(c){return c.priceCurrency==='green'?'greenCoins':'coins'}
 function cropPriceLabel(c){return `${c.priceCurrency==='green'?'🟢':'🟡'} ${fmt(c.price)}`}
@@ -572,16 +542,11 @@ function cropBalanceNote(c){if(c.balance==='estimated')return `<br/><b class="da
 function formatHours(hours){const mins=Math.round(hours*60);return mins>=60?`${Math.floor(mins/60)}h ${mins%60}min`:`${mins}min`}
 function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function flower(x,y,s=1,color='#ffe8c3'){if(isModernFarm()){let petals='';for(let i=0;i<6;i++){const a=i*Math.PI/3,px=x+Math.cos(a)*7*s,py=y+Math.sin(a)*7*s;petals+=`<ellipse cx="${px}" cy="${py}" rx="${4*s}" ry="${6*s}" fill="${color}" transform="rotate(${i*60} ${px} ${py})"/>`}return `<g pointer-events="none">${petals}<circle cx="${x}" cy="${y}" r="${3.2*s}" fill="#e8c76b"/><path d="M${x} ${y+5*s}v${9*s}" stroke="#528a5b" stroke-width="2.2"/></g>`}let a='';for(let i=0;i<5;i++){const angle=i*Math.PI*2/5;a+=`<ellipse cx="${x+Math.cos(angle)*s*6}" cy="${y+Math.sin(angle)*s*6}" rx="${3.6*s}" ry="${5.6*s}" fill="${color}" transform="rotate(${i*72} ${x+Math.cos(angle)*s*6} ${y+Math.sin(angle)*s*6})"/>`};return `<g pointer-events="none">${a}<circle cx="${x}" cy="${y}" r="${3*s}" fill="#ffd642"/></g>`}
-function grassClump(x,y,s=1){if(isModernFarm())return `<g pointer-events="none" opacity=".85" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0Q-3-14-12-19M0 0Q2-18 0-24M0 0Q9-15 16-17M0 0Q-12-8-18-8" fill="none" stroke="#477e58" stroke-width="3.4" stroke-linecap="round"/><path d="M-12-19q-8-10-13-4q4 9 13 4ZM0-24q-5-12 2-14q6 8-2 14ZM16-17q9-9 13-2q-5 8-13 2Z" fill="#84b77d" stroke="#477e58" stroke-width="1.5"/></g>`;return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
-function fencePath(points,section=''){if(isModernFarm()){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+='<path d="M'+a[0]+' '+(a[1]-30)+'L'+b[0]+' '+(b[1]-30)+'M'+a[0]+' '+(a[1]-9)+'L'+b[0]+' '+(b[1]-9)+'" fill="none" stroke="#627f72" stroke-width="15" stroke-linecap="round"/><path d="M'+a[0]+' '+(a[1]-34)+'L'+b[0]+' '+(b[1]-34)+'M'+a[0]+' '+(a[1]-13)+'L'+b[0]+' '+(b[1]-13)+'" fill="none" stroke="#c3d0bd" stroke-width="5" stroke-linecap="round"/>'}const posts=points.map(([x,y])=>'<g><ellipse cx="'+x+'" cy="'+(y+8)+'" rx="13" ry="6" fill="#315d48" opacity=".22"/><rect x="'+(x-9)+'" y="'+(y-62)+'" width="18" height="70" rx="5" fill="#718a79" stroke="#405d51" stroke-width="3"/><path d="M'+(x-8)+' '+(y-54)+'H'+(x+8)+'M'+(x-8)+' '+(y-23)+'H'+(x+8)+'" stroke="#d2dfcf" stroke-width="3"/></g>').join('');return '<g class="fence-section modern-fence '+section+'" data-fence-section="'+section+'" pointer-events="none">'+rails+posts+'</g>'}let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#865128" stroke-width="12" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-32}L${b[0]} ${b[1]-32}M${a[0]} ${a[1]-13}L${b[0]} ${b[1]-13}" stroke="#e0a05a" fill="none" stroke-width="5" stroke-linecap="round"/>`}
+function flower(x,y,s=1,color='#ffe8c3'){let a='';for(let i=0;i<5;i++){const angle=i*Math.PI*2/5;a+=`<ellipse cx="${x+Math.cos(angle)*s*6}" cy="${y+Math.sin(angle)*s*6}" rx="${3.6*s}" ry="${5.6*s}" fill="${color}" transform="rotate(${i*72} ${x+Math.cos(angle)*s*6} ${y+Math.sin(angle)*s*6})"/>`};return `<g pointer-events="none">${a}<circle cx="${x}" cy="${y}" r="${3*s}" fill="#ffd642"/></g>`}
+function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
+function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#865128" stroke-width="12" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-32}L${b[0]} ${b[1]-32}M${a[0]} ${a[1]-13}L${b[0]} ${b[1]-13}" stroke="#e0a05a" fill="none" stroke-width="5" stroke-linecap="round"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="12" ry="6" fill="#336b1f" opacity=".35"/><path d="M${x-9} ${y-54}L${x+1} ${y-67}L${x+11} ${y-54}L${x+10} ${y+8}L${x-8} ${y+8}Z" fill="#aa6835" stroke="#694320" stroke-width="3"/><path d="M${x-6} ${y-53}L${x+1} ${y-60}L${x+7} ${y-52}" fill="none" stroke="#f2c17a" stroke-width="4"/><path d="M${x-4} ${y-43}V${y+1}" stroke="#c48d54" stroke-width="4"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none">${rails}${posts}</g>`}
 function brickWalkwayMarkup(){
- if(isModernFarm()){
-  const paths=['M1000 8V32','M535 -75H1000','M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890','M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770','M532 890C510 830 500 760 500 720','M1120 455C1185 455 1210 470 1240 505C1285 560 1330 650 1370 740C1400 820 1410 865 1390 900'];
-  const layer=(w,color,opacity=1)=>paths.map(d=>'<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round" opacity="'+opacity+'"/>').join('');
-  return '<g id="farm-road-network" pointer-events="none">'+layer(86,'#526c5e',.18)+layer(76,'#b6b19a')+layer(66,'#d6cfb5')+layer(3,'#f7f0dc',.55)+'</g>';
- }
  const roads=[
  'M1000 8V32',
  'M535 -75H1000',
@@ -624,7 +589,7 @@ const ground=`<defs>
 <path d="M-1400 330Q-900 270 -480 340T180 320Q650 260 1020 310T1780 300Q2450 240 3100 325T4400 285" fill="none" stroke="#8acb4c" stroke-width="42" opacity=".13"/>
 <!-- Estradas secundárias são integradas à rede viária única. -->
 `;
-$('ground-layer').innerHTML=isModernFarm()?modernGroundMarkup()+brickWalkwayMarkup():ground+brickWalkwayMarkup();
+$('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
@@ -675,7 +640,7 @@ scenery+=`<g pointer-events="none">
  <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 -12q-3-13-9-16m9 16q8-12 15-13M970 -13q-3-14-10-17m10 17q8-12 15-13M1120 -13q-3-13-9-16m9 16q8-12 15-13"/></g>
  <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 -7l12-9 17 7-7 8Z"/><path d="M1035 -8l11-8 15 7-8 8Z"/></g>
  </g>`;
-if(isModernFarm())scenery+=modernAviaryMarkup();else scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
+scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
  <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
  <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
  <path d="M4 108L205 -4L406 108L385 125L205 29L25 125Z" fill="#a95f3d" stroke="#70432c" stroke-width="8"/>
@@ -751,9 +716,9 @@ function renderAnimals(){
   }
   const feetRatio={cachorro:1,burro:1068/1086,ovelha:1,vaca:1,bufala:1,boi:1,cabra:1,coelho:.92,galinha:1050/1086,porco:1070/1086,pombo:.92,pato:.92,pavao:.92};
   const baseY=y+h*(feetRatio[a.type]||1)-3,shadowRx=Math.max(18,w*.31),scaleX=w/1448,scaleY=h/1086;
-  const sheepEyes=isModernFarm()?'':a.type==='ovelha'?`<g class="sheep-open-eyes"><ellipse cx="260" cy="535" rx="12" ry="18" fill="#33201d"/><ellipse cx="425" cy="550" rx="12" ry="18" fill="#33201d"/><circle cx="257" cy="528" r="4.2" fill="#fff8e9"/><circle cx="422" cy="543" r="4.2" fill="#fff8e9"/></g>`:'';
-  const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;const assetName=breed?.asset||`animal-${a.type}`;const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','pavao','iaque'].includes(a.type)?'svg':'png');const animalGraphic=isModernFarm()?modernAnimalGraphic(a.type):(['peru','boi','cabra','bufala','coelho'].includes(a.type)?`<text x="724" y="850" text-anchor="middle" font-size="760">${ANIMALS[a.type].icon}</text>`:`<image class="animal-sprite" href="/assets/${assetName}.${assetExt}" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>`);
-  markup+=`<g class="animal-wrap animal-${a.type}" data-animal="${a.type}" data-animal-id="${safe(a.id)}" data-world-x="${x}" data-world-y="${y}" data-world-w="${w}" data-world-h="${h}" data-world-ground-y="${baseY}"><rect class="animal-hitbox" x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="${x+w*.5}" cy="${baseY+2}" rx="${shadowRx*1.22}" ry="${Math.max(12,w*.085)}" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="${x+w*.5}" cy="${baseY+1}" rx="${shadowRx*.7}" ry="${Math.max(6,w*.04)}" fill="#102b0d" opacity=".32"/><g transform="translate(${x} ${y}) scale(${scaleX} ${scaleY})">${animalGraphic}${sheepEyes}${isModernFarm()?'':`<g class="blink-overlay">${blinkMarkup(a.type)}</g>`}</g></g>`;
+  const sheepEyes=a.type==='ovelha'?`<g class="sheep-open-eyes"><ellipse cx="260" cy="535" rx="12" ry="18" fill="#33201d"/><ellipse cx="425" cy="550" rx="12" ry="18" fill="#33201d"/><circle cx="257" cy="528" r="4.2" fill="#fff8e9"/><circle cx="422" cy="543" r="4.2" fill="#fff8e9"/></g>`:'';
+  const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;const assetName=breed?.asset||`animal-${a.type}`;const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','pavao','iaque'].includes(a.type)?'svg':'png');const animalGraphic=['peru','boi','cabra','bufala','coelho'].includes(a.type)?`<text x="724" y="850" text-anchor="middle" font-size="760">${ANIMALS[a.type].icon}</text>`:`<image class="animal-sprite" href="/assets/${assetName}.${assetExt}" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>`;
+  markup+=`<g class="animal-wrap animal-${a.type}" data-animal="${a.type}" data-animal-id="${safe(a.id)}" data-world-x="${x}" data-world-y="${y}" data-world-w="${w}" data-world-h="${h}" data-world-ground-y="${baseY}"><rect class="animal-hitbox" x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="${x+w*.5}" cy="${baseY+2}" rx="${shadowRx*1.22}" ry="${Math.max(12,w*.085)}" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="${x+w*.5}" cy="${baseY+1}" rx="${shadowRx*.7}" ry="${Math.max(6,w*.04)}" fill="#102b0d" opacity=".32"/><g transform="translate(${x} ${y}) scale(${scaleX} ${scaleY})">${animalGraphic}${sheepEyes}<g class="blink-overlay">${blinkMarkup(a.type)}</g></g></g>`;
  }
  $('animal-layer').innerHTML=markup;
  scheduleAnimalBlinking();
@@ -766,7 +731,7 @@ function diamondPoints(r,c){const [x,y]=tilePoint(r,c);return [[x,y],[x+100,y-45
 function poly(points){return points.map(p=>p.join(',')).join(' ')}
 function plotGeometry(p,r,c,i){
  const pts=diamondPoints(r,c),s=poly(pts),[x,y]=tilePoint(r,c),shade=i%3,selected=i===lastSelected,red=p.soil==='red';
- const modern=isModernFarm();let tile=`<g class="plot-item" data-plot-index="${i}"><polygon points="${pts.map(([a,b])=>`${a+2},${b+8}`).join(' ')}" fill="${modern?'#345b45':(red?'#71372e':'#1c6a1a')}" opacity=".54"/><polygon points="${s}" fill="${modern?(p.status==='spent'?'#9a8464':(red?'#9b7468':'#b18d65')):(p.status==='spent'?(red?'#714039':'#785030'):(red?'#a9473f':'#60b62e'))}" stroke="${modern?'#6e5842':(red?'#78382f':(p.status==='spent'?'#5f3c28':'#3a7622'))}" stroke-width="${modern?4:2.5}"/>`;
+ let tile=`<g class="plot-item" data-plot-index="${i}"><polygon points="${pts.map(([a,b])=>`${a+2},${b+8}`).join(' ')}" fill="${red?'#71372e':'#1c6a1a'}" opacity=".54"/><polygon points="${s}" fill="${p.status==='spent'?(red?'#714039':'#785030'):(red?'#a9473f':'#60b62e')}" stroke="${red?'#78382f':(p.status==='spent'?'#5f3c28':'#3a7622')}" stroke-width="2.5"/>`;
  if(p.status==='spent'){
   for(let k=0;k<13;k++){const a=seedNoise(i*100+k*3)*125,b=seedNoise(i*9+k*21)*25;tile+=`<ellipse cx="${x+31+a}" cy="${y+6+b}" rx="${3+seedNoise(k+12)*8}" ry="2.3" fill="#a9764e" opacity=".5"/>`}
  }else{
@@ -837,24 +802,7 @@ function advancedFruitArt(type,color){
   default: return [-21,8,25].map((x,i)=>circle(x,-12+(i%2)*9,17+(i===1?4:0),color)).join('');
  }
 }
-function modernCropArt(type,progress){
- const v=CROPS[type],leafCount=progress>.62?7:progress>.25?5:3,fruitReady=progress>.7,leafColors=['#4b9462','#6eae70','#8fc47c','#397d55'];
- let art='<g stroke-linecap="round" stroke-linejoin="round"><path d="M0 4Q-4-30 2-72Q8-93 4-108" fill="none" stroke="#477d52" stroke-width="6"/>';
- for(let i=0;i<leafCount;i++){const side=i%2?-1:1,yy=-18-i*10,xx=side*(17+Math.floor(i/2)*7);art+='<path d="M0 '+yy+'Q'+(xx*.35)+' '+(yy-17)+' '+xx+' '+(yy-10)+'Q'+(xx*.7)+' '+(yy+5)+' 0 '+(yy+5)+'Z" fill="'+leafColors[i%leafColors.length]+'" stroke="#326b4b" stroke-width="2"/><path d="M0 '+yy+'L'+xx+' '+(yy-10)+'" stroke="#c5e0a4" stroke-width="1.5"/>'}
- if(v.kind==='flower'){
-  const size=progress>.75?15:progress>.45?11:0;
-  if(size){art+=flowerBloomMarkup(type,-12,-72,size,v.flower)+flowerBloomMarkup(type,18,-52,size*.82,v.flower)}
- }else if(fruitReady){
-  const color=v.fruit||'#d5a34e';
-  if(type==='milho'||type==='trigo'||type==='arroz')art+='<path d="M-16-40Q-27-70-8-91Q15-73 8-39Z" fill="'+color+'" stroke="#9b7a39" stroke-width="3"/><path d="M-10-48L-3-83M-3-47L4-79" stroke="#f4df8c" stroke-width="3"/>';
-  else if(type==='cenoura'||type==='nabo'||type==='beterraba'||type==='batata_doce')art+='<path d="M-24-20Q0-43 24-20Q15 4 0 34Q-14 6-24-20Z" fill="'+color+'" stroke="#8d6247" stroke-width="3"/>';
-  else if(type==='coco')art+='<ellipse cx="-16" cy="-38" rx="17" ry="23" fill="#94623f" stroke="#60442e" stroke-width="3"/><ellipse cx="17" cy="-36" rx="17" ry="23" fill="#a9784c" stroke="#60442e" stroke-width="3"/>';
-  else art+='<g fill="'+color+'" stroke="#8b6543" stroke-width="3"><ellipse cx="-18" cy="-34" rx="17" ry="23"/><ellipse cx="18" cy="-42" rx="18" ry="24"/><ellipse cx="0" cy="-12" rx="16" ry="21"/></g><g fill="#fff3d2" opacity=".6"><circle cx="-23" cy="-42" r="4"/><circle cx="13" cy="-50" r="4"/></g>';
- }
- art+='<path d="M-34 5Q0-2 34 5" stroke="#9d7a4c" stroke-width="4" fill="none" opacity=".7"/></g>';
- return art;
-}
-function cropArt(type,progress){const v=CROPS[type];if(isModernFarm())return modernCropArt(type,progress);const hasFruit=progress>.68,bloom=progress>.45&&progress<.78,leaves=progress>.55?7:progress>.22?5:3,leaf=['#1b8d39','#38ab3f','#58bd43','#2b9d35','#74c84a','#90d362','#4ea83e'];
+function cropArt(type,progress){const v=CROPS[type],hasFruit=progress>.68,bloom=progress>.45&&progress<.78,leaves=progress>.55?7:progress>.22?5:3,leaf=['#1b8d39','#38ab3f','#58bd43','#2b9d35','#74c84a','#90d362','#4ea83e'];
 let a='';
 if(v.kind==='flower'){
  const leafPairs=progress>.35?4:2;
@@ -1093,11 +1041,6 @@ function buyGiftItem(id){
 }
 function orchardTreeMarkup(slot,tree){
  const [x,y]=ORCHARD_SLOTS[slot],crop=tree?.type?CROPS[tree.type]:null,ready=tree?.status==='ready'||(tree?.type&&orchardTreeProgress(tree)>=1);
- if(isModernFarm()){
-  const progress=tree?.type?orchardTreeProgress(tree):0,fruit=({maca:'#d94b42',laranja:'#eea34b',limao:'#b9c95c',jabuticaba:'#65517a',coco:'#9a704e',caju:'#df8b51',goiaba:'#d98d91',acerola:'#c75b55'})[tree?.type]||crop?.fruit||'#d6a64d';
-  const label=crop?(ready?'PRONTA':Math.round(progress*100)+'%'):'＋ Plantar';
-  return '<g class="orchard-tree modern-orchard-tree" data-orchard-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer;pointer-events:all"><ellipse cy="20" rx="105" ry="18" fill="#315c43" opacity=".18"/><rect x="-110" y="-300" width="220" height="350" fill="transparent" pointer-events="all"/>'+(crop?modernTreeGraphic(tree.type,fruit,progress,ready):'<ellipse cy="0" rx="64" ry="22" fill="#b7c8ae" stroke="#718a76" stroke-width="6"/><path d="M-25-2L0-20L25-2" fill="none" stroke="#718a76" stroke-width="5"/>')+'<text y="48" text-anchor="middle" font-size="17" font-weight="700" fill="#f5f8ed" stroke="#365c49" stroke-width="4" paint-order="stroke">'+label+'</text><title>'+(crop?.name||'Canteiro de muda')+' · '+(ready?'Clique para colher':crop?'em crescimento':'Clique para plantar')+'</title></g>';
- }
  if(!crop)return `<g class="orchard-tree-slot" data-orchard-slot="${slot}" transform="translate(${x} ${y})" style="cursor:pointer;pointer-events:all"><ellipse cy="14" rx="60" ry="14" fill="#285c1c" opacity=".22"/><ellipse cy="0" rx="48" ry="19" fill="#8b6038" stroke="#67421f" stroke-width="5"/><path d="M-28 -2L-18 -19L0 -26L18 -19L28 -2" fill="#b37b43" stroke="#76502a" stroke-width="4"/><text y="-42" text-anchor="middle" font-size="18" fill="#fff4ce" stroke="#65451f" stroke-width="2" paint-order="stroke">＋ Plantar</text></g>`;
  const colors={maca:'#d83b37',laranja:'#f28a25',goiaba:'#e58d8c',limao:'#d4d83e',coco:'#8c5731',arvore_jujuba:'#e67eb7',arvore_pirulito:'#df4f87',arvore_romantica_chinesa:'#e78bbd',pinheiro_natal:'#d3b34d',arvore_namorados:'#e75b91',carambola:'#e8c63b',acerola:'#c92d43',jaca:'#a6b43d',caju:'#e98a38',pera:'#9ab34b',jabuticaba:'#49304f',guarana:'#a82f3b',mamao:'#e88d45'};
  const fruit=colors[tree.type]||crop.fruit||'#d4a13a',progress=orchardTreeProgress(tree),count=ready?6:Math.max(0,Math.floor(progress*6)),treeHue=({maca:'hue-rotate(-8deg) saturate(1.3)',laranja:'hue-rotate(18deg) saturate(1.25)',limao:'hue-rotate(48deg) saturate(1.35)',coco:'sepia(.25) saturate(.8)',jabuticaba:'hue-rotate(55deg) saturate(1.4)',pinheiro_natal:'hue-rotate(25deg) saturate(1.5)',arvore_jujuba:'hue-rotate(-28deg) saturate(1.5)',caju:'hue-rotate(10deg) saturate(1.35)',goiaba:'hue-rotate(-15deg) saturate(1.3)'})[tree.type]||'saturate(1.08)';
@@ -1106,7 +1049,6 @@ function orchardTreeMarkup(slot,tree){
 }
 function renderOrchardArea(){
  if(!state?.expansions?.orchard)return '';
- if(isModernFarm())return modernOrchardMarkup()+(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
  let html=`<g id="orchard-ground" pointer-events="none">
   <path d="M2195 5Q2325 -90 2550 -85L3125 -70Q3290 -35 3310 150L3285 455Q3240 560 3040 555L2330 545Q2165 510 2155 335L2160 130Q2165 45 2195 5Z" fill="#6aa93e" stroke="#3e7d2d" stroke-width="18"/>
   <path d="M2225 40Q2370 -25 2540 -25L3115 -15Q3235 15 3250 155L3235 425Q3190 505 3030 505L2350 500Q2220 470 2210 325L2215 130Z" fill="#8fc65a" stroke="#b8d982" stroke-width="8"/>
@@ -1127,7 +1069,6 @@ function renderOrchardArea(){
 
 function renderPondArea(){
  if(!state?.expansions?.pond)return '';
- if(isModernFarm())return modernRiverMarkup();
  return `<g id="pond-area" pointer-events="none">
   <defs>
    <linearGradient id="riverBank" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#d7c18e"/><stop offset=".5" stop-color="#ad9160"/><stop offset="1" stop-color="#806342"/></linearGradient>
@@ -1435,38 +1376,27 @@ function updateDayNight(){
  <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
  `:''; 
 }
-function renderModernFarmFinish(){
- return `<g id="modern-farm-finish" pointer-events="none">
-  <defs>
-   <linearGradient id="modernPaving" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dce5df" stop-opacity=".88"/><stop offset="1" stop-color="#aabbb4" stop-opacity=".72"/></linearGradient>
-   <linearGradient id="modernMetal" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c6d5d4"/><stop offset="1" stop-color="#657d80"/></linearGradient>
-  </defs>
-  <!-- Calçamento contemporâneo e discreto na chegada da casa. -->
-  <path d="M1080 428Q1160 438 1225 470L1240 486Q1160 462 1080 452Z" fill="url(#modernPaving)" stroke="#758e83" stroke-width="4" opacity=".82"/>
-  <path d="M1092 438L1220 478M1118 438L1130 458M1160 450L1172 469M1195 460L1207 477" stroke="#ffffff" stroke-width="3" opacity=".58"/>
-  <!-- Base limpa e pequenos canteiros junto ao celeiro e ao viveiro. -->
-  <path d="M790 2Q900 -5 1010 2T1215 3L1210 18Q1080 14 980 17T795 17Z" fill="#d3ddd2" opacity=".34"/>
-  <path d="M350 -55Q455 -67 560 -55T735 -53L730 -38Q610 -43 520 -39T355 -39Z" fill="#d5e0d8" opacity=".34"/>
-  <g fill="#8da99a" opacity=".72"><circle cx="825" cy="8" r="4"/><circle cx="900" cy="8" r="4"/><circle cx="1080" cy="9" r="4"/><circle cx="1170" cy="8" r="4"/><circle cx="395" cy="-45" r="4"/><circle cx="470" cy="-45" r="4"/><circle cx="640" cy="-45" r="4"/></g>
-  <!-- Acabamento metálico leve nas cercas do curral. -->
-  <g fill="none" stroke="url(#modernMetal)" stroke-width="5" stroke-linecap="round" opacity=".82">
-   <path d="M1262 -178H1778M1262 -157V428M1778 -157V428M1264 401H1428M1562 401H1778"/>
-  </g>
-  <g fill="#d5e2df" stroke="#60797b" stroke-width="3"><circle cx="1262" cy="-157" r="7"/><circle cx="1778" cy="-157" r="7"/><circle cx="1262" cy="430" r="7"/><circle cx="1778" cy="430" r="7"/></g>
-  <!-- Caminho de placas e iluminação baixa na mata e no pomar. -->
-  <path d="M3500 630Q3700 585 3890 620T4280 620" fill="none" stroke="#d8e3d9" stroke-width="26" stroke-linecap="round" opacity=".22"/>
-  <path d="M2250 300Q2470 270 2730 300T3210 295" fill="none" stroke="#e7e8d6" stroke-width="14" stroke-linecap="round" stroke-dasharray="2 28" opacity=".48"/>
-  <g stroke="#8aa79a" stroke-width="5" fill="#dbe8dd" opacity=".8">
-   <path d="M730 315V275M718 275H742" /><path d="M1230 330V290M1218 290H1242"/>
-   <path d="M2170 380V340M2158 340H2182"/><path d="M3325 420V380M3313 380H3337"/>
-  </g>
-  <g fill="#d7e9e3" opacity=".8"><circle cx="730" cy="270" r="8"/><circle cx="1230" cy="285" r="8"/><circle cx="2170" cy="335" r="8"/><circle cx="3325" cy="375" r="8"/></g>
-  <!-- Pedras claras organizadas na margem do rio e bordas dos canteiros. -->
-  <g fill="#c9d8d1" stroke="#7e9b8f" stroke-width="3" opacity=".78"><ellipse cx="-1370" cy="210" rx="14" ry="7"/><ellipse cx="-1250" cy="470" rx="11" ry="6"/><ellipse cx="-1125" cy="820" rx="15" ry="7"/><ellipse cx="-900" cy="590" rx="12" ry="6"/></g>
-  <path d="M-140 630L-40 675M-40 675L60 720M60 720L160 765" fill="none" stroke="#d4e0d6" stroke-width="5" opacity=".48"/>
- </g>`;
+function applyMenuThemeColors(){
+ const root=document.querySelector('.app');if(!root)return;
+ const palettes={
+  valentine:{light:'#fff0f5',mid:'#f3c7d7',ink:'#783c56',border:'#c46f8d',accent:'#e58eae',strong:'#b95178',dark:'#71344f',toolText:'#fff0f5'},
+  christmas:{light:'#f2f8ff',mid:'#c9dfef',ink:'#34536b',border:'#83abc9',accent:'#8fc5e8',strong:'#477fa9',dark:'#294c6b',toolText:'#f3faff'},
+  science:{light:'#edf7ff',mid:'#bfd9eb',ink:'#284d68',border:'#729dbb',accent:'#80b8d8',strong:'#356f98',dark:'#1d4668',toolText:'#f2f9ff'},
+  autumn:{light:'#fff3df',mid:'#e9c18a',ink:'#754522',border:'#bf8545',accent:'#d99a48',strong:'#a85e2b',dark:'#713d24',toolText:'#fff5e5'},
+  van_gogh:{light:'#fff6cf',mid:'#e6d17e',ink:'#3c4b69',border:'#b69a45',accent:'#e7c34f',strong:'#4c6f9d',dark:'#263d68',toolText:'#fff8d8'},
+  pelourinho:{light:'#fff0df',mid:'#e9b8a1',ink:'#704333',border:'#c17d65',accent:'#e58e69',strong:'#a94e55',dark:'#713a46',toolText:'#fff4e8'},
+  greek:{light:'#f0f8ff',mid:'#c5dced',ink:'#244968',border:'#7ca9c8',accent:'#75b5dd',strong:'#315f8c',dark:'#203f66',toolText:'#f3faff'},
+  summer:{light:'#fff5d9',mid:'#cce6d9',ink:'#285e58',border:'#76b6a4',accent:'#e8c36b',strong:'#31958d',dark:'#23645f',toolText:'#fff9e7'},
+  mountain:{light:'#f1f6fb',mid:'#c9d5e1',ink:'#344c60',border:'#8da4b9',accent:'#9bb6c9',strong:'#58788f',dark:'#344f66',toolText:'#f6fbff'},
+  germany:{light:'#fff2d8',mid:'#d8c1a0',ink:'#493b32',border:'#a98a63',accent:'#c85c4b',strong:'#8b3435',dark:'#342b2b',toolText:'#fff4df'},
+  independence:{light:'#f5f8dc',mid:'#c8df9d',ink:'#315b32',border:'#83a94e',accent:'#e4c84c',strong:'#438d49',dark:'#205c3a',toolText:'#fffbdc'}
+ };
+ const palette=palettes[state?.farmTheme||'classic'];
+ if(!palette){root.removeAttribute('data-menu-theme');for(const key of ['light','mid','ink','border','accent','strong','dark','toolText'])root.style.removeProperty('--menu-'+key);return;}
+ root.dataset.menuTheme=state.farmTheme;
+ for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-1400" y="-400" width="5800" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderPondArea()+renderOrchardArea()+renderForestArea();if(document.querySelector('.app')?.dataset.interface==='modern')html+=renderModernFarmFinish();if(state.grill?.owned){const x=700,y=280;if(isModernFarm())html+=modernGrillMarkup(state.grill.assembled,x,y);else html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-1400" y="-400" width="5800" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderPondArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
@@ -1481,9 +1411,9 @@ function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)
  </g>`}for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
-function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(isModernFarm()){const p=tree?.type?forestProgress(tree):0,ready=tree?.status==='ready'||p>=1;return '<g class="modern-forest-tree" data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="12" rx="55" ry="12" fill="#345e49" opacity=".18"/>'+(cfg?'<g transform="scale(.42)">'+modernTreeGraphic(tree.type,cfg.color,p,ready)+'</g>':'<ellipse cy="0" rx="38" ry="15" fill="#b6c8b4" stroke="#718b77" stroke-width="4"/><path d="M-15 0L0-14L15 0" fill="none" stroke="#718b77" stroke-width="4"/>')+'<text y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#f4f8ed" stroke="#345d49" stroke-width="3" paint-order="stroke">'+(cfg?(ready?'PRONTA':Math.round(p*100)+'%'):'PLANTAR')+'</text><title>'+(cfg?.name||'Plantio de árvore')+'</title></g>'} if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
+function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
  const p=forestProgress(tree),ready=tree.status==='ready'||p>=1;return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="48" ry="12" fill="#315d29" opacity=".25"/><path d="M-8 0L-6 -62L6 -62L8 0Z" fill="#805334" stroke="#604027" stroke-width="3"/><circle cy="-76" r="36" fill="'+cfg.color+'" stroke="#396d39" stroke-width="4"/><circle cx="-24" cy="-58" r="22" fill="'+cfg.color+'" opacity=".9"/><circle cx="23" cy="-58" r="23" fill="'+cfg.color+'" opacity=".9"/><circle cy="-96" r="21" fill="'+cfg.color+'" opacity=".9"/><text y="30" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff5d4" stroke="#563d20" stroke-width="3" paint-order="stroke">'+(ready?'PRONTA':Math.round(p*100)+'%')+'</text><title>'+cfg.name+' · '+(ready?'Clique para colher':formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+' restantes')+'</title></g>'}
-function renderForestArea(){if(isModernFarm())return '<g transform="translate(0 -150)">'+modernForestBackground()+state.forestPlots.map((t,i)=>forestTreeMarkup(i,t)).join('')+'</g>';const background='<g id="forest-area" pointer-events="none"><path d="M3430 -20Q3500 -120 3660 -120H4240Q4360 -80 4380 70V790Q4330 900 4200 900H3500Q3400 840 3400 700V100Q3400 10 3430 -20Z" fill="#467b3b" stroke="#2f5f30" stroke-width="18"/><path d="M3470 20H4310V820H3470Z" fill="#78a94e" stroke="#b5d37a" stroke-width="10"/><path d="M3485 40H4290V800H3485Z" fill="none" stroke="#d6e6a0" stroke-width="5" stroke-dasharray="8 16"/></g>';return '<g transform="translate(0 -150)">'+background+state.forestPlots.map((t,i)=>forestTreeMarkup(i,t)).join('')+'</g>'}
+function renderForestArea(){const background='<g id="forest-area" pointer-events="none"><path d="M3430 -20Q3500 -120 3660 -120H4240Q4360 -80 4380 70V790Q4330 900 4200 900H3500Q3400 840 3400 700V100Q3400 10 3430 -20Z" fill="#467b3b" stroke="#2f5f30" stroke-width="18"/><path d="M3470 20H4310V820H3470Z" fill="#78a94e" stroke="#b5d37a" stroke-width="10"/><path d="M3485 40H4290V800H3485Z" fill="none" stroke="#d6e6a0" stroke-width="5" stroke-dasharray="8 16"/></g>';return '<g transform="translate(0 -150)">'+background+state.forestPlots.map((t,i)=>forestTreeMarkup(i,t)).join('')+'</g>'}
 function focusForestArea(close=true){view.zoom=.82;view.cx=3890;view.cy=240;updateView();if(close)closeModal()}
 function plantForestTree(slot,id){if(writeLocked)return notify('Salvamento protegido.');const tree=state.forestPlots[slot],cfg=FOREST_TREES[id];if(!tree||tree.type||!cfg)return notify('Escolha um canteiro vazio e uma espécie válida.');if(farmLevel()<cfg.level)return notify(cfg.name+' exige nível '+cfg.level+'.');if((state.inventory['tree_'+id]||0)<1)return notify('Você não possui a muda de '+cfg.name+'. Compre-a na loja.');state.inventory['tree_'+id]--;state.forestPlots[slot]={type:id,status:'growing',plantedAt:Date.now()};awardXP(10,'plantio na Mata');remember('Plantou '+cfg.name+' na Mata.');markDirty();refresh();notify(cfg.name+' plantada na Mata.')}
 function harvestForestTree(slot){if(writeLocked)return notify('Salvamento protegido.');const t=state.forestPlots[slot];if(!t?.type)return openModal('forest');const cfg=FOREST_TREES[t.type],p=forestProgress(t);if(p<1&&t.status!=='ready')return notify(cfg.name+': faltam '+formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+'.');state.woodWarehouse[cfg.wood]=(state.woodWarehouse[cfg.wood]||0)+cfg.yield;awardXP(cfg.xp,'colheita de madeira');remember('Obteve '+cfg.yield+' unidades de '+cfg.woodName+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();notify(cfg.yield+' unidades de '+cfg.woodName+' adicionadas ao estoque.')}
@@ -1612,22 +1542,6 @@ $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');if(!b||b.closest('#modal-body'))return;e.preventDefault();e.stopPropagation();openModal(b.dataset.modal)},true);
 document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
-function applyInterfaceEra(era){
- const modern=era==='two';
- const value=modern?'modern':'classic';
- const tools=$('tools'),world=$('world'),appRoot=document.querySelector('.app');
- if(tools)tools.dataset.era=modern?'two':'classic';
- if(world)world.setAttribute('data-interface',value);
- if(appRoot)appRoot.dataset.interface=value;
- if(typeof initScene==='function'){initScene();renderPlots();renderAnimals()}
- if(typeof renderFarmAddons==='function')renderFarmAddons();
- if(musicEnabled){stopFarmMusic();startFarmMusic()}
-}
-document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click',()=>{
- document.querySelectorAll('.tab[data-era]').forEach(x=>x.classList.toggle('active',x===b));
- applyInterfaceEra(b.dataset.era==='two'?'two':'classic');
- notify(b.dataset.era==='two'?'Interface Moderna selecionada':'Interface 2.0 · Orkut selecionada')
-}));
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
 $('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
