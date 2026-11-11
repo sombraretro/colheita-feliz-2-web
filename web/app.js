@@ -507,33 +507,41 @@ function playSfx(kind){
  };
  (patterns[kind]||(()=>{}))();
 }
-// Melodia campestre da Interface 2.0 · Orkut.
-const FARM_MELODY=[392,494,587,659,587,494,440,494,523,587,659,784,659,587,494,440];
-const FARM_BASS=[196,147,165,131];
-const FARM_CHORDS=[[392,494,587],[294,370,440],[330,392,494],[262,330,392]];
-// Arranjo exclusivo da Interface Moderna: violão/piano sintético leve, com balanço confortável.
-const MODERN_FARM_MELODY=[392,440,494,587,659,587,494,440,392,494,523,587,659,587,523,494,440,494,587,659,784,659,587,523];
-const MODERN_FARM_BASS=[196,146.83,174.61,164.81];
-const MODERN_FARM_CHORDS=[[392,494,587],[293.66,369.99,440],[349.23,440,523.25],[329.63,392,493.88]];
+// Trilha campestre suave: frases variadas, harmonia leve e pequenas pausas.
+const FARM_MELODY=[
+ 392,494,587,494,440,null,494,587,
+ 659,587,494,440,392,null,440,494,
+ 523,587,659,587,523,null,494,523,
+ 587,659,587,494,440,null,392,440,
+ 494,587,659,784,659,null,587,494,
+ 523,587,659,587,494,null,440,494,
+ 587,659,784,659,587,null,523,494,
+ 440,494,523,587,523,null,494,392
+];
+const FARM_BASS=[196,146.83,164.81,130.81,174.61,146.83,196,164.81];
+const FARM_CHORDS=[
+ [392,493.88,587.33],[293.66,369.99,440],[329.63,392,493.88],[261.63,329.63,392],
+ [349.23,440,523.25],[293.66,369.99,440],[392,493.88,587.33],[329.63,392,493.88]
+];
 function startFarmMusic(){
- if(!musicEnabled||musicPlaying)return;const ctx=ensureAudio();if(!ctx)return;musicPlaying=true;musicIndex=0;
- const step=()=>{if(!musicEnabled){musicPlaying=false;return}
-  const modern=$('tools')?.dataset.era==='two';
-  const melody=modern?MODERN_FARM_MELODY:FARM_MELODY,bass=modern?MODERN_FARM_BASS:FARM_BASS,chords=modern?MODERN_FARM_CHORDS:FARM_CHORDS;
-  const beat=musicIndex%melody.length,note=melody[beat],bar=modern?Math.floor(beat/6)%chords.length:Math.floor(beat/4)%chords.length;
-  if(modern){
-   playTone(note,.28,'sine',.038);
-   if(beat%3===0)playTone(note*2,.13,'triangle',.009);
-   if(beat%6===0){playTone(bass[bar],.48,'sine',.026);chords[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.34,'triangle',.009),i*24))}
-   if(beat%12===11)setTimeout(()=>playTone(987.77,.16,'sine',.012,-90),90);
-   musicIndex++;musicTimer=setTimeout(step,310);
-  }else{
-   playTone(note,.23,'triangle',.058);
-   if(beat%2===0)playTone(note*2,.12,'sine',.012);
-   if(beat%4===0){playTone(bass[bar],.38,'sine',.034);chords[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.3,'triangle',.012),i*18))}
-   if(beat%8===7){setTimeout(()=>playTone(1175,.08,'sine',.016,-220),55);setTimeout(()=>playTone(1568,.07,'sine',.014,-260),125)}
-   musicIndex++;musicTimer=setTimeout(step,280);
+ if(!musicEnabled||musicPlaying)return;
+ const ctx=ensureAudio();if(!ctx)return;
+ musicPlaying=true;musicIndex=0;
+ const step=()=>{
+  if(!musicEnabled){musicPlaying=false;musicTimer=null;return;}
+  const beat=musicIndex%FARM_MELODY.length;
+  const note=FARM_MELODY[beat],bar=Math.floor(beat/8)%FARM_CHORDS.length;
+  if(note)playTone(note,.30,'triangle',.023);
+  if(beat%8===0){
+   playTone(FARM_BASS[bar],.82,'sine',.017);
+   FARM_CHORDS[bar].forEach((tone,i)=>setTimeout(()=>{if(musicEnabled)playTone(tone,.62,'sine',.0055)},i*52));
   }
+  if(beat%16===8&&note)playTone(note*2,.20,'sine',.0045);
+  musicIndex++;
+  if(musicIndex>=FARM_MELODY.length){
+   musicIndex=0;
+   musicTimer=setTimeout(step,1500);
+  }else musicTimer=setTimeout(step,390);
  };
  step();
 }
@@ -1212,7 +1220,7 @@ function modalHasFocusedEditor(){const active=document.activeElement;return !!(a
 function refresh(){expireDecorations();expireFarmTheme();syncAnimalCycles();syncOrchardTrees();updateHud();renderPlots();renderAnimals();renderFarmAddons();if(currentModal&&!modalHasFocusedEditor())renderModal()}
 function infest(){let changed=false;for(let i=0;i<state.plots.length;i++){const p=state.plots[i];if(p.status!=='growing'||p.initialGift||progress(p)>=1)continue;const h=(Date.now()-p.plantedAt)/HOUR;if(h>=3*CROP_TIME_FACTOR&&!p.weed&&!p.weedCleared&&(Math.floor(p.plantedAt/HOUR)+i*11)%5===0){p.weed=true;changed=true}if(h>=6*CROP_TIME_FACTOR&&!p.pest&&!p.pestCleared&&(Math.floor(p.plantedAt/HOUR)+i*13)%7===0){p.pest=true;changed=true}}if(changed){markDirty();refresh()}}
 function openModal(kind){if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);currentModal=kind;if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
-function closeModal(){currentModal='';$('overlay').classList.add('hidden')}
+function closeModal(){currentModal='';$('overlay').classList.add('hidden');}
 function dailyRewardAvailable(){return state.dailyRewardDate!==todayKey()}
 function claimDailyReward(){
  if(!dailyRewardAvailable())return notify('A recompensa diária de hoje já foi resgatada.');
@@ -1496,7 +1504,7 @@ case 'inbox':title='Caixa de entrada';html=`<div class="actions"><button class="
 case 'daily':title='Recompensa diária';html=dailyRewardAvailable()?`<div class="daily-reward"><span>🎁</span><b>Seu presente de hoje está esperando!</b><p>Receba sementes, fertilizantes ou flores. A quantidade cresce com sua sequência de visitas (até 5 itens nesta adaptação offline).</p><p><b>Sequência atual: ${fmt((state.dailyRewardDate===yesterdayKey()?(state.dailyStreak||0)+1:1))} dia(s)</b></p><button class="modal-action" data-claim-daily="true">Resgatar recompensa</button></div>`:`<div class="daily-reward claimed"><span>🌟</span><b>Recompensa de hoje já recebida!</b><p>Sequência atual: ${fmt(state.dailyStreak||1)} dia(s). Volte amanhã para receber outra recompensa.</p></div>`;break;
 case 'help':title='Como jogar';html='<p><b>Animais:</b> abra Animais, compre o alimento correspondente e alimente cada animal. Galinhas, vacas e porcos também podem receber rações históricas de melhoria (4, 10 e 2 moedas verdes, respectivamente), elevando o nível até 5; a fórmula de aumento de produção é um balanceamento local. O canil inclui dez raças históricas permanentes e dois cães temporários do evento de Dia dos Namorados (30 dias); os preços das raças permanentes são estimados. Galinhas, vacas, ovelhas, patos, pombos e pavões produzem itens para o depósito; porcos, burros e o iaque crescem em cinco etapas e podem ser vendidos quando adultos. Pato, Pombo e Pavão têm parâmetros estimados; o Iaque conserva o preço histórico de 55 moedas verdes, mas duração, ração e venda são estimadas. O cão pode ser alimentado para ativar a proteção local preparada para o modo online.</p><p><b>1.</b> Escolha sementes no inventário e clique na terra disponível.<br/><b>2.</b> Aguarde o crescimento (os ciclos desta edição duram 1/5 do tempo-base).<br/><b>3.</b> Selecione a mão e colha plantas maduras.<br/><b>4.</b> Use fertilizantes de 2h30, 5h50, 5h30, 6h, 8h, 15h ou 20h (reduções ajustadas para 1/5); os tempos/preços sem confirmação estão identificados como estimativas. O Surf Líquido Concentrado só funciona em flores. O Fertilizante do Amor foi adaptado para uso local porque originalmente era destinado às fazendas de amigos.<br/><b>5.</b> Venda a produção no depósito e use a enxada para preparar a terra.</p><p><b>Flores:</b> compre sementes de crisântemo, peônia, cravo ou rosa vermelha; plante e colha. As flores vão para a aba própria do depósito e começam bloqueadas contra venda acidental. <b>Fábrica:</b> use as quantidades indicadas para produzir buquês. <b>Popularidade:</b> aumenta ao fabricar buquês e concede bônus nas vendas nesta adaptação offline. <b>Casa de presentes:</b> guarda buquês e uma coleção local de itens históricos; o envio real depende do modo online. <b>Pomar:</b> libere a expansão, plante árvores usando sementes do inventário e colha seus frutos em oito espaços. <b>Lago:</b> libere a área visual nas Expansões.</p><p><b>Recompensa diária:</b> resgate um presente uma vez por dia. <b>Humor:</b> escolha um emoticon diário; a segunda troca custa 1.000 moedas. <b>Presentes grátis:</b> itens liberados por nível ficam disponíveis para envio quando houver modo online. <b>Churrasqueira:</b> compre por 1.000 moedas, reúna os componentes, abata opcionalmente animais para obter carne, compre mel/tempero e produza receitas. Os tempos de preparo da réplica são 1/5 do balanceamento-base; os valores exatos históricos não foram recuperados em texto legível. <b>Decoração:</b> compre e instale objetos em pontos seguros. Ao subir de nível, receba 1 moeda verde.</p><p><b>Terra vermelha:</b> compre a Varinha da Terra Vermelha por 2 moedas verdes (compra única e reutilizável). A primeira aplicação custa 15.000 moedas amarelas; a segunda, 60.000 amarelas + 1 verde. As aplicações seguintes usam uma progressão local porque a tabela histórica completa não foi recuperada. Sementes avançadas só crescem nesse solo; sementes comuns também podem ser plantadas nele. A Varinha de Restauração custa 3.000 moedas amarelas por uso e não devolve o valor gasto na terra vermelha. <b>Expansão:</b> libere canteiros bloqueados na Loja; os seis primeiros custam 1.500 moedas cada e os seis adicionais custam 2.200, com nível 10 exigido para a segunda faixa. <b>Atalhos:</b> Colheita rápida recolhe todas as plantas maduras; Escavada rápida limpa todos os canteiros colhidos. Com a ferramenta Selecionar, clicar em uma planta madura colhe automaticamente e clicar em um animal faminto alimenta-o se houver ração.</p><p><b>Zoom:</b> botões + / −, roda do mouse ou teclas + e −. <b>Câmera:</b> Alt + arrastar ou arrastar com botão central. Tecla 0 restaura a vista.</p><p>Os gráficos são objetos próprios, sem capturas de tela como fundo.</p>';break;
 case 'account':title='Conta e sincronização';if(!initSupabase()){html='<p>O serviço de autenticação ainda não carregou. Verifique a conexão com a internet e tente novamente.</p><p>O jogo continua funcionando e salvando localmente.</p>';break;}if(cloudUser){html=`<div class="account-card"><b>☁️ Conta conectada</b><p>${safe(cloudUser.email||'Jogador')}</p><small>${cloudDirty?'Há uma sincronização pendente.':'Sua fazenda está vinculada a esta conta.'}</small></div><div class="actions"><button class="modal-action" id="cloud-sync">Sincronizar agora</button><button class="modal-action alt" id="cloud-signout">Sair da conta</button></div><p><small>O salvamento local continua ativo como cópia de segurança. Seus dados na nuvem são privados e protegidos por políticas de acesso por usuário.</small></p>`;}else{html=`<p>Entre ou crie uma conta para salvar sua fazenda na nuvem e acessá-la em outros dispositivos. Sem entrar, o jogo continua funcionando localmente.</p><label class="auth-field">E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="seu@email.com"></label><label class="auth-field">Senha<input id="auth-password" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label><div class="actions"><button class="modal-action" id="auth-signin">Entrar</button><button class="modal-action alt" id="auth-signup">Criar conta</button></div><p><small>O cadastro pode exigir confirmação do endereço de e-mail, conforme as configurações de autenticação do seu projeto Supabase.</small></p>`;}break;
-case 'settings':title='Configurações e backup';html=`<p>O salvamento é automático e mantém uma cópia local da fazenda. Quando você entrar na sua conta, poderá sincronizar uma cópia na nuvem.</p><div class="audio-settings"><h3>🔊 Sons e música</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros das ferramentas</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente original de fazenda</label><small>A música é sintetizada para este jogo e não utiliza gravações comerciais.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json"><p><small>Versão 1.9.0 — animais redesenhados, curral reorganizado, rio e pomar reposicionados, celeiro ampliado, temas sazonais e áudio.</small></p>`;break;
+case 'settings':title='Configurações e backup';html=`<p>O salvamento é automático e mantém uma cópia local da fazenda. Quando você entrar na sua conta, poderá sincronizar uma cópia na nuvem.</p><div class="audio-settings"><h3>🔊 Sons e música</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros das ferramentas</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente suave da fazenda</label><small>Melodia instrumental leve, com variações e pausas para acompanhar o jogo sem cansar.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json"><p><small>Versão 1.9.0 — animais redesenhados, curral reorganizado, rio e pomar reposicionados, celeiro ampliado, temas sazonais e áudio.</small></p>`;break;
 }
 $('modal-title').textContent=title;body.innerHTML=html;
 if(currentModal==='settings'){
