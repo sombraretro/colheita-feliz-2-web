@@ -343,3 +343,74 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 .app[data-menu-theme] .tool{color:var(--menu-toolText)}
 .app[data-menu-theme] .tool.active{background:linear-gradient(var(--menu-accent),var(--menu-strong));border-color:var(--menu-light);box-shadow:0 0 8px var(--menu-light)}
 .app[data-menu-theme] .tool:hover{background:var(--menu-accent)}
+
+
+/* Experiência de toque: tablets e celulares — janela sempre com cabeçalho e fechar visíveis. */
+.overlay{
+ z-index:1000;
+ padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+}
+.dialog{width:min(820px,96vw);max-height:min(92dvh,900px);min-height:0}
+.dialog-head{position:relative;z-index:5;flex:0 0 auto;min-height:58px;gap:12px}
+.dialog-head h2{min-width:0;overflow-wrap:anywhere}
+.dialog-head button,#close-modal{
+ flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;
+ display:grid;place-items:center;line-height:1;font-size:30px;touch-action:manipulation;
+}
+.modal-body{flex:1 1 auto;min-height:0;max-height:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+@media(min-width:701px) and (max-width:1024px){
+ .topbar{gap:8px;padding:0 10px;min-height:62px;height:auto;flex-wrap:wrap}
+ .brand{min-width:190px;max-width:235px;flex:0 1 auto}
+ .brand-name{font-size:23px}
+ .topbar .tabs{flex:1 1 460px;min-width:0;flex-wrap:wrap;gap:5px;justify-content:flex-start}
+ .topbar .tabs .tab{min-height:38px;padding:8px 10px}
+ .topright{gap:5px}
+ .tool-bar{width:min(620px,calc(100% - 150px));height:64px;bottom:12px;padding:4px 7px}
+ .tool{flex:1;min-width:48px;height:50px;font-size:28px}
+ .dialog{width:min(900px,96vw);max-height:92dvh}
+ .modal-body{padding:14px}
+ .store-card button,.modal-action,.shop-jump{min-height:42px}
+}
+@media(max-width:700px){
+ .overlay{align-items:stretch;justify-content:center;padding: max(5px,env(safe-area-inset-top)) max(5px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left))}
+ .dialog{width:100%;height:100%;max-height:100%;min-height:0;border-width:3px;border-radius:13px}
+ .dialog-head{min-height:56px;padding:6px 9px}
+ .dialog-head h2{font-size:clamp(17px,4.8vw,21px)}
+ .modal-body{padding:10px;max-height:none}
+ .modal-body h3{font-size:15px;line-height:1.3}
+ .modal-body p{font-size:13px;line-height:1.45}
+ .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .store-card{min-width:0;overflow-wrap:anywhere;padding:9px;gap:6px}
+ .store-card button,.modal-action,.shop-jump,.actions button{min-height:42px;padding:8px 9px;font-size:12px;touch-action:manipulation}
+ .actions{gap:7px}
+ .actions button{flex:1 1 135px}
+ .audio-settings label{display:flex;align-items:center;gap:10px;min-height:44px}
+ .audio-settings input[type=checkbox]{width:22px;height:22px;flex:0 0 22px}
+ .tool-bar{height:56px;bottom:max(6px,env(safe-area-inset-bottom));width:calc(100% - 12px);max-width:none;padding:3px 4px;gap:1px;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
+ .tool-bar::-webkit-scrollbar{display:none}
+ .tool{flex:1 0 36px;min-width:36px;height:46px;font-size:clamp(20px,6vw,25px);border-radius:9px;touch-action:manipulation}
+ .farm-stats{transform:scale(.76);transform-origin:top left}
+ .area-navigation button{min-width:38px;min-height:48px}
+ .zoom-ui{bottom:70px}
+ .topbar{z-index:8}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .overlay{padding:4px}
+ .dialog{height:100%;max-height:100%;width:100%}
+ .dialog-head{min-height:48px;padding:3px 8px}
+ .dialog-head button,#close-modal{width:42px;height:42px;min-width:42px;min-height:42px;flex-basis:42px}
+ .modal-body{padding:8px}
+ .tool-bar{height:46px;bottom:3px}
+ .tool{height:38px}
+}
+@media(max-width:380px){
+ .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .store-card{padding:7px}
+ .store-card strong{font-size:11px}
+ .store-card small{font-size:9px}
+ .tool{flex-basis:34px;min-width:34px;font-size:19px}
+}
+@media(hover:none) and (pointer:coarse){
+ button,.tool,.tabs .tab{touch-action:manipulation}
+ .tool:hover,.area-navigation button:hover{transform:none}
+}
