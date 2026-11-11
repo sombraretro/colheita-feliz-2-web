@@ -293,3 +293,11 @@ html[data-cf2-next-ui="enabled"] .side-menu button:hover{background:linear-gradi
 #pan-left{left:10px}
 #pan-right{right:10px}
 @media(max-width:600px){.area-navigation button{width:34px;height:54px;font-size:19px;border-radius:10px}#pan-left{left:5px}#pan-right{right:5px}}
+
+/* Pesca no lago */
+.fishing-cast{width:100%;min-height:48px;font-size:16px;background:linear-gradient(#83c9e7,#3d91b8);border-color:#286b8a;color:#fff;text-shadow:0 1px 2px #28546b}
+.fishing-cast:disabled{opacity:.58;cursor:not-allowed}
+.fishing-rods{margin:12px 0 20px}
+.fishing-rod-card{min-width:0}
+.fishing-rod-card .actions{display:flex;gap:6px}
+.fishing-rod-card .actions button{flex:1;min-width:0;padding:8px 5px}
