@@ -329,3 +329,121 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 
 /* Prioriza a barra superior sobre controles flutuantes próximos. */
 .topbar{position:relative;z-index:30}.topbar .tabs{position:relative;z-index:31;pointer-events:auto}.topbar .tabs .tab{pointer-events:auto}html[data-cf2-next-ui="enabled"] .sidebar-toggle{z-index:25}html[data-cf2-next-ui="enabled"] .side-menu{z-index:24}
+
+/* Interface Moderna: identidade visual independente, mantendo intacta a versão 2.0 · Orkut. */
+.app[data-interface="modern"]{
+ --modern-ink:#203b43;--modern-muted:#58727a;--modern-teal:#147c78;--modern-blue:#286c91;
+ --modern-mint:#d8eee8;--modern-surface:#f4faf7;--modern-line:#8ebbb4;
+ font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;color:var(--modern-ink);
+}
+.app[data-interface="modern"] .topbar{
+ background:linear-gradient(115deg,#102f3b,#174d59 58%,#226b70);
+ border-bottom:3px solid #62c3b1;box-shadow:0 4px 18px #0b273b88;gap:12px;
+}
+.app[data-interface="modern"] .brand-flower{color:#72d7c2;text-shadow:0 0 12px #53cdb6}
+.app[data-interface="modern"] .brand-name{font-family:Inter,"Segoe UI",sans-serif;color:#f0fbf8;text-shadow:none;font-style:normal;letter-spacing:-1.2px}
+.app[data-interface="modern"] .brand-name em{color:#76ddc5}
+.app[data-interface="modern"] .brand-two{background:linear-gradient(145deg,#4bb5aa,#216d7e);border:1px solid #a5e7d8;box-shadow:0 3px 10px #071f2c;color:#fff}
+.app[data-interface="modern"] .brand small{color:#b2d7d3}
+.app[data-interface="modern"] .tabs button{
+ color:#d6eeea;background:linear-gradient(#245b65,#173e50);border:1px solid #397b83;border-bottom:0;
+ border-radius:9px 9px 0 0;box-shadow:inset 0 1px #ffffff22;font-family:Inter,"Segoe UI",sans-serif;
+}
+.app[data-interface="modern"] .tabs button.active{color:#10383d;background:linear-gradient(#9be6d3,#55bcae);border-color:#a7eee0;text-shadow:none}
+.app[data-interface="modern"] .tabs button:hover{filter:brightness(1.16)}
+.app[data-interface="modern"] .topright{color:#a8e4d9}
+.app[data-interface="modern"] .iconbtn{background:#1c5862;border:1px solid #65b9ac;color:#e5faf4}
+.app[data-interface="modern"] .playfield{
+ background:#7aaf88;background-image:radial-gradient(ellipse at 50% 10%,#b2d8a1 0,#83b989 48%,#557f72 100%);
+}
+.app[data-interface="modern"] .farm-stats{
+ background:linear-gradient(145deg,#f5fcf8,#dcefe8);border:1px solid #78b5a8;border-radius:17px;
+ box-shadow:0 8px 24px #173e3b44, inset 0 1px #fff;width:302px;
+}
+.app[data-interface="modern"] .avatar{border:2px solid #4d9d98;background:linear-gradient(#8bc9d4,#e2f4ef);border-radius:14px}
+.app[data-interface="modern"] .farm-name{font-family:Inter,"Segoe UI",sans-serif;color:#214a51}
+.app[data-interface="modern"] .farm-name span{color:#137c79}
+.app[data-interface="modern"] .xp-line b{color:#187d73}
+.app[data-interface="modern"] .xp-track{border:1px solid #75aaa1;background:#c5ded6;height:9px}
+.app[data-interface="modern"] .xp-track>div{background:linear-gradient(90deg,#4dc1a3,#7bd6a6)}
+.app[data-interface="modern"] .xp-line small,.app[data-interface="modern"] .currencies small{color:#5c7e7d}
+.app[data-interface="modern"] .currencies{color:#244f55}
+.app[data-interface="modern"] .sidebar-toggle{
+ border:1px solid #75c9b8;border-radius:14px;background:linear-gradient(145deg,#1d6871,#124454);
+ color:#eafff8;box-shadow:0 4px 12px #0b344c88;font-family:Inter,"Segoe UI",sans-serif;
+}
+.app[data-interface="modern"] .side-menu{
+ border:1px solid #68b5aa;border-radius:18px;background:linear-gradient(155deg,#f4fcf8f7,#d7eee8f7);
+ box-shadow:0 14px 35px #0b344c77,inset 0 1px #fff;backdrop-filter:blur(12px);
+}
+.app[data-interface="modern"] .side-menu button{
+ color:#214c53;background:linear-gradient(110deg,#fafffc,#e2f3ed);border:1px solid #a1cfc4;
+ border-radius:12px;box-shadow:0 2px 5px #1c59601a;font-family:Inter,"Segoe UI",sans-serif;
+}
+.app[data-interface="modern"] .side-menu button:hover{background:#c9eee4;border-color:#4ba99e;transform:translateX(-2px)}
+.app[data-interface="modern"] .side-menu button span{font-size:12px}
+.app[data-interface="modern"] .sidebar-toggle:focus-visible,.app[data-interface="modern"] .side-menu button:focus-visible{outline-color:#5bc7b3}
+.app[data-interface="modern"] .tool-bar[data-era="two"]{
+ left:50%;right:auto;top:auto;bottom:24px;transform:translateX(-50%);
+ flex-direction:row;width:min(620px,calc(100% - 170px));height:68px;padding:6px 12px;gap:6px;
+ background:linear-gradient(120deg,#153e4bF2,#176b6aF2);border:1px solid #70c9b4;
+ border-radius:20px;box-shadow:0 9px 26px #0d354c88,inset 0 1px #d7fff733;
+}
+.app[data-interface="modern"] .tool-bar[data-era="two"] .tool{
+ flex:1;width:auto;height:52px;border:1px solid transparent;border-radius:14px;
+ background:transparent;color:#d9fff3;font-family:Inter,"Segoe UI",sans-serif;font-size:0;
+ filter:none;box-shadow:none;
+}
+.app[data-interface="modern"] .tool-bar[data-era="two"] .tool::before{
+ content:attr(data-modern-icon);display:grid;place-items:center;width:38px;height:38px;margin:auto;
+ color:#b8f3df;font-size:28px;font-weight:600;line-height:1;
+}
+.app[data-interface="modern"] .tool-bar[data-era="two"] .tool.active{
+ background:linear-gradient(145deg,#b8f2df55,#49b6a855);border-color:#8de1cc;box-shadow:0 0 0 2px #63c9b333,0 0 14px #4ad2b244;
+}
+.app[data-interface="modern"] .tool-bar[data-era="two"] .tool.active::before{color:#fff}
+.app[data-interface="modern"] .tool-bar[data-era="two"] .tool:hover{background:#8bdcc333;transform:translateY(-3px)}
+.app[data-interface="modern"] .tip{bottom:105px;background:#173f4ddd;border:1px solid #73cbb6;border-radius:12px;color:#eafff7;text-shadow:none}
+.app[data-interface="modern"] .zoom-ui button{background:linear-gradient(#f4fffa,#cce9df);border:1px solid #579d96;color:#1c6064;box-shadow:0 3px 8px #153f3c55}
+.app[data-interface="modern"] .zoom-ui output{background:#e5f6ee;color:#285b60}
+.app[data-interface="modern"] .footer{color:#e8fff5;text-shadow:0 1px 3px #143b35}
+.app[data-interface="modern"] .toast{background:#e9f8f2;border:1px solid #65b9a9;border-radius:14px;color:#1d4f54;box-shadow:0 8px 24px #123c3d66}
+.app[data-interface="modern"] .dialog{background:linear-gradient(#f5fcf8,#dcefe8);border:2px solid #559e97;border-radius:20px;box-shadow:0 20px 55px #0b2f3a99;font-family:Inter,"Segoe UI",sans-serif;color:#234c52}
+.app[data-interface="modern"] .dialog-head{background:linear-gradient(110deg,#1d626b,#2b8a80);border-bottom:1px solid #7dd1bd}
+.app[data-interface="modern"] .dialog-head h2{font-family:Inter,"Segoe UI",sans-serif;color:#f1fff9;text-shadow:none}
+.app[data-interface="modern"] .dialog-head button{background:#e4f8ef;border:1px solid #8bcabd;color:#24565b;border-radius:10px}
+.app[data-interface="modern"] .store-card{background:#f8fdfa;border:1px solid #a5cfc3;border-radius:14px;box-shadow:0 4px 12px #1b565011}
+.app[data-interface="modern"] .store-card small{color:#587a78}
+.app[data-interface="modern"] .store-card button,.app[data-interface="modern"] .modal-action{background:linear-gradient(#9be4c9,#54b89e);border:1px solid #318e7c;color:#164b4a;border-radius:11px}
+.app[data-interface="modern"] .modal-action.alt{background:linear-gradient(#e3f3ed,#badbd0);border-color:#80b8aa;color:#28575a}
+.app[data-interface="modern"] .overlay{background:#0b2837bb}
+.app[data-interface="modern"] .area-navigation button{background:linear-gradient(145deg,#1d6871ee,#164555ee);border:1px solid #83d3c1;color:#eafff7;box-shadow:0 4px 12px #123b4c66}
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="casa"],
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="celeiro"],
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="arvore"],
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="casinha-cachorro"]{
+ filter:saturate(1.18) contrast(1.08) brightness(1.025) drop-shadow(0 7px 5px #254d3b55);
+}
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer #aviary-building{filter:saturate(1.2) contrast(1.08) drop-shadow(0 7px 6px #234b3b55)}
+.app[data-interface="modern"] #world[data-interface="modern"] #pond-area{filter:saturate(1.22) contrast(1.07)}
+.app[data-interface="modern"] #world[data-interface="modern"] #orchard-ground{filter:saturate(1.14) contrast(1.05)}
+.app[data-interface="modern"] #world[data-interface="modern"] #forest-area{filter:saturate(1.2) contrast(1.08)}
+.app[data-interface="modern"] #world[data-interface="modern"] #grill-building{filter:saturate(1.18) contrast(1.08) drop-shadow(0 6px 5px #234b3b55)}
+.app[data-interface="modern"] #world[data-interface="modern"] #garden-layer{filter:saturate(1.12) contrast(1.04)}
+.app[data-interface="modern"] #world[data-interface="modern"] #foreground-layer{filter:saturate(1.14) contrast(1.06)}
+.app[data-interface="modern"] #world[data-interface="modern"] #decoration-layer{filter:saturate(1.12) contrast(1.05)}
+.app[data-interface="modern"] #world[data-interface="modern"] #modern-farm-finish{filter:drop-shadow(0 2px 3px #285a4a44)}
+@media(max-width:700px){
+ .app[data-interface="modern"] .tool-bar[data-era="two"]{left:50%;right:auto;top:auto;bottom:7px;transform:translateX(-50%);width:calc(100% - 16px);max-width:520px;height:51px;padding:3px 5px;gap:2px}
+ .app[data-interface="modern"] .tool-bar[data-era="two"] .tool{height:41px}
+ .app[data-interface="modern"] .tool-bar[data-era="two"] .tool::before{width:32px;height:32px;font-size:23px}
+ .app[data-interface="modern"] .tip{bottom:65px}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .app[data-interface="modern"] .tool-bar[data-era="two"]{bottom:4px;height:43px}
+ .app[data-interface="modern"] .tool-bar[data-era="two"] .tool{height:35px}
+ .app[data-interface="modern"] .tool-bar[data-era="two"] .tool::before{font-size:20px}
+}
+@media(max-width:420px){
+ .app[data-interface="modern"] .tool-bar[data-era="two"]{width:calc(100% - 10px)}
+}
