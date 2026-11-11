@@ -1,4 +1,5 @@
 'use strict';
+/* Build refresh: redeploy XP progression fix (2026-11-10). */
 /* Colheita Feliz 2 1.9.0: cloud save and visual revision, inbox, friend cards and gift packages. */
 const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=36, BASE_PLOT_COUNT=30;
 const CROPS={
