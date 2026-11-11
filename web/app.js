@@ -359,7 +359,7 @@ function initSupabase(){
    if(session&&['SIGNED_IN','INITIAL_SESSION','TOKEN_REFRESHED','USER_UPDATED'].includes(event)){
     window.setTimeout(()=>{if(state)handleAuthSession(session).catch(error=>console.error('Falha ao concluir autenticação:',error));},0);
    }else if(event==='SIGNED_OUT'){
-    cloudUser=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;updateConnectionLabel();
+    cloudUser=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;updateConnectionLabel();
    }
   });
   supabaseAuthSubscription=listener?.data?.subscription||true;
@@ -425,7 +425,7 @@ async function saveCloud(){
 async function handleAuthSession(session){
  if(!session?.user||!supabaseClient)return;
  if(cloudSyncing)return;
- cloudSyncing=true;cloudUser=session.user;updateConnectionLabel();
+ cloudSyncing=true;if(cloudUser?.id!==session.user.id){onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false}cloudUser=session.user;updateConnectionLabel();
  try{
   const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();
   if(error)throw error;
@@ -453,7 +453,7 @@ async function handleAuthSession(session){
   console.error('Supabase:',error);cloudDirty=true;$('save-status').textContent='Salvo localmente · nuvem pendente';
   notify('A conta conectou, mas a sincronização falhou: '+(error.message||'verifique a configuração do Supabase.'));
  }finally{
-  cloudSyncing=false;updateConnectionLabel();if(currentModal==='account')renderModal();
+  cloudSyncing=false;updateConnectionLabel();if(cloudUser)publishSocialProfile().catch(error=>console.error('Perfil social:',error));if(currentModal==='account')renderModal();
  }
 }
 async function authenticate(mode){
