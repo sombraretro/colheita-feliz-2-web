@@ -1599,7 +1599,7 @@ function updateDayNight(){
     <clipPath id="houseRoundPane3"><path d="M447 180A19 19 0 0 0 466 199L466 180Z"/></clipPath>
     <clipPath id="houseRoundPane4"><path d="M472 180L489 180A19 19 0 0 1 470 199Z"/></clipPath>
    </defs>
-   <g fill="url(#houseGlassWarm)" opacity=".24">
+   <g fill="url(#houseGlassWarm)" opacity=".50">
     <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane1)"/>
     <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane2)"/>
     <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane3)"/>
@@ -1620,8 +1620,8 @@ function updateDayNight(){
   </g>`);
   lights=layer.querySelector('#house-window-lights');
  }
- const lightLevel=hour>=19||hour<5 ? .42 : hour>=18 ? .42*(hour-18) : hour>=5&&hour<6 ? .42*(6-hour) : 0;
- lights.style.opacity=String(Math.max(0,Math.min(.42,lightLevel)));
+ const lightLevel=hour>=19||hour<5 ? .68 : hour>=18 ? .68*(hour-18) : hour>=5&&hour<6 ? .68*(6-hour) : 0;
+ lights.style.opacity=String(Math.max(0,Math.min(.68,lightLevel)));
 }
 function applyMenuThemeColors(){
  const root=document.querySelector('.app');if(!root)return;
