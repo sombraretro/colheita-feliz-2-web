@@ -456,3 +456,187 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 }
 .app[data-interface="modern"] .sidebar-toggle{font-size:0}
 .app[data-interface="modern"] .sidebar-toggle::before{content:"◫";font-size:24px;line-height:1;color:#dffcf2}
+
+/* Polimento integral da Interface Moderna — identidade leve, consistente e reversível. */
+.app[data-interface="modern"]{
+ --m-ink:#25464b;--m-ink-soft:#567477;--m-line:#b8d3c9;--m-line-strong:#82b8aa;
+ --m-paper:#f5faf6;--m-paper-deep:#e5f1eb;--m-mint:#d2eee2;--m-teal:#267f79;
+ --m-teal-dark:#174e58;--m-gold:#c7a76a;--m-shadow:0 5px 15px #174b4520;
+ color:var(--m-ink);font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+}
+.app[data-interface="modern"] button,
+.app[data-interface="modern"] input,
+.app[data-interface="modern"] select,
+.app[data-interface="modern"] textarea{font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif}
+.app[data-interface="modern"] button{transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease,color .16s ease}
+.app[data-interface="modern"] button:focus-visible,
+.app[data-interface="modern"] input:focus-visible,
+.app[data-interface="modern"] select:focus-visible,
+.app[data-interface="modern"] textarea:focus-visible{outline:2px solid #4aa99a;outline-offset:2px}
+.app[data-interface="modern"] .farm-stats{border-width:1px;box-shadow:var(--m-shadow),inset 0 1px #fff}
+.app[data-interface="modern"] .farm-name{font-family:Inter,"Segoe UI",sans-serif;letter-spacing:-.25px}
+.app[data-interface="modern"] .mood-button{background:linear-gradient(145deg,#f9fffb,#d9eee5);border-color:#9bc9ba;color:#276d6a;box-shadow:0 2px 5px #174b4518}
+.app[data-interface="modern"] #mood-label{color:#66827e}
+.app[data-interface="modern"] .quick-actions button{
+ background:linear-gradient(145deg,#f8fcf7,#dcefe5);border:1px solid #83b7a7;border-radius:12px;
+ color:#285b59;box-shadow:0 4px 10px #174b4530;font-weight:650
+}
+.app[data-interface="modern"] .quick-actions button:hover:not(:disabled){background:#d4eee2;border-color:#4a9b8b}
+.app[data-interface="modern"] .quick-actions button:disabled{opacity:.48}
+.app[data-interface="modern"] .area-navigation button{border-radius:13px}
+.app[data-interface="modern"] .zoom-ui button{border-width:1px;border-radius:12px}
+.app[data-interface="modern"] .zoom-ui output{border:1px solid #b2d3c7;border-radius:10px}
+.app[data-interface="modern"] .footer{font-family:Inter,"Segoe UI",sans-serif;font-size:10px;color:#f4fff8;text-shadow:0 1px 3px #1c4d3b}
+.app[data-interface="modern"] .savedot{box-shadow:0 0 0 3px #e5fff033}
+.app[data-interface="modern"] .tip{font-family:Inter,"Segoe UI",sans-serif;box-shadow:0 4px 14px #123f4c44}
+.app[data-interface="modern"] .toast{font-family:Inter,"Segoe UI",sans-serif;font-weight:650}
+
+/* Menus, navegação de loja e botões de todas as janelas. */
+.app[data-interface="modern"] .side-menu button{display:flex;align-items:center;gap:9px;min-height:39px}
+.app[data-interface="modern"] .side-menu button::before{flex:0 0 25px}
+.app[data-interface="modern"] .dialog{
+ border:1px solid #80b6a8;border-radius:18px;background:linear-gradient(155deg,#f8fcf8,#e8f3ed);
+ box-shadow:0 18px 50px #102f3d66,0 2px 0 #fff inset;overflow:hidden
+}
+.app[data-interface="modern"] .dialog-head{
+ min-height:56px;padding:11px 16px;background:linear-gradient(110deg,#1b5662,#287f79);
+ border-bottom:1px solid #7dc6b4
+}
+.app[data-interface="modern"] .dialog-head h2{font-family:Inter,"Segoe UI",sans-serif;font-weight:700;letter-spacing:-.45px}
+.app[data-interface="modern"] .dialog-head button{border:1px solid #9ccfc1;border-radius:10px;background:#eaf8f1;color:#225c5c}
+.app[data-interface="modern"] .modal-body{color:#2b4e50;scrollbar-color:#9cc8b9 #e9f3ed}
+.app[data-interface="modern"] .modal-body p{color:#49696a;line-height:1.58}
+.app[data-interface="modern"] .modal-body h3{font-family:Inter,"Segoe UI",sans-serif;font-weight:700;color:#276b68;letter-spacing:-.2px;border-bottom:1px solid #c7ddd3;padding-bottom:6px}
+.app[data-interface="modern"] .modal-body small{color:#607c7a}
+.app[data-interface="modern"] .modal-body label{color:#345c5d}
+.app[data-interface="modern"] .modal-body input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.app[data-interface="modern"] .modal-body select,
+.app[data-interface="modern"] .modal-body textarea{
+ border:1px solid #a9cbbf;border-radius:10px;background:#fbfefb;color:#264c4d;
+ padding:9px 11px;box-shadow:inset 0 1px 2px #1c50430c
+}
+.app[data-interface="modern"] .modal-body input::placeholder,
+.app[data-interface="modern"] .modal-body textarea::placeholder{color:#8aa5a0}
+.app[data-interface="modern"] .modal-body input[type="checkbox"]{accent-color:#27877d}
+.app[data-interface="modern"] .modal-action,
+.app[data-interface="modern"] .store-card button{
+ background:linear-gradient(145deg,#a9e0c9,#73c3a8);border:1px solid #5ca892;color:#194e4c;
+ border-radius:10px;font-weight:700;box-shadow:0 2px 4px #225f4c18
+}
+.app[data-interface="modern"] .modal-action:hover:not(:disabled),
+.app[data-interface="modern"] .store-card button:hover:not(:disabled){background:linear-gradient(145deg,#bcebd7,#83d0b4);border-color:#3c9484;transform:translateY(-1px)}
+.app[data-interface="modern"] .modal-action.alt{background:linear-gradient(145deg,#edf6ef,#d6e9df);border-color:#a4c7b8;color:#315f5c}
+.app[data-interface="modern"] .modal-action.danger{background:linear-gradient(145deg,#f9e8df,#f1d0c3);border-color:#d5a18e;color:#854b3c}
+.app[data-interface="modern"] .modal-action:disabled,
+.app[data-interface="modern"] .store-card button:disabled{opacity:.45;filter:saturate(.5)}
+.app[data-interface="modern"] .actions{gap:8px}
+.app[data-interface="modern"] .list-line{border-bottom:1px solid #d4e4dc;color:#34585a;padding:10px 4px}
+.app[data-interface="modern"] .history-entry{background:#f8fcf8;border:1px solid #d0e2d8;border-radius:11px;color:#315557}
+.app[data-interface="modern"] .history-entry small{color:#718b85}
+.app[data-interface="modern"] .historical-note{background:#edf5ef;border-left:3px solid #70b39d;border-radius:8px;color:#5c7773}
+.app[data-interface="modern"] .gift-summary,
+.app[data-interface="modern"] .animal-summary{
+ background:linear-gradient(145deg,#f9fdf9,#e5f2e9);border:1px solid #bdd9cb;border-radius:14px;box-shadow:0 2px 8px #225c4b0d
+}
+.app[data-interface="modern"] .gift-summary small,
+.app[data-interface="modern"] .animal-summary small{color:#66817b}
+.app[data-interface="modern"] .offline-feature,
+.app[data-interface="modern"] .daily-reward{background:linear-gradient(145deg,#f8fcf7,#e5f2e8);border:1px solid #b6d6c6;border-radius:15px}
+.app[data-interface="modern"] .offline-feature p,
+.app[data-interface="modern"] .daily-reward p{color:#567572}
+.app[data-interface="modern"] .store-card{
+ background:linear-gradient(145deg,#fbfefa,#edf6ef);border:1px solid #c2dbcd;border-radius:13px;
+ box-shadow:0 3px 10px #1d57430c;min-height:145px
+}
+.app[data-interface="modern"] .store-card strong{color:#285a58;font-weight:700}
+.app[data-interface="modern"] .store-card .symbol{filter:saturate(.88)}
+.app[data-interface="modern"] .store-card small{color:#617c77;line-height:1.55}
+.app[data-interface="modern"] .grid-cards{gap:11px}
+.app[data-interface="modern"] .animal-card{background:linear-gradient(145deg,#fbfefa,#edf6ef);border:1px solid #c2dbcd;border-radius:14px}
+.app[data-interface="modern"] .animal-card-icon{background:#e3f2e9;border:1px solid #b5d7c5;border-radius:13px}
+.app[data-interface="modern"] .animal-card-main>b{font-family:Inter,"Segoe UI",sans-serif;color:#285a58}
+.app[data-interface="modern"] .animal-card-main>small{color:#69817b}
+.app[data-interface="modern"] .animal-progress{background:#dcebe1;border:1px solid #b5d3c3}
+.app[data-interface="modern"] .animal-progress i{background:linear-gradient(90deg,#5ab79c,#9bd5a5)}
+.app[data-interface="modern"] .animal-state{color:#398274}
+.app[data-interface="modern"] .queue-line{border:1px solid #c5ddd0;border-radius:12px;background:#f7fcf8;margin:6px 0}
+.app[data-interface="modern"] .queue-state{border-radius:20px;background:#d9eee3;color:#2a756b;padding:4px 9px}
+.app[data-interface="modern"] .mood-choice{background:#f8fcf8;border:1px solid #c2dbcd;border-radius:13px;color:#315e5a}
+.app[data-interface="modern"] .mood-choice.selected{border-color:#58a995;background:linear-gradient(#e9f8ef,#d1eee0);box-shadow:inset 0 0 0 1px #9ad1bd}
+.app[data-interface="modern"] .theme-card{border:1px solid #c1d9ce;border-radius:13px;background:#f8fcf8;box-shadow:0 2px 8px #20534210}
+.app[data-interface="modern"] .theme-card.theme-selected{border-color:#4c9d8a;background:#e4f4e9;box-shadow:0 0 0 2px #79c4aa55}
+.app[data-interface="modern"] .profile-editor,
+.app[data-interface="modern"] .account-card,
+.app[data-interface="modern"] .audio-settings{background:#f8fcf8;border:1px solid #c4ddd0;border-radius:13px;padding:12px}
+.app[data-interface="modern"] .profile-editor-preview{background:#e5f2e9;border:1px solid #b7d4c5;border-radius:14px}
+.app[data-interface="modern"] .profile-divider{border-color:#c5ded2}
+.app[data-interface="modern"] .task-card,
+.app[data-interface="modern"] .achievement-card{background:#f8fcf8;border:1px solid #c5ddd0;border-radius:13px;box-shadow:0 2px 8px #2053420b}
+.app[data-interface="modern"] .task-icon{background:#e0f1e6;border-radius:11px}
+.app[data-interface="modern"] .task-main{color:#315b58}
+.app[data-interface="modern"] .achievement-list{gap:9px}
+.app[data-interface="modern"] .shop-jump-nav{display:flex;gap:6px;overflow-x:auto;padding:5px 2px 10px;scrollbar-width:thin}
+.app[data-interface="modern"] .shop-jump{
+ flex:0 0 auto;background:#e9f5ed;border:1px solid #b6d5c6;color:#356c65;
+ border-radius:18px;padding:7px 11px;font-size:11px;font-weight:650
+}
+.app[data-interface="modern"] .shop-jump.active{background:#287f79;border-color:#287f79;color:#fff}
+.app[data-interface="modern"] .shop-section{scroll-margin-top:10px}
+.app[data-interface="modern"] .fishing-cast{background:linear-gradient(145deg,#b6e4d7,#7bc5b9);border-color:#64a99f}
+.app[data-interface="modern"] .sale-bonus-line{color:#66817b;border-color:#d2e4d9}
+.app[data-interface="modern"] .flower-store-card,
+.app[data-interface="modern"] .bouquet-card,
+.app[data-interface="modern"] .grill-recipe-card{background:linear-gradient(145deg,#fbfefa,#edf5ee);border-color:#c2dacf}
+.app[data-interface="modern"] .bouquet-card b{color:#477c74}
+.app[data-interface="modern"] .grill-recipe-card .missing-ingredients{background:#fbefea;border-color:#e4c2b5;color:#945c4e}
+.app[data-interface="modern"] .mood-grid,.app[data-interface="modern"] .grid-cards{align-items:stretch}
+.app[data-interface="modern"] .overlay{backdrop-filter:blur(4px)}
+.app[data-interface="modern"] .dialog.wide{width:min(920px,96vw)}
+.app[data-interface="modern"] .modal-body::-webkit-scrollbar{width:10px}
+.app[data-interface="modern"] .modal-body::-webkit-scrollbar-thumb{background:#a8cbbd;border:2px solid #edf5ef;border-radius:10px}
+
+/* Fazenda: ajustes delicados nas imagens e nas camadas reais do SVG. */
+.app[data-interface="modern"] #world{background:linear-gradient(145deg,#83b88b,#6eaa80 58%,#63977d)}
+.app[data-interface="modern"] #world #scenery-layer image[data-asset="casa"],
+.app[data-interface="modern"] #world #scenery-layer image[data-asset="celeiro"],
+.app[data-interface="modern"] #world #scenery-layer image[data-asset="arvore"],
+.app[data-interface="modern"] #world #scenery-layer image[data-asset="casinha-cachorro"]{
+ filter:saturate(1.1) contrast(1.035) brightness(1.015) drop-shadow(0 4px 3px #244c3b35)
+}
+.app[data-interface="modern"] #world #scenery-layer #aviary-building{filter:saturate(1.08) contrast(1.035)}
+.app[data-interface="modern"] #world #scenery-layer #grill-building{filter:saturate(1.1) contrast(1.045) drop-shadow(0 4px 3px #244c3b30)}
+.app[data-interface="modern"] #world #garden-layer{filter:saturate(1.035) contrast(1.025)}
+.app[data-interface="modern"] #world #crop-layer{filter:saturate(1.07) contrast(1.025)}
+.app[data-interface="modern"] #world #animal-layer{filter:saturate(1.045) contrast(1.025)}
+.app[data-interface="modern"] #world #foreground-layer{filter:saturate(1.05) contrast(1.025)}
+.app[data-interface="modern"] #world #pond-area{filter:saturate(1.09) contrast(1.035)}
+.app[data-interface="modern"] #world #orchard-ground{filter:saturate(1.07) contrast(1.025)}
+.app[data-interface="modern"] #world #forest-area{filter:saturate(1.08) contrast(1.035)}
+.app[data-interface="modern"] #world #modern-farm-finish{opacity:.72}
+.app[data-interface="modern"] #world .animal-shadow{opacity:.27!important}
+.app[data-interface="modern"] #world .animal-shadow-core{opacity:.19}
+.app[data-interface="modern"] #world .plot-hit:hover{fill:#d6f4df;fill-opacity:.16;stroke:#e4f5dc}
+.app[data-interface="modern"] #world .plot-selection{fill:#c8efdb;fill-opacity:.18;stroke:#b6e8d0}
+.app[data-interface="modern"] #world .river-bank-plants,
+.app[data-interface="modern"] #world .river-reeds{filter:saturate(1.1)}
+.app[data-interface="modern"] #world .river-flow{opacity:.94}
+.app[data-interface="modern"] #world .orchard-tree,
+.app[data-interface="modern"] #world [data-forest-slot]{filter:saturate(1.08) drop-shadow(0 2px 2px #244c3b22)}
+.app[data-interface="modern"] #world .fence-section{filter:drop-shadow(0 2px 2px #244c3b20)}
+.app[data-interface="modern"] #world #decoration-layer{filter:saturate(1.05)}
+@media(max-width:700px){
+ .app[data-interface="modern"] .dialog{max-height:91dvh;border-radius:15px}
+ .app[data-interface="modern"] .dialog-head{min-height:48px;padding:8px 12px}
+ .app[data-interface="modern"] .dialog-head h2{font-size:19px}
+ .app[data-interface="modern"] .modal-body{padding:11px}
+ .app[data-interface="modern"] .grid-cards{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
+ .app[data-interface="modern"] .store-card{padding:10px}
+ .app[data-interface="modern"] .animal-card{gap:8px;padding:9px}
+ .app[data-interface="modern"] .shop-jump{font-size:10px;padding:7px 9px}
+}
+@media(max-width:420px){
+ .app[data-interface="modern"] .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .app[data-interface="modern"] .store-card{min-width:0}
+ .app[data-interface="modern"] .animal-card-icon{flex-basis:40px;height:40px;font-size:24px}
+ .app[data-interface="modern"] .modal-body h3{font-size:14px}
+}
