@@ -1582,41 +1582,13 @@ function updateDayNight(){
   layer.insertAdjacentHTML('beforeend',`<g id="house-window-lights" class="house-window-lights" transform="translate(780 84.8) scale(.7678883)" opacity="0" pointer-events="none">
    <defs>
     <linearGradient id="houseGlassWarm" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e9c987"/><stop offset=".55" stop-color="#d8ad68"/><stop offset="1" stop-color="#bd8c50"/></linearGradient>
-    <!-- Máscaras ajustadas aos quatro vidros da casa.png (573x430). -->
-    <clipPath id="houseLeftPane1"><path d="M83 286L111 289L111 306L83 304Z"/></clipPath>
-    <clipPath id="houseLeftPane2"><path d="M116 289L143 291L143 307L116 306Z"/></clipPath>
-    <clipPath id="houseLeftPane3"><path d="M83 310L111 312L111 326L83 324Z"/></clipPath>
-    <clipPath id="houseLeftPane4"><path d="M116 312L143 313L143 327L116 326Z"/></clipPath>
-    <clipPath id="houseFrontPane1"><path d="M350 285L381 282L381 303L350 306Z"/></clipPath>
-    <clipPath id="houseFrontPane2"><path d="M386 281L417 278L417 301L386 304Z"/></clipPath>
-    <clipPath id="houseFrontPane3"><path d="M350 311L381 308L381 326L350 329Z"/></clipPath>
-    <clipPath id="houseFrontPane4"><path d="M386 306L417 303L417 322L386 325Z"/></clipPath>
-    <clipPath id="houseRightPane1"><path d="M458 277L485 277L485 299L458 299Z"/></clipPath>
-    <clipPath id="houseRightPane2"><path d="M490 278L516 279L516 301L490 300Z"/></clipPath>
-    <clipPath id="houseRightPane3"><path d="M458 305L485 305L485 326L458 326Z"/></clipPath>
-    <clipPath id="houseRightPane4"><path d="M490 306L516 307L516 327L490 326Z"/></clipPath>
-    <clipPath id="houseRoundPane1"><path d="M467 124A17 17 0 0 0 450 141L465 141Z"/></clipPath>
-    <clipPath id="houseRoundPane2"><path d="M469 124A17 17 0 0 1 484 141L471 141Z"/></clipPath>
-    <clipPath id="houseRoundPane3"><path d="M450 145A17 17 0 0 0 467 158L467 145Z"/></clipPath>
-    <clipPath id="houseRoundPane4"><path d="M471 145L484 145A17 17 0 0 1 469 158Z"/></clipPath>
+    <!-- Vidros mapeados sobre a arte original casa.png (573x430); molduras e cruzetas preservadas. -->
    </defs>
-   <g fill="url(#houseGlassWarm)" opacity=".50">
-    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane1)"/>
-    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane2)"/>
-    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane3)"/>
-    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane4)"/>
-    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane1)"/>
-    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane2)"/>
-    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane3)"/>
-    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane4)"/>
-    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane1)"/>
-    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane2)"/>
-    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane3)"/>
-    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane4)"/>
-    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane1)"/>
-    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane2)"/>
-    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane3)"/>
-    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane4)"/>
+   <g fill="url(#houseGlassWarm)" opacity=".42">
+    <path d="M59 291L88 293L88 319L59 317Z M96 293L122 295L122 319L96 318Z M59 324L88 326L88 350L59 348Z M96 325L122 326L122 350L96 349Z"/>
+    <path d="M354 291L383 288L383 319L354 322Z M391 287L419 284L419 316L391 319Z M354 328L383 325L383 354L354 357Z M391 324L419 321L419 350L391 353Z"/>
+    <path d="M461 281L487 281L487 309L461 309Z M494 281L519 282L519 309L494 309Z M461 317L487 317L487 345L461 345Z M494 317L519 318L519 345L494 344Z"/>
+    <path d="M468 160A20 20 0 0 0 449 180L466 180Z M472 160A20 20 0 0 1 491 180L474 180Z M449 184A20 20 0 0 0 468 204L468 184Z M474 184L491 184A20 20 0 0 1 472 204Z"/>
    </g>
   </g>`);
   lights=layer.querySelector('#house-window-lights');
