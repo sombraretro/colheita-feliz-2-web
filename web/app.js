@@ -1625,7 +1625,7 @@ async function helpOnlineFriendFarm(){
   renderModal();
   notify('Ajuda realizada: '+labels[action]+'. +'+fmt(result?.xp_awarded||0)+' XP e +1 moeda verde. ('+socialHelpUsedToday+'/10 hoje)');
  }catch(error){console.error('Ajuda entre amigos:',error);notify(error.message||'Não foi possível ajudar nesta fazenda.')}
- finally{socialHelpBusy=false}
+ finally{socialHelpBusy=false;if(currentModal==='friend-farm')renderModal()}
 }
 function renderVisitedFarm(){
  if(!visitedFarm)return '<p>Nenhuma fazenda selecionada.</p>';
