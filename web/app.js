@@ -507,47 +507,78 @@ function playSfx(kind){
  };
  (patterns[kind]||(()=>{}))();
 }
-// Trilha campestre suave: frases variadas, harmonia leve e pequenas pausas.
+// Trilha original em clima de fazenda: valsa folk em Sol maior, com timbre macio e pausas.
 const FARM_MELODY=[
- 392,494,587,494,440,null,494,587,
- 659,587,494,440,392,null,440,494,
- 523,587,659,587,523,null,494,523,
- 587,659,587,494,440,null,392,440,
- 494,587,659,784,659,null,587,494,
- 523,587,659,587,494,null,440,494,
- 587,659,784,659,587,null,523,494,
- 440,494,523,587,523,null,494,392
+ 67,69,71,74,71,69,67,null, 64,67,69,71,69,67,64,null,
+ 62,64,67,69,67,64,62,null, 64,67,69,74,71,69,67,null,
+ 67,71,74,79,74,71,69,null, 72,74,76,79,76,74,72,null,
+ 71,74,76,79,76,74,71,null, 69,71,74,76,74,71,67,null
 ];
-const FARM_BASS=[196,146.83,164.81,130.81,174.61,146.83,196,164.81];
+const FARM_BASS=[43,40,36,38,43,36,38,43];
 const FARM_CHORDS=[
- [392,493.88,587.33],[293.66,369.99,440],[329.63,392,493.88],[261.63,329.63,392],
- [349.23,440,523.25],[293.66,369.99,440],[392,493.88,587.33],[329.63,392,493.88]
+ [55,59,62],[52,55,59],[48,52,55],[50,54,57],
+ [55,59,62],[48,52,55],[50,54,57],[43,47,50]
 ];
+const farmHz=midi=>440*Math.pow(2,(midi-69)/12);
+function playFarmNote(midi,duration=.48,volume=.012,wave='triangle'){
+ const ctx=ensureAudio();if(!ctx)return;
+ const osc=ctx.createOscillator(),filter=ctx.createBiquadFilter(),gain=ctx.createGain(),now=ctx.currentTime;
+ osc.type=wave;osc.frequency.setValueAtTime(farmHz(midi),now);
+ filter.type='lowpass';filter.frequency.setValueAtTime(wave==='triangle'?1900:1250,now);filter.Q.value=.55;
+ gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(volume,now+.055);
+ gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+ osc.connect(filter);filter.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+duration+.025);
+}
+function playFarmPad(chord){
+ const ctx=ensureAudio();if(!ctx)return;
+ chord.forEach((midi,index)=>{
+  const osc=ctx.createOscillator(),gain=ctx.createGain(),now=ctx.currentTime;
+  osc.type='sine';osc.frequency.setValueAtTime(farmHz(midi),now);
+  gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(.0028,now+.22);
+  gain.gain.setValueAtTime(.0028,now+.82);gain.gain.exponentialRampToValueAtTime(.0001,now+1.42);
+  osc.connect(gain);gain.connect(ctx.destination);osc.start(now+index*.035);osc.stop(now+1.46);
+ });
+}
 function startFarmMusic(){
  if(!musicEnabled||musicPlaying)return;
  const ctx=ensureAudio();if(!ctx)return;
  musicPlaying=true;musicIndex=0;
  const step=()=>{
   if(!musicEnabled){musicPlaying=false;musicTimer=null;return;}
-  const beat=musicIndex%FARM_MELODY.length;
-  const note=FARM_MELODY[beat],bar=Math.floor(beat/8)%FARM_CHORDS.length;
-  if(note)playTone(note,.30,'triangle',.023);
-  if(beat%8===0){
-   playTone(FARM_BASS[bar],.82,'sine',.017);
-   FARM_CHORDS[bar].forEach((tone,i)=>setTimeout(()=>{if(musicEnabled)playTone(tone,.62,'sine',.0055)},i*52));
+  const beat=musicIndex%FARM_MELODY.length,bar=Math.floor(beat/3)%FARM_CHORDS.length;
+  const note=FARM_MELODY[beat];
+  if(note!==null)playFarmNote(note,.47,.0115,'triangle');
+  if(beat%3===0){
+   playFarmNote(FARM_BASS[bar],1.25,.008,'sine');
+   playFarmPad(FARM_CHORDS[bar]);
   }
-  if(beat%16===8&&note)playTone(note*2,.20,'sine',.0045);
   musicIndex++;
   if(musicIndex>=FARM_MELODY.length){
    musicIndex=0;
-   musicTimer=setTimeout(step,1500);
-  }else musicTimer=setTimeout(step,390);
+   musicTimer=setTimeout(step,4200);
+  }else musicTimer=setTimeout(step,560);
  };
  step();
 }
 function stopFarmMusic(){if(musicTimer)clearTimeout(musicTimer);musicTimer=null;musicPlaying=false}
 function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.025)}
 function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startFarmMusic();else stopFarmMusic()}
+let landscapeModeActive=false;
+async function toggleLandscapeMode(){
+ const root=document.documentElement,button=$('orientation-toggle');
+ if(landscapeModeActive){
+  landscapeModeActive=false;root.classList.remove('orientation-landscape-fallback');
+  try{screen.orientation?.unlock?.()}catch{}
+  if(button){button.setAttribute('aria-pressed','false');button.title='Girar para modo paisagem';button.setAttribute('aria-label','Ativar modo paisagem')}
+  notify('Modo paisagem desativado.');return;
+ }
+ let locked=false;
+ try{if(screen.orientation?.lock){await screen.orientation.lock('landscape');locked=true}}catch{}
+ landscapeModeActive=true;
+ if(!locked)root.classList.add('orientation-landscape-fallback');
+ if(button){button.setAttribute('aria-pressed','true');button.title='Voltar ao modo normal';button.setAttribute('aria-label','Desativar modo paisagem')}
+ notify(locked?'Modo paisagem ativado.':'Modo paisagem visual ativado. Se o aparelho não girar fisicamente, o jogo será ajustado para a horizontal.');
+}
 document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startFarmMusic()},{once:true});
 
 const seedNoise=n=>{const x=Math.sin(n*91.13+17.37)*29341.715;return x-Math.floor(x)};
@@ -1137,11 +1168,12 @@ function renderPondArea(){
   </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   <g transform="translate(-825 760)">
-   <ellipse cx="-105" cy="62" rx="142" ry="20" fill="#274f2a" opacity=".25"/>
-   <path d="M8 -4L-78 -25L-218 -8L-130 24Z" fill="#81532f" stroke="#593a24" stroke-width="8"/>
-   <path d="M8 -13L-78 -34L-218 -17M5 -2L-82 -23L-222 -6M2 10L-86 -11L-226 6M-2 21L-90 0L-230 17" fill="none" stroke="#d0a16b" stroke-width="8" stroke-linecap="round"/>
-   <path d="M-22 13V105M-105 27V112M-190 12V96" stroke="#674326" stroke-width="14" stroke-linecap="round"/>
-   <path d="M-14 -6L-14 35M-95 -25L-95 42M-180 -8L-180 28" stroke="#edc58a" stroke-width="4" opacity=".75"/>
+   <ellipse cx="-105" cy="31" rx="137" ry="17" fill="#274f2a" opacity=".22"/>
+   <!-- Pequena ponte de tábuas, apoiada apenas nas margens, sem pilares no leito do rio. -->
+   <path d="M18 -10Q-92 -43 -224 -12L-211 25Q-91 -2 28 18Z" fill="#80502d" stroke="#593a24" stroke-width="7" stroke-linejoin="round"/>
+   <path d="M12 -7Q-94 -34 -218 -9M16 2Q-91 -24 -215 0M21 11Q-88 -13 -212 12" fill="none" stroke="#d6a36a" stroke-width="7" stroke-linecap="round"/>
+   <path d="M-28 -19L-17 24M-72 -29L-61 14M-116 -31L-105 11M-160 -25L-149 16M-198 -15L-187 25" stroke="#684126" stroke-width="3" opacity=".72"/>
+   <path d="M-220 -13L-224 -24M18 -10L25 -21" stroke="#e4bd88" stroke-width="5" stroke-linecap="round"/>
   </g>
   <text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text>
  </g>`;
@@ -1563,7 +1595,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');i
 document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
-$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
+$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
 if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand);if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
 if(d.setMood)setMood(d.setMood);if(d.buyRod)buyFishingRod(d.buyRod,d.currency);if(d.selectRod)selectFishingRod(d.selectRod);if(d.castFish)castFishingRod();if(d.buyGrill)buyGrill();if(d.buyGrillPart)buyGrillPart(d.buyGrillPart);if(d.buyGrillIngredient)buyGrillSupply(d.buyGrillIngredient);if(d.buyTurkeyMeat)buyTurkeyMeat();if(d.butcherAnimal)butcherAnimal(d.butcherAnimal);if(d.produceGrill)produceGrillRecipe(d.produceGrill);if(d.collectGrill)collectGrill();if(d.cookRecipe)produceKitchenRecipe(d.cookRecipe);if(d.collectKitchen)collectKitchen();if(d.plantForest!==undefined)plantForestTree(Number(d.slot),d.plantForest);if(d.harvestForest!==undefined)harvestForestTree(Number(d.harvestForest));if(d.buySeaNet)buySeaNet(d.buySeaNet,d.currency);if(d.selectSeaNet)selectSeaNet(d.selectSeaNet);if(d.castSea)castSeaNet();if(d.craftWood)craftWoodItem(d.craftWood);if(d.toggleMeatLock)toggleMeatLock(d.toggleMeatLock);if(d.sellMeat)sellMeat(d.sellMeat);if(d.toggleProcessedLock)toggleProcessedLock(d.toggleProcessedLock);if(d.sellProcessed)sellProcessed(d.sellProcessed);if(d.assembleGrill)assembleGrill();if(d.buyTheme)buyFarmTheme(d.buyTheme);if(d.applyTheme)applyFarmTheme(d.applyTheme);if(d.buyDecoration)buyDecoration(d.buyDecoration);if(d.placeDecoration)placeDecoration(d.placeDecoration);if(d.removeDecoration!==undefined)removeDecoration(d.removeDecoration);
