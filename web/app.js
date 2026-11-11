@@ -455,7 +455,7 @@ function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="12" ry="6" fill="#336b1f" opacity=".35"/><path d="M${x-9} ${y-54}L${x+1} ${y-67}L${x+11} ${y-54}L${x+10} ${y+8}L${x-8} ${y+8}Z" fill="#aa6835" stroke="#694320" stroke-width="3"/><path d="M${x-6} ${y-53}L${x+1} ${y-60}L${x+7} ${y-52}" fill="none" stroke="#f2c17a" stroke-width="4"/><path d="M${x-4} ${y-43}V${y+1}" stroke="#c48d54" stroke-width="4"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none">${rails}${posts}</g>`}
 function brickWalkwayMarkup(){
  const routes=[
-  'M1490 360 C1570 390 1735 395 1780 485 C1825 575 1770 690 1800 780 C1820 835 1920 875 2010 890',
+  'M1685 360 C1720 332 1765 338 1790 390 C1825 465 1780 570 1790 700 C1795 790 1885 855 2010 890',
   'M910 940 C700 985 430 1005 180 980 C-90 955 -350 900 -535 825 C-630 787 -685 760 -735 735',
   'M2010 890 C2100 855 2165 800 2225 720 C2290 640 2370 590 2470 550'
  ];
@@ -541,11 +541,11 @@ scenery+=svgImage('casa',890,70,360,350);
 scenery+=svgImage('celeiro',1280,-20,450,380);
 scenery+=svgImage('casinha-cachorro',245,180,145,140);
 // Cercado quadrado com portão central na parte superior; laterais e frente permanecem fechadas.
-scenery+=fencePath([[1250,360],[1435,360]],'rear');
-scenery+=fencePath([[1545,360],[1730,360]],'rear');
+scenery+=fencePath([[1250,360],[1630,360]],'rear');
+scenery+=fencePath([[1740,360],[1730,360]],'rear');
 scenery+=fencePath([[1250,360],[1250,840]],'side');
 scenery+=fencePath([[1730,360],[1730,840]],'side');
-scenery+=`<g transform="translate(1435 360)"><path d="M0 -58V10M110 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L110 -48M0 -15L110 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L102 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H128" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
+scenery+=`<g transform="translate(1630 360)"><path d="M0 -58V10M110 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L110 -48M0 -15L110 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L102 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H128" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
