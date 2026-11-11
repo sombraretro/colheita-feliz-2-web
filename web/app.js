@@ -484,20 +484,33 @@ function playSfx(kind){
  };
  (patterns[kind]||(()=>{}))();
 }
-// Tema campestre mais vivo: melodia em Sol maior, baixo macio e acordes leves.
+// Melodia campestre da Interface 2.0 · Orkut.
 const FARM_MELODY=[392,494,587,659,587,494,440,494,523,587,659,784,659,587,494,440];
 const FARM_BASS=[196,147,165,131];
 const FARM_CHORDS=[[392,494,587],[294,370,440],[330,392,494],[262,330,392]];
+// Arranjo exclusivo da Interface Moderna: violão/piano sintético leve, com balanço confortável.
+const MODERN_FARM_MELODY=[392,440,494,587,659,587,494,440,392,494,523,587,659,587,523,494,440,494,587,659,784,659,587,523];
+const MODERN_FARM_BASS=[196,146.83,174.61,164.81];
+const MODERN_FARM_CHORDS=[[392,494,587],[293.66,369.99,440],[349.23,440,523.25],[329.63,392,493.88]];
 function startFarmMusic(){
  if(!musicEnabled||musicPlaying)return;const ctx=ensureAudio();if(!ctx)return;musicPlaying=true;musicIndex=0;
  const step=()=>{if(!musicEnabled){musicPlaying=false;return}
-  const beat=musicIndex%FARM_MELODY.length,note=FARM_MELODY[beat],bar=Math.floor(beat/4)%FARM_CHORDS.length;
-  // Volume reforçado para a música se destacar dos sons ambientes do navegador.
-  playTone(note,.23,'triangle',.058);
-  if(beat%2===0)playTone(note*2,.12,'sine',.012);
-  if(beat%4===0){playTone(FARM_BASS[bar],.38,'sine',.034);FARM_CHORDS[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.3,'triangle',.012),i*18))}
-  if(beat%8===7){setTimeout(()=>playTone(1175,.08,'sine',.016,-220),55);setTimeout(()=>playTone(1568,.07,'sine',.014,-260),125)}
-  musicIndex++;musicTimer=setTimeout(step,280)
+  const modern=$('tools')?.dataset.era==='two';
+  const melody=modern?MODERN_FARM_MELODY:FARM_MELODY,bass=modern?MODERN_FARM_BASS:FARM_BASS,chords=modern?MODERN_FARM_CHORDS:FARM_CHORDS;
+  const beat=musicIndex%melody.length,note=melody[beat],bar=Math.floor(beat/6)%chords.length;
+  if(modern){
+   playTone(note,.28,'sine',.038);
+   if(beat%3===0)playTone(note*2,.13,'triangle',.009);
+   if(beat%6===0){playTone(bass[bar],.48,'sine',.026);chords[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.34,'triangle',.009),i*24))}
+   if(beat%12===11)setTimeout(()=>playTone(987.77,.16,'sine',.012,-90),90);
+   musicIndex++;musicTimer=setTimeout(step,310);
+  }else{
+   playTone(note,.23,'triangle',.058);
+   if(beat%2===0)playTone(note*2,.12,'sine',.012);
+   if(beat%4===0){playTone(bass[bar],.38,'sine',.034);chords[bar].forEach((tone,i)=>setTimeout(()=>playTone(tone,.3,'triangle',.012),i*18))}
+   if(beat%8===7){setTimeout(()=>playTone(1175,.08,'sine',.016,-220),55);setTimeout(()=>playTone(1568,.07,'sine',.014,-260),125)}
+   musicIndex++;musicTimer=setTimeout(step,280);
+  }
  };
  step();
 }
@@ -1352,7 +1365,38 @@ function updateDayNight(){
  <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
  `:''; 
 }
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-1400" y="-400" width="5800" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderPondArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+function renderModernFarmFinish(){
+ return `<g id="modern-farm-finish" pointer-events="none">
+  <defs>
+   <linearGradient id="modernPaving" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dce5df" stop-opacity=".88"/><stop offset="1" stop-color="#aabbb4" stop-opacity=".72"/></linearGradient>
+   <linearGradient id="modernMetal" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c6d5d4"/><stop offset="1" stop-color="#657d80"/></linearGradient>
+  </defs>
+  <!-- Calçamento contemporâneo e discreto na chegada da casa. -->
+  <path d="M1080 428Q1160 438 1225 470L1240 486Q1160 462 1080 452Z" fill="url(#modernPaving)" stroke="#758e83" stroke-width="4" opacity=".82"/>
+  <path d="M1092 438L1220 478M1118 438L1130 458M1160 450L1172 469M1195 460L1207 477" stroke="#ffffff" stroke-width="3" opacity=".58"/>
+  <!-- Base limpa e pequenos canteiros junto ao celeiro e ao viveiro. -->
+  <path d="M790 2Q900 -5 1010 2T1215 3L1210 18Q1080 14 980 17T795 17Z" fill="#d3ddd2" opacity=".34"/>
+  <path d="M350 -55Q455 -67 560 -55T735 -53L730 -38Q610 -43 520 -39T355 -39Z" fill="#d5e0d8" opacity=".34"/>
+  <g fill="#8da99a" opacity=".72"><circle cx="825" cy="8" r="4"/><circle cx="900" cy="8" r="4"/><circle cx="1080" cy="9" r="4"/><circle cx="1170" cy="8" r="4"/><circle cx="395" cy="-45" r="4"/><circle cx="470" cy="-45" r="4"/><circle cx="640" cy="-45" r="4"/></g>
+  <!-- Acabamento metálico leve nas cercas do curral. -->
+  <g fill="none" stroke="url(#modernMetal)" stroke-width="5" stroke-linecap="round" opacity=".82">
+   <path d="M1262 -178H1778M1262 -157V428M1778 -157V428M1264 401H1428M1562 401H1778"/>
+  </g>
+  <g fill="#d5e2df" stroke="#60797b" stroke-width="3"><circle cx="1262" cy="-157" r="7"/><circle cx="1778" cy="-157" r="7"/><circle cx="1262" cy="430" r="7"/><circle cx="1778" cy="430" r="7"/></g>
+  <!-- Caminho de placas e iluminação baixa na mata e no pomar. -->
+  <path d="M3500 630Q3700 585 3890 620T4280 620" fill="none" stroke="#d8e3d9" stroke-width="26" stroke-linecap="round" opacity=".22"/>
+  <path d="M2250 300Q2470 270 2730 300T3210 295" fill="none" stroke="#e7e8d6" stroke-width="14" stroke-linecap="round" stroke-dasharray="2 28" opacity=".48"/>
+  <g stroke="#8aa79a" stroke-width="5" fill="#dbe8dd" opacity=".8">
+   <path d="M730 315V275M718 275H742" /><path d="M1230 330V290M1218 290H1242"/>
+   <path d="M2170 380V340M2158 340H2182"/><path d="M3325 420V380M3313 380H3337"/>
+  </g>
+  <g fill="#d7e9e3" opacity=".8"><circle cx="730" cy="270" r="8"/><circle cx="1230" cy="285" r="8"/><circle cx="2170" cy="335" r="8"/><circle cx="3325" cy="375" r="8"/></g>
+  <!-- Pedras claras organizadas na margem do rio e bordas dos canteiros. -->
+  <g fill="#c9d8d1" stroke="#7e9b8f" stroke-width="3" opacity=".78"><ellipse cx="-1370" cy="210" rx="14" ry="7"/><ellipse cx="-1250" cy="470" rx="11" ry="6"/><ellipse cx="-1125" cy="820" rx="15" ry="7"/><ellipse cx="-900" cy="590" rx="12" ry="6"/></g>
+  <path d="M-140 630L-40 675M-40 675L60 720M60 720L160 765" fill="none" stroke="#d4e0d6" stroke-width="5" opacity=".48"/>
+ </g>`;
+}
+function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-1400" y="-400" width="5800" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderPondArea()+renderOrchardArea()+renderForestArea();if(document.querySelector('.app')?.dataset.interface==='modern')html+=renderModernFarmFinish();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
@@ -1498,7 +1542,21 @@ $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');if(!b||b.closest('#modal-body'))return;e.preventDefault();e.stopPropagation();openModal(b.dataset.modal)},true);
 document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
-document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab[data-era]').forEach(x=>x.classList.toggle('active',x===b));$('tools').dataset.era=b.dataset.era==='two'?'two':'classic';notify(b.dataset.era==='two'?'Interface Moderna selecionada':'Interface 2.0 · Orkut selecionada')}));
+function applyInterfaceEra(era){
+ const modern=era==='two';
+ const value=modern?'modern':'classic';
+ const tools=$('tools'),world=$('world'),appRoot=document.querySelector('.app');
+ if(tools)tools.dataset.era=modern?'two':'classic';
+ if(world)world.setAttribute('data-interface',value);
+ if(appRoot)appRoot.dataset.interface=value;
+ if(typeof renderFarmAddons==='function')renderFarmAddons();
+ if(musicEnabled){stopFarmMusic();startFarmMusic()}
+}
+document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.tab[data-era]').forEach(x=>x.classList.toggle('active',x===b));
+ applyInterfaceEra(b.dataset.era==='two'?'two':'classic');
+ notify(b.dataset.era==='two'?'Interface Moderna selecionada':'Interface 2.0 · Orkut selecionada')
+}));
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
 $('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
