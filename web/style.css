@@ -249,3 +249,11 @@ html[data-cf2-next-ui="enabled"] .tool-icon-ready:hover{transform:translateY(-2p
 .friend-help-panel h3{margin:0 0 7px;color:#426c2d}.friend-help-panel>p{font-size:12px;line-height:1.45;color:#536b45;margin:0 0 12px}
 .friend-help-list{display:grid;gap:8px}.friend-help-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border:1px solid #c5d9ad;border-radius:9px;background:#fffdf4}.friend-help-item>span{display:grid;gap:3px;min-width:0}.friend-help-item small{font-size:11px;color:#6c765e}.friend-help-item button{flex:0 0 auto;white-space:nowrap}.friend-help-empty{padding:12px;border:1px dashed #a9c987;border-radius:9px;background:#ffffff99;color:#59734a;font-size:13px;text-align:center}
 @media(max-width:480px){.friend-help-item{align-items:stretch;flex-direction:column}.friend-help-item button{width:100%}}
+
+/* Ferramentas limitadas durante a visita de fazendas */
+.friend-visit-tools{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0 4px;padding:8px;border:1px solid #a9c987;border-radius:12px;background:linear-gradient(#f7ffe9,#e6f3d8)}
+.friend-visit-tool{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:86px;padding:8px 10px;border:2px solid #b8d39a;border-radius:10px;background:#fffdf4;color:#45652e;cursor:pointer}
+.friend-visit-tool span{font-size:25px;line-height:1.1}.friend-visit-tool small{font-size:10px;font-weight:700}
+.friend-visit-tool.active{border-color:#4d9a29;background:#dff2c9;box-shadow:0 0 0 2px #83bd5a55}
+.friend-visit-hint{margin:5px 0 10px;text-align:center;font-size:11px;color:#526c3e}
+.friend-visit-scene svg{pointer-events:auto}.friend-visit-scene svg .plot-hit{cursor:pointer!important}
