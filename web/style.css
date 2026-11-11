@@ -422,16 +422,16 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 .app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="celeiro"],
 .app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="arvore"],
 .app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="casinha-cachorro"]{
- filter:saturate(1.18) contrast(1.08) brightness(1.025) drop-shadow(0 7px 5px #254d3b55);
+ filter:saturate(1.1) contrast(1.035) brightness(1.015) drop-shadow(0 4px 3px #244c3b35);
 }
-.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer #aviary-building{filter:saturate(1.2) contrast(1.08) drop-shadow(0 7px 6px #234b3b55)}
-.app[data-interface="modern"] #world[data-interface="modern"] #pond-area{filter:saturate(1.22) contrast(1.07)}
-.app[data-interface="modern"] #world[data-interface="modern"] #orchard-ground{filter:saturate(1.14) contrast(1.05)}
-.app[data-interface="modern"] #world[data-interface="modern"] #forest-area{filter:saturate(1.2) contrast(1.08)}
-.app[data-interface="modern"] #world[data-interface="modern"] #grill-building{filter:saturate(1.18) contrast(1.08) drop-shadow(0 6px 5px #234b3b55)}
-.app[data-interface="modern"] #world[data-interface="modern"] #garden-layer{filter:saturate(1.12) contrast(1.04)}
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer #aviary-building{filter:saturate(1.08) contrast(1.035)}
+.app[data-interface="modern"] #world[data-interface="modern"] #pond-area{filter:saturate(1.09) contrast(1.035)}
+.app[data-interface="modern"] #world[data-interface="modern"] #orchard-ground{filter:saturate(1.07) contrast(1.025)}
+.app[data-interface="modern"] #world[data-interface="modern"] #forest-area{filter:saturate(1.08) contrast(1.035)}
+.app[data-interface="modern"] #world[data-interface="modern"] #grill-building{filter:saturate(1.1) contrast(1.045) drop-shadow(0 4px 3px #244c3b30)}
+.app[data-interface="modern"] #world[data-interface="modern"] #garden-layer{filter:saturate(1.035) contrast(1.025)}
 .app[data-interface="modern"] #world[data-interface="modern"] #foreground-layer{filter:saturate(1.14) contrast(1.06)}
-.app[data-interface="modern"] #world[data-interface="modern"] #decoration-layer{filter:saturate(1.12) contrast(1.05)}
+.app[data-interface="modern"] #world[data-interface="modern"] #decoration-layer{filter:saturate(1.05) contrast(1.025)}
 .app[data-interface="modern"] #world[data-interface="modern"] #modern-farm-finish{filter:drop-shadow(0 2px 3px #285a4a44)}
 @media(max-width:700px){
  .app[data-interface="modern"] .tool-bar[data-era="two"]{left:50%;right:auto;top:auto;bottom:7px;transform:translateX(-50%);width:calc(100% - 16px);max-width:520px;height:51px;padding:3px 5px;gap:2px}
@@ -640,3 +640,16 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
  .app[data-interface="modern"] .animal-card-icon{flex-basis:40px;height:40px;font-size:24px}
  .app[data-interface="modern"] .modal-body h3{font-size:14px}
 }
+/* Ajustes finais de intensidade: preservar a arte original, apenas refinar luz e contraste. */
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="casa"],
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="celeiro"],
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="arvore"],
+.app[data-interface="modern"] #world[data-interface="modern"] #scenery-layer image[data-asset="casinha-cachorro"]{filter:saturate(1.1) contrast(1.035) brightness(1.015) drop-shadow(0 4px 3px #244c3b35)}
+.app[data-interface="modern"] #world[data-interface="modern"] #pond-area{filter:saturate(1.09) contrast(1.035)}
+.app[data-interface="modern"] #world[data-interface="modern"] #orchard-ground{filter:saturate(1.07) contrast(1.025)}
+.app[data-interface="modern"] #world[data-interface="modern"] #forest-area{filter:saturate(1.08) contrast(1.035)}
+.app[data-interface="modern"] #world[data-interface="modern"] #grill-building{filter:saturate(1.1) contrast(1.045) drop-shadow(0 4px 3px #244c3b30)}
+.app[data-interface="modern"] #world[data-interface="modern"] #garden-layer{filter:saturate(1.035) contrast(1.025)}
+.app[data-interface="modern"] #world[data-interface="modern"] #foreground-layer{filter:saturate(1.05) contrast(1.025)}
+.app[data-interface="modern"] #world[data-interface="modern"] #decoration-layer{filter:saturate(1.05)}
+.app[data-interface="modern"] .event-seed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
