@@ -205,7 +205,7 @@ begin
       'crop',case when v_plot->>'crop'='null' then null else v_plot->>'crop' end,
       'progress',case when v_plot->>'status'='growing' then
         greatest(0,least(1,(v_now_ms-coalesce(nullif(v_plot->>'plantedAt','')::numeric,0))/
-          (case when coalesce((v_plot->>'regrowing')::boolean,false) and v_crop->>'regrowHours' is not null then (v_crop->>'regrowHours')::numeric else (v_crop->>'hours')::numeric end*0.2*3600000))
+          (case when coalesce((v_plot->>'regrowing')::boolean,false) and v_crop->>'regrowHours' is not null then (v_crop->>'regrowHours')::numeric else (v_crop->>'hours')::numeric end*0.2*3600000)))
         else 0 end,
       'weed',coalesce((v_plot->>'weed')::boolean,false),
       'pest',coalesce((v_plot->>'pest')::boolean,false),
