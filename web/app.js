@@ -470,7 +470,7 @@ function renderFriendVisitWorld(){
  try{
   writeLocked=true;renderPlots();renderAnimals(false);renderFarmAddons();
   const visitorLayers=Object.fromEntries(layerIds.map(id=>[id,$(id)?.innerHTML||'']));
-  const clone=world.cloneNode(true);clone.removeAttribute('id');clone.setAttribute('viewBox','-1400 -300 5800 980');clone.setAttribute('preserveAspectRatio','xMidYMid meet');clone.style.cssText='display:block;width:100%;min-width:1100px;height:auto;pointer-events:auto';
+  const clone=world.cloneNode(true);clone.removeAttribute('id');clone.setAttribute('preserveAspectRatio','xMidYMid meet');clone.style.cssText='display:block;width:100%;min-width:0;height:min(52vh,520px);pointer-events:auto';
   for(const id of layerIds){const target=clone.querySelector('#'+id);if(target)target.innerHTML=visitorLayers[id]}
   return '<div class="friend-visit-scene">'+clone.outerHTML+'</div>';
  }finally{
