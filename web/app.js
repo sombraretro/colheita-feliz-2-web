@@ -542,7 +542,6 @@ scenery+=svgImage('celeiro',1280,-20,450,380);
 scenery+=svgImage('casinha-cachorro',245,180,145,140);
 // Cercado quadrado com portão central na parte superior; laterais e frente permanecem fechadas.
 scenery+=fencePath([[1250,360],[1630,360]],'rear');
-scenery+=fencePath([[1740,360],[1730,360]],'rear');
 scenery+=fencePath([[1250,360],[1250,840]],'side');
 scenery+=fencePath([[1730,360],[1730,840]],'side');
 scenery+=`<g transform="translate(1630 360)"><path d="M0 -58V10M110 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L110 -48M0 -15L110 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L102 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H128" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
