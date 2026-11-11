@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR" data-cf2-next-ui="enabled"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>Colheita Feliz 2 — Edição Online 1.9.0</title><link rel="icon" href="/assets/arvore.png" type="image/png"><link rel="stylesheet" href="/style.css?v=20261111-classic-tool-icons-v2"></head>
+<!doctype html><html lang="pt-BR" data-cf2-next-ui="enabled"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>Colheita Feliz 2 — Edição Online 1.9.0</title><link rel="icon" href="/assets/arvore.png" type="image/png"><link rel="stylesheet" href="/style.css?v=20261111-original-cursor-spade-harvest"></head>
 <body><div class="app">
 <header class="topbar"><div class="brand"><span class="brand-flower" id="brand-theme-icon" aria-hidden="true">🌿</span><span class="brand-name">Colheita <em>Feliz</em></span><span class="brand-two">2</span></div><nav class="tabs"><button class="tab active">Interface 2.0 · Orkut</button><button class="tab" data-modal="kitchen" data-notify="kitchen">Cozinha</button><button class="tab" data-modal="herb-mix">Mix de Ervas</button><button class="tab" data-modal="carpentry">Marcenaria</button><button class="tab" data-modal="grill" data-notify="grill">Churrasqueira</button><button class="tab" data-modal="pond">Rio</button><button class="tab" data-area-nav="forest" data-notify="forest">Mata</button><button class="tab" data-modal="sea">Mar</button><button class="tab" data-modal="help">Ajuda</button></nav><div class="topright"><span class="offline-dot" id="connection-dot"></span><span id="connection-label">LOCAL</span><button class="iconbtn" id="orientation-toggle" type="button" aria-label="Ativar modo paisagem" aria-pressed="false" title="Girar para modo paisagem">⤾</button><button class="iconbtn" data-modal="account" title="Conta e sincronização">👤</button><button class="iconbtn" data-modal="settings" title="Configurações">⚙</button></div></header>
 <main id="playfield" class="playfield"><svg id="world" viewBox="0 0 1600 980" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-label="Fazenda interativa com objetos separados"><g id="ground-layer"></g><g id="theme-ground-layer"></g><g id="scenery-layer"></g><g id="decoration-layer"></g><g id="garden-layer"></g><g id="theme-overlay-layer"></g><g id="crop-layer"></g><g id="animal-layer"></g><g id="foreground-layer"></g><g id="day-night-layer" pointer-events="none"></g><g id="notification-layer" pointer-events="none"></g></svg>
@@ -15,11 +15,25 @@
 <div id="tip" class="tip">Selecione uma ferramenta e clique em um canteiro.</div>
 
 <div id="tools" class="tool-bar" role="toolbar" aria-label="Ferramentas da fazenda">
-<button class="tool active" data-tool="inspect" title="Selecionar" aria-label="Selecionar">↖</button>
-<button class="tool" data-tool="hoe" title="Enxada" aria-label="Enxada">
-<svg class="tool-svg original-tool-icon" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-<defs><linearGradient id="hoeWood" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#6c3517"/><stop offset=".25" stop-color="#d58a3d"/><stop offset=".55" stop-color="#f2bd68"/><stop offset="1" stop-color="#814019"/></linearGradient><linearGradient id="hoeSteel" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#fff"/><stop offset=".3" stop-color="#cbdde0"/><stop offset=".68" stop-color="#829ba1"/><stop offset="1" stop-color="#526b73"/></linearGradient></defs>
-<g stroke="#59351f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><path d="M27 82L62 20" stroke="#59351f" stroke-width="13"/><path d="M27 82L62 20" stroke="url(#hoeWood)" stroke-width="8"/><path d="M60 24L48 17Q43 14 46 9L51 5Q55 2 59 6L72 15Q76 18 72 23L68 28Z" fill="#8c4b24"/><path d="M61 20L72 24Q77 26 82 22L89 16Q92 13 89 10L84 6Q81 4 78 7L70 14L63 11Z" fill="url(#hoeSteel)"/><path d="M63 17L83 10" stroke="#fff" stroke-width="2"/><path d="M22 75L32 82" stroke="#f4c27a" stroke-width="2"/></g>
+<button class="tool active" data-tool="inspect" title="Selecionar" aria-label="Selecionar">
+<svg class="tool-svg original-tool-icon cursor-classic" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+<path d="M13 5L13 49L24 38L32 55L40 51L31 34L47 32Z" fill="#202020" stroke="#17120e" stroke-width="4" stroke-linejoin="round"/>
+<path d="M17 12L17 41L24 33L34 50L36 49L27 31L40 30Z" fill="#fff" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M17 12L40 30L27 31L24 33Z" fill="#dcecff"/>
+</svg></button>
+<button class="tool" data-tool="hoe" title="Pá" aria-label="Pá">
+<svg class="tool-svg original-tool-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="spadeHandle" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#75401e"/><stop offset=".28" stop-color="#d18a42"/><stop offset=".55" stop-color="#f1c078"/><stop offset="1" stop-color="#8a4a20"/></linearGradient>
+<linearGradient id="spadeBlade" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7ffff"/><stop offset=".28" stop-color="#c8d9df"/><stop offset=".68" stop-color="#8099a4"/><stop offset="1" stop-color="#526a78"/></linearGradient>
+</defs>
+<path d="M29 8Q32 5 35 8L38 12L34 17L30 17L26 12Z" fill="#71401f" stroke="#4c2b17" stroke-width="2"/>
+<path d="M32 14L27 48" stroke="#60351d" stroke-width="8" stroke-linecap="round"/>
+<path d="M32 14L27 48" stroke="url(#spadeHandle)" stroke-width="5" stroke-linecap="round"/>
+<path d="M27 43Q18 43 15 48L10 59Q9 62 13 62H42Q46 61 44 57L38 47Q35 43 27 43Z" fill="url(#spadeBlade)" stroke="#465e69" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M27 46L17 58L39 58L33 47Z" fill="#eaf5f7" opacity=".72"/>
+<path d="M16 58Q27 61 40 58" fill="none" stroke="#fff" stroke-width="1.5"/>
+<path d="M30 19L27 40" stroke="#f7d39b" stroke-width="1.2" stroke-linecap="round"/>
 </svg></button>
 <button class="tool" data-tool="seed" title="Sementes" aria-label="Sementes">
 <svg class="tool-svg original-tool-icon" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
@@ -49,10 +63,12 @@
 <g stroke="#733b25" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M32 30H61V22H69V31L75 38V76Q51 86 27 76V38Z" fill="url(#pestBottle)"/><path d="M34 22H63V15H73V24L68 31H32Z" fill="url(#pestTop)"/><path d="M69 18L81 13L85 19L73 26" fill="#9aadb2"/><path d="M80 14L90 11L92 16L84 20" fill="#dce5e7"/><path d="M38 43Q51 36 64 43V68Q51 74 38 68Z" fill="#fff2cf" stroke="#a05a35"/><ellipse cx="51" cy="54" rx="5" ry="7" fill="#633d27" stroke="#3e2a1d" stroke-width="2"/><circle cx="51" cy="45" r="4" fill="#8a5428"/><path d="M46 49L40 45M46 54L39 54M46 59L41 64M56 49L62 45M56 54L63 54M56 59L61 64M49 41L46 37M53 41L56 37" fill="none" stroke="#55351f" stroke-width="2.5"/><path d="M79 39L88 36M81 46L91 46M79 53L87 56" stroke="#b7eaff" stroke-width="3"/></g>
 </svg></button>
 <button class="tool" data-tool="hand" title="Colher" aria-label="Colher">
-<svg class="tool-svg original-tool-icon" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-<defs><linearGradient id="handSkin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe0b0"/><stop offset=".55" stop-color="#e9a66f"/><stop offset="1" stop-color="#bd7047"/></linearGradient><linearGradient id="handSleeve" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9bd5f4"/><stop offset="1" stop-color="#347bb7"/></linearGradient></defs>
-<g stroke="#75452b" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M18 68L30 59L38 67L29 84L17 80Z" fill="url(#handSleeve)"/><path d="M27 65L27 44Q27 38 32 38Q37 38 37 44V55V30Q37 24 42 24Q48 24 48 30V53V27Q48 21 54 22Q60 23 59 29V55V35Q59 29 65 30Q71 31 70 37L68 61Q67 74 57 79Q45 85 34 77Z" fill="url(#handSkin)"/><path d="M37 53V44M48 51V31M59 52V37" fill="none" stroke="#fff0d8" stroke-width="2.5"/><path d="M28 66Q36 61 42 69" fill="none" stroke="#a95f42" stroke-width="2.5"/><path d="M32 75Q44 84 58 76" fill="none" stroke="#a95f42" stroke-width="2.5"/></g>
-<path d="M68 16Q72 9 77 15Q81 21 74 28Q68 23 68 16Z" fill="#f2c34d" stroke="#8d5b22" stroke-width="2.5"/><path d="M74 19Q81 9 86 14Q85 22 74 19Z" fill="#7dbb37" stroke="#4c7924" stroke-width="2.5"/>
+<svg class="tool-svg original-tool-icon harvest-hand" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+<defs><linearGradient id="harvestSkin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe6bd"/><stop offset=".45" stop-color="#e9ae79"/><stop offset="1" stop-color="#b96e43"/></linearGradient><linearGradient id="harvestSleeve" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9bcdf0"/><stop offset="1" stop-color="#397bb5"/></linearGradient></defs>
+<path d="M8 48L17 39L29 45L22 61L7 58Z" fill="url(#harvestSleeve)" stroke="#56351f" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M17 43L18 27Q18 23 22 23Q26 23 26 27L26 36L27 15Q27 10 32 10Q37 10 37 15L37 34L39 18Q40 13 44 14Q49 15 48 20L46 37L49 28Q51 24 55 27Q58 29 56 34L51 48Q47 58 36 58L25 55Q17 53 17 43Z" fill="url(#harvestSkin)" stroke="#75452b" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M26 35L27 19M37 33L39 19M47 36L50 29" stroke="#fff0d8" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M19 45Q27 49 31 53" fill="none" stroke="#ad6846" stroke-width="2"/>
 </svg></button>
 </div><div class="quick-actions"><button id="quick-harvest" data-notify="crops" disabled>🌾 Colheita rápida (0)</button><button id="quick-dig" disabled>🪏 Escavada rápida (0)</button></div><div class="area-navigation" aria-label="Navegação entre áreas"><button id="pan-left" type="button" title="Mover para a área à esquerda" aria-label="Mover para a área à esquerda">◀</button><button id="pan-right" type="button" title="Mover para a área à direita" aria-label="Mover para a área à direita">▶</button></div><div class="zoom-ui"><button id="zoom-out" title="Diminuir zoom">−</button><output id="zoom-label">100%</output><button id="zoom-in" title="Aumentar zoom">+</button><button id="zoom-fit" class="reset fit" title="Mostrar a fazenda inteira" aria-label="Mostrar a fazenda inteira">⛶</button><button id="zoom-reset" class="reset" title="Centralizar câmera">⌖</button></div><div class="footer"><span><i class="savedot" id="save-dot"></i><span id="save-status">Carregando fazenda...</span></span><span>Arraste áreas livres para mover · setas laterais navegam · roda do mouse para zoom</span></div>
 <div id="toast" class="toast" role="status"></div></main>
