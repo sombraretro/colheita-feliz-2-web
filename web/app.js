@@ -136,10 +136,10 @@ const DECORATIONS={
 // Valores não preservados são marcados como estimativas; os temas artísticos têm dados publicados.
 const FARM_THEMES={
  classic:{name:'Fazenda Clássica',icon:'🌿',price:0,currency:'coins',days:0,xp:0,description:'Gramado verde, construções de madeira e cenário tradicional.',historical:true},
- valentine:{name:'Dia dos Namorados',icon:'💗',price:12000,currency:'coins',days:0,xp:0,estimated:true,seasonal:'valentine',description:'Corações, flores românticas e detalhes rosados.'},
+ valentine:{name:'Dia dos Namorados',icon:'💗',price:12000,greenPrice:12,currency:'coins',days:0,xp:0,estimated:true,seasonal:'valentine',description:'Corações, flores românticas e detalhes rosados.'},
  christmas:{name:'Natal',icon:'🎄',price:0,currency:'coins',days:0,xp:0,freeGift:true,seasonal:'christmas',description:'Terreno coberto de neve, copas nevadas e cenário natalino.'},
  science:{name:'Estação Ciência',icon:'🔬',price:49995,currency:'coins',days:0,xp:480,description:'Detalhes científicos e paleta azul metálica.',historical:true},
- autumn:{name:'Outono',icon:'🍂',price:18000,currency:'coins',days:0,xp:0,estimated:true,seasonal:'autumn',description:'Folhas douradas, tons quentes e clima de outono.'},
+ autumn:{name:'Outono',icon:'🍂',price:18000,greenPrice:18,currency:'coins',days:0,xp:0,estimated:true,seasonal:'autumn',description:'Folhas douradas, tons quentes e clima de outono.'},
  van_gogh:{name:'Van Gogh',icon:'🎨',price:50000,currency:'coins',days:0,xp:915,description:'Paisagem com pinceladas curvas e cores expressivas.',historical:true},
  pelourinho:{name:'Pelourinho',icon:'🏘️',price:65000,greenPrice:59,currency:'coins',days:0,xp:2280,description:'Fachadas coloridas, bandeirolas e detalhes coloniais.',historical:true},
  greek:{name:'Tema Grego',icon:'🏛️',price:72000,greenPrice:60,currency:'coins',days:0,xp:0,description:'Colunas claras, mármore e detalhes azul-marinho.',historical:true},
