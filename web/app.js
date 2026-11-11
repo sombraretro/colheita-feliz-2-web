@@ -202,7 +202,13 @@ Object.assign(GRILL_RECIPES,{
  kitchen_banana_cake:{name:'Bolo de Banana',icon:'🍰',minutes:42,yield:2,salePrice:520,xp:31,kitchenOnly:true,ingredients:[['crop','banana',2],['animal','eggs',2],['animal','milk',1]]},
  kitchen_cocoa_candy:{name:'Bombom de Cacau',icon:'🍫',minutes:38,yield:4,salePrice:650,xp:36,kitchenOnly:true,ingredients:[['crop','cacau',2],['animal','milk',1],['supply','honey',1]]},
  kitchen_peach_compote:{name:'Compota de Pêssego',icon:'🍑',minutes:27,yield:2,salePrice:410,xp:25,kitchenOnly:true,ingredients:[['crop','pessego',2],['crop','cana',1]]},
- kitchen_fish_rice:{name:'Arroz de Peixe',icon:'🍚',minutes:34,yield:3,salePrice:480,xp:28,kitchenOnly:true,ingredients:[['crop','arroz',2],['fish','pacu',1],['crop','tomate',1]]}
+ kitchen_fish_rice:{name:'Arroz de Peixe',icon:'🍚',minutes:34,yield:3,salePrice:480,xp:28,kitchenOnly:true,ingredients:[['crop','arroz',2],['fish','pacu',1],['crop','tomate',1]]},
+ kitchen_galinhada:{name:'Galinhada Caipira',icon:'🍗',minutes:58,yield:3,salePrice:760,xp:42,kitchenOnly:true,ingredients:[['meat','chicken',1],['crop','arroz',2],['crop','cebola',1],['crop','alho',1],['crop','tomate',1],['crop','milho',1]]},
+ kitchen_moqueca_peixe:{name:'Moqueca de Peixe',icon:'🍲',minutes:62,yield:2,salePrice:920,xp:50,kitchenOnly:true,ingredients:[['fish','tilapia',2],['crop','tomate',2],['crop','cebola',1],['crop','alho',1],['supply','dende_oil',1]]},
+ kitchen_frango_ensopado:{name:'Frango Ensopado',icon:'🥘',minutes:46,yield:3,salePrice:690,xp:38,kitchenOnly:true,ingredients:[['meat','chicken',1],['crop','batata',2],['crop','tomate',1],['crop','cebola',1],['crop','alho',1]]},
+ grill_espetinho_frango:{name:'Espetinho de Frango Temperado',icon:'🍢',minutes:42,yield:3,salePrice:590,xp:32,ingredients:[['meat','chicken',1],['crop','cebola',1],['crop','alho',1],['crop','pimenta',1],['supply','seasoning',1]]},
+ grill_espetinho_alcatra:{name:'Espetinho de Alcatra',icon:'🥩',minutes:55,yield:2,salePrice:820,xp:44,ingredients:[['meat','beef',1],['crop','cebola',1],['crop','alho',1],['crop','tomate',1],['supply','seasoning',1]]},
+ grill_costelinha_temperada:{name:'Costelinha Suína com Alho e Cebola',icon:'🍖',minutes:88,yield:2,salePrice:780,xp:42,ingredients:[['meat','pork',1],['crop','cebola',1],['crop','alho',2],['supply','seasoning',1]]}
 });
 
 
