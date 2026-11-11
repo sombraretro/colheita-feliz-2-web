@@ -363,6 +363,18 @@ function initSupabase(){
  }
  return true;
 }
+async function processEmailConfirmationCallback(){
+ if(!supabaseClient)return;
+ const url=new URL(window.location.href),tokenHash=url.searchParams.get('token_hash'),type=url.searchParams.get('type');
+ if(!tokenHash||!['signup','email'].includes(type||''))return;
+ const {data,error}=await supabaseClient.auth.verifyOtp({token_hash:tokenHash,type});
+ url.searchParams.delete('token_hash');url.searchParams.delete('type');
+ window.history.replaceState({},document.title,url.pathname+url.search+url.hash);
+ if(error){notify('Não foi possível confirmar este e-mail. O link pode ter expirado ou já ter sido utilizado. Solicite uma nova confirmação.');console.error('Confirmação de e-mail:',error);return;}
+ if(data?.session)await handleAuthSession(data.session);
+ else notify('E-mail confirmado com sucesso. Agora você já pode entrar com seu e-mail e senha.');
+}
+
 function updateConnectionLabel(){
  const label=$('connection-label'),dot=$('connection-dot');
  if(label)label.textContent=cloudUser?'NUVEM + LOCAL':'LOCAL';
@@ -1574,7 +1586,7 @@ async function start(){
  $('save-status').textContent=writeLocked?'BLOQUEADO: salvamento não carregado':(localSaveExists?'Salvamento local carregado':'Nova fazenda pronta');
  $('save-dot').className=writeLocked?'savedot error':'savedot';
  if(initSupabase()){
-  try{const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;if(data?.session)await handleAuthSession(data.session);}
+  try{await processEmailConfirmationCallback();const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;if(data?.session)await handleAuthSession(data.session);}
   catch(error){console.error('Auth session:',error);$('save-status').textContent='Salvo localmente · nuvem indisponível'}
  }
  setInterval(()=>{updateDayNight();infest();expireDecorations();expireFarmTheme();expireTemporaryDogBreeds();const animalsChanged=syncAnimalCycles(),treesChanged=syncOrchardTrees();if(animalsChanged)renderAnimals();if(treesChanged)renderFarmAddons();renderPlots();if(currentModal&&!modalHasFocusedEditor())renderModal()},5000);
