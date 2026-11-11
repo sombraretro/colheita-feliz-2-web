@@ -240,7 +240,7 @@ html[data-cf2-next-ui="enabled"] .tool-icon-ready:hover{transform:translateY(-2p
 
 /* Menu lateral suspenso — navegação recolhível da fazenda */
 html[data-cf2-next-ui="enabled"] .sidebar-toggle{
-  position:absolute;left:16px;top:128px;z-index:12;
+  position:absolute;left:auto;right:16px;top:128px;z-index:12;
   display:inline-flex;align-items:center;justify-content:center;
   width:46px;height:42px;padding:0;
   border:2px solid #c79045;border-radius:12px;
@@ -253,7 +253,7 @@ html[data-cf2-next-ui="enabled"] .sidebar-toggle:hover{filter:brightness(1.07);t
 html[data-cf2-next-ui="enabled"] .sidebar-toggle:focus-visible,
 html[data-cf2-next-ui="enabled"] .side-menu button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 html[data-cf2-next-ui="enabled"] .side-menu{
-  position:absolute;left:16px;right:auto;top:178px;z-index:11;
+  position:absolute;left:auto;right:16px;top:178px;z-index:11;
   width:min(245px,calc(100vw - 32px));max-height:calc(100% - 205px);
   padding:10px;gap:7px;overflow-y:auto;overscroll-behavior:contain;
   border:2px solid #b77d36;border-radius:15px;
@@ -261,7 +261,7 @@ html[data-cf2-next-ui="enabled"] .side-menu{
   box-shadow:0 8px 24px #203b1688,inset 0 1px #fff;
   scrollbar-width:thin;
   transition:transform .22s ease,opacity .22s ease,visibility .22s ease;
-  transform:translateX(calc(-100% - 24px));opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateX(calc(100% + 24px));opacity:0;visibility:hidden;pointer-events:none;
 }
 html[data-cf2-next-ui="enabled"] .side-menu.is-open{
   transform:translateX(0);opacity:1;visibility:visible;pointer-events:auto;
@@ -276,8 +276,8 @@ html[data-cf2-next-ui="enabled"] .side-menu button{
 html[data-cf2-next-ui="enabled"] .side-menu button span{flex:1}
 html[data-cf2-next-ui="enabled"] .side-menu button:hover{background:linear-gradient(#fffbe9,#f8e3b7)}
 @media(max-width:600px){
-  html[data-cf2-next-ui="enabled"] .sidebar-toggle{left:10px;top:156px;width:42px;height:40px}
-  html[data-cf2-next-ui="enabled"] .side-menu{left:10px;top:203px;width:min(235px,calc(100vw - 20px));max-height:calc(100% - 225px)}
+  html[data-cf2-next-ui="enabled"] .sidebar-toggle{left:auto;right:10px;top:156px;width:42px;height:40px}
+  html[data-cf2-next-ui="enabled"] .side-menu{left:auto;right:10px;top:203px;width:min(235px,calc(100vw - 20px));max-height:calc(100% - 225px)}
 }
 @media(max-height:560px){
   html[data-cf2-next-ui="enabled"] .side-menu{max-height:calc(100% - 120px);top:160px}
