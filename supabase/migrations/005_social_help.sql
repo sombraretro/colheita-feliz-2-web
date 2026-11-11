@@ -76,7 +76,7 @@ begin
   if v_uid is null then raise exception 'É necessário entrar na conta.'; end if;
   if p_owner is null or p_owner=v_uid then raise exception 'Fazenda inválida.'; end if;
   if p_plot_index is null or p_plot_index<0 or p_plot_index>35 then raise exception 'Canteiro inválido.'; end if;
-  if p_action not in ('water','harvest','pest','weed') then raise exception 'Ação de ajuda inválida.'; end if;
+  if p_action is null or p_action not in ('water','harvest','pest','weed') then raise exception 'Ação de ajuda inválida.'; end if;
 
   if not exists(
     select 1 from public.social_friendships f
