@@ -1,15 +1,62 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Shih Tzu dos namorados">
-<defs><linearGradient id="coat" x2=".7" y2="1"><stop stop-color="#f0d5a8"/><stop offset=".55" stop-color="#c99562"/><stop offset="1" stop-color="#8a5639"/></linearGradient><linearGradient id="cream" x2="0" y2="1"><stop stop-color="#fff3df"/><stop offset="1" stop-color="#dfc6a6"/></linearGradient></defs>
-<ellipse cx="760" cy="1035" rx="430" ry="28" fill="#18380f" opacity=".16"/>
-<path d="M440 620Q280 535 330 390Q410 460 485 550" fill="none" stroke="#c99562" stroke-width="105" stroke-linecap="round"/>
-<path d="M470 760L465 980Q470 1020 530 1015L565 990L550 745M760 760L765 985Q770 1020 830 1015L865 985L850 735M930 750L970 975Q980 1015 1040 1000L1060 970L1010 720" fill="url(#coat)" stroke="#8a5639" stroke-width="18" stroke-linejoin="round"/>
-<ellipse cx="700" cy="665" rx="350" ry="225" fill="url(#coat)" stroke="#8a5639" stroke-width="18"/><path d="M690 510Q860 530 920 740Q850 875 700 875Q580 790 560 680Z" fill="url(#cream)"/>
-<ellipse cx="1115" cy="405" rx="230" ry="210" fill="url(#coat)" stroke="#8a5639" stroke-width="18"/>
-<path d="M960 315Q845 340 885 520Q950 600 1035 490L1040 355Z" fill="#9a603d" stroke="#78472f" stroke-width="14"/><path d="M1220 315Q1360 345 1320 520Q1250 600 1175 485L1170 350Z" fill="#9a603d" stroke="#78472f" stroke-width="14"/>
-<path d="M1020 380Q1120 320 1230 390Q1345 445 1370 520Q1310 635 1185 620Q1050 600 1005 500Z" fill="url(#cream)" stroke="#b38b63" stroke-width="12"/>
-<ellipse cx="1110" cy="405" rx="25" ry="31" fill="#fffaf0"/><ellipse cx="1200" cy="400" rx="25" ry="31" fill="#fffaf0"/><circle cx="1115" cy="410" r="13" fill="#33251d"/><circle cx="1205" cy="405" r="13" fill="#33251d"/><circle cx="1110" cy="402" r="5" fill="#fff"/><circle cx="1200" cy="397" r="5" fill="#fff"/>
-<path d="M1130 465Q1200 440 1260 485Q1235 555 1175 555Q1125 535 1130 465Z" fill="#f7e8d5"/><ellipse cx="1240" cy="500" rx="34" ry="24" fill="#29201c"/><path d="M1190 555Q1230 585 1270 550" fill="none" stroke="#754a39" stroke-width="12" stroke-linecap="round"/>
-<path d="M1080 245Q1020 130 1080 105Q1150 150 1160 250" fill="#e9c9a4" stroke="#9b6746" stroke-width="12"/><path d="M1070 175Q1000 120 950 165Q980 245 1090 260M1160 175Q1230 120 1280 165Q1250 245 1140 260" fill="#ee8ab0" stroke="#a84c77" stroke-width="12"/><circle cx="1115" cy="220" r="36" fill="#f6b8ce" stroke="#a84c77" stroke-width="10"/>
-<path d="M900 610Q1080 660 1280 600" fill="none" stroke="#e87da8" stroke-width="34" stroke-linecap="round"/><circle cx="1090" cy="635" r="30" fill="#fff0c8" stroke="#c47a45" stroke-width="9"/>
-<g fill="#f08db2" stroke="#a94f7b" stroke-width="9"><path d="M500 510Q455 450 405 490Q350 555 500 655Q650 555 595 490Q545 450 500 510Z"/><path d="M790 450Q750 400 710 435Q665 490 790 575Q915 490 870 435Q830 400 790 450Z"/></g>
+<defs>
+ <linearGradient id="gold" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffe8bf"/><stop offset=".3" stop-color="#dfb783"/><stop offset=".7" stop-color="#b77b4d"/><stop offset="1" stop-color="#75442f"/></linearGradient>
+ <linearGradient id="cream" x2="0" y2="1"><stop stop-color="#fff8e9"/><stop offset=".6" stop-color="#ead8bd"/><stop offset="1" stop-color="#c6a985"/></linearGradient>
+ <linearGradient id="pink" x2="0" y2="1"><stop stop-color="#ffb9ce"/><stop offset=".55" stop-color="#e875a0"/><stop offset="1" stop-color="#a83d6d"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="17"/></filter>
+</defs>
+<ellipse cx="760" cy="1020" rx="445" ry="34" fill="#573d2d" opacity=".2" filter="url(#shadow)"/>
+<!-- flowing tail plume -->
+<path d="M450 620Q320 565 329 451Q336 379 396 354Q373 447 464 493Q516 523 532 572" fill="none" stroke="#b98253" stroke-width="112" stroke-linecap="round"/>
+<path d="M374 390Q361 469 443 503m-74-58-29 36m76 9-22 39m61-10-5 38" fill="none" stroke="#fff0d5" stroke-width="19" stroke-linecap="round"/>
+<!-- paws with long feathering -->
+<g fill="url(#gold)" stroke="#8a583a" stroke-width="17" stroke-linejoin="round">
+ <path d="M468 743Q498 799 486 935L459 970Q442 1010 493 1021L554 1013Q581 994 550 954L552 751Z"/>
+ <path d="M739 752Q781 807 786 946L765 983Q753 1019 804 1025L866 1012Q894 989 861 952L843 743Z"/>
+ <path d="M927 735Q973 783 1005 934L991 972Q991 1012 1040 1018L1102 995Q1120 972 1085 938L1035 711Z"/>
+</g>
+<g fill="none" stroke="#fff1d9" stroke-width="16" stroke-linecap="round"><path d="M463 956q26 39 60 30m-48 1 3 34m29-35 17 32m240-58q28 38 61 30m-45 0 4 33m26-34 18 31m166-70q30 35 61 21m-48 0 9 34"/></g>
+<!-- compact long-coated body -->
+<path d="M389 604Q437 502 584 493L792 501Q945 516 1001 629Q1028 718 975 795Q909 875 765 867L548 850Q417 830 374 730Z" fill="url(#gold)" stroke="#8a583a" stroke-width="21"/>
+<path d="M433 587Q493 517 593 528Q666 528 710 578Q664 669 693 825Q562 841 469 773Q411 716 433 587Z" fill="url(#cream)" opacity=".9"/>
+<path d="M760 524Q896 522 956 637Q980 717 923 798Q864 841 780 826Q822 698 760 524Z" fill="#f7e8ce"/>
+<!-- silky coat strands -->
+<g fill="none" stroke-linecap="round"><path d="M438 573q-26 51-3 96m44-124q-20 55 7 104m38-113q-9 57 23 103m45-95q-7 54 28 96m-141 128q35 43 78 49m-37-91q41 43 86 51m300-191q30 43 16 89m-45-109q28 47 14 89m-45-99q24 43 9 83" stroke="#fff4df" stroke-width="15" opacity=".85"/><path d="M474 775q32 28 69 33m-28-77q39 36 76 40m309-16q-25 40-60 54" stroke="#9d6845" stroke-width="10" opacity=".55"/></g>
+<!-- neck ruff -->
+<path d="M807 500Q884 450 971 495Q1038 548 1025 671Q989 744 927 760Q885 695 844 679Q896 594 807 500Z" fill="url(#cream)" stroke="#b58a62" stroke-width="12"/>
+<path d="M853 518q48 37 57 91m-13-99q62 48 66 118m-17-100q58 58 49 136m-74-27q33 48 19 91" fill="none" stroke="#fff9ec" stroke-width="17" stroke-linecap="round"/>
+<!-- rounded shih tzu head with abundant hair -->
+<path d="M1002 366Q1012 239 1118 215Q1235 188 1304 283Q1353 351 1316 437L1381 484Q1401 519 1358 552Q1307 582 1223 562L1115 541Q1011 520 981 449Z" fill="url(#gold)" stroke="#8a583a" stroke-width="22"/>
+<!-- long ears hidden beneath hair -->
+<path d="M1028 318Q934 286 929 408Q931 494 1013 525Q1070 491 1070 414Z" fill="#a86e49" stroke="#855239" stroke-width="14"/>
+<path d="M1264 311Q1367 304 1373 416Q1374 493 1296 527Q1244 491 1240 414Z" fill="#a86e49" stroke="#855239" stroke-width="14"/>
+<path d="M950 403q-1 70 55 91m333-89q24 66-25 100" fill="none" stroke="#e4b98a" stroke-width="17" stroke-linecap="round"/>
+<!-- face mask and long fringe -->
+<path d="M1060 260Q1105 211 1172 224Q1260 233 1283 318Q1295 383 1264 448Q1225 499 1172 496Q1112 493 1075 446Q1036 383 1060 260Z" fill="url(#cream)" stroke="#b58a62" stroke-width="12"/>
+<path d="M1055 283Q1101 199 1186 212Q1264 220 1300 301Q1248 296 1217 340Q1162 313 1115 357Q1080 335 1055 365Z" fill="url(#gold)" stroke="#a8754d" stroke-width="12"/>
+<path d="M1080 252q-17 78 20 132m26-160q-12 91 26 143m34-150q-4 82 31 128m25-91q-1 57 26 92" fill="none" stroke="#fff0d8" stroke-width="15" stroke-linecap="round"/>
+<!-- eyes framed by silky fringe -->
+<path d="M1071 375Q1101 338 1142 362L1153 405Q1119 435 1081 410Z" fill="#fff7e8"/><path d="M1180 364Q1221 335 1257 365L1265 405Q1231 433 1194 411Z" fill="#fff7e8"/>
+<ellipse cx="1113" cy="393" rx="18" ry="24" fill="#473126"/><ellipse cx="1224" cy="390" rx="18" ry="24" fill="#473126"/>
+<ellipse cx="1115" cy="394" rx="9" ry="17" fill="#100d0c"/><ellipse cx="1226" cy="391" rx="9" ry="17" fill="#100d0c"/>
+<circle cx="1108" cy="385" r="6" fill="#fff"/><circle cx="1219" cy="382" r="6" fill="#fff"/>
+<!-- short muzzle -->
+<path d="M1085 435Q1147 407 1201 431Q1263 407 1317 455Q1354 494 1328 538Q1284 579 1206 565Q1126 556 1080 505Q1060 470 1085 435Z" fill="url(#cream)" stroke="#b58a62" stroke-width="11"/>
+<path d="M1150 472Q1194 448 1246 471Q1270 488 1259 519Q1213 543 1171 519Q1144 503 1150 472Z" fill="#fff8eb"/>
+<ellipse cx="1306" cy="478" rx="31" ry="24" fill="#29201d" stroke="#704c3c" stroke-width="7"/>
+<path d="M1190 536Q1234 555 1274 531" fill="none" stroke="#815a47" stroke-width="10" stroke-linecap="round"/>
+<!-- twin pink bows -->
+<path d="M1122 254Q1065 187 1010 215Q1001 274 1106 293L1122 254Z" fill="url(#pink)" stroke="#a84670" stroke-width="12"/>
+<path d="M1130 254Q1186 187 1241 215Q1250 274 1146 293L1130 254Z" fill="url(#pink)" stroke="#a84670" stroke-width="12"/>
+<circle cx="1126" cy="263" r="24" fill="#ffd4df" stroke="#a84670" stroke-width="9"/>
+<path d="M1040 223q33 8 58 46m122-46q-34 8-58 46" fill="none" stroke="#ffe4ec" stroke-width="9" stroke-linecap="round"/>
+<!-- heart pendant collar -->
+<path d="M900 603Q1080 664 1285 594L1268 655Q1085 728 917 665Z" fill="url(#pink)" stroke="#a84770" stroke-width="13"/>
+<circle cx="1100" cy="666" r="35" fill="#f8d58a" stroke="#9e6a36" stroke-width="9"/>
+<path d="M1100 650Q1081 629 1065 644Q1047 665 1100 704Q1152 665 1135 644Q1118 629 1100 650Z" fill="#e63e71" stroke="#9d214f" stroke-width="7"/>
+<!-- floating hearts -->
+<g fill="url(#pink)" stroke="#a84770" stroke-width="7"><path d="M478 405Q449 365 412 387Q371 417 478 508Q585 417 544 387Q507 365 478 405Z"/><path d="M770 342Q744 309 715 328Q681 356 770 430Q859 356 825 328Q796 309 770 342Z"/><path d="M938 365Q916 340 893 355Q866 378 938 439Q1010 378 983 355Q960 340 938 365Z"/></g>
+<g fill="#ffe7ef" opacity=".8"><circle cx="459" cy="411" r="7"/><circle cx="755" cy="356" r="6"/><circle cx="928" cy="374" r="5"/></g>
+<!-- final silky strands -->
+<g fill="none" stroke="#fff5e3" stroke-width="12" stroke-linecap="round" opacity=".8"><path d="M1000 458l-19 26m34-9-14 27m-19 0-15 17m307 22 18 17m-44-7 15 24"/></g>
 </svg>
