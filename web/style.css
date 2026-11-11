@@ -653,3 +653,21 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 .app[data-interface="modern"] #world[data-interface="modern"] #foreground-layer{filter:saturate(1.05) contrast(1.025)}
 .app[data-interface="modern"] #world[data-interface="modern"] #decoration-layer{filter:saturate(1.05)}
 .app[data-interface="modern"] .event-seed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+
+/* Arte vetorial exclusiva da fazenda moderna */
+.app[data-interface="modern"] #scenery-layer .modern-asset{filter:drop-shadow(0 7px 5px #294b3c35)}
+.app[data-interface="modern"] #scenery-layer .modern-asset-arvore{filter:drop-shadow(0 5px 5px #234b3838)}
+.app[data-interface="modern"] #animal-layer .animal-wrap{filter:drop-shadow(0 3px 2px #243d3230)}
+.app[data-interface="modern"] #animal-layer .animal-shadow{opacity:.22!important}
+.app[data-interface="modern"] #animal-layer .animal-shadow-core{opacity:.12!important}
+.app[data-interface="modern"] #animal-layer .animal-hitbox{cursor:pointer}
+.app[data-interface="modern"] #garden-layer .plot-item polygon:first-child{opacity:.28}
+.app[data-interface="modern"] #garden-layer .plot-item polygon:nth-child(2){filter:drop-shadow(0 2px 1px #5c473533)}
+.app[data-interface="modern"] #garden-layer .plot-hit{fill:transparent;stroke:#dfe8d2;stroke-opacity:.35;stroke-width:2}
+.app[data-interface="modern"] #crop-layer .crop-object{filter:saturate(1.12) drop-shadow(0 2px 1px #365b3b22)}
+.app[data-interface="modern"] #decoration-layer #aviary-building{filter:drop-shadow(0 6px 4px #294b3c35)}
+.app[data-interface="modern"] #decoration-layer #grill-building{filter:drop-shadow(0 6px 4px #294b3c35)}
+.app[data-interface="modern"] #decoration-layer .modern-fence{filter:drop-shadow(0 2px 2px #294b3c22)}
+.app[data-interface="modern"] #ground-layer{filter:saturate(1.02)}
+.app[data-interface="modern"] #world .modern-orchard-tree,
+.app[data-interface="modern"] #world .modern-forest-tree{filter:drop-shadow(0 3px 2px #2c4e3930)}
