@@ -1,16 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Cachorro renas">
-<defs><linearGradient id="coat" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#9a6035"/><stop offset=".6" stop-color="#9a6035"/><stop offset="1" stop-color="#4c3020"/></linearGradient><linearGradient id="chest" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ead8b9"/><stop offset="1" stop-color="#4c3020"/></linearGradient></defs>
-<ellipse cx="760" cy="1035" rx="520" ry="32" fill="#18380f" opacity=".16"/>
-<path d="M330 600Q180 500 220 330Q285 410 395 520" fill="none" stroke="url(#coat)" stroke-width="75" stroke-linecap="round"/>
-<path d="M420 740L405 980Q405 1020 470 1020L515 1000L500 730M780 760L770 1000Q770 1030 835 1025L870 1005L850 735M960 730L990 990Q1000 1030 1060 1015L1080 990L1030 700" fill="url(#coat)" stroke="#3b281d" stroke-width="22" stroke-linejoin="round"/>
-<ellipse cx="700" cy="650" rx="430" ry="245" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
-<path d="M820 500Q920 520 980 690Q925 850 780 900Q690 810 700 690Z" fill="url(#chest)" opacity=".95"/>
-<path d="M820 240Q850 150 900 180L960 250" fill="#b9232e" stroke="#76232a" stroke-width="18"/><circle cx="885" cy="215" r="22" fill="#e33c3e"/>
-<ellipse cx="1110" cy="370" rx="245" ry="205" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
-<path d="M930 330Q820 130 870 95Q1005 105 1060 340Z" fill="url(#coat)" stroke="#3b281d" stroke-width="18"/><path d="M1210 330Q1310 100 1380 120Q1420 260 1290 370Z" fill="url(#coat)" stroke="#3b281d" stroke-width="18"/><path d="M970 170Q900 55 880 10m55 100l-55-30m55 30l-10-80M1270 155Q1350 35 1385 10m-60 105l70-25m-70 25l20-80" fill="none" stroke="#b78a4c" stroke-width="24" stroke-linecap="round"/>
-<ellipse cx="1260" cy="465" rx="150" ry="105" fill="#e5c9a6" stroke="#3b281d" stroke-width="16"/><circle cx="1360" cy="430" r="38" fill="#d72d37" stroke="#84232b" stroke-width="10"/>
-<ellipse cx="1090" cy="315" rx="35" ry="44" fill="#fff9eb"/><ellipse cx="1186" cy="285" rx="34" ry="43" fill="#fff9eb"/>
-<circle cx="1098" cy="319" r="17" fill="#211b18"/><circle cx="1193" cy="289" r="17" fill="#211b18"/><circle cx="1092" cy="311" r="6" fill="#fff"/><circle cx="1187" cy="281" r="6" fill="#fff"/>
-<path d="M900 500Q1080 570 1220 500" fill="none" stroke="#3569a8" stroke-width="32" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#efc94f" stroke="#986d27" stroke-width="9"/>
-<path d="M1160 545Q1190 590 1235 565" stroke="#3b251d" stroke-width="12" fill="none" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Golden Retriever Papai Noel Renas">
+<defs><linearGradient id="coat" x2=".7" y2="1"><stop stop-color="#f4c879"/><stop offset=".6" stop-color="#c98a42"/><stop offset="1" stop-color="#9b5e2e"/></linearGradient><linearGradient id="cream" x2="0" y2="1"><stop stop-color="#fff0d2"/><stop offset="1" stop-color="#d5a76d"/></linearGradient></defs>
+<ellipse cx="760" cy="1035" rx="510" ry="30" fill="#18380f" opacity=".16"/>
+<path d="M340 590Q190 500 235 355Q310 425 405 530" fill="none" stroke="#c98a42" stroke-width="88" stroke-linecap="round"/><path d="M335 570Q240 500 260 420" fill="none" stroke="#f5d79d" stroke-width="25" stroke-linecap="round"/>
+<path d="M425 730L405 980Q405 1025 480 1020L525 990L500 715M760 750L770 985Q775 1025 845 1015L880 985L850 710M950 710L1000 980Q1010 1020 1075 1000L1090 970L1020 675" fill="url(#coat)" stroke="#8c542d" stroke-width="20" stroke-linejoin="round"/>
+<ellipse cx="700" cy="650" rx="430" ry="240" fill="url(#coat)" stroke="#9a602e" stroke-width="18"/>
+<path d="M780 500Q900 530 990 720Q930 875 780 900Q700 820 690 690Z" fill="url(#cream)"/><path d="M800 770Q860 850 950 825" fill="none" stroke="#f9e7c8" stroke-width="28" stroke-linecap="round"/>
+<ellipse cx="1115" cy="365" rx="225" ry="190" fill="url(#coat)" stroke="#9a602e" stroke-width="18"/>
+<path d="M970 280Q880 300 910 470Q970 560 1040 470L1045 330Z" fill="#b77739" stroke="#8c542d" stroke-width="14"/><path d="M1200 280Q1300 310 1270 475Q1210 555 1150 465L1145 330Z" fill="#b77739" stroke="#8c542d" stroke-width="14"/>
+<path d="M1050 390Q1150 360 1250 415L1380 470Q1330 565 1200 565Q1090 555 1030 485Z" fill="url(#cream)" stroke="#9a602e" stroke-width="16"/><ellipse cx="1370" cy="470" rx="32" ry="25" fill="#33251d"/>
+<ellipse cx="1080" cy="330" rx="32" ry="39" fill="#fff5df"/><ellipse cx="1190" cy="315" rx="31" ry="38" fill="#fff5df"/><circle cx="1088" cy="335" r="16" fill="#35251c"/><circle cx="1195" cy="320" r="16" fill="#35251c"/><circle cx="1082" cy="326" r="6" fill="#fff"/><circle cx="1189" cy="312" r="6" fill="#fff"/>
+<path d="M1020 235Q1000 155 1080 130Q1160 105 1220 165L1250 250Z" fill="#c92335" stroke="#8c1c2b" stroke-width="15"/><path d="M1010 235Q1130 270 1255 235L1240 285Q1125 320 1015 280Z" fill="#fff4dc" stroke="#d9c9ad" stroke-width="12"/><circle cx="1125" cy="125" r="34" fill="#fff4dc"/>
+<path d="M1005 190Q920 95 950 30Q1015 75 1045 175M1200 180Q1270 75 1325 50Q1330 135 1250 220" fill="none" stroke="#a8783d" stroke-width="25" stroke-linecap="round"/><path d="M960 85L900 60M965 95L940 150M1300 90L1360 60M1290 110L1330 165" stroke="#a8783d" stroke-width="20" stroke-linecap="round"/>
+<path d="M910 560Q1100 610 1280 550" fill="none" stroke="#c51f31" stroke-width="40"/><path d="M980 555L1040 610L1100 555L1160 610L1220 555" fill="none" stroke="#f4d9a8" stroke-width="12"/>
 </svg>
