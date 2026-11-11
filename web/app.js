@@ -1575,53 +1575,53 @@ function updateDayNight(){
   <rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="${opacity}"/>
   <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
  </g>`);
- // A arte da casa tem três janelas retangulares e uma redonda. A luz é aplicada
- // somente aos vidros azuis, em quatro painéis separados por janela.
+ // A casa usa a mesma caixa de imagem de 440x430. As máscaras abaixo seguem
+ // o desenho real dos vidros, deixando molduras e cruzetas totalmente livres.
  let lights=layer.querySelector('#house-window-lights');
  if(!lights){
   layer.insertAdjacentHTML('beforeend',`<g id="house-window-lights" class="house-window-lights" transform="translate(780 84.8) scale(.7678883)" opacity="0" pointer-events="none">
    <defs>
-    <linearGradient id="houseGlassWarm" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe8a0"/><stop offset=".55" stop-color="#f5c56b"/><stop offset="1" stop-color="#e8a94f"/></linearGradient>
-    <clipPath id="houseLeftPane1"><path d="M61 294L86 297L86 316L61 314Z"/></clipPath>
-    <clipPath id="houseLeftPane2"><path d="M91 298L116 301L116 320L91 317Z"/></clipPath>
-    <clipPath id="houseLeftPane3"><path d="M60 320L86 322L86 339L60 336Z"/></clipPath>
-    <clipPath id="houseLeftPane4"><path d="M90 323L115 325L115 342L90 339Z"/></clipPath>
-    <clipPath id="houseFrontPane1"><path d="M350 268L379 264L379 286L350 291Z"/></clipPath>
-    <clipPath id="houseFrontPane2"><path d="M385 263L414 259L414 284L385 288Z"/></clipPath>
-    <clipPath id="houseFrontPane3"><path d="M350 295L379 291L379 315L350 319Z"/></clipPath>
-    <clipPath id="houseFrontPane4"><path d="M385 292L414 288L414 312L385 315Z"/></clipPath>
-    <clipPath id="houseRightPane1"><path d="M455 275L482 275L482 294L455 294Z"/></clipPath>
-    <clipPath id="houseRightPane2"><path d="M486 275L510 276L510 295L486 295Z"/></clipPath>
-    <clipPath id="houseRightPane3"><path d="M455 299L482 299L482 316L455 315Z"/></clipPath>
-    <clipPath id="houseRightPane4"><path d="M486 299L510 299L510 316L486 316Z"/></clipPath>
-    <clipPath id="houseRoundPane1"><path d="M466 159A16 16 0 0 0 450 175L464 175Z"/></clipPath>
-    <clipPath id="houseRoundPane2"><path d="M470 159A16 16 0 0 1 482 175L470 175Z"/></clipPath>
-    <clipPath id="houseRoundPane3"><path d="M450 179A16 16 0 0 0 466 191L466 179Z"/></clipPath>
-    <clipPath id="houseRoundPane4"><path d="M470 179L482 179A16 16 0 0 1 470 191Z"/></clipPath>
+    <linearGradient id="houseGlassWarm" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e9c987"/><stop offset=".55" stop-color="#d8ad68"/><stop offset="1" stop-color="#bd8c50"/></linearGradient>
+    <clipPath id="houseLeftPane1"><path d="M61 296L85 298L85 320L61 318Z"/></clipPath>
+    <clipPath id="houseLeftPane2"><path d="M93 299L119 301L119 322L93 320Z"/></clipPath>
+    <clipPath id="houseLeftPane3"><path d="M60 325L85 327L85 348L60 346Z"/></clipPath>
+    <clipPath id="houseLeftPane4"><path d="M92 327L119 329L119 350L92 348Z"/></clipPath>
+    <clipPath id="houseFrontPane1"><path d="M347 289L379 285L379 319L347 323Z"/></clipPath>
+    <clipPath id="houseFrontPane2"><path d="M387 283L419 279L419 315L387 319Z"/></clipPath>
+    <clipPath id="houseFrontPane3"><path d="M347 328L379 324L379 355L347 359Z"/></clipPath>
+    <clipPath id="houseFrontPane4"><path d="M387 324L419 320L419 351L387 355Z"/></clipPath>
+    <clipPath id="houseRightPane1"><path d="M465 282L488 282L488 306L465 306Z"/></clipPath>
+    <clipPath id="houseRightPane2"><path d="M494 283L516 284L516 307L494 306Z"/></clipPath>
+    <clipPath id="houseRightPane3"><path d="M465 312L488 312L488 338L465 337Z"/></clipPath>
+    <clipPath id="houseRightPane4"><path d="M494 312L516 313L516 339L494 338Z"/></clipPath>
+    <clipPath id="houseRoundPane1"><path d="M466 153A19 19 0 0 0 447 174L464 174Z"/></clipPath>
+    <clipPath id="houseRoundPane2"><path d="M470 153A19 19 0 0 1 489 174L472 174Z"/></clipPath>
+    <clipPath id="houseRoundPane3"><path d="M447 180A19 19 0 0 0 466 199L466 180Z"/></clipPath>
+    <clipPath id="houseRoundPane4"><path d="M472 180L489 180A19 19 0 0 1 470 199Z"/></clipPath>
    </defs>
-   <g fill="url(#houseGlassWarm)" opacity=".62">
-    <rect x="59" y="292" width="59" height="52" clip-path="url(#houseLeftPane1)"/>
-    <rect x="59" y="292" width="59" height="52" clip-path="url(#houseLeftPane2)"/>
-    <rect x="59" y="292" width="59" height="52" clip-path="url(#houseLeftPane3)"/>
-    <rect x="59" y="292" width="59" height="52" clip-path="url(#houseLeftPane4)"/>
-    <rect x="348" y="258" width="70" height="64" clip-path="url(#houseFrontPane1)"/>
-    <rect x="348" y="258" width="70" height="64" clip-path="url(#houseFrontPane2)"/>
-    <rect x="348" y="258" width="70" height="64" clip-path="url(#houseFrontPane3)"/>
-    <rect x="348" y="258" width="70" height="64" clip-path="url(#houseFrontPane4)"/>
-    <rect x="453" y="272" width="60" height="47" clip-path="url(#houseRightPane1)"/>
-    <rect x="453" y="272" width="60" height="47" clip-path="url(#houseRightPane2)"/>
-    <rect x="453" y="272" width="60" height="47" clip-path="url(#houseRightPane3)"/>
-    <rect x="453" y="272" width="60" height="47" clip-path="url(#houseRightPane4)"/>
-    <circle cx="466" cy="175" r="16" clip-path="url(#houseRoundPane1)"/>
-    <circle cx="466" cy="175" r="16" clip-path="url(#houseRoundPane2)"/>
-    <circle cx="466" cy="175" r="16" clip-path="url(#houseRoundPane3)"/>
-    <circle cx="466" cy="175" r="16" clip-path="url(#houseRoundPane4)"/>
+   <g fill="url(#houseGlassWarm)" opacity=".24">
+    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane1)"/>
+    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane2)"/>
+    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane3)"/>
+    <rect x="59" y="294" width="62" height="58" clip-path="url(#houseLeftPane4)"/>
+    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane1)"/>
+    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane2)"/>
+    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane3)"/>
+    <rect x="345" y="278" width="77" height="84" clip-path="url(#houseFrontPane4)"/>
+    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane1)"/>
+    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane2)"/>
+    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane3)"/>
+    <rect x="463" y="280" width="55" height="63" clip-path="url(#houseRightPane4)"/>
+    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane1)"/>
+    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane2)"/>
+    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane3)"/>
+    <circle cx="468" cy="176" r="19" clip-path="url(#houseRoundPane4)"/>
    </g>
   </g>`);
   lights=layer.querySelector('#house-window-lights');
  }
- const lightLevel=hour>=19||hour<5 ? .62 : hour>=18 ? .62*(hour-18) : hour>=5&&hour<6 ? .62*(6-hour) : 0;
- lights.style.opacity=String(Math.max(0,Math.min(.62,lightLevel)));
+ const lightLevel=hour>=19||hour<5 ? .42 : hour>=18 ? .42*(hour-18) : hour>=5&&hour<6 ? .42*(6-hour) : 0;
+ lights.style.opacity=String(Math.max(0,Math.min(.42,lightLevel)));
 }
 function applyMenuThemeColors(){
  const root=document.querySelector('.app');if(!root)return;
