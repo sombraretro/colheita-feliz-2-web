@@ -1574,7 +1574,25 @@ function updateDayNight(){
  <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>`:''; 
  if(night||twilight){
   const intensity=night?'.94':'.48';
-  layer.insertAdjacentHTML('beforeend','<g class="house-window-lights" transform="translate(780 100.2128) scale(.9361702)" opacity="'+intensity+'" pointer-events="none"><defs><linearGradient id="houseNightGlow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff5b8"/><stop offset=".55" stop-color="#ffd15d"/><stop offset="1" stop-color="#f39a32"/></linearGradient><filter id="houseWindowBloom" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter></defs><path d="M140 185L184 174L184 245L140 249Z" fill="#ffcc58" opacity=".38" filter="url(#houseWindowBloom)"/><path d="M290 176L349 161L350 228L290 245Z" fill="#ffcc58" opacity=".38" filter="url(#houseWindowBloom)"/><path d="M140 185L184 174L184 245L140 249Z" fill="url(#houseNightGlow)"/><path d="M290 176L349 161L350 228L290 245Z" fill="url(#houseNightGlow)"/><path d="M161 180L162 251M139 214L185 211M319 169V238M290 211L350 193" stroke="#8d542d" stroke-width="5" opacity=".92"/><path d="M143 188L181 178M293 179L346 166" stroke="#fff8d9" stroke-width="3" opacity=".72"/></g>');
+  // casa.png: 573x430. A imagem é exibida em 440x330, centralizada verticalmente na caixa 440x430.
+  // As máscaras seguem os cinco vidros reais da arte: duas janelas frontais, duas laterais e a janela circular do sótão.
+  layer.insertAdjacentHTML('beforeend',`<g class="house-window-lights" transform="translate(780 84.8) scale(.7678883)" opacity="${intensity}" pointer-events="none">
+   <defs>
+    <linearGradient id="houseNightGlow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff8cf"/><stop offset=".48" stop-color="#ffd66f"/><stop offset="1" stop-color="#f4a23b"/></linearGradient>
+    <radialGradient id="houseRoundGlow"><stop stop-color="#fff9d7"/><stop offset=".62" stop-color="#ffd36b"/><stop offset="1" stop-color="#e99432"/></radialGradient>
+    <filter id="houseWindowBloom" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="8"/></filter>
+    <clipPath id="houseWindowLeftSide"><path d="M60 291L124 292L124 343L60 340Z"/></clipPath>
+    <clipPath id="houseWindowFrontLeft"><path d="M169 263L219 251L219 315L169 325Z"/></clipPath>
+    <clipPath id="houseWindowFrontRight"><path d="M360 255L422 239L422 306L360 316Z"/></clipPath>
+    <clipPath id="houseWindowRightSide"><path d="M452 273L510 270L510 321L452 323Z"/></clipPath>
+    <clipPath id="houseWindowRound"><circle cx="468" cy="175" r="18"/></clipPath>
+   </defs>
+   <g clip-path="url(#houseWindowLeftSide)"><rect x="48" y="278" width="88" height="78" fill="#ffc85b" opacity=".55" filter="url(#houseWindowBloom)"/><rect x="48" y="278" width="88" height="78" fill="url(#houseNightGlow)"/><path d="M64 295L119 296" stroke="#fff9dc" stroke-width="4" opacity=".48"/></g>
+   <g clip-path="url(#houseWindowFrontLeft)"><rect x="156" y="238" width="78" height="100" fill="#ffc85b" opacity=".62" filter="url(#houseWindowBloom)"/><rect x="156" y="238" width="78" height="100" fill="url(#houseNightGlow)"/><path d="M174 269L213 260" stroke="#fff9dc" stroke-width="4" opacity=".52"/></g>
+   <g clip-path="url(#houseWindowFrontRight)"><rect x="347" y="226" width="88" height="101" fill="#ffc85b" opacity=".62" filter="url(#houseWindowBloom)"/><rect x="347" y="226" width="88" height="101" fill="url(#houseNightGlow)"/><path d="M366 261L415 248" stroke="#fff9dc" stroke-width="4" opacity=".52"/></g>
+   <g clip-path="url(#houseWindowRightSide)"><rect x="440" y="258" width="78" height="76" fill="#ffc85b" opacity=".55" filter="url(#houseWindowBloom)"/><rect x="440" y="258" width="78" height="76" fill="url(#houseNightGlow)"/><path d="M458 279L503 278" stroke="#fff9dc" stroke-width="4" opacity=".48"/></g>
+   <g clip-path="url(#houseWindowRound)"><circle cx="468" cy="175" r="25" fill="#ffc85b" opacity=".62" filter="url(#houseWindowBloom)"/><circle cx="468" cy="175" r="20" fill="url(#houseRoundGlow)"/><path d="M454 170Q468 162 482 170" fill="none" stroke="#fff9dc" stroke-width="3" opacity=".55"/></g>
+  </g>`);
  }
 }
 function applyMenuThemeColors(){
