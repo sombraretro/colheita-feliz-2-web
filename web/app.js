@@ -164,7 +164,7 @@ const GRILL_RECIPES={
 };
 const GRILL_SUPPLIES={honey:{name:'Mel',icon:'🍯',price:180},seasoning:{name:'Tempero',icon:'🧂',price:120}};
 const MEAT_PRODUCTS={chicken:{name:'Carne de frango',icon:'🍗',unitPrice:95},beef:{name:'Carne bovina',icon:'🥩',unitPrice:145},pork:{name:'Carne suína',icon:'🥓',unitPrice:125},lamb:{name:'Carne de cordeiro',icon:'🍖',unitPrice:160},turkey:{name:'Carne de peru',icon:'🦃',unitPrice:180}};
-const ANIMAL_MEAT_SOURCE={galinha:{meat:'chicken',yield:2},vaca:{meat:'beef',yield:3},porco:{meat:'pork',yield:3},ovelha:{meat:'lamb',yield:2}};
+const ANIMAL_MEAT_SOURCE={galinha:{meat:'chicken',yield:2},vaca:{meat:'beef',yield:3},porco:{meat:'pork',yield:3},ovelha:{meat:'lamb',yield:2},peru:{meat:'turkey',yield:2}};
 const GRILL_TIME_FACTOR=.2; // mantém a produção nova no ritmo reduzido de 1/5 desta réplica
 const ANIMAL_TIME_FACTOR=.2; // mantém o ritmo reduzido de 1/5 também para ciclos de produção/criação
 const ANIMALS={
@@ -173,6 +173,7 @@ const ANIMALS={
  vaca:{name:'Vaca',icon:'🐄',role:'producer',feedKey:'feed_cow',feedName:'Alimento para gado',feedPrice:60,feedHistorical:true,price:1450,cycleHours:12,product:'milk',productName:'Leite',productIcon:'🥛',yield:2,unitPrice:85,xp:14},
  ovelha:{name:'Ovelha',icon:'🐑',role:'producer',feedKey:'feed_sheep',feedName:'Ração para ovelha',feedPrice:95,price:1200,cycleHours:12,product:'wool',productName:'Lã',productIcon:'🧶',yield:1,unitPrice:135,xp:14},
  porco:{name:'Porco',icon:'🐖',role:'grower',feedKey:'feed_pig',feedName:'Alimento para porco',feedPrice:60,feedHistorical:true,price:1050,growthHours:12,sellPrice:4200,xp:18},
+ peru:{name:'Peru',icon:'🦃',role:'grower',feedKey:'feed_turkey',feedName:'Ração para peru',feedPrice:90,price:2200,growthHours:16,sellPrice:6800,xp:28,balance:'estimated',estimateNote:'Animal restaurado ao catálogo; alimentação, crescimento, XP e valores são estimativas locais.'},
  burro:{name:'Burro',icon:'🫏',role:'grower',feedKey:'feed_donkey',feedName:'Ração para burro',feedPrice:105,price:1750,growthHours:14,sellPrice:5900,xp:22},
  pato:{name:'Pato',icon:'🦆',role:'producer',feedKey:'feed_duck',feedName:'Ração para pato',feedPrice:95,price:1800,cycleHours:9,product:'duck_eggs',productName:'Ovos de pato',productIcon:'🥚',yield:2,unitPrice:70,xp:12,balance:'estimated',estimateNote:'ID histórico confirmado; preço, ciclo, rendimento e produção foram estimados.'},
  pombo:{name:'Pombo',icon:'🕊️',role:'producer',feedKey:'feed_pigeon',feedName:'Ração para pombo',feedPrice:80,price:1250,cycleHours:8,product:'pigeon_feathers',productName:'Penas de pombo',productIcon:'🪶',yield:3,unitPrice:45,xp:9,balance:'estimated',estimateNote:'ID histórico confirmado; preço, ciclo, rendimento e produção foram estimados.'},
@@ -214,7 +215,7 @@ const ANIMAL_SLOTS=[
  {x:1270,y:545,w:140,h:105},{x:1430,y:545,w:140,h:105},{x:1588,y:545,w:140,h:105},
  {x:1270,y:685,w:140,h:105},{x:1430,y:685,w:140,h:105},{x:1588,y:685,w:140,h:105}
 ];
-const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,porco:.82,ovelha:.88,burro:.94,vaca:1.00,iaque:.94};
+const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,porco:.82,ovelha:.88,burro:.94,vaca:1.00,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
 const ORCHARD_SLOTS=[[2350,185],[2580,185],[2810,185],[3040,185],[2350,410],[2580,410],[2810,410],[3040,410]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Lago da fazenda',icon:'🦆',price:9000,level:12}};
@@ -547,8 +548,8 @@ function renderAnimals(){
   const feetRatio={cachorro:1,burro:1068/1086,ovelha:1,vaca:1,galinha:1050/1086,porco:1070/1086,pombo:.92,pato:.92,pavao:.92};
   const baseY=y+h*(feetRatio[a.type]||1)-3,shadowRx=Math.max(18,w*.31),scaleX=w/1448,scaleY=h/1086;
   const sheepEyes=a.type==='ovelha'?`<g class="sheep-open-eyes"><ellipse cx="260" cy="535" rx="12" ry="18" fill="#33201d"/><ellipse cx="425" cy="550" rx="12" ry="18" fill="#33201d"/><circle cx="257" cy="528" r="4.2" fill="#fff8e9"/><circle cx="422" cy="543" r="4.2" fill="#fff8e9"/></g>`:'';
-  const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;const assetName=breed?.asset||`animal-${a.type}`;const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','pavao','iaque'].includes(a.type)?'svg':'png');
-  markup+=`<g class="animal-wrap animal-${a.type}" data-animal="${a.type}" data-animal-id="${safe(a.id)}" data-world-x="${x}" data-world-y="${y}" data-world-w="${w}" data-world-h="${h}" data-world-ground-y="${baseY}"><rect class="animal-hitbox" x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="${x+w*.5}" cy="${baseY-1}" rx="${shadowRx*1.05}" ry="${Math.max(7,w*.045)}" fill="#18380f" opacity=".3"/><ellipse class="animal-shadow-core" cx="${x+w*.5}" cy="${baseY}" rx="${shadowRx*.62}" ry="${Math.max(4,w*.026)}" fill="#18380f" opacity=".22"/><g transform="translate(${x} ${y}) scale(${scaleX} ${scaleY})"><image class="animal-sprite" href="/assets/${assetName}.${assetExt}" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>${sheepEyes}<g class="blink-overlay">${blinkMarkup(a.type)}</g></g></g>`;
+  const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;const assetName=breed?.asset||`animal-${a.type}`;const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','pavao','iaque'].includes(a.type)?'svg':'png');const animalGraphic=a.type==='peru'?'<text x="724" y="850" text-anchor="middle" font-size="760">🦃</text>':`<image class="animal-sprite" href="/assets/${assetName}.${assetExt}" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>`;
+  markup+=`<g class="animal-wrap animal-${a.type}" data-animal="${a.type}" data-animal-id="${safe(a.id)}" data-world-x="${x}" data-world-y="${y}" data-world-w="${w}" data-world-h="${h}" data-world-ground-y="${baseY}"><rect class="animal-hitbox" x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="${x+w*.5}" cy="${baseY-1}" rx="${shadowRx*1.05}" ry="${Math.max(7,w*.045)}" fill="#18380f" opacity=".3"/><ellipse class="animal-shadow-core" cx="${x+w*.5}" cy="${baseY}" rx="${shadowRx*.62}" ry="${Math.max(4,w*.026)}" fill="#18380f" opacity=".22"/><g transform="translate(${x} ${y}) scale(${scaleX} ${scaleY})">${animalGraphic}${sheepEyes}<g class="blink-overlay">${blinkMarkup(a.type)}</g></g></g>`;
  }
  $('animal-layer').innerHTML=markup;
  scheduleAnimalBlinking();
