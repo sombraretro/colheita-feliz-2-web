@@ -458,8 +458,7 @@ function brickWalkwayMarkup(){
  'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
  'M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770',
  'M532 890C510 830 500 760 500 720',
- 'M1255 470C1300 520 1340 600 1370 690C1400 770 1420 845 1390 900',
- 'M2010 890C2070 800 2140 710 2200 610'];
+ 'M1255 470C1300 520 1340 600 1370 690C1400 770 1420 845 1390 900'];
  const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
  return `<g id="farm-road-network" pointer-events="none">${layers(82,'#77512e',.22)}${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 21" opacity=".48"/>`).join('')}</g>`;
 }
@@ -500,7 +499,7 @@ let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[1255,470],[1300,520],[1340,600],[1370,690],[1400,770],[1420,845],[1390,900]],[[2010,890],[2070,800],[2140,710],[2200,610]]];
+const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[1255,470],[1300,520],[1340,600],[1370,690],[1400,770],[1420,845],[1390,900]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
  if(insidePoly(x,y,fieldOutline))return true;
@@ -540,6 +539,12 @@ scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T12
 for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,300,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=svgImage('casa',780,35,440,430);
 scenery+=svgImage('celeiro',785,-345,430,350);
+scenery+=`<g pointer-events="none">
+ <path d="M790 10Q845 1 900 10T1015 9T1110 10T1210 8" fill="none" stroke="#477d2d" stroke-width="8" stroke-linecap="round"/>
+ <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="12" rx="12" ry="6"/><ellipse cx="866" cy="13" rx="9" ry="5"/><ellipse cx="930" cy="11" rx="14" ry="6"/><ellipse cx="1080" cy="12" rx="11" ry="5"/><ellipse cx="1150" cy="10" rx="13" ry="6"/><ellipse cx="1198" cy="13" rx="9" ry="5"/></g>
+ <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 12q-3-13-9-16m9 16q8-12 15-13M970 11q-3-14-10-17m10 17q8-12 15-13M1120 11q-3-13-9-16m9 16q8-12 15-13"/></g>
+ <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 16l12-9 17 7-7 8Z"/><path d="M1035 15l11-8 15 7-8 8Z"/></g>
+ </g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
  <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
  <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
@@ -553,7 +558,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330
  <path d="M10 248Q75 238 130 249T245 248T400 250" fill="none" stroke="#4b842d" stroke-width="10" stroke-linecap="round"/>
  <g fill="#b9aa8e" stroke="#89795d" stroke-width="2"><ellipse cx="50" cy="252" rx="14" ry="7"/><ellipse cx="102" cy="255" rx="11" ry="6"/><ellipse cx="310" cy="254" rx="16" ry="7"/><ellipse cx="365" cy="250" rx="12" ry="6"/></g>
  <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M70 251q-5-20-14-24m14 24q8-17 17-19M340 251q-4-18-12-22m12 22q9-16 17-18"/></g>
- <text x="205" y="93" text-anchor="middle" font-size="20" font-weight="bold" fill="#fff2d3" stroke="#6d4b2d" stroke-width="3" paint-order="stroke">VIVEIRO DE AVES</text>
+ 
  </g>`;
 scenery+=`<g pointer-events="none">
  <path d="M770 8Q835 -5 900 7T1030 8T1225 10" fill="none" stroke="#438c2e" stroke-width="12" stroke-linecap="round"/>
@@ -605,7 +610,7 @@ function renderAnimals(){
  for(const a of animals){
   if(!ANIMALS[a.type])continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=540;y=155;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=500;y=155;w=150;h=112.5;}
   else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
@@ -946,7 +951,7 @@ function renderOrchardArea(){
   </g>
   <g fill="#f3d68b" stroke="#986c39" stroke-width="5"><path d="M2185 45v85m0-55l35-15m-35 38l-28-16M3270 75v85m0-55l30-15m-30 38l-28-16"/></g>
   <g transform="translate(2750 15)"><path d="M-95 20V-28L0-90L95-28V20Z" fill="#b94b37" stroke="#713c2b" stroke-width="8"/><path d="M-62 -28H62V20H-62Z" fill="#f5dfb0" stroke="#713c2b" stroke-width="6"/><path d="M-20 -28V20M20 -28V20" stroke="#9d5733" stroke-width="6"/><text y="8" text-anchor="middle" font-size="18" font-weight="bold" fill="#74472c">POMAR</text></g>
-  <text x="2740" y="525" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#47752f" stroke-width="5" paint-order="stroke">POMAR PRODUTIVO · 8 ÁRVORES</text>
+  
  </g>`;
  html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
  return html;
@@ -969,10 +974,13 @@ function renderPondArea(){
    <path d="M-1370 45q65-28 115 5m-100 18q60-20 105 8M-1245 330q65-22 115 10m-115 18q58-18 110 8M-1125 690q60-25 112 5m-102 20q56-18 105 8" fill="none" stroke="#d5f2e9" stroke-width="6" stroke-linecap="round" opacity=".24"/>
    <ellipse cx="-1190" cy="230" rx="72" ry="150" fill="#b8e7d8" opacity=".1"/><ellipse cx="-1080" cy="740" rx="55" ry="125" fill="#c2f0e4" opacity=".1"/>
   </g>
-  <g class="river-reeds sway" fill="none" stroke="#397a38" stroke-width="13" stroke-linecap="round">
-   <path d="M-1350 5q-22-72-50-94m50 94q18-65 49-85m-49 85q-8-46-2-92M-1245 300q-24-72-52-92m52 92q25-63 53-78m-53 78q-5-46 5-88M-1160 520q-20-66-49-83m49 83q24-61 53-74M-1110 930q-17-68-46-89m46 89q26-57 55-73M-930 110q-14-52-38-69m38 69q22-48 46-61m-46 61q-4-35 4-67M-850 480q-17-58-43-75m43 75q25-53 48-68M-900 1030q-15-62-40-80m40 80q25-51 48-63"/>
+  <g class="river-reeds sway" fill="none" stroke="#438b32" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M-1350 5v-24m0 24q-12-20-25-24m25 24q12-22 26-26M-1245 300v-27m0 27q-14-20-27-24m27 24q13-22 28-25M-1160 520v-25m0 25q-11-18-23-22m23 22q13-20 25-23M-1110 930v-27m0 27q-13-21-27-25m27 25q13-22 27-25M-930 110v-22m0 22q-11-17-23-20m23 20q12-18 24-21M-850 480v-24m0 24q-12-18-24-22m24 22q12-19 25-22M-900 1030v-25m0 25q-12-18-25-22m25 22q13-19 25-22"/>
   </g>
-  <g class="river-bank-plants sway" fill="#71994a" opacity=".9"><ellipse cx="-1370" cy="-75" rx="35" ry="17" transform="rotate(-22 -1370 -75)"/><ellipse cx="-1270" cy="265" rx="39" ry="19" transform="rotate(18 -1270 265)"/><ellipse cx="-1190" cy="610" rx="35" ry="18" transform="rotate(-18 -1190 610)"/><ellipse cx="-1125" cy="1010" rx="43" ry="20" transform="rotate(20 -1125 1010)"/><ellipse cx="-900" cy="55" rx="39" ry="18" transform="rotate(-20 -900 55)"/><ellipse cx="-830" cy="540" rx="34" ry="17" transform="rotate(16 -830 540)"/></g>
+  <g class="river-bank-plants sway" opacity=".96" stroke="#397b2e" stroke-width="3" stroke-linecap="round">
+   <g fill="#72b84b"><path d="M-1370 -75v-24q-20-12-24 4q7 15 24 20q3-23 20-26q8 18-20 26Z"/><path d="M-1270 265v-26q-18-12-24 4q7 15 24 22q5-23 22-27q8 17-22 27Z"/><path d="M-1190 610v-23q-19-11-23 4q7 14 23 19q4-22 21-25q8 17-21 25Z"/><path d="M-1125 1010v-26q-20-12-25 4q8 16 25 22q4-24 23-27q8 18-23 27Z"/></g>
+   <g fill="#91c95a"><path d="M-900 55v-23q-18-10-22 4q6 13 22 19q4-21 20-24q7 16-20 24Z"/><path d="M-830 540v-24q-18-11-23 4q7 15 23 20q4-21 21-25q8 17-21 25Z"/></g>
+  </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   <g transform="translate(-825 760)">
    <ellipse cx="-105" cy="62" rx="142" ry="20" fill="#274f2a" opacity=".25"/>
@@ -1162,7 +1170,7 @@ function updateDayNight(){
  const opacity=night?(twilight?.30:.42):(twilight?.12:0);
  layer.innerHTML=opacity>0?`<rect x="-1400" y="-400" width="5800" height="1700" fill="#071b3c" opacity="${opacity}"/>
  <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
- ${night?'<g opacity=".9"><circle cx="1180" cy="-145" r="48" fill="#fff0b8"/><circle cx="1200" cy="-160" r="43" fill="#071b3c"/></g>':''}`:''; 
+ `:''; 
 }
 function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-1400" y="-400" width="5800" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderPondArea()+renderOrchardArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
