@@ -1473,8 +1473,9 @@ $('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
 $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i){e.preventDefault();plotAction(Number(e.target.dataset.i))}});
 document.querySelectorAll('[data-modal]').forEach(b=>b.addEventListener('click',()=>openModal(b.dataset.modal)));
+document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
-document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab[data-era]').forEach(x=>x.classList.toggle('active',x===b));$('tools').dataset.era=b.dataset.era==='two'?'two':'classic';notify(b.dataset.era==='two'?'Interface 2.0 (organização em reconstrução)':'Interface clássica Orkut')}));
+document.querySelectorAll('.tab[data-era]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab[data-era]').forEach(x=>x.classList.toggle('active',x===b));$('tools').dataset.era=b.dataset.era==='two'?'two':'classic';notify(b.dataset.era==='two'?'Interface Moderna selecionada':'Interface 2.0 · Orkut selecionada')}));
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
 $('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
