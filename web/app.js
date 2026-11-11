@@ -457,7 +457,7 @@ function brickWalkwayMarkup(){
  const roads=[
  'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
  'M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770',
- 'M532 890C510 820 500 745 500 675','M910 940C900 820 900 650 1000 475','M1390 900C1450 760 1490 610 1500 455','M2010 890C2070 790 2140 680 2200 570'];
+ 'M532 890C510 830 500 760 500 720','M910 940C900 835 900 675 1000 510','M1390 900C1450 780 1490 650 1500 485','M2010 890C2070 800 2140 710 2200 610'];
  const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
  const junctions=[[532,890,39],[910,940,37],[1390,900,37],[2010,890,37]];
  const circles=(fill,stroke,width)=>junctions.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${width}"/>`).join('');
@@ -500,7 +500,7 @@ let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,820],[500,745],[500,675]],[[910,940],[900,820],[900,650],[1000,475]],[[1390,900],[1450,760],[1490,610],[1500,455]],[[2010,890],[2070,790],[2140,680],[2200,570]]];
+const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[910,940],[900,835],[900,675],[1000,510]],[[1390,900],[1450,780],[1490,650],[1500,485]],[[2010,890],[2070,800],[2140,710],[2200,610]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
  if(insidePoly(x,y,fieldOutline))return true;
@@ -515,8 +515,8 @@ function blocked(x,y){
 }
 const treePlacements=[
  [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-360,620,210,265,'hue-rotate(24deg) saturate(1.25)'],[-160,265,230,270,'hue-rotate(-18deg)'],
- [120,-190,205,250,'saturate(.82)'],[600,-205,245,290,'hue-rotate(12deg) saturate(1.2)'],
- [1810,-190,235,285,'hue-rotate(32deg)'],[2010,620,205,245,'sepia(.12) saturate(1.3)'],
+ [120,-190,205,250,'saturate(.82)'],[450,-205,245,290,'hue-rotate(12deg) saturate(1.2)'],
+ [1810,-190,235,285,'hue-rotate(32deg)'],
  [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:${filter}"`);
