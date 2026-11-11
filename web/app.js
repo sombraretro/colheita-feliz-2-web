@@ -1373,7 +1373,8 @@ Object.assign(GRILL_RECIPES,{
  kitchen_mungunza_salgado:{name:'Mungunzá Salgado',icon:'🍲',minutes:68,yield:3,salePrice:790,xp:44,kitchenOnly:true,ingredients:[['crop','milho_canjica',2],['meat','pork',1],['supply','seasoning',1]]},
  kitchen_abara_baiano:{name:'Abará Baiano',icon:'🍃',minutes:64,yield:2,salePrice:850,xp:48,kitchenOnly:true,ingredients:[['crop','feijao_fradinho',2],['supply','dende_oil',1],['supply','banana_leaf',1],['sea','camarao',1]]},
  kitchen_escondidinho_mandioca:{name:'Escondidinho de Mandioca com Carne',icon:'🥘',minutes:62,yield:3,salePrice:880,xp:50,kitchenOnly:true,ingredients:[['crop','mandioca',3],['meat','beef',1],['animal','milk',1],['crop','tomate',1]]},
- kitchen_bolinho_aipim:{name:'Bolinho de Aipim com Carne',icon:'🥟',minutes:50,yield:3,salePrice:720,xp:40,kitchenOnly:true,ingredients:[['crop','mandioca',2],['meat','beef',1],['animal','eggs',1]]}
+ kitchen_bolinho_aipim:{name:'Bolinho de Aipim com Carne',icon:'🥟',minutes:50,yield:3,salePrice:720,xp:40,kitchenOnly:true,ingredients:[['crop','mandioca',2],['meat','beef',1],['animal','eggs',1]]},
+ kitchen_ekuru_baiano:{name:'Ekuru Baiano',icon:'🍃',minutes:66,yield:2,salePrice:890,xp:50,kitchenOnly:true,ingredients:[['crop','feijao_fradinho',2],['crop','cebola',1],['supply','banana_leaf',1]]}
 });
 
 function recipeIngredientTotals(recipe){const totals=new Map();for(const [type,id,qty] of recipe.ingredients){const key=`${type}:${id}`,current=totals.get(key);if(current)current.qty+=qty;else totals.set(key,{type,id,qty});}return [...totals.values()]}
