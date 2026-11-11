@@ -618,7 +618,7 @@ function brickWalkwayMarkup(){
  'M1000 8V32',
  'M535 -75H1000',
  'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
- 'M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770',
+ 'M532 890C420 1010 120 1040 -300 1035C-700 1025 -1050 1030 -1320 1020',
  'M532 890C510 830 500 760 500 720',
  'M1120 455C1185 455 1210 470 1240 505C1285 560 1330 650 1370 740C1400 820 1410 865 1390 900'];
  const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
@@ -659,12 +659,12 @@ const ground=`<defs>
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
-const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
+const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-768,350],[-168,620],[-768,890],[-1368,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
+const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[420,1010],[120,1040],[-300,1035],[-700,1025],[-1050,1030],[-1320,1020]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
- if(insidePoly(x,y,fieldOutline))return true;
+ if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
  if(x>250&&x<720&&y>285&&y<700)return true;
  if(x>755&&x<1240&&y>-365&&y<25)return true;
@@ -676,23 +676,23 @@ function blocked(x,y){
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
  if(x>2000&&x<3315&&y>-110&&y<590)return true;
- if(x>-1420&&x<-790)return true;
+ if(x>-2070&&x<-1440)return true;
  return false;
 }
 const treePlacements=[
- [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-360,620,210,265,'hue-rotate(24deg) saturate(1.25)'],[-160,265,230,270,'hue-rotate(-18deg)'],
+ [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-2300,620,210,265,'hue-rotate(24deg) saturate(1.25)'],[-160,265,230,270,'hue-rotate(-18deg)'],
  [120,-190,205,250,'saturate(.82)'],
  [1810,-190,235,285,'hue-rotate(32deg)'],
  [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:${filter}"`);
 for(let i=0;i<330;i++){
- const x=seedNoise(i*17+3)*5600-1400,y=seedNoise(i*31+8)*1160-140;
+ const x=seedNoise(i*17+3)*6800-2600,y=seedNoise(i*31+8)*1160-140;
  if(blocked(x,y))continue;
  scenery+=i%6===0?flower(x,y,.4+seedNoise(i*13)*.5,['#fff5df','#f79cc4','#e4a3ef','#fff7ae'][i%4]):grassClump(x,y,.5+seedNoise(i)*.8);
 }
 for(let i=0;i<95;i++){
- const x=seedNoise(i*5+17)*5600-1400,y=seedNoise(i*9+71)*1160-140;
+ const x=seedNoise(i*5+17)*6800-2600,y=seedNoise(i*9+71)*1160-140;
  if(blocked(x,y))continue;
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
@@ -917,10 +917,10 @@ return a;
 }
 function renderPlots(){
  const perimeter='532,350 1132,620 532,890 -68,620';
- let html=`<polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/>`;
- html+=`<polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/>`;
- html+=`<polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/>`;
- let crops='';for(let r=0;r<Math.ceil(state.plots.length/PLOT_COLS);r++)for(let c=PLOT_COLS-1;c>=0;c--){const i=r*PLOT_COLS+c;if(!state.plots[i])continue;const part=plotGeometry(state.plots[i],r,c,i);html+=part.tile;crops+=part.crop}
+ const base=(offset)=>`<g transform="translate(${offset} 0)"><polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/><polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/><polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/></g>`;
+ let html=base(0)+base(EXPANSION_PLOT_OFFSET_X)+`<text x="-768" y="315" text-anchor="middle" font-size="25" font-weight="bold" fill="#fff5d4" stroke="#315b24" stroke-width="6" paint-order="stroke">NOVA PLANTAÇÃO · NÍVEIS 50–85</text>`;
+ let crops='';
+ for(let group=0;group<2;group++)for(let r=0;r<6;r++)for(let c=PLOT_COLS-1;c>=0;c--){const i=group*36+r*PLOT_COLS+c,p=state.plots[i];if(!p)continue;const part=plotGeometry(p,r,c,i);html+=part.tile;crops+=part.crop}
  $('garden-layer').innerHTML=html;$('crop-layer').innerHTML=crops
 }
 const TUTORIAL_TASKS=[
@@ -1085,7 +1085,7 @@ function useFertilizerOnPlot(plot){
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}view.zoom=id==='orchard'?.95:1.45;view.cx=id==='orchard'?2670:-1110;view.cy=id==='orchard'?245:420;updateView();if(close)closeModal();}
+function focusFarmArea(id,close=true){if(id==='new-fields'){view.zoom=1.05;view.cx=-768;view.cy=620;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}view.zoom=id==='orchard'?.95:1.45;view.cx=id==='orchard'?2670:-1760;view.cy=id==='orchard'?245:420;updateView();if(close)closeModal();}
 function buyExpansion(id){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(`${cfg.name} já está liberado.`);
@@ -1144,7 +1144,7 @@ function renderOrchardArea(){
 
 function renderPondArea(){
  if(!state?.expansions?.pond)return '';
- return `<g id="pond-area" pointer-events="none">
+ return `<g id="pond-area" pointer-events="none" transform="translate(-650 0)">
   <defs>
    <linearGradient id="riverBank" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#d7c18e"/><stop offset=".5" stop-color="#ad9160"/><stop offset="1" stop-color="#806342"/></linearGradient>
    <linearGradient id="riverWater" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2e8296"/><stop offset=".38" stop-color="#55b7c0"/><stop offset=".7" stop-color="#287d98"/><stop offset="1" stop-color="#1c617b"/></linearGradient>
@@ -1264,7 +1264,7 @@ async function save(){if(!dirty)return saving;dirty=false;const payload=JSON.str
  }).catch(e=>{console.error(e);dirty=true;$('save-status').textContent='Falha ao salvar localmente';$('save-dot').className='savedot error'});return saving}
 function progress(p){return Math.max(0,Math.min(1,(Date.now()-p.plantedAt)/(cropHours(p.crop,p.regrowing)*HOUR)))}
 function timeRemain(p){return formatHours((1-progress(p))*cropHours(p.crop,p.regrowing))}
-function plotAction(i){if(writeLocked){notify('Salvamento protegido. Veja Configurações.');return}const p=state.plots[i];if(!p)return;lastSelected=i;renderPlots();
+function plotAction(i){if(writeLocked){notify('Salvamento protegido. Veja Configurações.');return}const p=state.plots[i];if(!p)return;if(i>=EXPANSION_PLOT_START&&farmLevel()<50+(i-EXPANSION_PLOT_START)){notify('Este canteiro será liberado no nível '+(50+i-EXPANSION_PLOT_START)+'.');return}if(i>=EXPANSION_PLOT_START&&p.status==='grass'){p.status='dirt';markDirty()}lastSelected=i;renderPlots();
 if(tool==='soil-red'||tool==='soil-restore'){applySoilWand(p,tool==='soil-red'?'red':'restore');return}
 if(tool==='inspect'){if(p.status==='growing'&&progress(p)>=1){tool='hand';plotAction(i);tool='inspect';document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='inspect'));return}if(p.status==='growing'&&p.weed){p.weed=false;p.weedCleared=true;awardXP(2,'remoção contextual de ervas');playSfx('weed');remember('Removeu ervas daninhas com a ação contextual.');markDirty();refresh();notify('Ervas daninhas removidas automaticamente.');return}if(p.status==='growing'&&p.pest){p.pest=false;p.pestCleared=true;awardXP(2,'controle contextual de pragas');playSfx('pest');remember('Eliminou insetos com a ação contextual.');markDirty();refresh();notify('Insetos eliminados automaticamente.');return}if(p.status==='growing'&&p.wateredAt&&Date.now()-p.wateredAt>=4*HOUR*CROP_TIME_FACTOR){p.wateredAt=Date.now();awardXP(2,'irrigação contextual');playSfx('water');remember('Regou a plantação com a ação contextual.');markDirty();refresh();notify('Plantação regada automaticamente.');return}notify(p.status==='grass'?'Terreno reservado para expansão.':p.status==='dirt'?'Terra limpa pronta para plantar.':p.status==='spent'?'Use a enxada para limpar este canteiro.':`${CROPS[p.crop].name}: ${timeRemain(p)} restantes`);return}
 if(p.status==='grass'){notify('Terreno ainda não liberado.');return}
@@ -1383,7 +1383,7 @@ function applyFarmTheme(id){if(writeLocked)return notify('Salvamento protegido.'
 function buyFarmTheme(id,currency='coins'){if(writeLocked)return notify('Salvamento protegido.');const t=FARM_THEMES[id];if(!t||id==='classic')return;if((state.ownedFarmThemes||[]).includes(id))return applyFarmTheme(id);const green=currency==='greenCoins'&&Number.isFinite(t.greenPrice),wallet=green?'greenCoins':'coins',price=green?t.greenPrice:t.price;if(state[wallet]<price)return notify(green?'Moedas verdes insuficientes.':'Moedas amarelas insuficientes.');state[wallet]-=price;state.ownedFarmThemes=Array.isArray(state.ownedFarmThemes)?state.ownedFarmThemes:[];if(!state.ownedFarmThemes.includes(id))state.ownedFarmThemes.push(id);state.farmTheme=id;if(t.xp)awardXP(t.xp,'compra de tema');remember('Adquiriu permanentemente o tema de fazenda: '+t.name+'.');markDirty();renderFarmAddons();refresh();notify(t.name+' adquirido permanentemente e aplicado!')}
 function expireFarmTheme(){if(state)state.farmThemeExpiries={};}
 function buyDecoration(id){if(writeLocked)return notify('Salvamento protegido.');const d=DECORATIONS[id];if(!d)return;if(d.obtainOnly)return notify(d.obtainNote||'Este item é obtido por uma recompensa histórica.');const wallet=d.currency==='greenCoins'?'greenCoins':'coins';if(state[wallet]<d.price)return notify(d.currency==='greenCoins'?'Moedas verdes insuficientes.':'Moedas amarelas insuficientes.');state[wallet]-=d.price;state.decorInventory[id]=(state.decorInventory[id]||0)+1;awardXP(d.xp||0,'compra de decoração');remember('Comprou decoração: '+d.name+'.');markDirty();refresh();notify(d.name+' adicionada aos seus itens.')}
-const DECORATION_SLOTS=[[600,140],[-650,220],[1800,170],[2050,690],[-650,850],[2500,160],[2800,650],[3300,400],[-1120,160],[4200,170],[4200,1010],[1900,1030]];
+const DECORATION_SLOTS=[[600,140],[-650,220],[1800,170],[2050,690],[3000,1080],[2500,160],[2800,650],[3300,400],[-1120,160],[4200,170],[4200,1010],[1900,1030]];
 function placeDecoration(id){if(writeLocked)return notify('Salvamento protegido.');if(!DECORATIONS[id]||(state.decorInventory[id]||0)<=0)return;const used=new Set(state.placedDecorations.map(d=>d.slot));const slot=DECORATION_SLOTS.findIndex((_,i)=>!used.has(i));if(slot<0)return notify('Todos os espaços seguros de decoração estão ocupados.');state.decorInventory[id]--;state.placedDecorations.push({id,slot,installedAt:Date.now(),expiresAt:Date.now()+30*24*HOUR});remember('Instalou '+DECORATIONS[id].name+'.');markDirty();renderFarmAddons();refresh();notify(DECORATIONS[id].name+' instalada na fazenda.')}
 function removeDecoration(slot){expireDecorations();const i=state.placedDecorations.findIndex(d=>d.slot===Number(slot));if(i<0)return;const d=state.placedDecorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;remember('Guardou '+DECORATIONS[d.id].name+'.');markDirty();renderFarmAddons();refresh();notify('Decoração guardada nos itens.')}
 function expireDecorations(){if(!state||!Array.isArray(state.placedDecorations))return;const now=Date.now(),expired=state.placedDecorations.filter(d=>Number.isFinite(d.expiresAt)&&d.expiresAt<=now);if(!expired.length)return;state.placedDecorations=state.placedDecorations.filter(d=>!Number.isFinite(d.expiresAt)||d.expiresAt>now);remember(`${expired.length} decoração(ões) expiraram após 30 dias.`);markDirty(true);renderFarmAddons();notify('Uma decoração da fazenda expirou.')}
