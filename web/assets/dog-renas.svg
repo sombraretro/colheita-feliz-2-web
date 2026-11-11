@@ -1,15 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Golden Retriever Papai Noel Renas">
-<defs><linearGradient id="coat" x2=".7" y2="1"><stop stop-color="#f4c879"/><stop offset=".6" stop-color="#c98a42"/><stop offset="1" stop-color="#9b5e2e"/></linearGradient><linearGradient id="cream" x2="0" y2="1"><stop stop-color="#fff0d2"/><stop offset="1" stop-color="#d5a76d"/></linearGradient></defs>
-<ellipse cx="760" cy="1035" rx="510" ry="30" fill="#18380f" opacity=".16"/>
-<path d="M340 590Q190 500 235 355Q310 425 405 530" fill="none" stroke="#c98a42" stroke-width="88" stroke-linecap="round"/><path d="M335 570Q240 500 260 420" fill="none" stroke="#f5d79d" stroke-width="25" stroke-linecap="round"/>
-<path d="M425 730L405 980Q405 1025 480 1020L525 990L500 715M760 750L770 985Q775 1025 845 1015L880 985L850 710M950 710L1000 980Q1010 1020 1075 1000L1090 970L1020 675" fill="url(#coat)" stroke="#8c542d" stroke-width="20" stroke-linejoin="round"/>
-<ellipse cx="700" cy="650" rx="430" ry="240" fill="url(#coat)" stroke="#9a602e" stroke-width="18"/>
-<path d="M780 500Q900 530 990 720Q930 875 780 900Q700 820 690 690Z" fill="url(#cream)"/><path d="M800 770Q860 850 950 825" fill="none" stroke="#f9e7c8" stroke-width="28" stroke-linecap="round"/>
-<ellipse cx="1115" cy="365" rx="225" ry="190" fill="url(#coat)" stroke="#9a602e" stroke-width="18"/>
-<path d="M970 280Q880 300 910 470Q970 560 1040 470L1045 330Z" fill="#b77739" stroke="#8c542d" stroke-width="14"/><path d="M1200 280Q1300 310 1270 475Q1210 555 1150 465L1145 330Z" fill="#b77739" stroke="#8c542d" stroke-width="14"/>
-<path d="M1050 390Q1150 360 1250 415L1380 470Q1330 565 1200 565Q1090 555 1030 485Z" fill="url(#cream)" stroke="#9a602e" stroke-width="16"/><ellipse cx="1370" cy="470" rx="32" ry="25" fill="#33251d"/>
-<ellipse cx="1080" cy="330" rx="32" ry="39" fill="#fff5df"/><ellipse cx="1190" cy="315" rx="31" ry="38" fill="#fff5df"/><circle cx="1088" cy="335" r="16" fill="#35251c"/><circle cx="1195" cy="320" r="16" fill="#35251c"/><circle cx="1082" cy="326" r="6" fill="#fff"/><circle cx="1189" cy="312" r="6" fill="#fff"/>
-<path d="M1020 235Q1000 155 1080 130Q1160 105 1220 165L1250 250Z" fill="#c92335" stroke="#8c1c2b" stroke-width="15"/><path d="M1010 235Q1130 270 1255 235L1240 285Q1125 320 1015 280Z" fill="#fff4dc" stroke="#d9c9ad" stroke-width="12"/><circle cx="1125" cy="125" r="34" fill="#fff4dc"/>
-<path d="M1005 190Q920 95 950 30Q1015 75 1045 175M1200 180Q1270 75 1325 50Q1330 135 1250 220" fill="none" stroke="#a8783d" stroke-width="25" stroke-linecap="round"/><path d="M960 85L900 60M965 95L940 150M1300 90L1360 60M1290 110L1330 165" stroke="#a8783d" stroke-width="20" stroke-linecap="round"/>
-<path d="M910 560Q1100 610 1280 550" fill="none" stroke="#c51f31" stroke-width="40"/><path d="M980 555L1040 610L1100 555L1160 610L1220 555" fill="none" stroke="#f4d9a8" stroke-width="12"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Golden Retriever Papai Noel com chifres de rena">
+<defs>
+ <linearGradient id="fur" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffe2a1"/><stop offset=".35" stop-color="#e9b765"/><stop offset=".72" stop-color="#bd7939"/><stop offset="1" stop-color="#804522"/></linearGradient>
+ <linearGradient id="lightfur" x2="0" y2="1"><stop stop-color="#fff4d9"/><stop offset="1" stop-color="#dcae70"/></linearGradient>
+ <linearGradient id="red" x2="0" y2="1"><stop stop-color="#f64a50"/><stop offset=".55" stop-color="#c51f32"/><stop offset="1" stop-color="#761629"/></linearGradient>
+ <linearGradient id="antler" x2="0" y2="1"><stop stop-color="#d6a56c"/><stop offset="1" stop-color="#704326"/></linearGradient>
+ <filter id="soft" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="16"/></filter>
+</defs>
+<ellipse cx="760" cy="1020" rx="510" ry="34" fill="#583b1d" opacity=".2" filter="url(#soft)"/>
+<!-- fluffy tail -->
+<path d="M405 605Q290 568 256 465Q229 381 267 335Q282 432 375 478Q425 504 463 550" fill="none" stroke="#a96b35" stroke-width="98" stroke-linecap="round"/>
+<path d="M273 400Q294 457 347 477M292 445l-29 24m74 19-25 28m57-10-12 31" stroke="#f5d59a" stroke-width="19" fill="none" stroke-linecap="round"/>
+<!-- paws -->
+<g fill="url(#fur)" stroke="#92582c" stroke-width="18" stroke-linejoin="round">
+ <path d="M443 727Q469 778 452 932L423 974Q407 1015 455 1022L519 1014Q547 1000 523 963L526 755Z"/>
+ <path d="M724 744Q763 799 767 948L746 985Q735 1021 787 1026L851 1013Q878 992 848 957L835 748Z"/>
+ <path d="M938 706Q986 760 1021 931L1007 974Q1007 1013 1055 1017L1117 994Q1136 972 1100 940L1051 686Z"/>
+</g>
+<g fill="none" stroke="#ffe2aa" stroke-width="13" stroke-linecap="round"><path d="M435 966q30 18 71 1M759 969q34 18 75 0M1017 953q34 18 71-2"/></g>
+<!-- body -->
+<path d="M374 595Q421 493 584 480L808 491Q971 503 1038 625Q1061 720 1006 790Q944 873 789 871L547 852Q405 833 360 725Z" fill="url(#fur)" stroke="#9b612e" stroke-width="23"/>
+<path d="M404 599Q461 519 580 518Q641 511 695 545Q644 639 677 821Q529 834 431 757Q389 702 404 599Z" fill="#f8d99e" opacity=".72"/>
+<path d="M773 515Q934 524 987 658Q1003 751 925 814Q844 857 753 811Q817 690 773 515Z" fill="url(#lightfur)"/>
+<!-- fur locks -->
+<g fill="none" stroke-linecap="round"><path d="M438 572q-28 45-10 86m52-129q-28 54-8 92m70-105q-19 51 4 91m62-78q-22 59 7 104m430-20q-31 44-11 83m-67-117q-22 54 5 100m-86-125q-10 52 22 93" stroke="#fff0c9" stroke-width="18" opacity=".7"/><path d="M470 775q38 36 80 39m-35-91q36 42 78 48m365-30q-24 46-67 60m20-109q-17 47-58 66" stroke="#9c5c2b" stroke-width="12" opacity=".55"/></g>
+<!-- neck ruff -->
+<path d="M825 490Q900 441 1000 480Q1068 527 1063 654Q1029 746 951 760Q904 702 864 679Q914 602 825 490Z" fill="url(#lightfur)" stroke="#b47a3e" stroke-width="13"/>
+<path d="M875 513q54 26 68 89m-20-98q70 43 75 112m-25-103q69 56 65 132m-83-35q37 47 28 93" fill="none" stroke="#fff4d9" stroke-width="17" stroke-linecap="round"/>
+<!-- head -->
+<path d="M1000 360Q1015 235 1120 215Q1235 188 1300 281Q1347 348 1312 432L1383 482Q1402 515 1360 548Q1307 580 1226 560L1120 540Q1012 516 982 448Z" fill="url(#fur)" stroke="#9b612e" stroke-width="22"/>
+<!-- floppy ears -->
+<path d="M1038 307Q942 270 931 371Q921 463 1008 504Q1061 490 1080 415Z" fill="#a96635" stroke="#854a28" stroke-width="15"/>
+<path d="M1261 300Q1365 295 1372 403Q1378 478 1302 512Q1252 491 1238 420Z" fill="#a96635" stroke="#854a28" stroke-width="15"/>
+<path d="M957 375q-4 71 51 94m322-94q29 64-18 103" fill="none" stroke="#f0bd76" stroke-width="17" stroke-linecap="round"/>
+<!-- creamy face blaze and muzzle -->
+<path d="M1131 240Q1095 328 1120 401Q1150 458 1197 480Q1241 448 1253 397Q1245 304 1198 240Z" fill="url(#lightfur)"/>
+<path d="M1076 389Q1128 347 1196 384Q1270 358 1327 420Q1370 475 1341 526Q1295 578 1207 563Q1117 554 1070 492Q1047 438 1076 389Z" fill="url(#lightfur)" stroke="#bd8547" stroke-width="12"/>
+<ellipse cx="1370" cy="477" rx="34" ry="27" fill="#33251e" stroke="#68452c" stroke-width="7"/>
+<path d="M1185 526Q1253 557 1323 523" fill="none" stroke="#85512e" stroke-width="12" stroke-linecap="round"/>
+<!-- eyes -->
+<ellipse cx="1090" cy="350" rx="33" ry="40" fill="#fff1d5"/><ellipse cx="1214" cy="343" rx="33" ry="40" fill="#fff1d5"/>
+<ellipse cx="1097" cy="357" rx="17" ry="24" fill="#38271d"/><ellipse cx="1219" cy="350" rx="17" ry="24" fill="#38271d"/>
+<circle cx="1090" cy="347" r="7" fill="#fff"/><circle cx="1212" cy="340" r="7" fill="#fff"/>
+<path d="M1055 314q38-30 73-3m45-6q42-29 78 2" fill="none" stroke="#a96a37" stroke-width="13" stroke-linecap="round"/>
+<!-- antlers -->
+<g fill="none" stroke="url(#antler)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M1058 258Q1028 205 1017 150L976 112M1023 179L967 173M1024 205L1070 151L1084 105M1230 252Q1260 195 1288 150L1335 119M1275 177L1336 177M1291 206L1246 153L1244 105"/>
+</g>
+<g fill="none" stroke="#f0c58a" stroke-width="7" stroke-linecap="round"><path d="M1051 241Q1033 192 1020 153M1227 239Q1262 189 1287 153"/></g>
+<!-- santa hat -->
+<path d="M1032 257Q1060 128 1162 108Q1220 100 1260 161L1280 267Q1150 299 1032 257Z" fill="url(#red)" stroke="#8f1b2b" stroke-width="16"/>
+<path d="M1040 244Q1158 286 1279 244L1291 292Q1159 337 1025 292Z" fill="#fff4e4" stroke="#d6c3a8" stroke-width="12"/>
+<path d="M1080 197Q1112 145 1175 139" fill="none" stroke="#ff8580" stroke-width="12" opacity=".7"/>
+<circle cx="1263" cy="153" r="35" fill="#fff5e8" stroke="#d7c7ad" stroke-width="8"/>
+<!-- festive scarf and bell -->
+<path d="M916 601Q1085 666 1287 589L1272 652Q1090 730 919 661Z" fill="url(#red)" stroke="#851a2b" stroke-width="13"/>
+<path d="M1110 657L1157 674L1138 815L1088 797Z" fill="url(#red)" stroke="#851a2b" stroke-width="12"/>
+<path d="M1110 687l39 13m-45 22 39 13m-45 22 38 13" stroke="#ffe8bf" stroke-width="8"/>
+<circle cx="1041" cy="671" r="34" fill="#e8b94e" stroke="#946b24" stroke-width="10"/><path d="M1025 671q16 24 32 0" fill="none" stroke="#fff0a6" stroke-width="8"/><path d="M1041 638v-11" stroke="#946b24" stroke-width="9"/>
+<!-- decorative fur strokes -->
+<g stroke="#fff0cb" stroke-width="11" stroke-linecap="round" opacity=".72"><path d="M1005 454l-19 24m31-8-14 25m-20-2-13 17M1290 540l18 18m-43-7 13 23"/></g>
 </svg>
