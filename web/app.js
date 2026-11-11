@@ -458,7 +458,7 @@ function brickWalkwayMarkup(){
   // Portão do curral -> casa -> estrada principal.
   'M465 360 C580 430 690 500 930 470 C1000 600 985 760 910 940',
   // Estrada principal -> píer na margem do rio.
-  'M532 890 C260 945 -130 930 -470 875 C-690 840 -825 805 -920 770',
+  'M532 890 C260 945 -130 930 -470 875 C-650 840 -690 805 -730 770',
   // Estrada principal -> pomar.
   'M2010 890 C2100 855 2165 800 2225 720 C2290 640 2370 590 2470 550'
  ];
@@ -960,11 +960,11 @@ function renderPondArea(){
   </g>
   <g fill="#71994a" opacity=".9"><ellipse cx="-1370" cy="-75" rx="35" ry="17" transform="rotate(-22 -1370 -75)"/><ellipse cx="-1270" cy="265" rx="39" ry="19" transform="rotate(18 -1270 265)"/><ellipse cx="-1190" cy="610" rx="35" ry="18" transform="rotate(-18 -1190 610)"/><ellipse cx="-1125" cy="1010" rx="43" ry="20" transform="rotate(20 -1125 1010)"/><ellipse cx="-900" cy="55" rx="39" ry="18" transform="rotate(-20 -900 55)"/><ellipse cx="-830" cy="540" rx="34" ry="17" transform="rotate(16 -830 540)"/></g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
-  <g transform="translate(-920 760)">
-   <ellipse cx="45" cy="54" rx="120" ry="20" fill="#274f2a" opacity=".24"/>
-   <path d="M0 0L112 -18L190 8L76 30Z" fill="#81532f" stroke="#593a24" stroke-width="7"/>
-   <path d="M-4 -8L108 -27L184 -1M-1 2L112 -16L188 12M2 12L116 -6L192 22" fill="none" stroke="#d0a16b" stroke-width="9"/>
-   <path d="M18 15V92M91 25V100M159 14V82" stroke="#674326" stroke-width="13" stroke-linecap="round"/>
+  <g transform="translate(-730 760)">
+   <ellipse cx="-45" cy="54" rx="120" ry="20" fill="#274f2a" opacity=".24"/>
+   <path d="M0 0L-112 -18L-190 8L-76 30Z" fill="#81532f" stroke="#593a24" stroke-width="7"/>
+   <path d="M4 -8L-108 -27L-184 -1M1 2L-112 -16L-188 12M-2 12L-116 -6L-192 22" fill="none" stroke="#d0a16b" stroke-width="9"/>
+   <path d="M-18 15V92M-91 25V100M-159 14V82" stroke="#674326" stroke-width="13" stroke-linecap="round"/>
   </g>
   <text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text>
  </g>`;
