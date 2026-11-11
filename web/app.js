@@ -512,7 +512,7 @@ const FARM_MELODY=[
  67,69,71,74,71,69,67,null, 64,67,69,71,69,67,64,null,
  62,64,67,69,67,64,62,null, 64,67,69,74,71,69,67,null,
  67,71,74,79,74,71,69,null, 72,74,76,79,76,74,72,null,
- 71,74,76,79,76,74,71,null, 69,71,74,76,74,71,67,null
+
 ];
 const FARM_BASS=[43,40,36,38,43,36,38,43];
 const FARM_CHORDS=[
@@ -1168,6 +1168,10 @@ function renderPondArea(){
   </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   <g transform="translate(-825 760)">
+   <g transform="translate(25 19)" fill="#6da94a" stroke="#397b2e" stroke-width="2">
+    <ellipse cx="-12" cy="8" rx="18" ry="9"/><ellipse cx="4" cy="3" rx="17" ry="10"/><ellipse cx="17" cy="10" rx="15" ry="8"/>
+    <path d="M-9 7q-12-18-18-15q1 14 18 15M3 4q4-19 14-18q4 14-14 18M13 9q15-12 21-5q-5 12-21 5Z" fill="#91c95a"/>
+   </g>
    <ellipse cx="-105" cy="31" rx="137" ry="17" fill="#274f2a" opacity=".22"/>
    <!-- Pequena ponte de tábuas, apoiada apenas nas margens, sem pilares no leito do rio. -->
    <path d="M18 -10Q-92 -43 -224 -12L-211 25Q-91 -2 28 18Z" fill="#80502d" stroke="#593a24" stroke-width="7" stroke-linejoin="round"/>
