@@ -283,3 +283,13 @@ html[data-cf2-next-ui="enabled"] .side-menu button:hover{background:linear-gradi
   html[data-cf2-next-ui="enabled"] .side-menu{max-height:calc(100% - 120px);top:160px}
   html[data-cf2-next-ui="enabled"] .sidebar-toggle{top:112px}
 }
+
+/* Navegação livre entre as áreas da fazenda */
+.area-navigation{position:absolute;inset:0;z-index:6;pointer-events:none}
+.area-navigation button{position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:46px;height:66px;padding:0;border:2px solid #9b7139;border-radius:14px;background:linear-gradient(135deg,#fff5d8eF,#e8c27eeF);color:#68451f;font-size:25px;font-weight:900;box-shadow:0 3px 7px #25471766;cursor:pointer;pointer-events:auto;transition:filter .15s ease,transform .15s ease}
+.area-navigation button:hover{filter:brightness(1.08);transform:translateY(-50%) scale(1.05)}
+.area-navigation button:active{transform:translateY(-50%) scale(.96)}
+.area-navigation button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#pan-left{left:10px}
+#pan-right{right:10px}
+@media(max-width:600px){.area-navigation button{width:34px;height:54px;font-size:19px;border-radius:10px}#pan-left{left:5px}#pan-right{right:5px}}
