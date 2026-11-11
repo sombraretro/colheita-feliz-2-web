@@ -163,7 +163,7 @@ const GRILL_RECIPES={
  lamb_grilled:{name:'Carneiro grelhado',icon:'🍖',minutes:120,yield:2,salePrice:790,xp:40,ingredients:[['meat','lamb',1],['crop','tomate',1],['supply','seasoning',1]]},
  tilapia_grilled:{name:'Tilápia na brasa',icon:'🐟',minutes:45,yield:2,salePrice:390,xp:22,ingredients:[['fish','tilapia',1],['supply','seasoning',1]]},
  pacu_grilled:{name:'Pacu na brasa',icon:'🐠',minutes:60,yield:2,salePrice:560,xp:30,ingredients:[['fish','pacu',1],['crop','pimenta',1],['supply','seasoning',1]]},
- tambaqui_roast:{name:'Tambaqui assado',icon:'🐟',minutes:75,yield:2,salePrice:680,xp:34,ingredients:[['fish','tambaqui',1],['crop','limão',1],['supply','seasoning',1]]},
+ tambaqui_roast:{name:'Tambaqui assado',icon:'🐟',minutes:75,yield:2,salePrice:680,xp:34,ingredients:[['fish','tambaqui',1],['crop','tomate',1],['supply','seasoning',1]]},
  traira_grilled:{name:'Traíra espalmada',icon:'🐟',minutes:55,yield:2,salePrice:470,xp:26,ingredients:[['fish','traira',1],['crop','tomate',1],['supply','seasoning',1]]},
  tucuna_grilled:{name:'Tucunaré grelhado',icon:'🐠',minutes:80,yield:2,salePrice:760,xp:38,ingredients:[['fish','tucunaré',1],['crop','pimenta',1],['supply','seasoning',1]]},
  dourado_grilled:{name:'Dourado na brasa',icon:'🐠',minutes:100,yield:2,salePrice:920,xp:46,ingredients:[['fish','dourado',1],['crop','tomate',1],['supply','seasoning',1]]},
