@@ -546,3 +546,6 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 /* Ícones ilustrados clássicos das ferramentas, com volume e silhuetas legíveis. */
 .tool-svg{width:49px;height:49px;overflow:visible;flex:0 0 auto}.original-tool-icon{filter:drop-shadow(0 2px 1.5px #422b1680)}.tool{display:flex;align-items:center;justify-content:center;padding:2px}
 @media(max-width:700px){.tool-svg{width:42px;height:42px}}
+
+
+.theme-countdown{display:block;padding:5px 7px;border-radius:7px;background:#fff1cf;color:#75501d;font-weight:700;text-align:center}.house-theme-decor{filter:drop-shadow(0 2px 2px #3b281f66)}.house-window-lights{filter:drop-shadow(0 0 9px #ffd76a)}
