@@ -167,7 +167,16 @@ const GRILL_RECIPES={
  traira_grilled:{name:'Traíra Recheada da Beira do Lago',icon:'🐟',minutes:55,yield:2,salePrice:470,xp:26,ingredients:[['fish','traira',1],['crop','tomate',1],['supply','seasoning',1]]},
  tucuna_grilled:{name:'Filé de Tucunaré com Pimenta',icon:'🐠',minutes:80,yield:2,salePrice:760,xp:38,ingredients:[['fish','tucunaré',1],['crop','pimenta',1],['supply','seasoning',1]]},
  dourado_grilled:{name:'Dourado ao Molho Campestre',icon:'🐠',minutes:100,yield:2,salePrice:920,xp:46,ingredients:[['fish','dourado',1],['crop','tomate',1],['supply','seasoning',1]]},
- pirarucu_grilled:{name:'Pirarucu Amazônico na Brasa',icon:'🐟',minutes:130,yield:2,salePrice:1250,xp:60,ingredients:[['fish','pirarucu',1],['crop','pimenta',1],['supply','seasoning',1]]}
+ pirarucu_grilled:{name:'Pirarucu Amazônico na Brasa',icon:'🐟',minutes:130,yield:2,salePrice:1250,xp:60,ingredients:[['fish','pirarucu',1],['crop','pimenta',1],['supply','seasoning',1]]},
+ lambari_frito:{name:'Lambari Crocante da Beira do Rio',icon:'🍤',minutes:30,yield:3,salePrice:180,xp:10,ingredients:[['fish','lambari',2],['crop','milho',1],['supply','seasoning',1]]},
+ cara_moqueca:{name:'Moquequinha de Cará com Ervas',icon:'🍲',minutes:45,yield:2,salePrice:260,xp:14,ingredients:[['fish','cara',2],['crop','tomate',1],['crop','cebola',1],['supply','seasoning',1]]},
+ mandi_frito:{name:'Mandi Dourado com Crosta de Milho',icon:'🍽️',minutes:50,yield:2,salePrice:330,xp:18,ingredients:[['fish','mandi',1],['crop','milho',2],['supply','seasoning',1]]},
+ piau_assado:{name:'Piau Assado com Tempero da Roça',icon:'🐟',minutes:55,yield:2,salePrice:370,xp:20,ingredients:[['fish','piau',1],['crop','tomate',1],['crop','pimenta',1],['supply','seasoning',1]]},
+ curimbata_recheado:{name:'Curimbatá Recheado à Caipira',icon:'🍴',minutes:65,yield:2,salePrice:450,xp:24,ingredients:[['fish','curimbata',1],['crop','batata',1],['crop','cebola',1],['supply','seasoning',1]]},
+ pintado_ao_molho:{name:'Pintado ao Molho de Tomate Rústico',icon:'🍲',minutes:85,yield:2,salePrice:780,xp:38,ingredients:[['fish','pintado',1],['crop','tomate',2],['crop','pimenta',1],['supply','seasoning',1]]},
+ surubim_na_folha:{name:'Surubim na Folha com Ervas Aromáticas',icon:'🌿',minutes:95,yield:2,salePrice:860,xp:42,ingredients:[['fish','surubim',1],['crop','cebola',1],['crop','tomate',1],['supply','seasoning',1]]},
+ jau_assado:{name:'Jaú Assado de Festa',icon:'🔥',minutes:115,yield:2,salePrice:1080,xp:52,ingredients:[['fish','jau',1],['crop','batata',2],['crop','pimenta',1],['supply','seasoning',1]]},
+ pirarara_especial:{name:'Pirarara Especial do Pescador',icon:'🍛',minutes:125,yield:2,salePrice:1180,xp:56,ingredients:[['fish','pirarara',1],['crop','tomate',1],['crop','milho',1],['supply','honey',1]]}
 };
 
 const FISH_TYPES={
@@ -793,7 +802,10 @@ function normalize(data){
   a.slot=slot;usedSlots.add(slot);return true;
  });
  data.xp=Number.isFinite(data.xp)?Math.max(0,data.xp):0;
- if(data.xpProgressionVersion!==2){const oldLevel=1+Math.floor(data.xp/200),oldProgress=(data.xp%200)/200;data.xp=xpRequiredForLevel(oldLevel)+Math.round(oldProgress*xpForNextLevel(oldLevel));data.xpProgressionVersion=2;}
+ const progressionVersion=Number.isFinite(data.xpProgressionVersion)?data.xpProgressionVersion:1;
+ if(progressionVersion<2){const oldLevel=1+Math.floor(data.xp/200),oldProgress=(data.xp%200)/200;data.xp=oldLevelXPRequired(oldLevel)+Math.round(oldProgress*oldLevelXPNext(oldLevel));}
+ if(progressionVersion<3){const oldLevel=oldLevelFromXP(data.xp),oldProgress=(data.xp-oldLevelXPRequired(oldLevel))/oldLevelXPNext(oldLevel);data.xp=xpRequiredForLevel(oldLevel)+Math.round(oldProgress*xpForNextLevel(oldLevel));}
+ data.xpProgressionVersion=3;
  data.greenCoins=Number.isFinite(data.greenCoins)?Math.max(0,data.greenCoins):0;
  data.popularity=Number.isFinite(data.popularity)?Math.max(0,data.popularity):0;
  data.social=(data.social&&typeof data.social==='object')?data.social:{};data.social.friends=Array.isArray(data.social.friends)?data.social.friends.filter(f=>f&&typeof f.id==='string'&&typeof f.farmName==='string').slice(0,100):[];data.social.inbox=Array.isArray(data.social.inbox)?data.social.inbox.filter(m=>m&&typeof m.id==='string'&&typeof m.text==='string').slice(0,200):[];data.social.sent=Array.isArray(data.social.sent)?data.social.sent.filter(m=>m&&typeof m.id==='string').slice(0,200):[];
@@ -833,9 +845,13 @@ function normalize(data){
  for(const plot of data.plots){if(!plot||!['grass','dirt','spent','growing'].includes(plot.status))return null;if(plot.status==='growing'&&(!CROPS[plot.crop]||!Number.isFinite(plot.plantedAt)))return null;plot.soil=plot.soil==='red'?'red':'normal';plot.weed=!!plot.weed;plot.pest=!!plot.pest;plot.wateredAt=Number.isFinite(plot.wateredAt)?plot.wateredAt:plot.plantedAt;plot.harvestsRemaining=Number.isFinite(plot.harvestsRemaining)?Math.max(1,plot.harvestsRemaining):1;}
  return data;
 }
-function xpForNextLevel(level){return 200+(Math.max(1,Math.floor(level))-1)*8}
-function xpRequiredForLevel(level){const n=Math.max(0,Math.floor(level)-1);return 200*n+4*n*(n-1)}
-function levelFromXP(xp){const value=Math.max(0,Number(xp)||0),n=Math.max(0,Math.floor((-196+Math.sqrt(38416+16*value))/8));return n+1}
+function oldLevelXPNext(level){return 200+(Math.max(1,Math.floor(level))-1)*8}
+function oldLevelXPRequired(level){const n=Math.max(0,Math.floor(level)-1);return 200*n+4*n*(n-1)}
+function oldLevelFromXP(xp){const value=Math.max(0,Number(xp)||0),n=Math.max(0,Math.floor((-196+Math.sqrt(38416+16*value))/8));return n+1}
+// Nova curva aumenta o custo por nível em 16 XP (antes, 8 XP).
+function xpForNextLevel(level){return 200+(Math.max(1,Math.floor(level))-1)*16}
+function xpRequiredForLevel(level){const n=Math.max(0,Math.floor(level)-1);return 200*n+8*n*(n-1)}
+function levelFromXP(xp){const value=Math.max(0,Number(xp)||0),n=Math.max(0,Math.floor((-192+Math.sqrt(36864+32*value))/16));return n+1}
 function farmLevel(){return levelFromXP(state.xp)}
 function nextLockedPlotIndex(){return state.plots.findIndex((p,i)=>i>=24&&p.status==='grass')}
 function plotUnlockCost(index){return index>=30?2200:1500}
