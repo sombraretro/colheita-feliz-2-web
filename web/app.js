@@ -255,9 +255,9 @@ const FERTILIZERS={
  surfConcentrate:{name:'Surf Líquido Concentrado · 20h',icon:'🧼',hours:20,price:0,currency:'gift',flowerOnly:true,balance:'historical',note:'Presente diário ou de amigos; reduz 20h e só pode ser usado em flores.'}
 };
 const ANIMAL_SLOTS=[
- {x:255,y:-105,w:140,h:105},{x:415,y:-105,w:140,h:105},{x:575,y:-105,w:140,h:105},
- {x:255,y:35,w:140,h:105},{x:415,y:35,w:140,h:105},{x:575,y:35,w:140,h:105},
- {x:255,y:175,w:140,h:105},{x:415,y:175,w:140,h:105},{x:575,y:175,w:140,h:105}
+ {x:1280,y:-105,w:140,h:105},{x:1440,y:-105,w:140,h:105},{x:1600,y:-105,w:140,h:105},
+ {x:1280,y:35,w:140,h:105},{x:1440,y:35,w:140,h:105},{x:1600,y:35,w:140,h:105},
+ {x:1280,y:175,w:140,h:105},{x:1440,y:175,w:140,h:105},{x:1600,y:175,w:140,h:105}
  ];
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,porco:.82,ovelha:.88,burro:.94,vaca:1.00,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
@@ -454,16 +454,14 @@ function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" tran
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#865128" stroke-width="12" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-32}L${b[0]} ${b[1]-32}M${a[0]} ${a[1]-13}L${b[0]} ${b[1]-13}" stroke="#e0a05a" fill="none" stroke-width="5" stroke-linecap="round"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="12" ry="6" fill="#336b1f" opacity=".35"/><path d="M${x-9} ${y-54}L${x+1} ${y-67}L${x+11} ${y-54}L${x+10} ${y+8}L${x-8} ${y+8}Z" fill="#aa6835" stroke="#694320" stroke-width="3"/><path d="M${x-6} ${y-53}L${x+1} ${y-60}L${x+7} ${y-52}" fill="none" stroke="#f2c17a" stroke-width="4"/><path d="M${x-4} ${y-43}V${y+1}" stroke="#c48d54" stroke-width="4"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none">${rails}${posts}</g>`}
 function brickWalkwayMarkup(){
- const routes=[
-  // Portão do curral -> casa -> estrada principal.
-  'M465 360 C580 430 690 500 930 470 C1000 600 985 760 910 940',
-  // Estrada principal -> píer na margem do rio.
-  'M532 890 C260 945 -130 930 -470 875 C-650 840 -690 805 -730 770',
-  // Estrada principal -> pomar.
-  'M2010 890 C2100 855 2165 800 2225 720 C2290 640 2370 590 2470 550'
- ];
- const paths=routes.map(d=>`<g><path d="${d}" fill="none" stroke="#513b2a" stroke-width="72" stroke-linecap="round" opacity=".25"/><path d="${d}" fill="none" stroke="#835039" stroke-width="64" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#b66b48" stroke-width="55" stroke-linecap="round"/><path d="${d}" fill="none" stroke="url(#brickPattern)" stroke-width="51" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#efc49a" stroke-width="2" stroke-linecap="round" opacity=".55"/></g>`).join('');
- return `<g id="brick-walkway" pointer-events="none">${paths}</g>`;
+ const roads=[
+ 'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
+ 'M532 890C260 945 -130 930 -470 875C-650 840 -690 805 -730 770',
+ 'M532 890C510 820 500 745 500 675','M910 940C900 820 900 650 1000 475','M1390 900C1450 760 1490 610 1500 455','M2010 890C2070 790 2140 680 2200 570'];
+ const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
+ const junctions=[[532,890,39],[910,940,37],[1390,900,37],[2010,890,37]];
+ const circles=(fill,stroke,width)=>junctions.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${width}"/>`).join('');
+ return `<g id="farm-road-network" pointer-events="none">${layers(82,'#77512e',.22)}${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${circles('url(#farmRoad)','#9b7448',5)}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 21" opacity=".48"/>`).join('')}</g>`;
 }
 function scheduleAnimalBlinking(){
  document.querySelectorAll('.animal-wrap').forEach(node=>{
@@ -495,37 +493,33 @@ const ground=`<defs>
 <path d="M-1400 210Q-900 150 -480 225T220 205Q620 150 980 210T1710 190Q2420 135 3100 220T4400 180V-200H-1400Z" fill="#319322" opacity=".2"/>
 <path d="M-1400 740Q-920 665 -520 780T120 785Q520 730 860 805T1600 800Q2400 740 3100 790T4400 760V1300H-1400Z" fill="#93c93f" opacity=".17"/>
 <path d="M-1400 330Q-900 270 -480 340T180 320Q650 260 1020 310T1780 300Q2450 240 3100 325T4400 285" fill="none" stroke="#8acb4c" stroke-width="42" opacity=".13"/>
-<!-- Estrada principal: nasce no vértice inferior do plantio e segue em curva até além da tela. -->
-<path id="farm-road-shadow" d="M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890" fill="none" stroke="#77512e" stroke-width="80" stroke-linecap="round" opacity=".24"/>
-<path id="farm-road-edge" d="M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890" fill="none" stroke="#9b7448" stroke-width="72" stroke-linecap="round"/>
-<path id="farm-road" d="M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890" fill="none" stroke="url(#farmRoad)" stroke-width="62" stroke-linecap="round"/>
-<path d="M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890" fill="none" stroke="#f3e0b5" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 21" opacity=".52"/>
-<!-- Caminho de tijolinhos: acompanha a perspectiva do gramado e chega à abertura do curral. -->
+<!-- Estradas secundárias são integradas à rede viária única. -->
 `;
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-function roadY(x){const pts=[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]];for(let i=1;i<pts.length;i++){if(x<=pts[i][0]){const a=pts[i-1],b=pts[i],t=Math.max(0,(x-a[0])/(b[0]-a[0]));return a[1]+(b[1]-a[1])*t}}return 890}
+const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[260,945],[-130,930],[-470,875],[-650,840],[-730,770]],[[532,890],[510,820],[500,745],[500,675]],[[910,940],[900,820],[900,650],[1000,475]],[[1390,900],[1450,760],[1490,610],[1500,455]],[[2010,890],[2070,790],[2140,680],[2200,570]]];
+function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
  if(insidePoly(x,y,fieldOutline))return true;
- if(x>740&&x<1165&&y>35&&y<455)return true; // casa
- if(x>1750&&x<1940&&y>130&&y<320)return true; // casinha do cachorro
- if(x>1170&&x<1640&&y>20&&y<455)return true; // celeiro
- if(x>195&&x<735&&y>-175&&y<395)return true; // curral
- if(x>480&&x<4400&&Math.abs(y-roadY(x))<56)return true;
- if(x>2000&&x<3290&&y>-110&&y<590)return true; // pomar
- if(x>-1420&&x<-790)return true; // rio
+ if(x>755&&x<1240&&y>20&&y<485)return true;
+ if(x>250&&x<720&&y>285&&y<700)return true;
+ if(x>1240&&x<1800&&y>-180&&y<455)return true;
+ if(x>1810&&x<1990&&y>120&&y<330)return true;
+ if(nearRoad(x,y))return true;
+ if(x>2000&&x<3315&&y>-110&&y<590)return true;
+ if(x>-1420&&x<-790)return true;
  return false;
 }
 const treePlacements=[
- [-430,20,235,285],[-360,620,225,270],[-160,265,205,245],
- [120,-190,210,255],[600,-205,225,270],
- [1810,-190,255,300],[1900,115,210,250],
- [3420,20,235,275],[3820,45,250,290],[4300,30,250,290]
+ [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-360,620,210,265,'hue-rotate(24deg) saturate(1.25)'],[-160,265,230,270,'hue-rotate(-18deg)'],
+ [120,-190,205,250,'saturate(.82)'],[600,-205,245,290,'hue-rotate(12deg) saturate(1.2)'],
+ [1810,-190,235,285,'hue-rotate(32deg)'],[2010,620,205,245,'sepia(.12) saturate(1.3)'],
+ [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
 ];
-for(const t of treePlacements)scenery+=svgImage('arvore',...t);
+for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:${filter}"`);
 for(let i=0;i<330;i++){
  const x=seedNoise(i*17+3)*5600-1400,y=seedNoise(i*31+8)*1160-140;
  if(blocked(x,y))continue;
@@ -536,28 +530,23 @@ for(let i=0;i<95;i++){
  if(blocked(x,y))continue;
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
-// Sombras de contato e pequenos tufos na base eliminam o efeito de flutuação.
-scenery+=`<g pointer-events="none" filter="url(#shadow)">
- <ellipse cx="970" cy="418" rx="205" ry="34" fill="#193d16" opacity=".42"/>
- <ellipse cx="1400" cy="397" rx="245" ry="38" fill="#193d16" opacity=".4"/>
- <ellipse cx="1845" cy="292" rx="82" ry="18" fill="#193d16" opacity=".36"/>
- <ellipse cx="465" cy="365" rx="290" ry="36" fill="#193d16" opacity=".35"/>
-</g>`;
-scenery+=svgImage('casa',790,70,360,350);
-scenery+=svgImage('celeiro',1175,35,450,365);
-scenery+=svgImage('casinha-cachorro',1770,155,145,140);
-scenery+=fencePath([[220,-150],[710,-150]],'rear');
-scenery+=fencePath([[220,-150],[220,360]],'side');
-scenery+=fencePath([[710,-150],[710,360]],'side');
+// Bases orgânicas de grama substituem as sombras dos prédios.
+scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 285Q1870 276 1945 286L1935 310Q1870 315 1820 306Z" fill="#4d982d" opacity=".72"/></g>`;
+for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1825,302,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
+scenery+=svgImage('casa',780,35,440,430);
+scenery+=svgImage('celeiro',270,300,430,370);
+scenery+=svgImage('casinha-cachorro',1830,155,145,140);
+scenery+=fencePath([[1260,-150],[1780,-150]],'rear');
+scenery+=fencePath([[1260,-150],[1260,430]],'side');
+scenery+=fencePath([[1780,-150],[1780,430]],'side');
 
 $('scenery-layer').innerHTML=scenery;$('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
-front+=fencePath([[220,360],[400,360]],'front');
-front+=fencePath([[530,360],[710,360]],'front');
-front+=`<g transform="translate(400 360)"><path d="M0 -58V10M130 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L130 -48M0 -15L130 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L122 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H148" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
-// Identificação do curral, próxima ao portão.
-front+=`<g transform="translate(465 375) scale(.52)"><ellipse cx="42" cy="69" rx="42" ry="7" fill="#315e1b" opacity=".25"/><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
+front+=fencePath([[1260,430],[1430,430]],'front');
+front+=fencePath([[1560,430],[1780,430]],'front');
+front+=`<g transform="translate(1430 430)"><path d="M0 -58V10M130 -58V10" stroke="#714625" stroke-width="13"/><path d="M0 -48L130 -48M0 -15L130 -15" stroke="#a86b37" stroke-width="9"/><path d="M8 -50L122 -14" stroke="#e0a05a" stroke-width="6"/><path d="M-18 -2H148" stroke="#c6a06b" stroke-width="4" opacity=".8"/></g>`;
+front+=`<g transform="translate(1495 445) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
 front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
 for(let i=0;i<38;i++){
@@ -591,7 +580,7 @@ function renderAnimals(){
  for(const a of animals){
   if(!ANIMALS[a.type])continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=1790;y=175;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=1850;y=175;w=150;h=112.5;}
   else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
@@ -914,9 +903,9 @@ function orchardTreeMarkup(slot,tree){
  const [x,y]=ORCHARD_SLOTS[slot],crop=tree?.type?CROPS[tree.type]:null,ready=tree?.status==='ready'||(tree?.type&&orchardTreeProgress(tree)>=1);
  if(!crop)return `<g class="orchard-tree-slot" data-orchard-slot="${slot}" transform="translate(${x} ${y})" style="cursor:pointer;pointer-events:all"><ellipse cy="14" rx="60" ry="14" fill="#285c1c" opacity=".22"/><ellipse cy="0" rx="48" ry="19" fill="#8b6038" stroke="#67421f" stroke-width="5"/><path d="M-28 -2L-18 -19L0 -26L18 -19L28 -2" fill="#b37b43" stroke="#76502a" stroke-width="4"/><text y="-42" text-anchor="middle" font-size="18" fill="#fff4ce" stroke="#65451f" stroke-width="2" paint-order="stroke">＋ Plantar</text></g>`;
  const colors={maca:'#d83b37',laranja:'#f28a25',goiaba:'#e58d8c',limao:'#d4d83e',coco:'#8c5731',arvore_jujuba:'#e67eb7',arvore_pirulito:'#df4f87',arvore_romantica_chinesa:'#e78bbd',pinheiro_natal:'#d3b34d',arvore_namorados:'#e75b91',carambola:'#e8c63b',acerola:'#c92d43',jaca:'#a6b43d',caju:'#e98a38',pera:'#9ab34b',jabuticaba:'#49304f',guarana:'#a82f3b',mamao:'#e88d45'};
- const fruit=colors[tree.type]||crop.fruit||'#d4a13a',progress=orchardTreeProgress(tree),count=ready?6:Math.max(0,Math.floor(progress*6));
+ const fruit=colors[tree.type]||crop.fruit||'#d4a13a',progress=orchardTreeProgress(tree),count=ready?6:Math.max(0,Math.floor(progress*6)),treeHue=({maca:'hue-rotate(-8deg) saturate(1.3)',laranja:'hue-rotate(18deg) saturate(1.25)',limao:'hue-rotate(48deg) saturate(1.35)',coco:'sepia(.25) saturate(.8)',jabuticaba:'hue-rotate(55deg) saturate(1.4)',pinheiro_natal:'hue-rotate(25deg) saturate(1.5)',arvore_jujuba:'hue-rotate(-28deg) saturate(1.5)',caju:'hue-rotate(10deg) saturate(1.35)',goiaba:'hue-rotate(-15deg) saturate(1.3)'})[tree.type]||'saturate(1.08)';
  const fruits=Array.from({length:count},(_,i)=>{const a=i*2.4;return `<circle cx="${Math.cos(a)*56}" cy="${-178+Math.sin(a)*23}" r="9" fill="${fruit}" stroke="#80512c" stroke-width="3"/><circle cx="${Math.cos(a)*56-2}" cy="${-181+Math.sin(a)*23}" r="2.5" fill="#fff0bd" opacity=".75"/>`}).join('');
- return `<g class="orchard-tree" data-orchard-slot="${slot}" transform="translate(${x} ${y})" style="cursor:pointer;pointer-events:all"><ellipse cy="17" rx="88" ry="16" fill="#245b18" opacity=".25"/><rect x="-100" y="-270" width="200" height="320" fill="transparent" pointer-events="all"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" pointer-events="none"/>${fruits}${ready?'<circle cx="75" cy="-230" r="17" fill="#f4d55f" stroke="#a8742c" stroke-width="3"/><path d="M75-242V-218M63-230H87" stroke="#fff8dc" stroke-width="4"/>':''}<text y="43" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff5d4" stroke="#5d421e" stroke-width="3" paint-order="stroke">${ready?'PRONTA':`${Math.round(progress*100)}%`}</text><title>${crop.name} · ${ready?'Clique para colher':formatHours((1-progress)*cropHours(tree.type,!!tree.regrowing))+' restantes'}</title></g>`;
+ return `<g class="orchard-tree" data-orchard-slot="${slot}" transform="translate(${x} ${y})" style="cursor:pointer;pointer-events:all"><ellipse cy="17" rx="88" ry="16" fill="#245b18" opacity=".25"/><rect x="-100" y="-270" width="200" height="320" fill="transparent" pointer-events="all"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" pointer-events="none" style="filter:${treeHue}"/>${fruits}${ready?'<circle cx="75" cy="-230" r="17" fill="#f4d55f" stroke="#a8742c" stroke-width="3"/><path d="M75-242V-218M63-230H87" stroke="#fff8dc" stroke-width="4"/>':''}<text y="43" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff5d4" stroke="#5d421e" stroke-width="3" paint-order="stroke">${ready?'PRONTA':`${Math.round(progress*100)}%`}</text><title>${crop.name} · ${ready?'Clique para colher':formatHours((1-progress)*cropHours(tree.type,!!tree.regrowing))+' restantes'}</title></g>`;
 }
 function renderOrchardArea(){
  if(!state?.expansions?.orchard)return '';
@@ -955,10 +944,10 @@ function renderPondArea(){
    <path d="M-1370 45q65-28 115 5m-100 18q60-20 105 8M-1245 330q65-22 115 10m-115 18q58-18 110 8M-1125 690q60-25 112 5m-102 20q56-18 105 8" fill="none" stroke="#d5f2e9" stroke-width="6" stroke-linecap="round" opacity=".24"/>
    <ellipse cx="-1190" cy="230" rx="72" ry="150" fill="#b8e7d8" opacity=".1"/><ellipse cx="-1080" cy="740" rx="55" ry="125" fill="#c2f0e4" opacity=".1"/>
   </g>
-  <g fill="none" stroke="#397a38" stroke-width="13" stroke-linecap="round">
+  <g class="river-reeds" fill="none" stroke="#397a38" stroke-width="13" stroke-linecap="round">
    <path d="M-1350 5q-22-72-50-94m50 94q18-65 49-85m-49 85q-8-46-2-92M-1245 300q-24-72-52-92m52 92q25-63 53-78m-53 78q-5-46 5-88M-1160 520q-20-66-49-83m49 83q24-61 53-74M-1110 930q-17-68-46-89m46 89q26-57 55-73M-930 110q-14-52-38-69m38 69q22-48 46-61m-46 61q-4-35 4-67M-850 480q-17-58-43-75m43 75q25-53 48-68M-900 1030q-15-62-40-80m40 80q25-51 48-63"/>
   </g>
-  <g fill="#71994a" opacity=".9"><ellipse cx="-1370" cy="-75" rx="35" ry="17" transform="rotate(-22 -1370 -75)"/><ellipse cx="-1270" cy="265" rx="39" ry="19" transform="rotate(18 -1270 265)"/><ellipse cx="-1190" cy="610" rx="35" ry="18" transform="rotate(-18 -1190 610)"/><ellipse cx="-1125" cy="1010" rx="43" ry="20" transform="rotate(20 -1125 1010)"/><ellipse cx="-900" cy="55" rx="39" ry="18" transform="rotate(-20 -900 55)"/><ellipse cx="-830" cy="540" rx="34" ry="17" transform="rotate(16 -830 540)"/></g>
+  <g class="river-bank-plants" fill="#71994a" opacity=".9"><ellipse cx="-1370" cy="-75" rx="35" ry="17" transform="rotate(-22 -1370 -75)"/><ellipse cx="-1270" cy="265" rx="39" ry="19" transform="rotate(18 -1270 265)"/><ellipse cx="-1190" cy="610" rx="35" ry="18" transform="rotate(-18 -1190 610)"/><ellipse cx="-1125" cy="1010" rx="43" ry="20" transform="rotate(20 -1125 1010)"/><ellipse cx="-900" cy="55" rx="39" ry="18" transform="rotate(-20 -900 55)"/><ellipse cx="-830" cy="540" rx="34" ry="17" transform="rotate(16 -830 540)"/></g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   <g transform="translate(-730 760)">
    <ellipse cx="-45" cy="54" rx="120" ry="20" fill="#274f2a" opacity=".24"/>
