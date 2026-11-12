@@ -745,3 +745,4 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 }
 
 .pepper-icon img{width:1.45em;height:1.45em;display:block;object-fit:contain}.pepper-icon:after{display:none}
+.pepper-icon img[src*="pimentao-amarelo"]{filter:saturate(1.85) contrast(1.06)}
