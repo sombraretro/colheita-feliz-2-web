@@ -1066,9 +1066,9 @@ function normalize(data){
  data.forestPlots=Array.isArray(data.forestPlots)?data.forestPlots.slice(0,FOREST_PLOTS):[];while(data.forestPlots.length<FOREST_PLOTS)data.forestPlots.push({type:null,status:'empty',plantedAt:0});data.forestPlots=data.forestPlots.map(t=>t&&FOREST_TREES[t.type]?{type:t.type,status:['growing','ready'].includes(t.status)?t.status:'growing',plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:Date.now()}:{type:null,status:'empty',plantedAt:0});
  data.woodWarehouse=(data.woodWarehouse&&typeof data.woodWarehouse==='object')?data.woodWarehouse:{};for(const id of [...new Set(Object.values(FOREST_TREES).map(t=>t.wood))])data.woodWarehouse[id]=Number.isFinite(data.woodWarehouse[id])?Math.max(0,Math.floor(data.woodWarehouse[id])):0;
  data.furnitureWarehouse=(data.furnitureWarehouse&&typeof data.furnitureWarehouse==='object')?data.furnitureWarehouse:{};for(const id of Object.keys(WOODWORK_RECIPES))data.furnitureWarehouse[id]=Number.isFinite(data.furnitureWarehouse[id])?Math.max(0,Math.floor(data.furnitureWarehouse[id])):0;data.carpentry=(data.carpentry&&typeof data.carpentry==='object')?data.carpentry:{queue:[]};data.carpentry.queue=Array.isArray(data.carpentry.queue)?data.carpentry.queue.filter(j=>j&&WOODWORK_RECIPES[j.recipe]&&typeof j.id==='string'&&Number.isFinite(j.startedAt)&&Number.isFinite(j.readyAt)&&j.readyAt>=j.startedAt).slice(-100).map(j=>({...j,xpEarned:Number.isSafeInteger(j.xpEarned)?Math.max(0,j.xpEarned):12,woodConsumed:Number.isSafeInteger(j.woodConsumed)?Math.max(0,j.woodConsumed):WOODWORK_RECIPES[j.recipe].qty})):[];
- data.seaFishing=(data.seaFishing&&typeof data.seaFishing==='object')?data.seaFishing:{};data.seaFishing.nets=Array.isArray(data.seaFishing.nets)?[...new Set(data.seaFishing.nets.filter(id=>SEA_NETS[id]))]:['normal'];if(!data.seaFishing.nets.includes('normal'))data.seaFishing.nets.unshift('normal');data.seaFishing.net=SEA_NETS[data.seaFishing.net]&&data.seaFishing.nets.includes(data.seaFishing.net)?data.seaFishing.net:'normal';data.seaFishing.lastCastAt=Number.isFinite(data.seaFishing.lastCastAt)?Math.max(0,data.seaFishing.lastCastAt):0;
+ data.seaFishing=(data.seaFishing&&typeof data.seaFishing==='object')?data.seaFishing:{};data.seaFishing.nets=Array.isArray(data.seaFishing.nets)?[...new Set(data.seaFishing.nets.filter(id=>SEA_NETS[id]))]:['normal'];if(!data.seaFishing.nets.includes('normal'))data.seaFishing.nets.unshift('normal');data.seaFishing.net=SEA_NETS[data.seaFishing.net]&&data.seaFishing.nets.includes(data.seaFishing.net)?data.seaFishing.net:'normal';data.seaFishing.lastCastAt=Number.isFinite(data.seaFishing.lastCastAt)?Math.max(0,data.seaFishing.lastCastAt):0;data.seaFishing.extraordinaryMisses=Number.isFinite(data.seaFishing.extraordinaryMisses)?Math.max(0,Math.min(50,Math.floor(data.seaFishing.extraordinaryMisses))):0;
  data.seaWarehouse=(data.seaWarehouse&&typeof data.seaWarehouse==='object')?data.seaWarehouse:{};for(const id of Object.keys(SEA_TYPES))data.seaWarehouse[id]=Number.isFinite(data.seaWarehouse[id])?Math.max(0,Math.floor(data.seaWarehouse[id])):0;
- data.fishing=(data.fishing&&typeof data.fishing==='object')?data.fishing:{};data.fishing.rods=Array.isArray(data.fishing.rods)?[...new Set(data.fishing.rods.filter(id=>FISHING_RODS[id]))]:['normal'];if(!data.fishing.rods.includes('normal'))data.fishing.rods.unshift('normal');data.fishing.rod=FISHING_RODS[data.fishing.rod]&&data.fishing.rods.includes(data.fishing.rod)?data.fishing.rod:'normal';data.fishing.lastCastAt=Number.isFinite(data.fishing.lastCastAt)?Math.max(0,data.fishing.lastCastAt):0;
+ data.fishing=(data.fishing&&typeof data.fishing==='object')?data.fishing:{};data.fishing.rods=Array.isArray(data.fishing.rods)?[...new Set(data.fishing.rods.filter(id=>FISHING_RODS[id]))]:['normal'];if(!data.fishing.rods.includes('normal'))data.fishing.rods.unshift('normal');data.fishing.rod=FISHING_RODS[data.fishing.rod]&&data.fishing.rods.includes(data.fishing.rod)?data.fishing.rod:'normal';data.fishing.lastCastAt=Number.isFinite(data.fishing.lastCastAt)?Math.max(0,data.fishing.lastCastAt):0;data.fishing.extraordinaryMisses=Number.isFinite(data.fishing.extraordinaryMisses)?Math.max(0,Math.min(40,Math.floor(data.fishing.extraordinaryMisses))):0;
  data.fishWarehouse=(data.fishWarehouse&&typeof data.fishWarehouse==='object')?data.fishWarehouse:{};for(const id of Object.keys(FISH_TYPES))data.fishWarehouse[id]=Number.isFinite(data.fishWarehouse[id])?Math.max(0,Math.floor(data.fishWarehouse[id])):0;
  data.meatWarehouse=(data.meatWarehouse&&typeof data.meatWarehouse==='object')?data.meatWarehouse:{};
  data.meatLocks=(data.meatLocks&&typeof data.meatLocks==='object')?data.meatLocks:{};
@@ -1489,15 +1489,42 @@ function updateFishingCooldownButtons(){
   sea.textContent=waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
  }
 }
+function weightedFishingChoice(entries,levelKey,level){
+ const weighted=entries.map(([id,item])=>({id,item,weight:item.weight})).filter(x=>x.weight>0);
+ const total=weighted.reduce((sum,x)=>sum+x.weight,0);let roll=Math.random()*total;
+ for(const x of weighted){roll-=x.weight;if(roll<=0)return x.id;}
+ return weighted[0]?.id||null;
+}
+function extraordinaryFishingChoice(types,levelKey,level){
+ const candidates=Object.entries(types).filter(([,item])=>item[levelKey]>level);
+ if(!candidates.length)return null;
+ const weighted=candidates.map(([id,item])=>({id,weight:item.weight/Math.pow(item[levelKey]-level,1.5)}));
+ const total=weighted.reduce((sum,x)=>sum+x.weight,0);let roll=Math.random()*total;
+ for(const x of weighted){roll-=x.weight;if(roll<=0)return x.id;}
+ return weighted[0]?.id||null;
+}
 function castFishingRod(){
  if(writeLocked)return notify('Salvamento protegido.');
  if(!state.expansions.pond)return notify('Libere primeiro o Lago nas Expansões.');
  const now=Date.now(),remaining=FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0));
  if(remaining>0)return notify(`Aguarde mais ${Math.ceil(remaining/1000)} segundo(s) para pescar novamente.`);
- const rod=FISHING_RODS[state.fishing.rod]||FISHING_RODS.normal,available=Object.entries(FISH_TYPES).filter(([,f])=>f.minRod<=rod.order);
- const weighted=available.reduce((sum,[,f])=>sum+f.weight,0);let roll=Math.random()*weighted,fishId=available[0][0];
- for(const [id,fish] of available){roll-=fish.weight;if(roll<=0){fishId=id;break;}}
- const fish=FISH_TYPES[fishId];state.fishing.lastCastAt=now;state.fishWarehouse[fishId]=(state.fishWarehouse[fishId]||0)+1;awardXP(fish.xp,'pescaria');remember(`Pescou ${fish.name} com a vara ${rod.name}.`);markDirty();refresh();notify(`🎣 Você pescou ${fish.name} · ${fish.rarity} · +${fish.xp} XP!`);
+ const rod=FISHING_RODS[state.fishing.rod]||FISHING_RODS.normal;
+ const available=Object.entries(FISH_TYPES).filter(([,f])=>f.minRod<=rod.order);
+ const misses=state.fishing.extraordinaryMisses||0;
+ const chance=Math.min(8,2+Math.floor(misses/5)*.5);
+ const extraordinary=misses>=40-1||Math.random()*100<chance;
+ let fishId=extraordinary?extraordinaryFishingChoice(FISH_TYPES,'minRod',rod.order):null;
+ const isExtraordinary=!!fishId;
+ if(!fishId)fishId=weightedFishingChoice(available,'minRod',rod.order);
+ if(!fishId)return notify('Nenhum peixe disponível para este equipamento.');
+ const fish=FISH_TYPES[fishId];
+ state.fishing.lastCastAt=now;
+ state.fishing.extraordinaryMisses=isExtraordinary?0:Math.min(40,misses+1);
+ state.fishWarehouse[fishId]=(state.fishWarehouse[fishId]||0)+1;
+ awardXP(fish.xp,'pescaria');
+ remember((isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
+ markDirty();refresh();
+ notify((isExtraordinary?'✨🎣 PESCA EXTRAORDINÁRIA! ':'🎣 Você pescou ')+fish.name+' · '+fish.rarity+' · +'+fish.xp+' XP!');
 }
 
 function buyGrill(){if(writeLocked)return notify('Salvamento protegido.');if(state.grill.owned)return;if(state.coins<1000)return notify('A churrasqueira custa 1.000 moedas amarelas.');state.coins-=1000;state.grill.owned=true;remember('Comprou a churrasqueira desmontada.');markDirty();renderFarmAddons();refresh();notify('Churrasqueira comprada! Agora reúna os componentes para montá-la.')}
@@ -2000,7 +2027,29 @@ function plantForestTree(slot,id){if(writeLocked)return notify('Salvamento prote
 function harvestForestTree(slot){if(writeLocked)return notify('Salvamento protegido.');const t=state.forestPlots[slot];if(!t?.type)return openModal('forest');const cfg=FOREST_TREES[t.type],p=forestProgress(t);if(p<1&&t.status!=='ready')return notify(cfg.name+': faltam '+formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+'.');if(cfg.herbYield){const key='herb_'+cfg.herbYield;state.inventory[key]=(state.inventory[key]||0)+cfg.yield;awardXP(cfg.xp,'colheita de ervas na Mata');awardSpecialistXP('lumberjack',cfg.xp);remember('Colheu '+cfg.yield+' folhas de '+cfg.name+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();return notify(cfg.yield+' folhas de '+cfg.name+' adicionadas aos ingredientes do Mix de Ervas.')}if(cfg.wood)state.woodWarehouse[cfg.wood]=(state.woodWarehouse[cfg.wood]||0)+cfg.yield;if(cfg.leafId){const key='herb_'+cfg.leafId;state.inventory[key]=(state.inventory[key]||0)+Math.max(1,Math.floor(cfg.yield/3));}awardXP(cfg.xp,'colheita de madeira');awardSpecialistXP('lumberjack',cfg.xp);remember('Obteve '+cfg.yield+' unidades de '+cfg.woodName+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();notify(cfg.yield+' unidades de '+cfg.woodName+' adicionadas ao estoque.'+(cfg.leafId?' Folhas também recolhidas para o Mix de Ervas.':''))}
 function buySeaNet(id,currency){if(writeLocked)return notify('Salvamento protegido.');if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');const cfg=SEA_NETS[id];if(!cfg||id==='normal')return;if(state.seaFishing.nets.includes(id))return selectSeaNet(id);if(farmLevel()<cfg.level)return notify('A rede '+cfg.name+' exige nível '+cfg.level+'.');const wallet=currency==='greenCoins'?'greenCoins':'coins',price=currency==='greenCoins'?cfg.greenCoins:cfg.coins;if(state[wallet]<price)return notify(currency==='greenCoins'?'Moedas verdes insuficientes.':'Moedas amarelas insuficientes.');state[wallet]-=price;state.seaFishing.nets.push(id);state.seaFishing.net=id;remember('Comprou a rede '+cfg.name+'.');markDirty();refresh();notify('Rede '+cfg.name+' adquirida e equipada.')}
 function selectSeaNet(id){if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');if(!SEA_NETS[id]||!state.seaFishing.nets.includes(id))return;state.seaFishing.net=id;markDirty();refresh();notify('Rede '+SEA_NETS[id].name+' equipada.')}
-function castSeaNet(){if(writeLocked)return notify('Salvamento protegido.');if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');const now=Date.now(),remaining=SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0));if(remaining>0)return notify('Aguarde '+Math.ceil(remaining/1000)+' segundo(s) para lançar a rede novamente.');const net=SEA_NETS[state.seaFishing.net]||SEA_NETS.normal,available=Object.entries(SEA_TYPES).filter(([,f])=>f.minNet<=net.order),weight=available.reduce((n,[,f])=>n+f.weight,0);let roll=Math.random()*weight,id=available[0][0];for(const [key,f] of available){roll-=f.weight;if(roll<=0){id=key;break}}const item=SEA_TYPES[id];state.seaFishing.lastCastAt=now;state.seaWarehouse[id]=(state.seaWarehouse[id]||0)+1;awardXP(item.xp,'pesca no mar');remember('Capturou '+item.name+' com a rede '+net.name+'.');markDirty();refresh();notify('🌊 '+item.name+' capturado · '+item.rarity+' · +'+item.xp+' XP!')}
+function castSeaNet(){
+ if(writeLocked)return notify('Salvamento protegido.');
+ if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');
+ const now=Date.now(),remaining=SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0));
+ if(remaining>0)return notify('Aguarde '+Math.ceil(remaining/1000)+' segundo(s) para lançar a rede novamente.');
+ const net=SEA_NETS[state.seaFishing.net]||SEA_NETS.normal;
+ const available=Object.entries(SEA_TYPES).filter(([,f])=>f.minNet<=net.order);
+ const misses=state.seaFishing.extraordinaryMisses||0;
+ const chance=Math.min(8,1.5+Math.floor(misses/5)*.5);
+ const extraordinary=misses>=50-1||Math.random()*100<chance;
+ let id=extraordinary?extraordinaryFishingChoice(SEA_TYPES,'minNet',net.order):null;
+ const isExtraordinary=!!id;
+ if(!id)id=weightedFishingChoice(available,'minNet',net.order);
+ if(!id)return notify('Nenhum item disponível para esta rede.');
+ const item=SEA_TYPES[id];
+ state.seaFishing.lastCastAt=now;
+ state.seaFishing.extraordinaryMisses=isExtraordinary?0:Math.min(50,misses+1);
+ state.seaWarehouse[id]=(state.seaWarehouse[id]||0)+1;
+ awardXP(item.xp,'pesca no mar');
+ remember((isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'.');
+ markDirty();refresh();
+ notify((isExtraordinary?'✨🌊 PESCA EXTRAORDINÁRIA! ':'🌊 ')+item.name+' capturado · '+item.rarity+' · +'+item.xp+' XP!');
+}
 function craftWoodItem(id){if(writeLocked)return notify('Salvamento protegido.');const cfg=WOODWORK_RECIPES[id];if(!cfg)return;const have=state.woodWarehouse[cfg.wood]||0;if(have<cfg.qty)return notify('Madeira insuficiente: '+cfg.qty+' unidades de '+ingredientName('wood',cfg.wood)+'.');state.carpentry=state.carpentry||{queue:[]};if(state.carpentry.queue.length>=100)return notify('A fila da marcenaria atingiu o limite de 100 fabricações.');state.woodWarehouse[cfg.wood]-=cfg.qty;const now=Date.now(),startedAt=state.carpentry.queue.filter(j=>j.readyAt>now).reduce((m,j)=>Math.max(m,j.readyAt),now),minutes=cfg.minutes||Math.max(25,20+cfg.qty*9+(cfg.lakeBridge?35:0)),readyAt=startedAt+minutes*60000;state.carpentry.queue.push({id:'wood-'+now+'-'+Math.floor(Math.random()*100000),recipe:id,startedAt,readyAt,xpEarned:12,woodConsumed:cfg.qty});remember('Iniciou a fabricação de '+cfg.name+' na marcenaria.');markDirty();refresh();notify(cfg.name+' entrou na fila. Aguarde '+minutes+' minutos para recolher.')}
 function collectWoodwork(){if(writeLocked)return notify('Salvamento protegido.');const now=Date.now(),ready=(state.carpentry?.queue||[]).filter(j=>j.readyAt<=now);if(!ready.length)return notify('Ainda não há móveis ou itens prontos para recolher.');let xp=0;for(const job of ready){if(!WOODWORK_RECIPES[job.recipe])continue;state.furnitureWarehouse[job.recipe]=(state.furnitureWarehouse[job.recipe]||0)+1;xp+=job.xpEarned||12;}state.carpentry.queue=state.carpentry.queue.filter(j=>j.readyAt>now);awardSpecialistXP('carpenter',xp);remember('Recolheu '+ready.length+' item(ns) fabricado(s) na marcenaria.');markDirty();refresh();notify(ready.length+' item(ns) recolhido(s) · +'+xp+' XP de Marceneiro.')}
 
