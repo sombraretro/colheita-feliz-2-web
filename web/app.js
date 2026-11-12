@@ -1431,7 +1431,7 @@ function modalHasFocusedEditor(){const active=document.activeElement;return !!(a
 function refresh(){syncLakeFish();expireDecorations();expireFarmTheme();syncAnimalCycles();syncOrchardTrees();syncLevelPlotUnlocks();updateHud();renderPlots();renderAnimals();renderFarmAddons();if(currentModal&&!modalHasFocusedEditor())renderModal()}
 function infest(){let changed=false;for(let i=0;i<state.plots.length;i++){const p=state.plots[i];if(p.status!=='growing'||p.initialGift||progress(p)>=1)continue;const h=(Date.now()-p.plantedAt)/HOUR;if(h>=3*CROP_TIME_FACTOR&&!p.weed&&!p.weedCleared&&(Math.floor(p.plantedAt/HOUR)+i*11)%5===0){p.weed=true;changed=true}if(h>=6*CROP_TIME_FACTOR&&!p.pest&&!p.pestCleared&&(Math.floor(p.plantedAt/HOUR)+i*13)%7===0){p.pest=true;changed=true}}if(changed){markDirty(true);refresh()}}
 function openModal(kind){if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
-function closeModal(){currentModal='';document.querySelector('.app')?.classList.remove('modal-open');$('overlay').classList.add('hidden');renderPlots();}
+function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}currentModal='';document.querySelector('.app')?.classList.remove('modal-open');$('overlay').classList.add('hidden');renderPlots();}
 function dailyRewardAvailable(){return state.dailyRewardDate!==todayKey()}
 function claimDailyReward(){
  if(!dailyRewardAvailable())return notify('A recompensa diária de hoje já foi resgatada.');
@@ -2261,7 +2261,7 @@ if(currentModal==='gifts'&&cloudUser&&!onlineGiftsLoaded){refreshOnlineGifts(fal
  $('auth-signin')?.addEventListener('click',()=>authenticate('signin'));
  $('auth-signup')?.addEventListener('click',()=>authenticate('signup'));
  $('cloud-signout')?.addEventListener('click',disconnectCloud);
- $('cloud-sync')?.addEventListener('click',()=>handleAuthSession({user:cloudUser}));
+ $('cloud-sync')?.addEventListener('click',async()=>{if(dirty){await save();return}if(cloudDirty){try{await saveCloud();$('save-status').textContent='Salvo na nuvem';$('save-dot').className='savedot';notify('Fazenda sincronizada com a nuvem.')}catch(error){notify('Falha ao sincronizar: '+(error.message||'tente novamente.'))}return}cloudSessionReadyUserId=null;await handleAuthSession({user:cloudUser})});
 }
 if(['shop','warehouse'].includes(currentModal)){
  const headings=[...body.querySelectorAll(':scope > h3')];
@@ -2335,7 +2335,7 @@ async function start(){
   try{await processEmailConfirmationCallback();const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;if(data?.session){sessionFound=true;await handleAuthSession(data.session);}}
   catch(error){console.error('Auth session:',error);$('save-status').textContent='Falha ao conectar à nuvem · jogo bloqueado';notify('Não foi possível acessar a nuvem. Verifique sua conexão e tente novamente.')}
  }
- if(!sessionFound&&currentModal!=='account')openModal('account');
+ if((!sessionFound||writeLocked)&&currentModal!=='account')openModal('account');
  setInterval(()=>{if(dirty)save()},60000);
  setInterval(updateFishingCooldownButtons,250);
  setInterval(()=>{updateDayNight();infest();expireDecorations();expireFarmTheme();expireTemporaryDogBreeds();const lakeChanged=syncLakeFish(),animalsChanged=syncAnimalCycles(),treesChanged=syncOrchardTrees();if(animalsChanged)renderAnimals();if(treesChanged)renderFarmAddons();if(!currentModal)renderPlots();else if(['kitchen','grill','factory','animals','orchard','pond','lake','sea','carpentry'].includes(currentModal)&&!modalHasFocusedEditor())renderModal()},15000);
