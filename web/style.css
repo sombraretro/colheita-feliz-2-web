@@ -757,3 +757,6 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .friend-help-selected .actions{margin-bottom:0}
 .friend-help-selected button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:700px){.friend-farm-scene{max-height:340px}.friend-help-quota{align-items:flex-start;flex-direction:column}.friend-farm-areas span{font-size:10px}}
+
+/* Os marcadores de notificações no cenário ficam sempre imóveis. */
+.world-notification{animation:none!important;transform:none!important;scale:1!important}
