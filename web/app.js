@@ -1682,9 +1682,9 @@ function recipeNeedText(recipe){return recipeIngredientTotals(recipe).map(({type
 const SPECIALIST_TITLES={
  chef:['Chef Iniciante','Chef Ajudante','Chef Junior','Chef-Meio Oficial','Chef Pleno','Chef Sênior','Chef Líder','Chef Master'],
  carpenter:['Marceneiro Iniciante','Marceneiro Ajudante','Marceneiro Junior','Marceneiro-Meio Oficial','Marceneiro Pleno','Marceneiro Sênior','Líder de Produção','Projetista'],
- alchemist:['Alquimista','Misturador','Alquimista Junior','Alquimista Pleno','Alquimista Sênior','Herbologista','Transmutador'],
+ alchemist:['Alquimista','Misturador','Alquimista Junior','Curandeiro','Alquimista Pleno','Alquimista Sênior','Herbologista','Transmutador'],
  grill:['Churrasqueiro','Grelhador','Espeteiro','Meat Junior','Meat Pleno','Meat Senior','Líder Braseiro','Pitmaster'],
- lumberjack:['Lenhador','Escoteiro','Lenhador Junior','Lenhador Pleno','Lenhador Sênior','Cortador Pro','Mestre do Machado']
+ lumberjack:['Lenhador','Escoteiro','Lenhador Junior','Serrador','Lenhador Pleno','Lenhador Sênior','Cortador Pro','Mestre do Machado']
 };
 function specialistTitleLevel(key,index){const names=SPECIALIST_TITLES[key]||[];return names.length<2?1:1+Math.round(index*49/(names.length-1))}
 function specialistTitle(key,level){const names=SPECIALIST_TITLES[key]||[];let title=names[0]||key;for(let i=0;i<names.length;i++){if(level>=specialistTitleLevel(key,i))title=names[i];else break;}return title}
@@ -1732,7 +1732,7 @@ function awardSpecialistXP(key,amount){
    notices.push('Nível '+reached+': '+specialistTitle(key,reached)+(promotion?' · PROMOÇÃO':'')+' · '+(rewards.length?rewards.join(', '):'recompensa recebida'));
   }
   const lastTitle=specialistTitle(key,level),lastPromotion=specialistPromotionLevel(key,level);
-  notify('🏅 '+lastTitle+' · nível '+level+(lastPromotion?'! Promoção conquistada!':'')+' · '+notices.length+' recompensa(s) adicionada(s).');
+  notify('🏅 '+lastTitle+' · nível '+level+(lastPromotion?'! Promoção conquistada!':'')+' · '+notices.slice(-2).join(' | '));
  }
  return level;
 }
@@ -2270,7 +2270,7 @@ case 'settings':title='Configurações e backup';html=`<p>O salvamento é autom�
 $('modal-title').textContent=title;body.innerHTML=html;body.scrollTop=modalScrollTop;
 if(currentModal==='inventory'){
  const sortSelect=$('inventory-sort');
- if(sortSelect)sortSelect.addEventListener('change',()=>{inventorySortMode=['default','alphabetical','available'].includes(sortSelect.value)?sortSelect.value:'default';sortSelect.blur();renderModal();});
+ if(sortSelect)sortSelect.addEventListener('change',()=>{inventorySortMode=['default','alphabetical','available'].includes(sortSelect.value)?sortSelect.value:'default';sortSelect.blur();requestAnimationFrame(()=>{if(currentModal==='inventory')renderModal();});});
 }
 if(currentModal==='settings'){
  const sound=$('sound-toggle'),music=$('music-toggle');
@@ -2294,7 +2294,7 @@ if(['shop','warehouse'].includes(currentModal)){
   const content=document.createElement('div');content.className='shop-section-content';if(index!==0)content.hidden=true;
   let cursor=heading.nextSibling;
   while(cursor&&cursor.tagName!=='H3'){const next=cursor.nextSibling;content.appendChild(cursor);cursor=next;}
-  section.append(toggle,content);body.insertBefore(section,headings[index+1]||null);
+  section.append(toggle,content);heading.replaceWith(section);
   toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));content.hidden=open;toggle.querySelector('.shop-category-chevron').textContent=open?'＋':'−';});
  });
  if(accordionOpen?.length){[...body.querySelectorAll('.shop-section')].forEach((section,index)=>{const toggle=section.querySelector('.shop-category-toggle'),content=section.querySelector('.shop-section-content');if(!toggle||!content||accordionOpen[index]===undefined)return;const open=accordionOpen[index];toggle.setAttribute('aria-expanded',String(open));content.hidden=!open;const icon=toggle.querySelector('.shop-category-chevron');if(icon)icon.textContent=open?'−':'＋';});}
