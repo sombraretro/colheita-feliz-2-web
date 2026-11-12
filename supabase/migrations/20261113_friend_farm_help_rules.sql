@@ -220,6 +220,7 @@ begin
         else 0 end,
       'weed',coalesce((v_plot->>'weed')::boolean,false),
       'pest',coalesce((v_plot->>'pest')::boolean,false),
+      'regrowing',coalesce((v_plot->>'regrowing')::boolean,false),
       'soil',case when v_plot->>'soil'='red' then 'red' else 'normal' end
     );
     v_snapshot:=jsonb_set(v_snapshot,array['plots',p_plot_index::text],v_public_plot,true);
