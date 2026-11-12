@@ -667,7 +667,7 @@ details.shop-section .grid-cards{grid-template-columns:repeat(auto-fit,minmax(mi
     position:fixed;right:10px;bottom:calc(72px + env(safe-area-inset-bottom));
     z-index:55;width:min(245px,calc(100vw - 20px));height:auto;max-height:min(calc(100dvh - 145px),520px);min-height:0;
     padding:10px;gap:7px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
-    -webkit-overflow-scrolling:touch;touch-action:pan-y;flex-direction:column;align-items:stretch;
+    -webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#a97838 #f5e5c4;flex-direction:column;align-items:stretch;
     border:2px solid #b77d36;border-radius:15px;
     background:linear-gradient(160deg,#fff8e6f5,#e9c783f5);
     box-shadow:0 8px 24px #203b1688,inset 0 1px #fff;scrollbar-width:thin
@@ -698,3 +698,5 @@ html.orientation-landscape-fallback .more-menu{
  max-height:calc(100vw - 112px);bottom:calc(54px + env(safe-area-inset-bottom));
 }
 html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
+
+@media(max-width:1024px){.more-menu::-webkit-scrollbar{width:7px}.more-menu::-webkit-scrollbar-track{background:#f5e5c4;border-radius:8px}.more-menu::-webkit-scrollbar-thumb{background:#a97838;border-radius:8px;border:1px solid #f5e5c4}}
