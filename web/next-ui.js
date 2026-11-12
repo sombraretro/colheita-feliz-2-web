@@ -1,5 +1,4 @@
-/* Colheita Feliz 2 · base de interface da próxima etapa.
-   Permanece desativada na 1.9.0: a navegação atual não é alterada. */
+/* Colheita Feliz 2 · menu lateral recolhível e ferramentas acessíveis. */
 (() => {
   const labels = {
     inspect: 'Selecionar / inspecionar',
@@ -13,23 +12,115 @@
   };
 
   function init() {
+    if (document.documentElement.dataset.cf2NextUiInitialized === 'true') return;
+    document.documentElement.dataset.cf2NextUiInitialized = 'true';
     const menu = document.querySelector('.side-menu');
-    const toggle = document.querySelector('[data-sidebar-toggle]');
-    if (menu && toggle) {
-      const close = () => {
-        menu.classList.remove('is-open');
-        toggle.setAttribute('aria-expanded', 'false');
+    const toggles = [...document.querySelectorAll('[data-sidebar-toggle]')];
+    if (menu && toggles.length) {
+      let lastToggle = toggles[0];
+      const syncToggles = open => {
+        toggles.forEach(toggle => {
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.setAttribute('aria-label', open ? 'Fechar menu lateral' : 'Abrir menu lateral');
+        });
       };
-      toggle.addEventListener('click', () => {
-        const open = menu.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', String(open));
+      const close = ({restoreFocus = false} = {}) => {
+        menu.classList.remove('is-open');
+        syncToggles(false);
+        if (restoreFocus) lastToggle.focus();
+      };
+      const open = toggle => {
+        lastToggle = toggle;
+        menu.classList.add('is-open');
+        syncToggles(true);
+      };
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (menu.classList.contains('is-open')) close();
+          else {
+            document.querySelector('.more-menu')?.classList.remove('is-open');
+            document.querySelectorAll('[data-more-toggle]').forEach(moreToggle => {
+              moreToggle.setAttribute('aria-expanded', 'false');
+              moreToggle.setAttribute('aria-label', 'Abrir mais opções');
+            });
+            open(toggle);
+          }
+        });
+      });
+      menu.addEventListener('click', event => {
+        if (event.target.closest('button')) close();
       });
       document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') close();
+        if (event.key === 'Escape' && menu.classList.contains('is-open')) close({restoreFocus: true});
       });
       document.addEventListener('click', event => {
-        if (!menu.contains(event.target) && !toggle.contains(event.target)) close();
+        if (!menu.contains(event.target) && !toggles.some(toggle => toggle.contains(event.target))) close();
       });
+      syncToggles(false);
+    }
+
+
+    const moreMenu = document.querySelector('.more-menu');
+    const moreToggles = [...document.querySelectorAll('[data-more-toggle]')];
+    if (moreMenu && moreToggles.length) {
+      let touchScroll = null;
+      moreMenu.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'touch' || moreMenu.scrollHeight <= moreMenu.clientHeight) return;
+        const rotatedFallback = document.documentElement.classList.contains('orientation-landscape-fallback') && matchMedia('(orientation: portrait)').matches;
+        touchScroll = { id: event.pointerId, startY: event.clientY, startX: event.clientX, startTop: moreMenu.scrollTop, rotatedFallback, moved: false };
+      }, { passive: true });
+      moreMenu.addEventListener('pointermove', event => {
+        if (!touchScroll || touchScroll.id !== event.pointerId) return;
+        const delta = touchScroll.rotatedFallback
+          ? event.clientX - touchScroll.startX
+          : event.clientY - touchScroll.startY;
+        if (!touchScroll.moved && Math.abs(delta) < 6) return;
+        if (!touchScroll.moved) {
+          touchScroll.moved = true;
+          try { moreMenu.setPointerCapture(event.pointerId); } catch {}
+        }
+        moreMenu.scrollTop = touchScroll.startTop + (touchScroll.rotatedFallback ? delta : -delta);
+        event.preventDefault();
+      }, { passive: false });
+      const finishTouchScroll = event => {
+        if (touchScroll && touchScroll.id === event.pointerId) touchScroll = null;
+      };
+      moreMenu.addEventListener('pointerup', finishTouchScroll);
+      moreMenu.addEventListener('pointercancel', finishTouchScroll);
+      const syncMoreToggles = open => moreToggles.forEach(toggle => {
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Fechar mais opções' : 'Abrir mais opções');
+      });
+      const closeMore = () => {
+        moreMenu.classList.remove('is-open');
+        syncMoreToggles(false);
+      };
+      moreToggles.forEach(toggle => toggle.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const opening = !moreMenu.classList.contains('is-open');
+        if (opening) {
+          document.querySelector('.side-menu')?.classList.remove('is-open');
+          document.querySelectorAll('[data-sidebar-toggle]').forEach(sideToggle => {
+            sideToggle.setAttribute('aria-expanded', 'false');
+            sideToggle.setAttribute('aria-label', 'Abrir menu lateral');
+          });
+        }
+        moreMenu.classList.toggle('is-open', opening);
+        syncMoreToggles(opening);
+      }));
+      moreMenu.addEventListener('click', event => {
+        if (event.target.closest('button')) closeMore();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMore();
+      });
+      document.addEventListener('click', event => {
+        if (!moreMenu.contains(event.target) && !moreToggles.some(toggle => toggle.contains(event.target))) closeMore();
+      });
+      syncMoreToggles(false);
     }
 
     document.querySelectorAll('.tool-bar .tool[data-tool]').forEach(button => {
@@ -42,5 +133,5 @@
   }
 
   window.CF2NextUI = { init };
-  if (document.documentElement.dataset.cf2NextUi === 'enabled') init();
+  init();
 })();
