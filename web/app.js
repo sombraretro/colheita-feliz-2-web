@@ -1272,7 +1272,40 @@ function renderPondArea(){
     [-1730,1110,.6,'hue-rotate(35deg) saturate(1.12)'],
     [-1590,1135,.76,'hue-rotate(-20deg) saturate(1.18)'],
     [-1460,1090,.62,'hue-rotate(8deg) saturate(1.2)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%5===0?.94:1}"/></g>`).join('')}
+   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%5===0?.94:1}"/></g>`).join('')} 
+   ${[
+    [-1845,-300,.72,'hue-rotate(68deg) saturate(1.35)'],
+    [-1980,-270,.86,'sepia(.42) saturate(1.45) hue-rotate(350deg)'],
+    [-2125,-235,.66,'hue-rotate(145deg) saturate(1.25)'],
+    [-2260,-190,.78,'hue-rotate(205deg) saturate(1.3)'],
+    [-1875,-105,.9,'hue-rotate(82deg) saturate(1.4)'],
+    [-2025,-70,.62,'hue-rotate(235deg) saturate(1.25)'],
+    [-2170,-35,.82,'sepia(.55) saturate(1.55) hue-rotate(5deg)'],
+    [-2300,35,.68,'hue-rotate(165deg) saturate(1.35)'],
+    [-1850,125,.65,'hue-rotate(205deg) saturate(1.4)'],
+    [-1995,155,.84,'hue-rotate(58deg) saturate(1.4)'],
+    [-2140,190,.72,'hue-rotate(285deg) saturate(1.35)'],
+    [-2280,245,.9,'sepia(.35) saturate(1.6) hue-rotate(330deg)'],
+    [-1885,325,.82,'hue-rotate(125deg) saturate(1.35)'],
+    [-2030,355,.64,'hue-rotate(220deg) saturate(1.45)'],
+    [-2180,390,.88,'hue-rotate(42deg) saturate(1.5)'],
+    [-2320,455,.7,'hue-rotate(175deg) saturate(1.35)'],
+    [-1855,525,.76,'sepia(.48) saturate(1.5) hue-rotate(345deg)'],
+    [-2005,555,.9,'hue-rotate(95deg) saturate(1.35)'],
+    [-2150,590,.62,'hue-rotate(245deg) saturate(1.4)'],
+    [-2295,645,.84,'hue-rotate(155deg) saturate(1.3)'],
+    [-1880,715,.68,'hue-rotate(35deg) saturate(1.5)'],
+    [-2025,745,.86,'hue-rotate(195deg) saturate(1.35)'],
+    [-2175,780,.72,'sepia(.5) saturate(1.55) hue-rotate(8deg)'],
+    [-2315,845,.9,'hue-rotate(115deg) saturate(1.4)'],
+    [-1850,915,.82,'hue-rotate(225deg) saturate(1.35)'],
+    [-1995,945,.65,'hue-rotate(72deg) saturate(1.45)'],
+    [-2140,980,.88,'hue-rotate(165deg) saturate(1.35)'],
+    [-2285,1050,.7,'sepia(.4) saturate(1.55) hue-rotate(340deg)'],
+    [-1900,1110,.76,'hue-rotate(255deg) saturate(1.3)'],
+    [-2050,1140,.86,'hue-rotate(105deg) saturate(1.4)'],
+    [-2200,1170,.68,'hue-rotate(25deg) saturate(1.5)']
+   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".22"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%6===0?.96:1}"/></g>`).join('')}
    <g class="grove-flowers" stroke="#557b35" stroke-width="2">
     ${[[-1660,-12,'#f0c94f'],[-1510,48,'#e879a5'],[-1735,245,'#f5e7d2'],[-1465,225,'#9d83d2'],[-1600,405,'#efc84f'],[-1740,555,'#e879a5'],[-1485,535,'#f4e4c7'],[-1650,755,'#9d83d2'],[-1510,905,'#f0c94f'],[-1730,1030,'#e879a5'],[-1450,1015,'#f4e4c7']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><path d="M0 7v-12" stroke-width="2.5"/><circle cy="-16" r="4.5" fill="${c}"/><circle cx="-5.5" cy="-13" r="4" fill="${c}"/><circle cx="5.5" cy="-13" r="4" fill="${c}"/><circle cy="-10" r="3.8" fill="${c}"/><circle cy="-13" r="2" fill="#f8e6a7"/></g>`).join('')}
    </g>
