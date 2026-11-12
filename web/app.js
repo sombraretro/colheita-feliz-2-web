@@ -426,6 +426,7 @@ let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false;
 const SUPABASE_URL='https://osmoolsywhlorgqqybhk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable__pNF0EfJMbM_a6Jdmpylvg_HY3nzRpo';
 let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,cloudDirty=false,cloudConflict=false,supabaseAuthSubscription=null,cloudSessionReadyUserId=null;
+let cloudRetryTimer=null,cloudRetryCountdown=null,cloudRetryAttempt=0,cloudRetryAt=0,cloudRetryContext=null,cloudPermanentSaveError=null;
 let cloudIntegrityReport=null,cloudIntegrityChecking=false;
 function initSupabase(){
  if(!supabaseClient){
@@ -474,21 +475,77 @@ function readLegacyFarmSave(){
 }
 function clearLegacyFarmSave(){try{localStorage.removeItem('cf2.save')}catch(error){console.warn('Não foi possível limpar o antigo salvamento local:',error)}}
 
-async function saveCloud(){
- if(!supabaseClient||!cloudUser)return;
- if(!validateFarmSnapshot(state))throw new Error('Os dados atuais da fazenda não passaram pela verificação de integridade. A gravação foi cancelada para proteger o progresso.');
- const nextRevision=cloudRevision+1;
- const row={user_id:cloudUser.id,farm_name:state.farmName||'Minha fazenda',state:JSON.parse(JSON.stringify(state)),revision:nextRevision,updated_at:new Date().toISOString()};
+function cloudRevisionConflict(message='A fazenda na nuvem possui uma revisão mais recente. Carregue a versão atual antes de continuar.'){const error=new Error(message);error.code='CLOUD_REVISION_CONFLICT';return error}
+function isPermanentCloudSaveError(error){
+ if(error?.code==='CLOUD_REVISION_CONFLICT'||error?.code==='23505')return true;
+ const status=Number(error?.status||error?.statusCode||error?.context?.status);
+ if([400,401,403,404,422].includes(status))return true;
+ const code=String(error?.code||'').toUpperCase();
+ if(['42501','PGRST301','PGRST204','PGRST205','22P02'].includes(code))return true;
+ const message=String(error?.message||'').toLowerCase();
+ return message.includes('não passaram pela verificação')||message.includes('formato inválido')||message.includes('permission denied')||message.includes('invalid jwt')||message.includes('row-level security')||message.includes('violates row-level security');
+}
+function clearCloudRetry(){
+ if(cloudRetryTimer){clearTimeout(cloudRetryTimer);cloudRetryTimer=null}
+ if(cloudRetryCountdown){clearInterval(cloudRetryCountdown);cloudRetryCountdown=null}
+ cloudRetryAt=0;
+}
+function scheduleCloudRetry(error){
+ if(cloudConflict||cloudPermanentSaveError||!dirty)return;
+ const delays=[2000,5000,10000,20000,30000,60000];
+ const delay=delays[Math.min(cloudRetryAttempt,delays.length-1)];
+ cloudRetryAttempt++;
+ cloudRetryAt=Date.now()+delay;
+ const updateStatus=()=>{
+  const seconds=Math.max(0,Math.ceil((cloudRetryAt-Date.now())/1000));
+  $('save-status').textContent='Falha temporária · nova tentativa em '+seconds+'s (tentativa '+cloudRetryAttempt+')';
+  $('save-dot').className='savedot saving';
+ };
+ updateStatus();
+ if(cloudRetryCountdown)clearInterval(cloudRetryCountdown);
+ cloudRetryCountdown=setInterval(updateStatus,1000);
+ cloudRetryTimer=setTimeout(()=>{
+  clearCloudRetry();
+  if(dirty&&navigator.onLine&&farmWriteAllowed(false))save();
+  else if(dirty){$('save-status').textContent='Alterações pendentes · aguardando conexão';$('save-dot').className='savedot error'}
+ },delay);
+ console.warn('Sincronização temporariamente indisponível; nova tentativa agendada:',error);
+}
+async function reconcileCloudRetry(){
+ const context=cloudRetryContext;
+ if(!context||context.userId!==cloudUser?.id)return false;
+ const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();
+ if(error)throw error;
+ if(!data){
+  if(context.baseRevision===0)return false;
+  throw cloudRevisionConflict('O registro da fazenda mudou durante a tentativa de sincronização. A gravação foi pausada para proteger o progresso.');
+ }
+ const remoteRevision=Number(data.revision)||1;
+ if(remoteRevision===context.baseRevision)return false;
+ if(remoteRevision===context.baseRevision+1&&validateFarmSnapshot(data.state)&&JSON.stringify(stableIntegrityValue(data.state))===JSON.stringify(stableIntegrityValue(context.snapshot))){
+  cloudRevision=remoteRevision;cloudUpdatedAt=data.updated_at||null;cloudDirty=dirty;
+  return true;
+ }
+ throw cloudRevisionConflict();
+}
+async function saveCloud(snapshot=state){
+ if(!supabaseClient||!cloudUser)throw new Error('Nenhuma conta conectada para salvar na nuvem.');
+ if(!validateFarmSnapshot(snapshot))throw new Error('Os dados atuais da fazenda não passaram pela verificação de integridade. A gravação foi cancelada para proteger o progresso.');
+ const userId=cloudUser.id,baseRevision=cloudRevision;
+ const savedState=JSON.parse(JSON.stringify(snapshot));
+ const nextRevision=baseRevision+1;
+ const row={user_id:userId,farm_name:savedState.farmName||'Minha fazenda',state:savedState,revision:nextRevision,updated_at:new Date().toISOString()};
+ cloudRetryContext={userId,baseRevision,snapshot:savedState};
  let result;
- if(cloudRevision===0){
+ if(baseRevision===0){
   result=await supabaseClient.from('farm_saves').insert(row).select('revision,updated_at').single();
  }else{
   const update={farm_name:row.farm_name,state:row.state,revision:nextRevision,updated_at:row.updated_at};
-  result=await supabaseClient.from('farm_saves').update(update).eq('user_id',cloudUser.id).eq('revision',cloudRevision).select('revision,updated_at').maybeSingle();
+  result=await supabaseClient.from('farm_saves').update(update).eq('user_id',userId).eq('revision',baseRevision).select('revision,updated_at').maybeSingle();
  }
- if(result.error){if(result.error.code==='23505'){const conflict=new Error('A fazenda foi criada em outra sessão. Carregue a versão atual da nuvem antes de continuar.');conflict.code='CLOUD_REVISION_CONFLICT';throw conflict;}throw result.error;}
- if(!result.data){const conflict=new Error('A fazenda na nuvem possui uma revisão mais recente. Carregue a versão atual antes de continuar.');conflict.code='CLOUD_REVISION_CONFLICT';throw conflict;}
- cloudRevision=Number(result.data.revision)||nextRevision;cloudUpdatedAt=result.data.updated_at||row.updated_at;cloudDirty=false;publishSocialProfile().catch(error=>console.error('Publicação do perfil social:',error));
+ if(result.error){if(result.error.code==='23505')throw cloudRevisionConflict('A fazenda foi criada em outra sessão. Carregue a versão atual da nuvem antes de continuar.');throw result.error;}
+ if(!result.data)throw cloudRevisionConflict();
+ cloudRevision=Number(result.data.revision)||nextRevision;cloudUpdatedAt=result.data.updated_at||row.updated_at;cloudRetryContext=null;publishSocialProfile().catch(error=>console.error('Publicação do perfil social:',error));
 }
 async function handleAuthSession(session){
  if(!session?.user||!supabaseClient)return;
@@ -1520,12 +1577,42 @@ function confirmTutorialTask(id){if(!farmWriteAllowed())return;const t=TUTORIAL_
 function claimAchievement(id){if(!farmWriteAllowed())return;const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a||state.claimedAchievements.includes(id)||!a.test())return;state.claimedAchievements.push(id);state.coins+=a.reward;awardXP(a.xp,'conquista');remember(`Conquistou: ${a.title}.`);markDirty();refresh();notify(`Conquista resgatada: +${fmt(a.reward)} moedas!`)}
 function farmWriteAllowed(showMessage=true){const allowed=!writeLocked&&!cloudConflict&&!!cloudUser&&cloudSessionReadyUserId===cloudUser.id;if(!allowed&&showMessage)notify('Salvamento protegido. Aguarde a conexão e o carregamento da fazenda na nuvem.');return allowed}
 function hasPendingCloudChanges(){return dirty||cloudDirty}
-function markDirty(deferUntilAutosave=false){if(!farmWriteAllowed())return false;cloudIntegrityReport=null;dirty=true;cloudDirty=true;state.updatedAt=Date.now();$('save-status').textContent=deferUntilAutosave?'Alterações pendentes · salvamento em até 1 minuto':'Salvando na nuvem...';$('save-dot').className='savedot saving';if(!deferUntilAutosave){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save()},0)}return true}
-async function save(){if(!dirty)return saving;if(cloudConflict){$('save-status').textContent='Conflito de versões · escolha como recuperar';$('save-dot').className='savedot error';return saving}if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id){dirty=true;$('save-status').textContent='Aguardando conexão com a nuvem';$('save-dot').className='savedot error';return saving}dirty=false;saving=saving.then(async()=>{
- if(!cloudUser)throw new Error('Nenhuma conta conectada para salvar na nuvem.');
- await saveCloud();
- if(!dirty){$('save-status').textContent='Salvo na nuvem';$('save-dot').className='savedot'}
- }).catch(e=>{console.error('Cloud save:',e);dirty=true;cloudDirty=true;if(e?.code==='CLOUD_REVISION_CONFLICT'){cloudConflict=true;writeLocked=true;$('save-status').textContent='Conflito entre versões · gravação pausada';$('save-dot').className='savedot error';if(currentModal==='account')renderModal();notify('Outra sessão salvou uma versão mais recente. As gravações foram pausadas para proteger os dois progressos. Abra Conta e sincronização para escolher como recuperar.')}else{$('save-status').textContent='Falha no salvamento na nuvem · alterações pendentes';$('save-dot').className='savedot error';notify('Não foi possível salvar na nuvem. Mantenha a sessão aberta e verifique sua conexão.')}});return saving}
+function markDirty(deferUntilAutosave=false){if(!farmWriteAllowed())return false;cloudIntegrityReport=null;cloudPermanentSaveError=null;dirty=true;cloudDirty=true;state.updatedAt=Date.now();$('save-status').textContent=deferUntilAutosave?'Alterações pendentes · salvamento em até 1 minuto':'Salvando na nuvem...';$('save-dot').className='savedot saving';if(!deferUntilAutosave){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save()},0)}return true}
+async function save(){
+ if(!dirty)return saving;
+ if(cloudConflict){$('save-status').textContent='Conflito de versões · escolha como recuperar';$('save-dot').className='savedot error';return saving}
+ if(cloudPermanentSaveError){$('save-status').textContent='Falha permanente · verifique a conta ou os dados';$('save-dot').className='savedot error';return saving}
+ if(cloudRetryTimer)return saving;
+ if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id){dirty=true;$('save-status').textContent='Aguardando conexão com a nuvem';$('save-dot').className='savedot error';return saving}
+ dirty=false;
+ saving=saving.then(async()=>{
+  if(!cloudUser)throw new Error('Nenhuma conta conectada para salvar na nuvem.');
+  if(cloudRetryContext){
+   const alreadySaved=await reconcileCloudRetry();
+   if(alreadySaved){cloudRetryContext=null;return}
+  }
+  const snapshot=JSON.parse(JSON.stringify(state));
+  await saveCloud(snapshot);
+ }).then(()=>{
+  cloudPermanentSaveError=null;cloudRetryContext=null;cloudRetryAttempt=0;clearCloudRetry();cloudDirty=dirty;
+  if(!dirty){$('save-status').textContent='Salvo na nuvem';$('save-dot').className='savedot'}
+  else{$('save-status').textContent='Novas alterações pendentes · sincronizando';$('save-dot').className='savedot saving';if(!saveTimer)saveTimer=setTimeout(()=>{saveTimer=null;save()},0)}
+ }).catch(e=>{
+  console.error('Cloud save:',e);dirty=true;cloudDirty=true;
+  if(e?.code==='CLOUD_REVISION_CONFLICT'){
+   clearCloudRetry();cloudRetryContext=null;cloudPermanentSaveError=null;cloudConflict=true;writeLocked=true;$('save-status').textContent='Conflito entre versões · gravação pausada';$('save-dot').className='savedot error';
+   if(currentModal==='account')renderModal();
+   notify('Outra sessão salvou uma versão mais recente. As gravações foram pausadas para proteger os dois progressos. Abra Conta e sincronização para escolher como recuperar.');
+  }else if(isPermanentCloudSaveError(e)){
+   clearCloudRetry();cloudPermanentSaveError=e;$('save-status').textContent='Falha permanente · verifique a conta ou os dados';$('save-dot').className='savedot error';
+   notify('A nuvem recusou a gravação. As alterações permanecem nesta sessão; verifique a conta ou os dados antes de tentar novamente.');
+  }else{
+   if(!cloudRetryContext)cloudRetryContext={userId:cloudUser?.id,baseRevision:cloudRevision,snapshot:JSON.parse(JSON.stringify(state))};
+   scheduleCloudRetry(e);
+  }
+ });
+ return saving;
+}
 function progress(p){return Math.max(0,Math.min(1,(Date.now()-p.plantedAt)/(cropHours(p.crop,p.regrowing)*HOUR)))}
 function timeRemain(p){return formatHours((1-progress(p))*cropHours(p.crop,p.regrowing))}
 function plotAction(i){if(writeLocked){notify('Salvamento protegido. Veja Configurações.');return}const p=state.plots[i];if(!p)return;if(i>=EXPANSION_PLOT_START&&farmLevel()<50+(i-EXPANSION_PLOT_START)){notify('Este canteiro será liberado no nível '+(50+i-EXPANSION_PLOT_START)+'.');return}if(i>=EXPANSION_PLOT_START&&p.status==='grass'){p.status='dirt';markDirty()}lastSelected=i;renderPlots();
@@ -2543,7 +2630,7 @@ const finishPointer=e=>{
 $('playfield').addEventListener('pointerup',finishPointer);
 $('playfield').addEventListener('pointercancel',finishPointer);
 window.addEventListener('offline',()=>{if(hasPendingCloudChanges()){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
-window.addEventListener('online',()=>{if(dirty&&farmWriteAllowed(false))save()});
+window.addEventListener('online',()=>{if(dirty&&farmWriteAllowed(false)){clearCloudRetry();cloudPermanentSaveError=null;save()}});
 window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save();else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pageshow',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pagehide',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
@@ -2560,7 +2647,7 @@ async function start(){
   catch(error){console.error('Auth session:',error);$('save-status').textContent='Falha ao conectar à nuvem · jogo bloqueado';notify('Não foi possível acessar a nuvem. Verifique sua conexão e tente novamente.')}
  }
  if((!sessionFound||writeLocked)&&currentModal!=='account')openModal('account');
- setInterval(()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()},15000);
+ setInterval(()=>{if(dirty&&!cloudRetryTimer&&!cloudPermanentSaveError&&navigator.onLine&&farmWriteAllowed(false))save()},15000);
  setInterval(updateFishingCooldownButtons,250);
  setInterval(()=>{updateDayNight();infest();expireDecorations();expireFarmTheme();expireTemporaryDogBreeds();const lakeChanged=syncLakeFish(),animalsChanged=syncAnimalCycles(),treesChanged=syncOrchardTrees();if(animalsChanged)renderAnimals();if(treesChanged)renderFarmAddons();if(!currentModal)renderPlots();else if(['kitchen','grill','factory','animals','orchard','pond','lake','sea','carpentry'].includes(currentModal)&&!modalHasFocusedEditor())renderModal()},15000);
 }
