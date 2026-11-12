@@ -2456,8 +2456,21 @@ function renderOnlineGifts(){
 }
 async function visitOnlineFriendFarm(friendId){
  const friend=onlineFriends.find(f=>f.user_id===friendId);if(!friend)return notify('Amigo não encontrado.');
- try{const [farm,help]=await Promise.all([socialRpc('social_visit_friend_farm',{p_friend:friendId}),socialRpc('social_help_friend_status',{p_owner:friendId})]);const quota=Array.isArray(help)?help[0]:help;visitedFarm={...farm,friendId,helpUsed:Number(quota?.used)||0,helpLimit:Number(quota?.limit)||15};selectedFriendPlot=null;openModal('friend-farm');socialRpc('social_notify_farm_visit',{p_owner:friendId}).catch(error=>console.warn('Notificação de visita:',error))}
- catch(error){notify(error.message||'Não foi possível visitar esta fazenda.')}
+ try{
+  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});
+  if(!farm||typeof farm!=='object')throw new Error('O servidor não retornou os dados desta fazenda.');
+  visitedFarm={...farm,friendId,helpUsed:0,helpLimit:15};selectedFriendPlot=null;
+  openModal('friend-farm');
+  socialRpc('social_notify_farm_visit',{p_owner:friendId}).catch(error=>console.warn('Notificação de visita:',error));
+  try{
+   const help=await socialRpc('social_help_friend_status',{p_owner:friendId});
+   const quota=Array.isArray(help)?help[0]:help;
+   if(currentModal==='friend-farm'&&visitedFarm?.friendId===friendId){
+    visitedFarm={...visitedFarm,helpUsed:Number(quota?.used)||0,helpLimit:Number(quota?.limit)||15};
+    renderModal();
+   }
+  }catch(error){console.warn('Não foi possível consultar o limite de ajudas; a visita continua disponível:',error)}
+ }catch(error){notify(error.message||'Não foi possível visitar esta fazenda.')}
 }
 async function toggleVisitedFarmLike(){
  if(!visitedFarm?.friendId)return notify('Abra primeiro a fazenda de um amigo.');
@@ -2521,9 +2534,14 @@ async function performFriendFarmHelp(plotIndex,action){
   const restored=normalizeFarmSnapshot(row.state);
   if(!restored||!validateFarmSnapshot(restored))throw new Error('O salvamento atualizado não passou pela verificação de integridade.');
   state=restored;cloudRevision=Number(row.revision)||cloudRevision+1;cloudUpdatedAt=row.updated_at||new Date().toISOString();dirty=false;cloudDirty=false;cloudRetryContext=null;clearTimeout(saveTimer);saveTimer=null;
-  const [farm,quota]=await Promise.all([socialRpc('social_visit_friend_farm',{p_friend:visitedFarm.friendId}),socialRpc('social_help_friend_status',{p_owner:visitedFarm.friendId})]);
-  const status=Array.isArray(quota)?quota[0]:quota;
-  visitedFarm={...farm,friendId:visitedFarm.friendId,helpUsed:Number(status?.used)||Number(row.daily_used)||0,helpLimit:15};
+  const friendId=visitedFarm.friendId;
+  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});
+  visitedFarm={...farm,friendId,helpUsed:Math.min(15,(Number(visitedFarm.helpUsed)||0)+1),helpLimit:15};
+  try{
+   const quota=await socialRpc('social_help_friend_status',{p_owner:friendId});
+   const status=Array.isArray(quota)?quota[0]:quota;
+   visitedFarm={...visitedFarm,helpUsed:Number(status?.used)||visitedFarm.helpUsed};
+  }catch(error){console.warn('Não foi possível atualizar o contador de ajudas:',error)}
   selectedFriendPlot=plotIndex;refresh();
   const labels={harvest:'Colheita concluída. A produção foi para o depósito do proprietário.',water:'Plantação regada com sucesso.',pest:'Pragas removidas.',weed:'Ervas daninhas removidas.'};
   notify((labels[action]||'Ajuda realizada')+' +1 🟢');
