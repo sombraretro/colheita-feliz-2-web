@@ -1647,13 +1647,13 @@ function renderLakeArea(){
   const angle=[0,90,45,-45][Number(bridge.slot)]??0,rad=angle*Math.PI/180;
   const half=1/Math.sqrt((Math.cos(rad)/236)**2+(Math.sin(rad)/158)**2);
   const planks=Array.from({length:13},(_,i)=>{const px=-half+((i+1)*2*half/14);return `<path d="M${px.toFixed(1)} -17Q${px.toFixed(1)} -5 ${px.toFixed(1)} 22" stroke="#69452e" stroke-width="3.2" opacity=".85"/>`}).join("");
-  const posts=Array.from({length:9},(_,i)=>{const px=-half+(i*2*half/8);return `<path d="M${px.toFixed(1)} -20v-29 M${px.toFixed(1)} 20v-29" stroke="#493326" stroke-width="${i===0||i===8?8:6}" stroke-linecap="round"/>`}).join("");
+  const posts=Array.from({length:9},(_,i)=>{const px=-half+(i*2*half/8);return `<path d="M${px.toFixed(1)} -20v-29 M${px.toFixed(1)} 20v29" stroke="#493326" stroke-width="${i===0||i===8?8:6}" stroke-linecap="round"/>`}).join("");
   s+=`<g class="lake-bridge" transform="translate(${x} ${waterY}) rotate(${angle})">
    <path d="M-${half.toFixed(1)} -13Q0 -29 ${half.toFixed(1)} -13L${half.toFixed(1)} 28Q0 12 -${half.toFixed(1)} 28Z" fill="#3b3026" opacity=".42" transform="translate(0 7)"/>
    <path d="M-${half.toFixed(1)} -19Q0 -35 ${half.toFixed(1)} -19L${half.toFixed(1)} 22Q0 6 -${half.toFixed(1)} 22Z" fill="${tone}" stroke="#493326" stroke-width="7" stroke-linejoin="round"/>
    <path d="M-${half.toFixed(1)} -19Q0 -35 ${half.toFixed(1)} -19L${half.toFixed(1)} -8Q0 -24 -${half.toFixed(1)} -8Z" fill="#f4d9a5" opacity=".72"/>
    ${planks}
-   <path d="M-${half.toFixed(1)} -20Q0 -67 ${half.toFixed(1)} -20M-${half.toFixed(1)} 20Q0 -27 ${half.toFixed(1)} 20" fill="none" stroke="#493326" stroke-width="8" stroke-linecap="round"/>
+   <path d="M-${half.toFixed(1)} -20Q0 -67 ${half.toFixed(1)} -20M-${half.toFixed(1)} 20Q0 67 ${half.toFixed(1)} 20" fill="none" stroke="#493326" stroke-width="8" stroke-linecap="round"/>
    <path d="M-${half.toFixed(1)} -20Q0 -67 ${half.toFixed(1)} -20M-${half.toFixed(1)} 20Q0 -27 ${half.toFixed(1)} 20" fill="none" stroke="#d7ad70" stroke-width="4.5" stroke-linecap="round"/>
    ${posts}
    <path d="M-${half.toFixed(1)} -18l-7 -8m${(2*half).toFixed(1)} 0l7 8M-${half.toFixed(1)} 22l-7 8m${(2*half).toFixed(1)} 0l7 -8" stroke="#493326" stroke-width="5" stroke-linecap="round"/>
