@@ -548,15 +548,15 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 @media(max-width:700px){.tool-svg{width:42px;height:42px}}
 
 
-.theme-countdown{display:block;padding:5px 7px;border-radius:7px;background:#fff1cf;color:#75501d;font-weight:700;text-align:center}.house-theme-decor{filter:drop-shadow(0 2px 2px #3b281f66)}.house-window-lights{filter:drop-shadow(0 0 9px #ffd76a)}
+.theme-countdown{display:block;padding:5px 7px;border-radius:7px;background:#fff1cf;color:#75501d;font-weight:700;text-align:center}.house-theme-decor{filter:drop-shadow(0 2px 2px #3b281f66)}
 
 
 /* Iluminação e ornamentos da casa alinhados ao viewBox 470×320 do SVG original. */
-.house-theme-decor{filter:drop-shadow(0 1.5px 1.8px #39231755)}.house-window-lights{filter:drop-shadow(0 0 7px #ffc95d)}
+.house-theme-decor{filter:drop-shadow(0 1.5px 1.8px #39231755)}
 
 /* Luz interna discreta: somente o vidro recebe o tom quente; transição suave ao amanhecer/anoitecer. */
-.house-window-lights{filter:none;transition:opacity 5s ease-in-out;}
-@media(prefers-reduced-motion:reduce){.house-window-lights{transition:none}}
 
-.house-window-lights{filter:none;transition:opacity 5s ease-in-out;}
-@media(prefers-reduced-motion:reduce){.house-window-lights{transition:none;}}
+@media(prefers-reduced-motion:reduce){}
+
+
+@media(prefers-reduced-motion:reduce){}
