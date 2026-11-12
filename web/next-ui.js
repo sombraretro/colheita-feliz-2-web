@@ -54,6 +54,37 @@
       syncToggles(false);
     }
 
+
+    const moreMenu = document.querySelector('.more-menu');
+    const moreToggles = [...document.querySelectorAll('[data-more-toggle]')];
+    if (moreMenu && moreToggles.length) {
+      const syncMoreToggles = open => moreToggles.forEach(toggle => {
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Fechar mais opções' : 'Abrir mais opções');
+      });
+      const closeMore = () => {
+        moreMenu.classList.remove('is-open');
+        syncMoreToggles(false);
+      };
+      moreToggles.forEach(toggle => toggle.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const opening = !moreMenu.classList.contains('is-open');
+        moreMenu.classList.toggle('is-open', opening);
+        syncMoreToggles(opening);
+      }));
+      moreMenu.addEventListener('click', event => {
+        if (event.target.closest('button')) closeMore();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMore();
+      });
+      document.addEventListener('click', event => {
+        if (!moreMenu.contains(event.target) && !moreToggles.some(toggle => toggle.contains(event.target))) closeMore();
+      });
+      syncMoreToggles(false);
+    }
+
     document.querySelectorAll('.tool-bar .tool[data-tool]').forEach(button => {
       const label = labels[button.dataset.tool];
       if (!label) return;
