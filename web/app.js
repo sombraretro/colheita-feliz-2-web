@@ -1695,7 +1695,7 @@ function specialistXPAtLevel(level){let total=0;for(let n=1;n<level;n++)total+=s
 function specialistSummary(key,label){const p=state.specialistProgress?.[key]||{xp:0},level=specialistLevelFromXP(p.xp),within=p.xp-specialistXPAtLevel(level),need=specialistXPForNext(level),name=specialistTitle(key,level);return '<div class="list-line"><span>🏅 '+name+' · nível '+level+'/50</span><b>'+(level>=50?'NÍVEL MÁXIMO':fmt(within)+' / '+fmt(need)+' XP')+'</b></div><div class="animal-progress"><i style="width:'+Math.min(100,level>=50?100:Math.round(within/need*100))+'%"></i></div>'}
 function specialistRewardPools(key){
  const crops=FIELD_CROP_IDS.filter(id=>CROPS[id]&&CROPS[id].kind!=='flower'&&!CROPS[id].advanced);
- const meats=Object.keys(MEAT_PRODUCTS),supplies=Object.keys(GRILL_SUPPLIES),fish=Object.keys(FISH_TYPES),woods=Object.keys(state.woodWarehouse||{}),herbs=[...new Set(Object.values(FOREST_TREES).map(t=>t.herbYield).filter(Boolean))],mixes=Object.keys(MIX_HERB_RECIPES);
+ const meats=Object.keys(MEAT_PRODUCTS),supplies=Object.keys(GRILL_SUPPLIES),fish=Object.keys(FISH_TYPES),woods=Object.keys(state.woodWarehouse||{}),herbs=[...new Set(Object.values(FOREST_TREES).map(t=>t.leafId).filter(Boolean))],mixes=Object.keys(MIX_HERB_RECIPES);
  if(key==='chef')return [{type:'crop',ids:crops},{type:'meat',ids:meats},{type:'supply',ids:supplies}];
  if(key==='grill')return [{type:'meat',ids:meats},{type:'fish',ids:fish},{type:'supply',ids:supplies}];
  if(key==='carpenter')return [{type:'wood',ids:woods}];
@@ -1713,8 +1713,8 @@ function grantSpecialistReward(key,level,promotion){
   else if(pool.type==='meat'){state.meatWarehouse[id]=(state.meatWarehouse[id]||0)+amount;awards.push(amount+' '+MEAT_PRODUCTS[id].name);}
   else if(pool.type==='supply'){state.inventory[id]=(state.inventory[id]||0)+amount;awards.push(amount+' '+GRILL_SUPPLIES[id].name);}
   else if(pool.type==='fish'){state.fishWarehouse[id]=(state.fishWarehouse[id]||0)+amount;awards.push(amount+' '+FISH_TYPES[id].name);}
-  else if(pool.type==='wood'){state.woodWarehouse[id]=(state.woodWarehouse[id]||0)+amount;awards.push(amount+' '+id.replaceAll('_',' '));}
-  else if(pool.type==='herb'){state.inventory['herb_'+id]=(state.inventory['herb_'+id]||0)+amount;awards.push(amount+' folhas de '+id.replaceAll('_',' '));}
+  else if(pool.type==='wood'){state.woodWarehouse[id]=(state.woodWarehouse[id]||0)+amount;const woodName=Object.values(FOREST_TREES).find(tree=>tree.wood===id)?.woodName||('Madeira de '+id.replaceAll('_',' '));awards.push(amount+' '+woodName);}
+  else if(pool.type==='herb'){state.inventory['herb_'+id]=(state.inventory['herb_'+id]||0)+amount;const herbName=Object.values(FOREST_TREES).find(tree=>tree.leafId===id)?.name||id.replaceAll('_',' ');awards.push(amount+' folhas de '+herbName);}
   else if(pool.type==='mix'){state.inventory['mix_'+id]=(state.inventory['mix_'+id]||0)+amount;awards.push(amount+' '+MIX_HERB_RECIPES[id].name);}
  }
  return awards;
