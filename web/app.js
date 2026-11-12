@@ -621,21 +621,31 @@ function stopFarmMusic(){if(musicTimer)clearTimeout(musicTimer);musicTimer=null;
 function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.025)}
 function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startFarmMusic();else stopFarmMusic()}
 let landscapeModeActive=false;
+function syncLandscapeControls(active){
+ const desktop=$('orientation-toggle'),mobile=$('orientation-toggle-mobile');
+ if(desktop){desktop.setAttribute('aria-pressed',String(active));desktop.title=active?'Voltar ao modo retrato':'Girar para modo paisagem';desktop.setAttribute('aria-label',active?'Voltar ao modo retrato':'Ativar modo paisagem')}
+ if(mobile){mobile.setAttribute('aria-pressed',String(active));mobile.setAttribute('aria-label',active?'Voltar ao modo retrato':'Ativar modo paisagem');mobile.title=active?'Voltar ao modo retrato':'Ativar modo paisagem';const label=mobile.querySelector('span');if(label)label.textContent=active?'Voltar ao modo retrato':'Modo paisagem'}
+}
 async function toggleLandscapeMode(){
- const root=document.documentElement,button=$('orientation-toggle');
+ const root=document.documentElement;
  if(landscapeModeActive){
-  landscapeModeActive=false;root.classList.remove('orientation-landscape-fallback');
+  landscapeModeActive=false;
+  root.classList.remove('orientation-landscape-fallback');
   try{screen.orientation?.unlock?.()}catch{}
-  if(button){button.setAttribute('aria-pressed','false');button.title='Girar para modo paisagem';button.setAttribute('aria-label','Ativar modo paisagem')}
+  syncLandscapeControls(false);
+  requestAnimationFrame(()=>{updateView();fitWholeFarm()});
   notify('Modo paisagem desativado.');return;
  }
  let locked=false;
  try{if(screen.orientation?.lock){await screen.orientation.lock('landscape');locked=true}}catch{}
  landscapeModeActive=true;
  if(!locked)root.classList.add('orientation-landscape-fallback');
- if(button){button.setAttribute('aria-pressed','true');button.title='Voltar ao modo normal';button.setAttribute('aria-label','Desativar modo paisagem')}
+ syncLandscapeControls(true);
+ requestAnimationFrame(()=>{updateView();fitWholeFarm()});
  notify(locked?'Modo paisagem ativado.':'Modo paisagem visual ativado. Se o aparelho não girar fisicamente, o jogo será ajustado para a horizontal.');
 }
+window.addEventListener('orientationchange',()=>requestAnimationFrame(()=>{updateView();fitWholeFarm()}));
+window.addEventListener('resize',()=>{if(landscapeModeActive)requestAnimationFrame(updateView)});
 document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startFarmMusic()},{once:true});
 
 const seedNoise=n=>{const x=Math.sin(n*91.13+17.37)*29341.715;return x-Math.floor(x)};
@@ -2320,12 +2330,21 @@ $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
 window.addEventListener('resize',updateView);
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.15);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.15)});
+const pointerGeometry=e=>{
+ const rect=svg.getBoundingClientRect();
+ if(document.documentElement.classList.contains('orientation-landscape-fallback')&&matchMedia('(orientation: portrait)').matches){
+  const virtualRect={left:0,top:0,right:rect.height,bottom:rect.width,width:rect.height,height:rect.width};
+  return {x:e.clientY-rect.top,y:rect.right-e.clientX,rect:virtualRect};
+ }
+ return {x:e.clientX,y:e.clientY,rect};
+};
 $('playfield').addEventListener('pointerdown',e=>{
  if(!e.target.closest('#world'))return;
- activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ const point=pointerGeometry(e);
+ activePointers.set(e.pointerId,{x:point.x,y:point.y});
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
  if(activePointers.size>=2){
-  const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=svg.getBoundingClientRect();
+  const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=point.rect;
   const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2,dist=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
   const visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);
   const rx=(midX-rect.left)/Math.max(1,rect.width),ry=(midY-rect.top)/Math.max(1,rect.height);
@@ -2335,13 +2354,14 @@ $('playfield').addEventListener('pointerdown',e=>{
  const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
- e.preventDefault();drag={x:e.clientX,y:e.clientY,cx:view.cx,cy:view.cy,moved:false};
+ e.preventDefault();drag={x:point.x,y:point.y,cx:view.cx,cy:view.cy,moved:false};
 });
 $('playfield').addEventListener('pointermove',e=>{
  if(!activePointers.has(e.pointerId))return;
- activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ const point=pointerGeometry(e);
+ activePointers.set(e.pointerId,{x:point.x,y:point.y});
  if(activePointers.size>=2&&pinchState){
-  const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=svg.getBoundingClientRect();
+  const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=point.rect;
   const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2,dist=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
   const next=Math.max(.22,Math.min(2.5,pinchState.zoom*dist/pinchState.distance));
   view.zoom=Math.round(next*100)/100;
@@ -2352,9 +2372,9 @@ $('playfield').addEventListener('pointermove',e=>{
   suppressWorldClickUntil=Date.now()+500;updateView();e.preventDefault();return;
  }
  if(!drag)return;
- const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+ const dx=point.x-drag.x,dy=point.y-drag.y;
  if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;
- const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height),ratioX=visibleW/rect.width,ratioY=visibleH/rect.height;
+ const rect=point.rect,visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height),ratioX=visibleW/rect.width,ratioY=visibleH/rect.height;
  view.cx=drag.cx-dx*ratioX;view.cy=drag.cy-dy*ratioY;updateView();
 });
 const finishPointer=e=>{
