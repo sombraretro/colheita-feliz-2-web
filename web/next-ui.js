@@ -12,6 +12,8 @@
   };
 
   function init() {
+    if (document.documentElement.dataset.cf2NextUiInitialized === 'true') return;
+    document.documentElement.dataset.cf2NextUiInitialized = 'true';
     const menu = document.querySelector('.side-menu');
     const toggles = [...document.querySelectorAll('[data-sidebar-toggle]')];
     if (menu && toggles.length) {
@@ -62,5 +64,5 @@
   }
 
   window.CF2NextUI = { init };
-  if (document.documentElement.dataset.cf2NextUi === 'enabled') init();
+  init();
 })();
