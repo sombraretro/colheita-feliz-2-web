@@ -746,3 +746,4 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 
 .pepper-icon img{width:1.45em;height:1.45em;display:block;object-fit:contain}.pepper-icon:after{display:none}
 .pepper-icon img[src*="pimentao-amarelo"]{filter:saturate(1.85) contrast(1.06)}
+\n.help-feature-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px;margin:8px 0 14px}.help-feature-item{display:flex;align-items:center;gap:8px;min-width:0;padding:9px 11px;border:1px solid #d9bd8c;border-radius:9px;background:#fff9eb;color:#684a27;font-size:13px}.help-feature-item>span{color:#7c9b45;font-size:18px;line-height:1}.help-feature-item b{font-weight:650}.help-tool-list{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.help-tool-list span{padding:6px 10px;border-radius:20px;background:#edf2dc;border:1px solid #c6d2a5;color:#4d6332;font-size:12px}
