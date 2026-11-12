@@ -484,7 +484,7 @@ async function saveCloud(){
   const update={farm_name:row.farm_name,state:row.state,revision:nextRevision,updated_at:row.updated_at};
   result=await supabaseClient.from('farm_saves').update(update).eq('user_id',cloudUser.id).eq('revision',cloudRevision).select('revision,updated_at').maybeSingle();
  }
- if(result.error)throw result.error;
+ if(result.error){if(result.error.code==='23505'){const conflict=new Error('A fazenda foi criada em outra sessão. Carregue a versão atual da nuvem antes de continuar.');conflict.code='CLOUD_REVISION_CONFLICT';throw conflict;}throw result.error;}
  if(!result.data){const conflict=new Error('A fazenda na nuvem possui uma revisão mais recente. Carregue a versão atual antes de continuar.');conflict.code='CLOUD_REVISION_CONFLICT';throw conflict;}
  cloudRevision=Number(result.data.revision)||nextRevision;cloudUpdatedAt=result.data.updated_at||row.updated_at;cloudDirty=false;publishSocialProfile().catch(error=>console.error('Publicação do perfil social:',error));
 }
