@@ -641,7 +641,7 @@ async function toggleLandscapeMode(){
  landscapeModeActive=true;
  if(!locked)root.classList.add('orientation-landscape-fallback');
  syncLandscapeControls(true);
- requestAnimationFrame(()=>{updateView();fitWholeFarm()});
+ requestAnimationFrame(updateView);
  notify(locked?'Modo paisagem ativado.':'Modo paisagem visual ativado. Se o aparelho não girar fisicamente, o jogo será ajustado para a horizontal.');
 }
 window.addEventListener('orientationchange',()=>requestAnimationFrame(updateView));
