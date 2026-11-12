@@ -760,3 +760,8 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 
 /* Os marcadores de notificações no cenário ficam sempre imóveis. */
 .world-notification{animation:none!important;transform:none!important;scale:1!important}
+
+
+/* Correção definitiva: marcadores de notificação do mundo sem animação ou transição. */
+#world .world-notification,
+#world .world-notification *{animation:none!important;animation-play-state:paused!important;transition:none!important}
