@@ -238,7 +238,15 @@ Object.assign(GRILL_RECIPES,{
  kitchen_frango_ensopado:{name:'Frango Ensopado',icon:'🥘',minutes:46,yield:3,salePrice:690,xp:38,kitchenOnly:true,category:'savory',ingredients:[['meat','chicken',1],['crop','batata',2],['crop','tomate',1],['crop','cebola',1],['crop','alho',1],['mix','tempero_aromatico',1]]},
  grill_espetinho_frango:{name:'Espetinho de Frango Temperado',icon:'🍢',minutes:42,yield:3,salePrice:590,xp:32,ingredients:[['meat','chicken',1],['crop','cebola',1],['crop','alho',1],['crop','pimenta',1],['mix','tempero_pimenta_alecrim',1]]},
  grill_espetinho_alcatra:{name:'Espetinho de Alcatra',icon:'🥩',minutes:55,yield:2,salePrice:820,xp:44,ingredients:[['meat','beef',1],['crop','cebola',1],['crop','alho',1],['crop','tomate',1],['supply','seasoning',1]]},
- grill_costelinha_temperada:{name:'Costelinha Suína com Alho e Cebola',icon:'🍖',minutes:88,yield:2,salePrice:780,xp:42,ingredients:[['meat','pork',1],['crop','cebola',1],['crop','alho',2],['mix','tempero_verde_mata',1]]}
+ grill_costelinha_temperada:{name:'Costelinha Suína com Alho e Cebola',icon:'🍖',minutes:88,yield:2,salePrice:780,xp:42,ingredients:[['meat','pork',1],['crop','cebola',1],['crop','alho',2],['mix','tempero_verde_mata',1]]},
+ kitchen_pirarucu_albino:{name:'Caldeirada de Pirarucu Albino',icon:'🍲',minutes:145,yield:2,salePrice:1850,xp:82,kitchenOnly:true,category:'savory',ingredients:[['fish','pirarucu_albino',1],['crop','tomate',2],['crop','cebola',1],['crop','mandioca',2],['supply','dende_oil',1]]},
+ grill_pirarucu_albino:{name:'Pirarucu Albino na Brasa',icon:'🔥',minutes:165,yield:2,salePrice:1980,xp:88,ingredients:[['fish','pirarucu_albino',1],['crop','limão',1],['crop','alho',2],['supply','seasoning',1]]},
+ kitchen_arraia_gigante:{name:'Moqueca de Arraia Gigante',icon:'🥘',minutes:155,yield:2,salePrice:1920,xp:86,kitchenOnly:true,category:'savory',ingredients:[['fish','arraia_gigante',1],['crop','tomate',2],['crop','cebola',2],['crop','coco',1],['supply','dende_oil',1]]},
+ grill_arraia_gigante:{name:'Asas de Arraia na Grelha',icon:'🍽️',minutes:150,yield:2,salePrice:1880,xp:84,ingredients:[['fish','arraia_gigante',1],['crop','alho',2],['crop','pimenta',1],['supply','seasoning',1]]},
+ kitchen_peixe_lua:{name:'Peixe-lua ao Creme de Coco',icon:'🍛',minutes:160,yield:2,salePrice:2050,xp:92,kitchenOnly:true,category:'savory',ingredients:[['sea','peixe_lua',1],['crop','coco',2],['crop','cebola',1],['crop','alho',1],['animal','milk',1]]},
+ grill_peixe_lua:{name:'Peixe-lua Grelhado com Ervas',icon:'🐟',minutes:175,yield:2,salePrice:2180,xp:96,ingredients:[['sea','peixe_lua',1],['crop','limao',1],['crop','alho',2],['supply','seasoning',1]]},
+ kitchen_celacanto:{name:'Ensopado de Celacanto das Profundezas',icon:'🍲',minutes:190,yield:2,salePrice:2350,xp:105,kitchenOnly:true,category:'savory',ingredients:[['sea','celacanto',1],['crop','batata',2],['crop','tomate',2],['crop','cebola',1],['animal','milk',1]]},
+ grill_celacanto:{name:'Celacanto Assado do Mar Profundo',icon:'🔥',minutes:210,yield:2,salePrice:2480,xp:110,ingredients:[['sea','celacanto',1],['crop','alho',2],['crop','pimenta',1],['supply','seasoning',1]]}
 });
 
 
@@ -284,7 +292,9 @@ const SEA_TYPES={
  linguado:{name:'Linguado',icon:'🐟',rarity:'Muito raro',xp:17,minNet:3,weight:9},namorado:{name:'Namorado',icon:'🐟',rarity:'Muito raro',xp:18,minNet:3,weight:8},atum:{name:'Atum',icon:'🐟',rarity:'Muito raro',xp:19,minNet:3,weight:7},bonito:{name:'Bonito',icon:'🐟',rarity:'Muito raro',xp:18,minNet:3,weight:7},
  pargo:{name:'Pargo',icon:'🐠',rarity:'Lendário',xp:24,minNet:4,weight:5},cherne:{name:'Cherne',icon:'🐟',rarity:'Lendário',xp:25,minNet:4,weight:4},peixe_espada:{name:'Peixe-espada',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3},dourado_mar:{name:'Dourado-do-mar',icon:'🐠',rarity:'Lendário',xp:27,minNet:4,weight:3},
  salmao:{name:'Salmão',icon:'🐟',rarity:'Muito raro',xp:19,minNet:3,weight:6},
- bacalhau:{name:'Bacalhau',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3}
+ bacalhau:{name:'Bacalhau',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3},
+ peixe_lua:{name:'Peixe-lua',icon:'🐟',rarity:'Extraordinário',xp:44,minNet:0,weight:0.75,extraordinaryOnly:true},
+ celacanto:{name:'Celacanto',icon:'🐟',rarity:'Extraordinário',xp:50,minNet:0,weight:0.5,extraordinaryOnly:true}
 };
 const SEA_NETS={normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},novato:{name:'Novato',level:8,coins:3800,greenCoins:2,order:1},junior:{name:'Junior',level:16,coins:12500,greenCoins:5,order:2},senior:{name:'Sênior',level:26,coins:36000,greenCoins:12,order:3},profissional:{name:'Profissional',level:38,coins:90000,greenCoins:25,order:4}};
 const LAKE_FISH={lambari:{name:"Lambari",icon:"🐟",egg:180,price:260,hours:3},tilapia:{name:"Tilápia",icon:"🐠",egg:260,price:420,hours:4},carpa:{name:"Carpa",icon:"🐟",egg:420,price:680,hours:5},koi:{name:"Carpa Koi",icon:"🎏",egg:900,price:1500,hours:6},pacu:{name:"Pacu",icon:"🐟",egg:620,price:980,hours:5},tambaqui:{name:"Tambaqui",icon:"🐠",egg:780,price:1250,hours:6},pintado:{name:"Pintado",icon:"🐟",egg:1100,price:1850,hours:7},dourado:{name:"Dourado",icon:"🐠",egg:1250,price:2100,hours:7},pirarucu:{name:"Pirarucu",icon:"🐟",egg:1800,price:3200,hours:9},esturjao:{name:"Esturjão",icon:"🐟",egg:2400,price:4400,hours:10}};
@@ -324,6 +334,8 @@ const FISH_TYPES={
  barbado:{name:'Barbado',rarity:'Muito raro',xp:16,icon:'🐟',minRod:3,weight:6},
  aruana:{name:'Aruanã',rarity:'Raro',xp:12,icon:'🐠',minRod:2,weight:8},
  apaiari:{name:'Apaiari (acará-açu)',rarity:'Incomum',xp:8,icon:'🐠',minRod:1,weight:12},
+ pirarucu_albino:{name:'Pirarucu Albino',rarity:'Extraordinário',xp:42,icon:'🐟',minRod:0,weight:0.8,extraordinaryOnly:true},
+ arraia_gigante:{name:'Arraia Gigante de Água Doce',rarity:'Extraordinário',xp:46,icon:'🪽',minRod:0,weight:0.65,extraordinaryOnly:true},
 };
 const FISHING_RODS={
  normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},
@@ -1496,9 +1508,9 @@ function weightedFishingChoice(entries,levelKey,level){
  return weighted[0]?.id||null;
 }
 function extraordinaryFishingChoice(types,levelKey,level){
- const candidates=Object.entries(types).filter(([,item])=>item[levelKey]>level);
+ const candidates=Object.entries(types).filter(([,item])=>item.extraordinaryOnly||item[levelKey]>level);
  if(!candidates.length)return null;
- const weighted=candidates.map(([id,item])=>({id,weight:item.weight/Math.pow(item[levelKey]-level,1.5)}));
+ const weighted=candidates.map(([id,item])=>({id,weight:item.weight/(item.extraordinaryOnly?1:Math.pow(item[levelKey]-level,1.5))}));
  const total=weighted.reduce((sum,x)=>sum+x.weight,0);let roll=Math.random()*total;
  for(const x of weighted){roll-=x.weight;if(roll<=0)return x.id;}
  return weighted[0]?.id||null;
@@ -1509,7 +1521,7 @@ function castFishingRod(){
  const now=Date.now(),remaining=FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0));
  if(remaining>0)return notify(`Aguarde mais ${Math.ceil(remaining/1000)} segundo(s) para pescar novamente.`);
  const rod=FISHING_RODS[state.fishing.rod]||FISHING_RODS.normal;
- const available=Object.entries(FISH_TYPES).filter(([,f])=>f.minRod<=rod.order);
+ const available=Object.entries(FISH_TYPES).filter(([,f])=>!f.extraordinaryOnly&&f.minRod<=rod.order);
  const misses=state.fishing.extraordinaryMisses||0;
  const chance=Math.min(8,2+Math.floor(misses/5)*.5);
  const extraordinary=misses>=40-1||Math.random()*100<chance;
@@ -2033,7 +2045,7 @@ function castSeaNet(){
  const now=Date.now(),remaining=SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0));
  if(remaining>0)return notify('Aguarde '+Math.ceil(remaining/1000)+' segundo(s) para lançar a rede novamente.');
  const net=SEA_NETS[state.seaFishing.net]||SEA_NETS.normal;
- const available=Object.entries(SEA_TYPES).filter(([,f])=>f.minNet<=net.order);
+ const available=Object.entries(SEA_TYPES).filter(([,f])=>!f.extraordinaryOnly&&f.minNet<=net.order);
  const misses=state.seaFishing.extraordinaryMisses||0;
  const chance=Math.min(8,1.5+Math.floor(misses/5)*.5);
  const extraordinary=misses>=50-1||Math.random()*100<chance;
