@@ -700,3 +700,6 @@ html.orientation-landscape-fallback .more-menu{
 html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 
 @media(max-width:1024px){.more-menu::-webkit-scrollbar{width:7px}.more-menu::-webkit-scrollbar-track{background:#f5e5c4;border-radius:8px}.more-menu::-webkit-scrollbar-thumb{background:#a97838;border-radius:8px;border:1px solid #f5e5c4}}
+
+/* Catálogo permanente de descobertas */
+.catalog-section{margin:10px 0;border:1px solid #c99a55;border-radius:11px;background:#fff8e7;overflow:hidden}.catalog-section summary{cursor:pointer;padding:12px 14px;font-weight:700;color:#69451f;background:linear-gradient(#fff2cf,#f2d9a7);list-style:none}.catalog-section summary::-webkit-details-marker{display:none}.catalog-section summary:after{content:'＋';float:right}.catalog-section[open] summary:after{content:'−'}.catalog-section summary span{font-weight:400;color:#8b6a42}.catalog-items{padding:4px 10px}.catalog-items .list-line{gap:10px}.catalog-items .list-line small{color:#78824d;white-space:nowrap}@media(max-width:700px){.catalog-section summary{padding:13px 12px;font-size:13px}.catalog-items .list-line{align-items:flex-start;flex-wrap:wrap}}
