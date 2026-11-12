@@ -576,3 +576,44 @@ details.shop-section[open]>summary{margin-bottom:12px;padding-bottom:10px;border
 details.shop-section .grid-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
 .store-card label{display:flex;flex-direction:column;gap:5px;margin:8px 0;color:#795b34;font-size:12px;font-weight:700}
 .store-card input[data-batch-qty]{width:100%;min-height:34px;padding:6px 8px;border:1px solid #d3b77f;border-radius:8px;background:#fffdf5;color:#503a20;font:inherit}
+
+
+/* Etapa 1 — navegação móvel reorganizada, mantendo a interface desktop intacta. */
+.mobile-navigation{display:none}
+@media(max-width:700px){
+ .topbar{display:flex;flex-wrap:nowrap;align-items:center;min-height:48px;height:48px;max-height:48px;padding:4px 8px;overflow:visible}
+ .topbar .brand{flex:1 1 auto;max-width:none;min-width:0}
+ .topbar .tabs{display:none!important}
+ .topright{margin-left:auto;flex:0 0 auto}
+ .playfield{min-height:0}
+ .mobile-navigation{
+  position:fixed;z-index:40;left:0;right:0;bottom:0;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:3px;padding:6px max(7px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));
+  min-height:62px;background:linear-gradient(180deg,#fff4d9f5,#e5c48ff5);
+  border-top:2px solid #a87839;box-shadow:0 -3px 12px #263b1d55;
+ }
+ .mobile-navigation button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  min-width:0;min-height:48px;padding:3px 2px;border:1px solid #c69a5d;border-radius:9px;
+  background:linear-gradient(#fff9e9,#f0d6a4);color:#62421f;font:700 11px Verdana,sans-serif;
+  touch-action:manipulation;
+ }
+ .mobile-navigation button span{font-size:20px;line-height:1.1}
+ .mobile-navigation button small{font-size:10px;line-height:1.1}
+ .tool-bar{bottom:calc(70px + env(safe-area-inset-bottom));}
+ .zoom-ui{bottom:calc(126px + env(safe-area-inset-bottom));}
+ .quick-actions{display:none}
+ .footer{display:none}
+ .side-menu{z-index:45;bottom:calc(72px + env(safe-area-inset-bottom));top:auto;max-height:min(65dvh,520px);overflow-y:auto}
+ .sidebar-toggle{z-index:46}
+ .app[data-menu-theme] .mobile-navigation{background:linear-gradient(180deg,var(--menu-light),var(--menu-mid));border-top-color:var(--menu-border)}
+ .app[data-menu-theme] .mobile-navigation button{color:var(--menu-ink);background:linear-gradient(var(--menu-light),var(--menu-mid));border-color:var(--menu-border)}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .mobile-navigation{min-height:52px;padding-top:3px;padding-bottom:max(3px,env(safe-area-inset-bottom))}
+ .mobile-navigation button{min-height:42px;flex-direction:row;gap:5px}
+ .mobile-navigation button span{font-size:17px}
+ .tool-bar{bottom:calc(58px + env(safe-area-inset-bottom))}
+ .zoom-ui{bottom:calc(110px + env(safe-area-inset-bottom))}
+}
