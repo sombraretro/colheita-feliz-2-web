@@ -13,22 +13,32 @@
 
   function init() {
     const menu = document.querySelector('.side-menu');
-    const toggle = document.querySelector('[data-sidebar-toggle]');
-    if (menu && toggle) {
+    const toggles = [...document.querySelectorAll('[data-sidebar-toggle]')];
+    if (menu && toggles.length) {
+      let lastToggle = toggles[0];
+      const syncToggles = open => {
+        toggles.forEach(toggle => {
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.setAttribute('aria-label', open ? 'Fechar menu lateral' : 'Abrir menu lateral');
+        });
+      };
       const close = ({restoreFocus = false} = {}) => {
         menu.classList.remove('is-open');
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Abrir menu lateral');
-        if (restoreFocus) toggle.focus();
+        syncToggles(false);
+        if (restoreFocus) lastToggle.focus();
       };
-      const open = () => {
+      const open = toggle => {
+        lastToggle = toggle;
         menu.classList.add('is-open');
-        toggle.setAttribute('aria-expanded', 'true');
-        toggle.setAttribute('aria-label', 'Fechar menu lateral');
+        syncToggles(true);
       };
-      toggle.addEventListener('click', () => {
-        if (menu.classList.contains('is-open')) close();
-        else open();
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (menu.classList.contains('is-open')) close();
+          else open(toggle);
+        });
       });
       menu.addEventListener('click', event => {
         if (event.target.closest('button')) close();
@@ -37,8 +47,9 @@
         if (event.key === 'Escape' && menu.classList.contains('is-open')) close({restoreFocus: true});
       });
       document.addEventListener('click', event => {
-        if (!menu.contains(event.target) && !toggle.contains(event.target)) close();
+        if (!menu.contains(event.target) && !toggles.some(toggle => toggle.contains(event.target))) close();
       });
+      syncToggles(false);
     }
 
     document.querySelectorAll('.tool-bar .tool[data-tool]').forEach(button => {
