@@ -1534,10 +1534,10 @@ const MIX_HERB_RECIPES={
 };
 
 const MIX_HERB_SALE_PRICES={
- banho_sete_ervas:420,banho_descarrego:300,banho_energizacao:280,banho_protecao:300,
- banho_renovacao_pitangueira:260,banho_folhas_aromaticas:280,banho_mata:360,
- banho_louro_alfazema:320,banho_louro_prosperidade:340,banho_louro_amor:380,
- banho_pipoca:180,banho_casca_laranja:160,banho_pitangueira:260
+ banho_sete_ervas:520,banho_descarrego:420,banho_energizacao:400,banho_protecao:360,
+ banho_renovacao_pitangueira:360,banho_folhas_aromaticas:400,banho_mata:460,
+ banho_louro_alfazema:420,banho_louro_prosperidade:420,banho_louro_amor:560,
+ banho_pipoca:420,banho_casca_laranja:180,banho_pitangueira:360
 };
 function recipeIngredientTotals(recipe){const totals=new Map();for(const [type,id,qty] of recipe.ingredients){const key=`${type}:${id}`,current=totals.get(key);if(current)current.qty+=qty;else totals.set(key,{type,id,qty});}return [...totals.values()]}
 function recipeMissing(recipe){return recipeIngredientTotals(recipe).filter(({type,id,qty})=>ingredientCount(type,id)<qty)}
