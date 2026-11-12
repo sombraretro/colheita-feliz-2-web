@@ -618,40 +618,32 @@ details.shop-section .grid-cards{grid-template-columns:repeat(auto-fit,minmax(mi
  .zoom-ui{bottom:calc(110px + env(safe-area-inset-bottom))}
 }
 
-/* Correção de navegação e gestos em celulares e tablets. */
+
+/* Navegação móvel separada: o menu lateral original mantém seus próprios atalhos. */
 .mobile-menu-item{display:none}
 @media(max-width:1024px){
- .app{height:100dvh;min-height:0;overflow:hidden}
- .topbar{height:48px;min-height:48px;max-height:48px;flex:0 0 48px;flex-wrap:nowrap;align-items:center;padding:4px 9px;gap:8px}
  .topbar .tabs{display:none!important}
- .topright{margin-left:auto;gap:4px;flex:0 0 auto}
  .topright .iconbtn{display:none}
- .topright #connection-label{font-size:10px}
- .playfield{height:0;min-height:0;flex:1 1 0;overflow:hidden;touch-action:none}
- #world{touch-action:none}
- .sidebar-toggle{display:none!important}
- .mobile-navigation{position:fixed;z-index:60;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:5px max(8px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));min-height:64px;background:linear-gradient(180deg,#fff4d9f5,#e5c48ff5);border-top:2px solid #a87839;box-shadow:0 -3px 12px #263b1d55}
+ .mobile-navigation{display:grid;position:fixed;z-index:60;left:0;right:0;bottom:0;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:5px max(8px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));min-height:64px;background:linear-gradient(180deg,#fff4d9f5,#e5c48ff5);border-top:2px solid #a87839;box-shadow:0 -3px 12px #263b1d55}
  .mobile-navigation button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:48px;padding:3px 2px;border:1px solid #c69a5d;border-radius:9px;background:linear-gradient(#fff9e9,#f0d6a4);color:#62421f;font:700 11px Verdana,sans-serif;touch-action:manipulation}
  .mobile-navigation button span{font-size:20px;line-height:1.1}
  .mobile-navigation button small{font-size:10px;line-height:1.1}
- .tool-bar{bottom:calc(72px + env(safe-area-inset-bottom));max-width:calc(100% - 16px);width:calc(100% - 16px);height:54px;padding:3px 4px;gap:2px}
- .tool{flex:1 1 34px;min-width:32px;height:46px}
- .zoom-ui{bottom:calc(130px + env(safe-area-inset-bottom));right:8px}
- .quick-actions,.footer{display:none!important}
- .side-menu{z-index:70;right:8px;left:auto;top:auto;bottom:calc(72px + env(safe-area-inset-bottom));width:min(310px,calc(100vw - 16px));max-height:min(72dvh,620px);overflow-y:auto;overscroll-behavior:contain;padding:8px;background:linear-gradient(#fff8e8,#e8d0a3);border:2px solid #a87839;border-radius:14px;box-shadow:0 8px 24px #17230f66}
- .side-menu button{width:100%;min-height:42px;flex:0 0 auto}
  .mobile-menu-item{display:flex!important}
  .app[data-menu-theme] .mobile-navigation{background:linear-gradient(180deg,var(--menu-light),var(--menu-mid));border-top-color:var(--menu-border)}
- .app[data-menu-theme] .mobile-navigation button,.app[data-menu-theme] .side-menu{color:var(--menu-ink);background:linear-gradient(var(--menu-light),var(--menu-mid));border-color:var(--menu-border)}
+ .app[data-menu-theme] .mobile-navigation button{color:var(--menu-ink);background:linear-gradient(var(--menu-light),var(--menu-mid));border-color:var(--menu-border)}
 }
 @media(max-width:700px){
- .farm-stats{top:7px;left:7px;transform:scale(.68);transform-origin:top left}
+ .topbar{display:flex;flex-wrap:nowrap;align-items:center;min-height:48px;height:48px;max-height:48px;padding:4px 8px;overflow:visible}
+ .topbar .brand{flex:1 1 auto;max-width:none;min-width:0}
+ .topright{margin-left:auto;flex:0 0 auto}
+ .playfield{min-height:0;height:0;flex:1 1 0;overflow:hidden;touch-action:none}
+ #world{touch-action:none}
  .mobile-navigation{min-height:62px}
  .mobile-navigation button span{font-size:19px}
  .mobile-navigation button small{font-size:9px}
  .tool-bar{bottom:calc(68px + env(safe-area-inset-bottom))}
  .zoom-ui{bottom:calc(124px + env(safe-area-inset-bottom))}
- .side-menu{bottom:calc(68px + env(safe-area-inset-bottom));max-height:70dvh}
+ .farm-stats{top:7px;left:7px;transform:scale(.68);transform-origin:top left}
 }
 @media(max-width:700px) and (orientation:landscape){
  .mobile-navigation{min-height:48px;padding-top:2px;padding-bottom:max(2px,env(safe-area-inset-bottom))}
@@ -660,10 +652,9 @@ details.shop-section .grid-cards{grid-template-columns:repeat(auto-fit,minmax(mi
  .tool-bar{bottom:calc(54px + env(safe-area-inset-bottom));height:42px}
  .tool{height:36px}
  .zoom-ui{bottom:calc(100px + env(safe-area-inset-bottom))}
- .side-menu{bottom:calc(54px + env(safe-area-inset-bottom));max-height:72dvh}
 }
 @media(hover:none) and (pointer:coarse){
  .playfield,#world{touch-action:none}
  .side-menu,.modal-body{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
- .mobile-navigation button,.side-menu button{touch-action:manipulation}
+ .mobile-navigation button{touch-action:manipulation}
 }
