@@ -438,7 +438,7 @@ function initSupabase(){
    if(session&&['SIGNED_IN','INITIAL_SESSION'].includes(event)){
     window.setTimeout(()=>{if(state)handleAuthSession(session).catch(error=>console.error('Falha ao concluir autenticação:',error));},0);
    }else if(event==='SIGNED_OUT'){
-    cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();if(currentModal==='account')renderModal();refresh();
+    clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();if(currentModal==='account')renderModal();refresh();
    }
   });
   supabaseAuthSubscription=listener?.data?.subscription||true;
@@ -551,7 +551,7 @@ async function handleAuthSession(session){
  if(!session?.user||!supabaseClient)return;
  if(cloudSessionReadyUserId===session.user.id||cloudSyncing)return;
  cloudSyncing=true;let syncSucceeded=false;writeLocked=true;
- if(cloudUser?.id!==session.user.id){onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null}
+ if(cloudUser?.id!==session.user.id){clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null}
  cloudUser=session.user;updateConnectionLabel();$('save-status').textContent='Carregando fazenda da nuvem...';
  try{
   const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();
@@ -2512,7 +2512,7 @@ if(currentModal==='inbox'&&cloudUser&&!onlineInboxLoaded){refreshOnlineInbox(fal
 if(currentModal==='gifts'&&cloudUser&&!onlineGiftsLoaded){refreshOnlineGifts(false)}
  if(currentModal==='account'){
  $('cloud-integrity-check')?.addEventListener('click',runFarmIntegrityCheck);
- $('cloud-resolve-load')?.addEventListener('click',async()=>{if(!cloudConflict||!cloudUser)return;if(!confirm('Carregar a versão mais recente da nuvem? As alterações ainda não sincronizadas desta página serão descartadas.'))return;const button=$('cloud-resolve-load');if(button){button.disabled=true;button.textContent='Carregando versão da nuvem...'}try{const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Nenhum salvamento foi encontrado na nuvem.');const restored=normalizeFarmSnapshot(data.state);if(!restored)throw new Error('A versão mais recente da nuvem está em formato inválido.');state=restored;cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;cloudConflict=false;cloudDirty=false;dirty=false;writeLocked=false;clearTimeout(saveTimer);saveTimer=null;cloudSessionReadyUserId=cloudUser.id;$('save-status').textContent='Versão mais recente carregada da nuvem';$('save-dot').className='savedot';refresh();notify('Conflito resolvido. A versão mais recente da nuvem foi carregada.');renderModal()}catch(error){console.error('Recuperação de conflito:',error);if(button){button.disabled=false;button.textContent='Tentar carregar novamente'}notify('Não foi possível recuperar a versão da nuvem: '+(error.message||'verifique sua conexão.'))}});
+ $('cloud-resolve-load')?.addEventListener('click',async()=>{if(!cloudConflict||!cloudUser)return;if(!confirm('Carregar a versão mais recente da nuvem? As alterações ainda não sincronizadas desta página serão descartadas.'))return;const button=$('cloud-resolve-load');if(button){button.disabled=true;button.textContent='Carregando versão da nuvem...'}try{const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Nenhum salvamento foi encontrado na nuvem.');const restored=normalizeFarmSnapshot(data.state);if(!restored)throw new Error('A versão mais recente da nuvem está em formato inválido.');state=restored;cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;cloudConflict=false;cloudDirty=false;dirty=false;writeLocked=false;clearTimeout(saveTimer);saveTimer=null;cloudSessionReadyUserId=cloudUser.id;$('save-status').textContent='Versão mais recente carregada da nuvem';$('save-dot').className='savedot';refresh();notify('Conflito resolvido. A versão mais recente da nuvem foi carregada.');renderModal()}catch(error){console.error('Recuperação de conflito:',error);if(button){button.disabled=false;button.textContent='Tentar carregar novamente'}notify('Não foi possível recuperar a versão da nuvem: '+(error.message||'verifique sua conexão.'))}});
  $('auth-signin')?.addEventListener('click',()=>authenticate('signin'));
  $('auth-signup')?.addEventListener('click',()=>authenticate('signup'));
  $('cloud-signout')?.addEventListener('click',disconnectCloud);
@@ -2629,7 +2629,7 @@ const finishPointer=e=>{
 };
 $('playfield').addEventListener('pointerup',finishPointer);
 $('playfield').addEventListener('pointercancel',finishPointer);
-window.addEventListener('offline',()=>{if(hasPendingCloudChanges()){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
+window.addEventListener('offline',()=>{clearCloudRetry();if(hasPendingCloudChanges()){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
 window.addEventListener('online',()=>{if(dirty&&farmWriteAllowed(false)){clearCloudRetry();cloudPermanentSaveError=null;save()}});
 window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save();else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pageshow',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
