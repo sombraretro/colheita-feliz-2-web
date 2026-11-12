@@ -1240,6 +1240,8 @@ function normalize(data){
  data.dogBreedsOwned=Array.isArray(data.dogBreedsOwned)?[...new Set(data.dogBreedsOwned.filter(id=>DOG_BREEDS[id]&&!DOG_BREEDS[id].temporary))]:['classico'];if(!data.dogBreedsOwned.includes('classico'))data.dogBreedsOwned.unshift('classico');
  data.temporaryDogBreeds=(data.temporaryDogBreeds&&typeof data.temporaryDogBreeds==='object')?data.temporaryDogBreeds:{};for(const id of Object.keys(data.temporaryDogBreeds)){if(!DOG_BREEDS[id]?.temporary||!Number.isFinite(data.temporaryDogBreeds[id])||data.temporaryDogBreeds[id]<=Date.now())delete data.temporaryDogBreeds[id];}
  data.inventory=(data.inventory&&typeof data.inventory==='object')?data.inventory:{};
+ const forestSeedMoves=[['pinheiro_natal','pinheiro_natal'],['eucalipto','eucalipto'],['pinha','pinha'],['arvore_garrafa','uvaia'],['nepenthes','cambuca']];
+ for(const [oldId,newId] of forestSeedMoves){const target='tree_'+newId,legacyKeys=oldId===newId?[oldId]:[oldId,'tree_'+oldId];for(const key of legacyKeys){if(key===target)continue;const qty=Math.max(0,Math.floor(Number(data.inventory[key])||0));if(qty){data.inventory[target]=(Number(data.inventory[target])||0)+qty;data.inventory[key]=0}}}
  data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string').map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
  data.giftInventory=(data.giftInventory&&typeof data.giftInventory==='object')?data.giftInventory:{};
  for(const id of Object.keys(GIFT_ITEMS))data.giftInventory[id]=Number.isFinite(data.giftInventory[id])?Math.max(0,Math.floor(data.giftInventory[id])):0;
