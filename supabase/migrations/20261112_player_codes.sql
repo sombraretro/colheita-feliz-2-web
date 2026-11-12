@@ -30,7 +30,7 @@ begin
   select player_code into v_code from public.social_player_codes where user_id = v_user;
   if v_code is null then
     loop
-      v_code := 'CF-' || upper(substr(encode(gen_random_bytes(4), 'hex'), 1, 8));
+      v_code := 'CF-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8));
       insert into public.social_player_codes(user_id, player_code)
       values (v_user, v_code)
       on conflict do nothing;
