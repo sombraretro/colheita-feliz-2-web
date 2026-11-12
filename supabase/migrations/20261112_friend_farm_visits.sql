@@ -168,3 +168,7 @@ grant execute on function public.social_get_farm_visit_settings() to authenticat
 grant execute on function public.social_set_farm_visit_permission(boolean) to authenticated;
 grant execute on function public.social_visit_friend_farm(uuid) to authenticated;
 grant execute on function public.social_toggle_farm_like(uuid) to authenticated;
+
+-- Impede que o cliente contorne a preferência chamando a RPC antiga diretamente.
+-- A nova RPC social_visit_friend_farm a invoca internamente com privilégios do servidor.
+revoke all on function public.social_get_friend_farm(uuid) from public, anon, authenticated;
