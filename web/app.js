@@ -2336,7 +2336,7 @@ function downloadSocialPackage(payload,filename){const blob=new Blob([JSON.strin
 
 
 function buildPublicFarmSnapshot(){
- const plots=(state.plots||[]).slice(0,72).map(p=>({status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',crop:CROPS[p.crop]?p.crop:null,progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'}));
+ const plots=(state.plots||[]).slice(0,72).map(p=>({status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',crop:CROPS[p.crop]?p.crop:null,progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,regrowing:!!p.regrowing,weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'}));
  const animals=(state.animals||[]).filter(a=>ANIMALS[a.type]).slice(0,80).map(a=>({type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,stage:Math.max(1,Math.min(5,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null}));
  const orchard=(state.orchardTrees||[]).slice(0,8).map(t=>({type:CROPS[t.type]?t.type:null,status:t.status==='ready'||(t.type&&orchardTreeProgress(t)>=1)?'ready':t.type?'growing':'empty',progress:t.type?orchardTreeProgress(t):0,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0)}));
  const forest=(state.forestPlots||[]).slice(0,36).map(t=>({type:FOREST_TREES[t.type]?t.type:null,status:t.type&&forestProgress(t)>=1?'ready':t.type?'growing':'empty',progress:t.type?forestProgress(t):0}));
@@ -2474,12 +2474,13 @@ function friendPlotProgress(plot){
  if(!plot||plot.status!=='growing'||!CROPS[plot.crop])return base;
  const updated=Date.parse(visitedFarm&&visitedFarm.updated_at||'');
  if(!Number.isFinite(updated)||updated<=0)return base;
- return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,Number(CROPS[plot.crop].hours)||1)*CROP_TIME_FACTOR*HOUR)));
+ const cfg=CROPS[plot.crop],hours=plot.regrowing&&cfg.regrowHours?cfg.regrowHours:cfg.hours;
+ return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,Number(hours)||1)*CROP_TIME_FACTOR*HOUR)));
 }
 function renderFriendFarmScene(snap){
  const plots=snap.plots||[];let field='';
  for(let i=0;i<72;i++){
-  const p=plots[i]||{status:'grass'},r=Math.floor((i%36)/6),c=5-(i%6),index=i;
+  const p=plots[i]||{status:'grass'},r=Math.floor((i%36)/6),c=i%6,index=i;
   const xy=plotTilePoint(r,c,index),x=xy[0],y=xy[1],pts=diamondPoints(r,c,index),points=pts.map(q=>q.join(',')).join(' ');
   const locked=p.status==='grass',red=p.soil==='red',selected=selectedFriendPlot===i;
   field+='<g class="friend-farm-plot '+(locked?'is-locked ':'')+(selected?'is-selected':'')+'" data-help-plot="'+i+'" role="button" tabindex="0" aria-label="Canteiro '+(i+1)+'" style="cursor:'+(locked?'default':'pointer')+'">';
@@ -2503,7 +2504,7 @@ function renderFriendFarmScene(snap){
  const orchardIcons=(snap.orchard||[]).filter(t=>t.type).map(t=>CROPS[t.type]?.icon||'🌳').join(' ');
  const forestCount=(snap.forest||[]).filter(t=>t.type).length;
  const bg='<defs><linearGradient id="friendGrass" x2="0" y2="1"><stop stop-color="'+(snap.farmTheme==='christmas'?'#dbe9d4':'#9bd45d')+'"/><stop offset="1" stop-color="#65ae37"/></linearGradient></defs><rect x="-1500" y="-220" width="3000" height="1350" fill="url(#friendGrass)"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#c7a36b" stroke-width="90"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#ead2a0" stroke-width="8" stroke-dasharray="5 28"/>';
- const fields='<g><polygon points="-1468,350 -868,620 -1468,890 -2068,620" fill="#398d2b" opacity=".23"/><polygon points="-68,350 532,620 -68,890 -668,620" fill="#398d2b" opacity=".23"/><polygon points="-1468,350 -868,620 -1468,890 -2068,620" fill="none" stroke="#3c8127" stroke-width="14"/><polygon points="-68,350 532,620 -68,890 -668,620" fill="none" stroke="#3c8127" stroke-width="14"/></g>';
+ const fields='<g><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="#398d2b" opacity=".23"/><polygon points="-68,620 532,350 1132,620 532,890" fill="#398d2b" opacity=".23"/><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="none" stroke="#3c8127" stroke-width="14"/><polygon points="-68,620 532,350 1132,620 532,890" fill="none" stroke="#3c8127" stroke-width="14"/></g>';
  const buildings='<g transform="translate(820 120)"><ellipse cy="150" rx="170" ry="25" fill="#315d24" opacity=".25"/><path d="M-150 35L0-65L150 35V145H-150Z" fill="#f3dba8" stroke="#754a2b" stroke-width="12"/><path d="M-170 35L0-90L170 35" fill="#b84d38" stroke="#713c2b" stroke-width="13"/><rect x="-36" y="65" width="72" height="80" rx="6" fill="#81502e" stroke="#57351f" stroke-width="7"/><rect x="-112" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><rect x="64" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><text y="178" text-anchor="middle" font-size="26" font-weight="bold" fill="#fff8d8" stroke="#684323" stroke-width="4" paint-order="stroke">CASA</text></g><g transform="translate(1240 430)"><path d="M-115 10L0-70L115 10V110H-115Z" fill="#e5c88d" stroke="#79502d" stroke-width="10"/><path d="M-135 10L0-95L135 10" fill="#9b4931" stroke="#683d27" stroke-width="10"/><rect x="-38" y="38" width="76" height="72" fill="#80502f" stroke="#573b25" stroke-width="7"/><text y="142" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff5d4" stroke="#5b4025" stroke-width="4" paint-order="stroke">VIVEIRO</text></g>';
  const tint=snap.farmTheme&&snap.farmTheme!=='classic'?'<rect x="-1500" y="-220" width="3000" height="1350" fill="'+(theme?.accent||'#ffffff')+'" opacity=".045"/>':'';
  return '<svg class="friend-farm-scene" viewBox="-1500 -220 3000 1350" role="group" aria-label="Fazenda real de '+safe(visitedFarm?.farm_name||'amigo')+'" xmlns="http://www.w3.org/2000/svg">'+bg+fields+buildings+tint+field+decorations+'</svg><div class="friend-farm-areas"><span>🐾 '+safe(animalIcons||'Sem animais')+'</span><span>🌳 Pomar: '+safe(orchardIcons||'sem árvores')+' · Mata: '+forestCount+' árvore(s)</span><span>🔥 Churrasqueira: '+(snap.grill?'construída':'não construída')+'</span></div>';
