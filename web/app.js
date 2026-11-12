@@ -1519,6 +1519,7 @@ function acceptTutorialTask(id){if(!farmWriteAllowed())return;const t=TUTORIAL_T
 function confirmTutorialTask(id){if(!farmWriteAllowed())return;const t=TUTORIAL_TASKS.find(x=>x.id===id);if(!t||state.tutorial.acceptedId!==id||(state.taskProgress[id]||0)<t.goal)return;state.coins+=t.reward;awardXP(t.xp,'tarefa do livro');state.tutorial.completed.push(id);state.tutorial.acceptedId=null;state.tutorial.finished=state.tutorial.completed.length===TUTORIAL_TASKS.length;remember(`Concluiu a tarefa: ${t.title}.`);markDirty();refresh();notify(`Tarefa concluída! +${fmt(t.reward)} moedas.`)}
 function claimAchievement(id){if(!farmWriteAllowed())return;const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a||state.claimedAchievements.includes(id)||!a.test())return;state.claimedAchievements.push(id);state.coins+=a.reward;awardXP(a.xp,'conquista');remember(`Conquistou: ${a.title}.`);markDirty();refresh();notify(`Conquista resgatada: +${fmt(a.reward)} moedas!`)}
 function farmWriteAllowed(showMessage=true){const allowed=!writeLocked&&!cloudConflict&&!!cloudUser&&cloudSessionReadyUserId===cloudUser.id;if(!allowed&&showMessage)notify('Salvamento protegido. Aguarde a conexão e o carregamento da fazenda na nuvem.');return allowed}
+function hasPendingCloudChanges(){return dirty||cloudDirty}
 function markDirty(deferUntilAutosave=false){if(!farmWriteAllowed())return false;cloudIntegrityReport=null;dirty=true;cloudDirty=true;state.updatedAt=Date.now();$('save-status').textContent=deferUntilAutosave?'Alterações pendentes · salvamento em até 1 minuto':'Salvando na nuvem...';$('save-dot').className='savedot saving';if(!deferUntilAutosave){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save()},0)}return true}
 async function save(){if(!dirty)return saving;if(cloudConflict){$('save-status').textContent='Conflito de versões · escolha como recuperar';$('save-dot').className='savedot error';return saving}if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id){dirty=true;$('save-status').textContent='Aguardando conexão com a nuvem';$('save-dot').className='savedot error';return saving}dirty=false;saving=saving.then(async()=>{
  if(!cloudUser)throw new Error('Nenhuma conta conectada para salvar na nuvem.');
@@ -2541,12 +2542,12 @@ const finishPointer=e=>{
 };
 $('playfield').addEventListener('pointerup',finishPointer);
 $('playfield').addEventListener('pointercancel',finishPointer);
-window.addEventListener('offline',()=>{if(dirty){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
+window.addEventListener('offline',()=>{if(hasPendingCloudChanges()){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
 window.addEventListener('online',()=>{if(dirty&&farmWriteAllowed(false))save()});
 window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save();else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pageshow',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pagehide',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
-window.addEventListener('beforeunload',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
+window.addEventListener('beforeunload',event=>{if(hasPendingCloudChanges()){event.preventDefault();event.returnValue='';return ''}});
 }
 async function start(){
  initScene();setupEvents();updateView();state=newGame();writeLocked=true;
