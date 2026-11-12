@@ -743,3 +743,5 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
  .side-menu button{width:100%;min-width:0;padding:7px 8px;font-size:11px;background:linear-gradient(#fff5dded,#e9c88fe8)}
  .tool-bar{width:min(760px,calc(100% - 300px));gap:6px}
 }
+
+.pepper-icon img{width:1.45em;height:1.45em;display:block;object-fit:contain}.pepper-icon:after{display:none}
