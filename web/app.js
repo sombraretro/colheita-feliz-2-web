@@ -192,7 +192,17 @@ const GRILL_RECIPES={
  pintado_ao_molho:{name:'Pintado ao Molho de Tomate Rústico',icon:'🍲',minutes:85,yield:2,salePrice:780,xp:38,ingredients:[['fish','pintado',1],['crop','tomate',2],['crop','pimenta',1],['supply','seasoning',1]]},
  surubim_na_folha:{name:'Surubim na Folha com Ervas Aromáticas',icon:'🌿',minutes:95,yield:2,salePrice:860,xp:42,ingredients:[['fish','surubim',1],['crop','batata',1],['crop','tomate',1],['supply','seasoning',1]]},
  jau_assado:{name:'Jaú Assado de Festa',icon:'🔥',minutes:115,yield:2,salePrice:1080,xp:52,ingredients:[['fish','jau',1],['crop','batata',2],['crop','pimenta',1],['supply','seasoning',1]]},
- pirarara_especial:{name:'Pirarara Especial do Pescador',icon:'🍛',minutes:125,yield:2,salePrice:1180,xp:56,ingredients:[['fish','pirarara',1],['crop','tomate',1],['crop','milho',1],['supply','honey',1]]}
+ pirarara_especial:{name:'Pirarara Especial do Pescador',icon:'🍛',minutes:125,yield:2,salePrice:1180,xp:56,ingredients:[['fish','pirarara',1],['crop','tomate',1],['crop','milho',1],['supply','honey',1]]},
+ piranha_brasa:{name:'Piranha na Brasa com Ervas',icon:'🔥',minutes:70,yield:2,salePrice:520,xp:28,ingredients:[['fish','piranha',1],['crop','tomate',1],['supply','seasoning',1]]},
+ matrinxa_assada:{name:'Matrinxã Assada Recheada',icon:'🐟',minutes:85,yield:2,salePrice:720,xp:36,ingredients:[['fish','matrinxa',1],['crop','cebola',1],['crop','farinha_mandioca',1],['supply','seasoning',1]]},
+ piraputanga_grelhada:{name:'Piraputanga Grelhada Pantaneira',icon:'🐠',minutes:80,yield:2,salePrice:690,xp:34,ingredients:[['fish','piraputanga',1],['crop','tomate',1],['crop','pimenta',1]]},
+ jundia_na_folha:{name:'Jundiá na Folha de Bananeira',icon:'🍃',minutes:65,yield:2,salePrice:470,xp:24,ingredients:[['fish','jundia',1],['supply','banana_leaf',1],['supply','seasoning',1]]},
+ cachara_brasa:{name:'Cachara na Brasa com Alho',icon:'🐟',minutes:100,yield:2,salePrice:880,xp:43,ingredients:[['fish','cachara',1],['crop','alho',2],['crop','limão',1],['supply','seasoning',1]]},
+ barbado_assado:{name:'Barbado Assado à Beira-Rio',icon:'🔥',minutes:105,yield:2,salePrice:940,xp:46,ingredients:[['fish','barbado',1],['crop','cebola',1],['crop','tomate',2],['supply','seasoning',1]]},
+ aruana_grelhado:{name:'Aruanã Grelhado com Pimenta',icon:'🐠',minutes:90,yield:2,salePrice:790,xp:39,ingredients:[['fish','aruana',1],['crop','pimenta',1],['crop','alho',1],['supply','seasoning',1]]},
+ apaiari_assado:{name:'Apaiari Assado Amazônico',icon:'🐟',minutes:75,yield:2,salePrice:560,xp:29,ingredients:[['fish','apaiari',1],['crop','tomate',1],['crop','cebola',1],['supply','seasoning',1]]},
+ salmao_brasa:{name:'Salmão na Brasa com Ervas',icon:'🐟',minutes:115,yield:2,salePrice:1120,xp:54,ingredients:[['sea','salmao',1],['crop','alho',1],['crop','batata',1],['supply','seasoning',1]]},
+ bacalhau_grelhado:{name:'Bacalhau Grelhado à Portuguesa',icon:'🐟',minutes:145,yield:2,salePrice:1480,xp:68,ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['supply','olive_oil',1]]}
 };
 Object.assign(GRILL_RECIPES,{
  goat_grilled:{name:'Cabrito na Brasa com Ervas',icon:'🍖',minutes:105,yield:2,salePrice:780,xp:42,ingredients:[['meat','goat',1],['crop','pimenta',1],['supply','seasoning',1]]},
@@ -209,6 +219,16 @@ Object.assign(GRILL_RECIPES,{
  kitchen_cocoa_candy:{name:'Bombom de Cacau',icon:'🍫',minutes:38,yield:4,salePrice:650,xp:36,kitchenOnly:true,ingredients:[['crop','cacau',2],['animal','milk',1],['supply','honey',1]]},
  kitchen_peach_compote:{name:'Compota de Pêssego',icon:'🍑',minutes:27,yield:2,salePrice:410,xp:25,kitchenOnly:true,ingredients:[['crop','pessego',2],['crop','cana',1]]},
  kitchen_fish_rice:{name:'Arroz de Peixe',icon:'🍚',minutes:34,yield:3,salePrice:480,xp:28,kitchenOnly:true,ingredients:[['crop','arroz',2],['fish','pacu',1],['crop','tomate',1]]},
+ kitchen_piranha_calderada:{name:'Caldeirada de Piranha',icon:'🍲',minutes:78,yield:2,salePrice:680,xp:34,kitchenOnly:true,ingredients:[['fish','piranha',1],['crop','tomate',2],['crop','cebola',1],['crop','batata',1]]},
+ kitchen_matrinxa_moqueca:{name:'Moqueca de Matrinxã',icon:'🍲',minutes:92,yield:2,salePrice:890,xp:44,kitchenOnly:true,ingredients:[['fish','matrinxa',1],['crop','tomate',2],['crop','cebola',1],['supply','dende_oil',1]]},
+ kitchen_piraputanga_rice:{name:'Arroz Cremoso de Piraputanga',icon:'🍚',minutes:82,yield:3,salePrice:820,xp:40,kitchenOnly:true,ingredients:[['fish','piraputanga',1],['crop','arroz',2],['crop','tomate',1],['crop','alho',1]]},
+ kitchen_jundia_stew:{name:'Ensopado Caipira de Jundiá',icon:'🥘',minutes:70,yield:2,salePrice:590,xp:30,kitchenOnly:true,ingredients:[['fish','jundia',1],['crop','batata',2],['crop','cebola',1],['crop','tomate',1]]},
+ kitchen_cachara_pirao:{name:'Cachara ao Molho com Pirão',icon:'🍲',minutes:110,yield:2,salePrice:1080,xp:52,kitchenOnly:true,ingredients:[['fish','cachara',1],['crop','farinha_mandioca',2],['crop','tomate',2],['crop','cebola',1]]},
+ kitchen_barbado_stew:{name:'Barbado Ensopado com Legumes',icon:'🥘',minutes:118,yield:2,salePrice:1160,xp:56,kitchenOnly:true,ingredients:[['fish','barbado',1],['crop','batata',2],['crop','cenoura',1],['crop','tomate',1]]},
+ kitchen_aruana_coconut:{name:'Aruanã ao Leite de Coco',icon:'🍛',minutes:105,yield:2,salePrice:1020,xp:50,kitchenOnly:true,ingredients:[['fish','aruana',1],['crop','coco',1],['crop','tomate',1],['crop','cebola',1]]},
+ kitchen_apaiari_stew:{name:'Apaiari ao Molho Amazônico',icon:'🍲',minutes:86,yield:2,salePrice:760,xp:38,kitchenOnly:true,ingredients:[['fish','apaiari',1],['crop','tomate',2],['crop','pimenta',1],['crop','cebola',1]]},
+ kitchen_salmao_creamy:{name:'Salmão Cremoso com Ervas',icon:'🍝',minutes:125,yield:2,salePrice:1320,xp:62,kitchenOnly:true,ingredients:[['sea','salmao',1],['animal','milk',1],['crop','alho',1],['crop','batata',1]]},
+ kitchen_bacalhau_bras:{name:'Bacalhau à Brás',icon:'🍳',minutes:155,yield:3,salePrice:1680,xp:76,kitchenOnly:true,ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['animal','eggs',2]]},
  kitchen_galinhada:{name:'Galinhada Caipira',icon:'🍗',minutes:58,yield:3,salePrice:760,xp:42,kitchenOnly:true,ingredients:[['meat','chicken',1],['crop','arroz',2],['crop','cebola',1],['crop','alho',1],['crop','tomate',1],['crop','milho',1],['mix','tempero_aromatico',1]]},
  kitchen_moqueca_peixe:{name:'Moqueca de Peixe',icon:'🍲',minutes:62,yield:2,salePrice:920,xp:50,kitchenOnly:true,ingredients:[['fish','tilapia',2],['crop','tomate',2],['crop','cebola',1],['crop','alho',1],['supply','dende_oil',1],['mix','tempero_verde_mata',1]]},
  kitchen_frango_ensopado:{name:'Frango Ensopado',icon:'🥘',minutes:46,yield:3,salePrice:690,xp:38,kitchenOnly:true,ingredients:[['meat','chicken',1],['crop','batata',2],['crop','tomate',1],['crop','cebola',1],['crop','alho',1],['mix','tempero_aromatico',1]]},
@@ -258,7 +278,9 @@ const SEA_TYPES={
  pescada:{name:'Pescada-amarela',icon:'🐟',rarity:'Incomum',xp:8,minNet:1,weight:19},anchova:{name:'Anchova',icon:'🐟',rarity:'Incomum',xp:8,minNet:1,weight:18},lula:{name:'Lula',icon:'🦑',rarity:'Incomum',xp:9,minNet:1,weight:16},mexilhao:{name:'Mexilhão',icon:'🦪',rarity:'Incomum',xp:8,minNet:1,weight:15},cavala:{name:'Cavala',icon:'🐟',rarity:'Incomum',xp:9,minNet:1,weight:15},
  badejo:{name:'Badejo',icon:'🐟',rarity:'Raro',xp:12,minNet:2,weight:14},garoupa:{name:'Garoupa',icon:'🐟',rarity:'Raro',xp:13,minNet:2,weight:13},polvo:{name:'Polvo',icon:'🐙',rarity:'Raro',xp:14,minNet:2,weight:12},ostra:{name:'Ostra',icon:'🦪',rarity:'Raro',xp:13,minNet:2,weight:12},vieira:{name:'Vieira',icon:'🦪',rarity:'Raro',xp:14,minNet:2,weight:10},
  linguado:{name:'Linguado',icon:'🐟',rarity:'Muito raro',xp:17,minNet:3,weight:9},namorado:{name:'Namorado',icon:'🐟',rarity:'Muito raro',xp:18,minNet:3,weight:8},atum:{name:'Atum',icon:'🐟',rarity:'Muito raro',xp:19,minNet:3,weight:7},bonito:{name:'Bonito',icon:'🐟',rarity:'Muito raro',xp:18,minNet:3,weight:7},
- pargo:{name:'Pargo',icon:'🐠',rarity:'Lendário',xp:24,minNet:4,weight:5},cherne:{name:'Cherne',icon:'🐟',rarity:'Lendário',xp:25,minNet:4,weight:4},peixe_espada:{name:'Peixe-espada',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3},dourado_mar:{name:'Dourado-do-mar',icon:'🐠',rarity:'Lendário',xp:27,minNet:4,weight:3}
+ pargo:{name:'Pargo',icon:'🐠',rarity:'Lendário',xp:24,minNet:4,weight:5},cherne:{name:'Cherne',icon:'🐟',rarity:'Lendário',xp:25,minNet:4,weight:4},peixe_espada:{name:'Peixe-espada',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3},dourado_mar:{name:'Dourado-do-mar',icon:'🐠',rarity:'Lendário',xp:27,minNet:4,weight:3},
+ salmao:{name:'Salmão',icon:'🐟',rarity:'Muito raro',xp:19,minNet:3,weight:6},
+ bacalhau:{name:'Bacalhau',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3}
 };
 const SEA_NETS={normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},novato:{name:'Novato',level:8,coins:3800,greenCoins:2,order:1},junior:{name:'Junior',level:16,coins:12500,greenCoins:5,order:2},senior:{name:'Sênior',level:26,coins:36000,greenCoins:12,order:3},profissional:{name:'Profissional',level:38,coins:90000,greenCoins:25,order:4}};
 const LAKE_FISH={lambari:{name:"Lambari",icon:"🐟",egg:180,price:260,hours:3},tilapia:{name:"Tilápia",icon:"🐠",egg:260,price:420,hours:4},carpa:{name:"Carpa",icon:"🐟",egg:420,price:680,hours:5},koi:{name:"Carpa Koi",icon:"🎏",egg:900,price:1500,hours:6},pacu:{name:"Pacu",icon:"🐟",egg:620,price:980,hours:5},tambaqui:{name:"Tambaqui",icon:"🐠",egg:780,price:1250,hours:6},pintado:{name:"Pintado",icon:"🐟",egg:1100,price:1850,hours:7},dourado:{name:"Dourado",icon:"🐠",egg:1250,price:2100,hours:7},pirarucu:{name:"Pirarucu",icon:"🐟",egg:1800,price:3200,hours:9},esturjao:{name:"Esturjão",icon:"🐟",egg:2400,price:4400,hours:10}};
@@ -290,6 +312,14 @@ const FISH_TYPES={
  pirarucu:{name:'Pirarucu',rarity:'Lendário',xp:20,icon:'🐟',minRod:4,weight:5},
  jau:{name:'Jaú',rarity:'Lendário',xp:22,icon:'🐟',minRod:4,weight:4},
  pirarara:{name:'Pirarara',rarity:'Lendário',xp:24,icon:'🐠',minRod:4,weight:3},
+ piranha:{name:'Piranha',rarity:'Incomum',xp:7,icon:'🐟',minRod:1,weight:14},
+ matrinxa:{name:'Matrinxã',rarity:'Raro',xp:10,icon:'🐟',minRod:2,weight:11},
+ piraputanga:{name:'Piraputanga',rarity:'Raro',xp:10,icon:'🐠',minRod:2,weight:10},
+ jundia:{name:'Jundiá',rarity:'Incomum',xp:7,icon:'🐟',minRod:1,weight:14},
+ cachara:{name:'Cachara',rarity:'Muito raro',xp:15,icon:'🐟',minRod:3,weight:7},
+ barbado:{name:'Barbado',rarity:'Muito raro',xp:16,icon:'🐟',minRod:3,weight:6},
+ aruana:{name:'Aruanã',rarity:'Raro',xp:12,icon:'🐠',minRod:2,weight:8},
+ apaiari:{name:'Apaiari (acará-açu)',rarity:'Incomum',xp:8,icon:'🐠',minRod:1,weight:12},
 };
 const FISHING_RODS={
  normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},
