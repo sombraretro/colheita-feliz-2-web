@@ -560,3 +560,6 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 
 
 @media(prefers-reduced-motion:reduce){}
+
+/* Lago artificial: margem em perspectiva, água viva e progressão da piscicultura. */
+#artificial-lake{filter:drop-shadow(0 9px 7px #25451f66)}.lake-ripples{animation:lakeDrift 8s ease-in-out infinite alternate;transform-origin:1480px -213px}.lake-growth{height:8px;margin:7px 0;border-radius:8px;background:#d8e0d3;overflow:hidden}.lake-growth i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#62b5a0,#277d9c)}@keyframes lakeDrift{from{transform:translate(-3px,-2px) scale(1)}to{transform:translate(4px,2px) scale(1.015)}}@media(prefers-reduced-motion:reduce){.lake-ripples{animation:none}}
