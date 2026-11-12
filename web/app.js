@@ -851,7 +851,7 @@ function plotTilePoint(r,c,i){const [x,y]=tilePoint(r,c);return [x+(i>=EXPANSION
 function diamondPoints(r,c,i=0){const [x,y]=plotTilePoint(r,c,i);return [[x,y],[x+100,y-45],[x+200,y],[x+100,y+45]]}
 function poly(points){return points.map(p=>p.join(',')).join(' ')}
 function plotGeometry(p,r,c,i){
- const pts=diamondPoints(r,c,i),s=poly(pts),[x,y]=plotTilePoint(r,c,i),shade=i%3,selected=i===lastSelected,red=p.soil==='red',requiredLevel=i>=EXPANSION_PLOT_START?50+(i-EXPANSION_PLOT_START):0,levelLocked=requiredLevel>0&&farmLevel()<requiredLevel;
+ const pts=diamondPoints(r,c,i),s=poly(pts),[x,y]=plotTilePoint(r,c,i),shade=i%3,selected=i===lastSelected,red=p.soil==='red',requiredLevel=i>=EXPANSION_PLOT_START?50+(i-EXPANSION_PLOT_START):0,levelLocked=requiredLevel>0&&farmLevel()<requiredLevel,purchaseLocked=i>=24&&i<EXPANSION_PLOT_START&&p.status==='grass';
  let tile=`<g class="plot-item" data-plot-index="${i}"><polygon points="${pts.map(([a,b])=>`${a+2},${b+8}`).join(' ')}" fill="${red?'#71372e':'#1c6a1a'}" opacity=".54"/><polygon points="${s}" fill="${p.status==='spent'?(red?'#714039':'#785030'):(red?'#a9473f':'#60b62e')}" stroke="${red?'#78382f':(p.status==='spent'?'#5f3c28':'#3a7622')}" stroke-width="2.5"/>`;
  if(p.status==='spent'){
   for(let k=0;k<13;k++){const a=seedNoise(i*100+k*3)*125,b=seedNoise(i*9+k*21)*25;tile+=`<ellipse cx="${x+31+a}" cy="${y+6+b}" rx="${3+seedNoise(k+12)*8}" ry="2.3" fill="#a9764e" opacity=".5"/>`}
@@ -863,7 +863,7 @@ function plotGeometry(p,r,c,i){
    tile+=`<path d="M${xx} ${yy}l${-8+seedNoise(k)*5} -5m8 5l${4+seedNoise(k*3)*7} -4" stroke="${shade===0?'#f4f9c2':'#ebf8ad'}" stroke-width="2" opacity=".53" fill="none"/>`;
   }
  }
- if(red)tile+=`<g pointer-events="none"><circle cx="${x+174}" cy="${y-14}" r="10" fill="#8f302d" stroke="#f2c0a9" stroke-width="2"/><path d="M${x+170} ${y-14}q4-8 9-2q-1 7-9 2Z" fill="#f6d6b4"/></g>`;if(levelLocked)tile+=`<g pointer-events="none"><rect x="${x+87}" y="${y-7}" width="26" height="22" rx="4" fill="#59462e" stroke="#f2d58e" stroke-width="2"/><path d="M${x+93} ${y-7}v-8a7 7 0 0 1 14 0v8" fill="none" stroke="#f2d58e" stroke-width="4" stroke-linecap="round"/><text x="${x+100}" y="${y+32}" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff5d4" stroke="#59462e" stroke-width="3" paint-order="stroke">NV. ${requiredLevel}</text></g>`;if(selected)tile+=`<polygon class="plot-selection" points="${s}"/>`;
+ if(red)tile+=`<g pointer-events="none"><circle cx="${x+174}" cy="${y-14}" r="10" fill="#8f302d" stroke="#f2c0a9" stroke-width="2"/><path d="M${x+170} ${y-14}q4-8 9-2q-1 7-9 2Z" fill="#f6d6b4"/></g>`;if(levelLocked||purchaseLocked)tile+=`<g pointer-events="none"><rect x="${x+87}" y="${y-7}" width="26" height="22" rx="4" fill="#59462e" stroke="#f2d58e" stroke-width="2"/><path d="M${x+93} ${y-7}v-8a7 7 0 0 1 14 0v8" fill="none" stroke="#f2d58e" stroke-width="4" stroke-linecap="round"/>${levelLocked?`<text x="${x+100}" y="${y+32}" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff5d4" stroke="#59462e" stroke-width="3" paint-order="stroke">NV. ${requiredLevel}</text>`:''}</g>`;if(selected)tile+=`<polygon class="plot-selection" points="${s}"/>`;
  tile+=`<polygon class="plot-hit" points="${s}" data-i="${i}" data-row="${r}" data-col="${c}" tabindex="0" role="button" aria-label="Terreno ${i+1}${levelLocked?' bloqueado até o nível '+requiredLevel:''}"/><title>Terreno ${i+1}${levelLocked?' · bloqueado até o nível '+requiredLevel:''}</title></g>`;
  let crop='';
  if(p.status==='growing'){
