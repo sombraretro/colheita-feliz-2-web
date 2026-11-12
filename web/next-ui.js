@@ -68,17 +68,20 @@
       let touchScroll = null;
       moreMenu.addEventListener('pointerdown', event => {
         if (event.pointerType !== 'touch' || moreMenu.scrollHeight <= moreMenu.clientHeight) return;
-        touchScroll = { id: event.pointerId, startY: event.clientY, startTop: moreMenu.scrollTop, moved: false };
+        const rotatedFallback = document.documentElement.classList.contains('orientation-landscape-fallback') && matchMedia('(orientation: portrait)').matches;
+        touchScroll = { id: event.pointerId, startY: event.clientY, startX: event.clientX, startTop: moreMenu.scrollTop, rotatedFallback, moved: false };
       }, { passive: true });
       moreMenu.addEventListener('pointermove', event => {
         if (!touchScroll || touchScroll.id !== event.pointerId) return;
-        const delta = event.clientY - touchScroll.startY;
+        const delta = touchScroll.rotatedFallback
+          ? event.clientX - touchScroll.startX
+          : event.clientY - touchScroll.startY;
         if (!touchScroll.moved && Math.abs(delta) < 6) return;
         if (!touchScroll.moved) {
           touchScroll.moved = true;
           try { moreMenu.setPointerCapture(event.pointerId); } catch {}
         }
-        moreMenu.scrollTop = touchScroll.startTop - delta;
+        moreMenu.scrollTop = touchScroll.startTop + (touchScroll.rotatedFallback ? delta : -delta);
         event.preventDefault();
       }, { passive: false });
       const finishTouchScroll = event => {
