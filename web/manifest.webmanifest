@@ -1,0 +1,20 @@
+{
+  "name": "Colheita Feliz 2 — Edição Online",
+  "short_name": "Colheita Feliz 2",
+  "description": "Sua fazenda online.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#55a92a",
+  "theme_color": "#438e19",
+  "icons": [
+    {
+      "src": "/assets/arvore.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
