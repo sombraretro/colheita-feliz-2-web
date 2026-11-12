@@ -1174,6 +1174,23 @@ function renderOrchardArea(){
  return html;
 }
 
+function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
+ const posts=Array.from({length:9},(_,i)=>{const px=-half+(i*2*half/8);return `<path d="M${px.toFixed(1)} -20v-29 M${px.toFixed(1)} 20v29" stroke="#493326" stroke-width="${i===0||i===8?8:6}" stroke-linecap="round"/>`}).join("");
+ const planks=Array.from({length:13},(_,i)=>{const px=-half+((i+1)*2*half/14);return `<path d="M${px.toFixed(1)} -17v39" stroke="#69452e" stroke-width="3.2" opacity=".85"/>`}).join("");
+ const rail=variant%2===0?'#d7ad70':'#e2c18b';
+ return `<g class="river-bridge river-bridge-${variant}" transform="translate(${x} ${y}) rotate(${angle})">
+  <path d="M-${half} -13Q0 -29 ${half} -13L${half} 28Q0 12 -${half} 28Z" fill="#30251e" opacity=".4" transform="translate(0 7)"/>
+  <path d="M-${half} -19Q0 -35 ${half} -19L${half} 22Q0 6 -${half} 22Z" fill="${tone}" stroke="#493326" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M-${half} -19Q0 -35 ${half} -19L${half} -8Q0 -24 -${half} -8Z" fill="#f4d9a5" opacity=".72"/>
+  ${planks}
+  <path d="M-${half} -20Q0 -67 ${half} -20M-${half} 20Q0 67 ${half} 20" fill="none" stroke="#493326" stroke-width="8" stroke-linecap="round"/>
+  <path d="M-${half} -20Q0 -67 ${half} -20M-${half} 20Q0 67 ${half} 20" fill="none" stroke="${rail}" stroke-width="4.5" stroke-linecap="round"/>
+  ${posts}
+  <path d="M-${half} -18l-7 -8m${2*half-14} 0l7 8M-${half} 22l-7 8m${2*half-14} 0l7 -8" stroke="#493326" stroke-width="5" stroke-linecap="round"/>
+  <path d="M-${half} -4h13m${2*half-26} 0h13" stroke="#f6e1b9" stroke-width="3" opacity=".8"/>
+  <path d="M-${half+3} -23l-5 -7m${2*half+6} 0l-5 7" stroke="#f0d19a" stroke-width="5" stroke-linecap="round"/>
+ </g>`;
+}
 function renderPondArea(){
  if(!state?.expansions?.pond)return '';
  return `<g id="pond-area" pointer-events="none" transform="translate(-650 0)">
@@ -1223,18 +1240,12 @@ function renderPondArea(){
    </g>
   </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
-  <g transform="translate(-825 760)">
-   <g transform="translate(25 19)" fill="#6da94a" stroke="#397b2e" stroke-width="2">
-    <ellipse cx="-12" cy="8" rx="18" ry="9"/><ellipse cx="4" cy="3" rx="17" ry="10"/><ellipse cx="17" cy="10" rx="15" ry="8"/>
-    <path d="M-9 7q-12-18-18-15q1 14 18 15M3 4q4-19 14-18q4 14-14 18M13 9q15-12 21-5q-5 12-21 5Z" fill="#91c95a"/>
-   </g>
-   <ellipse cx="-105" cy="31" rx="137" ry="17" fill="#274f2a" opacity=".22"/>
-   <!-- Pequena ponte de tábuas, apoiada apenas nas margens, sem pilares no leito do rio. -->
-   <path d="M18 -10Q-92 -43 -224 -12L-211 25Q-91 -2 28 18Z" fill="#80502d" stroke="#593a24" stroke-width="7" stroke-linejoin="round"/>
-   <path d="M12 -7Q-94 -34 -218 -9M16 2Q-91 -24 -215 0M21 11Q-88 -13 -212 12" fill="none" stroke="#d6a36a" stroke-width="7" stroke-linecap="round"/>
-   <path d="M-28 -19L-17 24M-72 -29L-61 14M-116 -31L-105 11M-160 -25L-149 16M-198 -15L-187 25" stroke="#684126" stroke-width="3" opacity=".72"/>
-   <path d="M-220 -13L-224 -24M18 -10L25 -21" stroke="#e4bd88" stroke-width="5" stroke-linecap="round"/>
-  </g>
+  ${[
+   [-1228,-120,42,108,'#b7834d',0],
+   [-1118,180,-38,104,'#477da8',1],
+   [-1107,500,-30,92,'#568b58',2],
+   [-1075,830,36,104,'#a34f43',3]
+  ].map(b=>renderRiverBridgeMarkup(...b)).join('')}
   <text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text>
  </g>`;
 }
