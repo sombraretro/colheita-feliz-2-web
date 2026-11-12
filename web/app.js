@@ -1729,6 +1729,8 @@ function awardSpecialistXP(key,amount){
   playSfx('levelup');const notices=[];
   for(let reached=before+1;reached<=level;reached++){
    const promotion=specialistPromotionLevel(key,reached),rewards=grantSpecialistReward(key,reached,promotion);
+   const greenReward=1+(promotion?3:0);state.greenCoins=(state.greenCoins||0)+greenReward;
+   rewards.push('🟢 '+greenReward+' moeda(s) verde(s)');
    notices.push('Nível '+reached+': '+specialistTitle(key,reached)+(promotion?' · PROMOÇÃO':'')+' · '+(rewards.length?rewards.join(', '):'recompensa recebida'));
   }
   const lastTitle=specialistTitle(key,level),lastPromotion=specialistPromotionLevel(key,level);
