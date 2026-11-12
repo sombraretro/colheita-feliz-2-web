@@ -723,3 +723,10 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .mobile-shortcut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}.mobile-shortcut-option{display:flex;align-items:center;gap:8px;padding:11px;border:1px solid #d5b77c;border-radius:10px;background:#fff8e7;font-weight:700;color:#68451f}.mobile-shortcut-option input{width:18px;height:18px;accent-color:#5a9b30}
 @media(min-width:701px) and (max-width:1024px){.farm-stats{transform:scale(.88);transform-origin:top left}.side-menu{max-height:58%;overflow:auto}.mobile-navigation{grid-template-columns:repeat(5,minmax(0,1fr));min-height:70px;padding:7px 14px calc(7px + env(safe-area-inset-bottom));gap:12px}.mobile-navigation button{min-height:54px;border-radius:12px}.mobile-navigation button span{font-size:23px}.mobile-navigation button small{font-size:12px}.playfield{min-height:0}}
 @media(min-width:1025px){.playfield{width:100%;max-width:none}.side-menu{max-width:min(360px,32vw)}}
+
+.crop-icon-mark{display:inline-grid;place-items:center;line-height:1;vertical-align:middle}.crop-icon-art svg{width:1.45em;height:1.45em;display:block;filter:none}.forest-icon-mark{display:inline-block;line-height:1}
+.quick-actions{max-width:min(220px,28vw)}.quick-actions button{white-space:normal;line-height:1.25;min-height:34px}
+#multi-select-plots.active{background:linear-gradient(#fff2bd,#f0cb63);border-color:#b8862f;box-shadow:0 0 0 2px #fff3b2}
+.plot-selection{fill:#ffe45c;stroke:#fff5c4;stroke-width:8;opacity:.52;pointer-events:none}
+@media(min-width:1200px){.playfield{width:100%;max-width:none}.side-menu{max-width:min(390px,28vw)}.quick-actions{right:22px}.farm-stats{max-width:380px}}
+@media(max-width:700px){.quick-actions{right:8px;bottom:calc(92px + env(safe-area-inset-bottom));max-width:160px}.quick-actions button{min-width:130px;font-size:10px;padding:7px}.crop-icon-art svg{width:1.3em;height:1.3em}}
