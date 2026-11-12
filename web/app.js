@@ -633,7 +633,7 @@ async function toggleLandscapeMode(){
   root.classList.remove('orientation-landscape-fallback');
   try{screen.orientation?.unlock?.()}catch{}
   syncLandscapeControls(false);
-  requestAnimationFrame(()=>{updateView();fitWholeFarm()});
+  requestAnimationFrame(updateView);
   notify('Modo paisagem desativado.');return;
  }
  let locked=false;
@@ -644,7 +644,7 @@ async function toggleLandscapeMode(){
  requestAnimationFrame(()=>{updateView();fitWholeFarm()});
  notify(locked?'Modo paisagem ativado.':'Modo paisagem visual ativado. Se o aparelho não girar fisicamente, o jogo será ajustado para a horizontal.');
 }
-window.addEventListener('orientationchange',()=>requestAnimationFrame(()=>{updateView();fitWholeFarm()}));
+window.addEventListener('orientationchange',()=>requestAnimationFrame(updateView));
 window.addEventListener('resize',()=>{if(landscapeModeActive)requestAnimationFrame(updateView)});
 document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startFarmMusic()},{once:true});
 
