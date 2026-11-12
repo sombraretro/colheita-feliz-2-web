@@ -1310,7 +1310,7 @@ function renderPondArea(){
     ${[[-1660,-12,'#f0c94f'],[-1510,48,'#e879a5'],[-1735,245,'#f5e7d2'],[-1465,225,'#9d83d2'],[-1600,405,'#efc84f'],[-1740,555,'#e879a5'],[-1485,535,'#f4e4c7'],[-1650,755,'#9d83d2'],[-1510,905,'#f0c94f'],[-1730,1030,'#e879a5'],[-1450,1015,'#f4e4c7']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><path d="M0 7v-12" stroke-width="2.5"/><circle cy="-16" r="4.5" fill="${c}"/><circle cx="-5.5" cy="-13" r="4" fill="${c}"/><circle cx="5.5" cy="-13" r="4" fill="${c}"/><circle cy="-10" r="3.8" fill="${c}"/><circle cy="-13" r="2" fill="#f8e6a7"/></g>`).join('')}
    </g>
   </g>
-  <text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text>
+
  </g>`;
 }
 
@@ -1716,7 +1716,7 @@ function renderLakeArea(){
   <path d="M${x-90} ${y-95}q55-15 110 0t110 0M${x-175} ${y+5}q38-12 76 0t76 0" fill="none" stroke="#d8ffff" stroke-width="4" opacity=".38"/>
  </g>
  <path d="M${x-170} ${y-105}q-32-22-48 4m380 18q26-22 42 2M${x-170} ${y+105}q-26 18-43-4m365-2q30 20 45-4" fill="none" stroke="#397b35" stroke-width="9" stroke-linecap="round"/>
- <text x="${x}" y="${y+5}" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff" stroke="#17536c" stroke-width="4" paint-order="stroke">LAGO</text>`;
+`;
  (state.lake?.bridges||[]).forEach(bridge=>{
   const tone=WOODWORK_RECIPES[bridge.id]?.tone||"#b7834d";
   const angle=[0,90,45,-45][Number(bridge.slot)]??0,rad=angle*Math.PI/180;
