@@ -448,7 +448,7 @@ function initSupabase(){
    if(session&&['SIGNED_IN','INITIAL_SESSION'].includes(event)){
     window.setTimeout(()=>{if(state)handleAuthSession(session).catch(error=>console.error('Falha ao concluir autenticação:',error));},0);
    }else if(event==='SIGNED_OUT'){
-    clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];onlineGifts=[];onlineGiftsLoaded=false;onlinePlayerCode='';onlineCodeSearchResult=null;visitedFarm=null;updateConnectionLabel();if(currentModal==='account')renderModal();refresh();
+    clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;clearCloudRetry();cloudRetryAttempt=0;cloudRetryContext=null;cloudPermanentSaveError=null;cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];onlineGifts=[];onlineGiftsLoaded=false;onlinePlayerCode='';onlineCodeSearchResult=null;visitedFarm=null;farmVisitSettings={allow_visits:true,like_count:0};updateConnectionLabel();if(currentModal==='account')renderModal();refresh();
    }
   });
   supabaseAuthSubscription=listener?.data?.subscription||true;
@@ -605,7 +605,7 @@ async function disconnectCloud(){
  if(dirty){await save();if(dirty||cloudDirty)return notify('Não foi possível concluir o salvamento na nuvem. A sessão foi mantida para proteger seu progresso.')}
  else if(cloudDirty){try{await saveCloud()}catch(error){return notify('Não foi possível sincronizar antes de sair: '+(error.message||'tente novamente.'))}}
  const {error}=await supabaseClient.auth.signOut();if(error)return notify(error.message||'Não foi possível sair da conta.');
- cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineSocialLoaded=false;onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;onlinePlayerCode='';onlineCodeSearchResult=null;visitedFarm=null;updateConnectionLabel();refresh();notify('Sessão encerrada. Entre novamente para carregar sua fazenda da nuvem.');renderModal();
+ cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineSocialLoaded=false;onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;onlinePlayerCode='';onlineCodeSearchResult=null;visitedFarm=null;farmVisitSettings={allow_visits:true,like_count:0};updateConnectionLabel();refresh();notify('Sessão encerrada. Entre novamente para carregar sua fazenda da nuvem.');renderModal();
 }
 
 let soundEnabled=true,musicEnabled=true;
@@ -2325,7 +2325,7 @@ async function markOnlineNotificationRead(id){
  catch(error){notify(error.message||'Não foi possível marcar a notificação.')}
 }
 
-let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null;
+let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null;farmVisitSettings={allow_visits:true,like_count:0};
 async function refreshOnlineGifts(showError=true){
  if(!cloudUser||onlineGiftsBusy)return;
  onlineGiftsBusy=true;
