@@ -2295,17 +2295,17 @@ function updateView(){const v=Math.min(2.5,Math.max(.22,view.zoom));view.zoom=v;
 function setZoom(next){view.zoom=Math.round(Math.max(.22,Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),fit=Math.min(WORLD.h/(WORLD.bottom-WORLD.top),WORLD.h*aspect/(WORLD.right-WORLD.left));view.cx=(WORLD.left+WORLD.right)/2;view.cy=(WORLD.top+WORLD.bottom)/2;setZoom(fit*.97)}
 function panView(direction){const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);view.cx+=direction*visibleW*.68;updateView()}
-let drag=null,selectedForestSlot=0;
+let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
-$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag)plotAction(Number(hit.dataset.i))});
-$('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
-$('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
+$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});
+$('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
+$('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
 $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i){e.preventDefault();plotAction(Number(e.target.dataset.i))}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');if(!b||b.closest('#modal-body'))return;e.preventDefault();e.stopPropagation();openModal(b.dataset.modal)},true);
 document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
-$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
+$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('orientation-toggle-mobile')?.addEventListener('click',toggleLandscapeMode);$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
 if(d.socialSearch)searchOnlinePlayers();if(d.socialRefresh)refreshOnlineSocial();if(d.socialAdd)sendOnlineFriendRequest(d.socialAdd);if(d.socialAccept)respondOnlineFriendRequest(d.socialAccept,true);if(d.socialReject)respondOnlineFriendRequest(d.socialReject,false);if(d.conversation){activeConversationId=d.conversation;onlineMessages=[];openModal('inbox');loadOnlineConversation(d.conversation,false)}if(d.socialInboxRefresh)refreshOnlineInbox();if(d.sendOnlineMessage)sendOnlineMessage();if(d.notificationRead)markOnlineNotificationRead(d.notificationRead);if(d.visitFarm)visitOnlineFriendFarm(d.visitFarm);if(d.helpFriendFarm)helpOnlineFriendFarm();if(d.sendOnlineGift)sendOnlineGift(d.sendOnlineGift);if(d.claimOnlineGift)claimOnlineGift(d.claimOnlineGift);if(d.refreshOnlineGifts)refreshOnlineGifts();if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand,d.wandCurrency||'green');if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
 if(d.setMood)setMood(d.setMood);if(d.buyRod)buyFishingRod(d.buyRod,d.currency);if(d.selectRod)selectFishingRod(d.selectRod);if(d.castFish)castFishingRod();if(d.buyGrill)buyGrill();if(d.buyGrillPart)buyGrillPart(d.buyGrillPart);if(d.buyGrillIngredient)buyGrillSupply(d.buyGrillIngredient);if(d.buyTurkeyMeat)buyTurkeyMeat();if(d.butcherAnimal)butcherAnimal(d.butcherAnimal);if(d.produceGrill)produceGrillRecipe(d.produceGrill,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectGrill)collectGrill();if(d.cookRecipe)produceKitchenRecipe(d.cookRecipe,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectKitchen)collectKitchen();if(d.selectForest!==undefined){selectedForestSlot=Number(d.selectForest);renderModal()}if(d.plantForest!==undefined)plantForestTree(Number(d.slot),d.plantForest);if(d.harvestForest!==undefined)harvestForestTree(Number(d.harvestForest));if(d.buySeaNet)buySeaNet(d.buySeaNet,d.currency);if(d.selectSeaNet)selectSeaNet(d.selectSeaNet);if(d.castSea)castSeaNet();if(d.craftWood)craftWoodItem(d.craftWood);if(d.collectWoodwork)collectWoodwork();if(d.buyLakeEgg)buyLakeEgg(d.buyLakeEgg);if(d.buyLakeFeed)buyLakeFeed();if(d.feedLakeFish)feedLakeFish(d.feedLakeFish);if(d.sellLakeFish)sellLakeFish(d.sellLakeFish);if(d.placeLakeDecor)placeLakeDecoration(d.placeLakeDecor);if(d.removeLakeDecor!==undefined)removeLakeDecoration(Number(d.removeLakeDecor));if(d.placeLakeBridge)placeLakeBridge(d.placeLakeBridge);if(d.removeLakeBridge!==undefined)removeLakeBridge(Number(d.removeLakeBridge));if(d.toggleMeatLock)toggleMeatLock(d.toggleMeatLock);if(d.sellMeat){const qty=saleQuantity('meat',d.sellMeat,state.meatWarehouse[d.sellMeat]||0);if(qty)sellMeat(d.sellMeat,qty)}if(d.toggleProcessedLock)toggleProcessedLock(d.toggleProcessedLock);if(d.sellProcessed){const qty=saleQuantity('processed',d.sellProcessed,state.processedWarehouse[d.sellProcessed]||0);if(qty)sellProcessed(d.sellProcessed,qty)}if(d.assembleGrill)assembleGrill();if(d.buyTheme)buyFarmTheme(d.buyTheme,d.currency||'coins');if(d.applyTheme)applyFarmTheme(d.applyTheme);if(d.buyDecoration)buyDecoration(d.buyDecoration);if(d.placeDecoration)placeDecoration(d.placeDecoration);if(d.removeDecoration!==undefined)removeDecoration(d.removeDecoration);
@@ -2320,9 +2320,49 @@ $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
 window.addEventListener('resize',updateView);
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.15);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.15)});
-$('playfield').addEventListener('pointerdown',e=>{if(!e.target.closest('#world'))return;const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');const requested=e.altKey||e.button===1;const freeDrag=e.button===0&&!interactive;if(!requested&&!freeDrag)return;e.preventDefault();drag={x:e.clientX,y:e.clientY,cx:view.cx,cy:view.cy,moved:false};$('playfield').setPointerCapture(e.pointerId)});
-$('playfield').addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height),ratioX=visibleW/rect.width,ratioY=visibleH/rect.height;view.cx=drag.cx-dx*ratioX;view.cy=drag.cy-dy*ratioY;updateView()});
-$('playfield').addEventListener('pointerup',e=>{drag=null});$('playfield').addEventListener('pointercancel',()=>drag=null);
+$('playfield').addEventListener('pointerdown',e=>{
+ if(!e.target.closest('#world'))return;
+ activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ try{$('playfield').setPointerCapture(e.pointerId)}catch{}
+ if(activePointers.size>=2){
+  const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=svg.getBoundingClientRect();
+  const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2,dist=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
+  const visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);
+  const rx=(midX-rect.left)/Math.max(1,rect.width),ry=(midY-rect.top)/Math.max(1,rect.height);
+  pinchState={distance:dist,zoom:view.zoom,worldX:view.cx-visibleW/2+rx*visibleW,worldY:view.cy-visibleH/2+ry*visibleH};
+  drag=null;e.preventDefault();return;
+ }
+ const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');
+ const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
+ if(!requested&&!freeDrag)return;
+ e.preventDefault();drag={x:e.clientX,y:e.clientY,cx:view.cx,cy:view.cy,moved:false};
+});
+$('playfield').addEventListener('pointermove',e=>{
+ if(!activePointers.has(e.pointerId))return;
+ activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(activePointers.size>=2&&pinchState){
+  const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=svg.getBoundingClientRect();
+  const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2,dist=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
+  const next=Math.max(.22,Math.min(2.5,pinchState.zoom*dist/pinchState.distance));
+  view.zoom=Math.round(next*100)/100;
+  const visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);
+  const rx=(midX-rect.left)/Math.max(1,rect.width),ry=(midY-rect.top)/Math.max(1,rect.height);
+  view.cx=pinchState.worldX-rx*visibleW+visibleW/2;
+  view.cy=pinchState.worldY-ry*visibleH+visibleH/2;
+  suppressWorldClickUntil=Date.now()+500;updateView();e.preventDefault();return;
+ }
+ if(!drag)return;
+ const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+ if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;
+ const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height),ratioX=visibleW/rect.width,ratioY=visibleH/rect.height;
+ view.cx=drag.cx-dx*ratioX;view.cy=drag.cy-dy*ratioY;updateView();
+});
+const finishPointer=e=>{
+ activePointers.delete(e.pointerId);pinchState=null;drag=null;
+ if(activePointers.size===1){const p=[...activePointers.values()][0];drag={x:p.x,y:p.y,cx:view.cx,cy:view.cy,moved:true}}
+};
+$('playfield').addEventListener('pointerup',finishPointer);
+$('playfield').addEventListener('pointercancel',finishPointer);
 window.addEventListener('beforeunload',()=>{if(dirty)save()});
 }
 async function start(){
