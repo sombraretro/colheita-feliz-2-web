@@ -65,6 +65,27 @@
     const moreMenu = document.querySelector('.more-menu');
     const moreToggles = [...document.querySelectorAll('[data-more-toggle]')];
     if (moreMenu && moreToggles.length) {
+      let touchScroll = null;
+      moreMenu.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'touch' || moreMenu.scrollHeight <= moreMenu.clientHeight) return;
+        touchScroll = { id: event.pointerId, startY: event.clientY, startTop: moreMenu.scrollTop, moved: false };
+      }, { passive: true });
+      moreMenu.addEventListener('pointermove', event => {
+        if (!touchScroll || touchScroll.id !== event.pointerId) return;
+        const delta = event.clientY - touchScroll.startY;
+        if (!touchScroll.moved && Math.abs(delta) < 6) return;
+        if (!touchScroll.moved) {
+          touchScroll.moved = true;
+          try { moreMenu.setPointerCapture(event.pointerId); } catch {}
+        }
+        moreMenu.scrollTop = touchScroll.startTop - delta;
+        event.preventDefault();
+      }, { passive: false });
+      const finishTouchScroll = event => {
+        if (touchScroll && touchScroll.id === event.pointerId) touchScroll = null;
+      };
+      moreMenu.addEventListener('pointerup', finishTouchScroll);
+      moreMenu.addEventListener('pointercancel', finishTouchScroll);
       const syncMoreToggles = open => moreToggles.forEach(toggle => {
         toggle.setAttribute('aria-expanded', String(open));
         toggle.setAttribute('aria-label', open ? 'Fechar mais opções' : 'Abrir mais opções');
