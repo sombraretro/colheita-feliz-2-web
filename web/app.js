@@ -545,7 +545,7 @@ async function saveCloud(snapshot=state){
  }
  if(result.error){if(result.error.code==='23505')throw cloudRevisionConflict('A fazenda foi criada em outra sessão. Carregue a versão atual da nuvem antes de continuar.');throw result.error;}
  if(!result.data)throw cloudRevisionConflict();
- cloudRevision=Number(result.data.revision)||nextRevision;cloudUpdatedAt=result.data.updated_at||row.updated_at;cloudRetryContext=null;publishSocialProfile().catch(error=>console.error('Publicação do perfil social:',error));
+ cloudRevision=Number(result.data.revision)||nextRevision;cloudUpdatedAt=result.data.updated_at||row.updated_at;cloudDirty=dirty;cloudRetryContext=null;publishSocialProfile().catch(error=>console.error('Publicação do perfil social:',error));
 }
 async function handleAuthSession(session){
  if(!session?.user||!supabaseClient)return;
