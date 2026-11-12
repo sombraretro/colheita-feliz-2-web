@@ -194,15 +194,15 @@ const GRILL_RECIPES={
  jau_assado:{name:'Jaú Assado de Festa',icon:'🔥',minutes:115,yield:2,salePrice:1080,xp:52,ingredients:[['fish','jau',1],['crop','batata',2],['crop','pimenta',1],['supply','seasoning',1]]},
  pirarara_especial:{name:'Pirarara Especial do Pescador',icon:'🍛',minutes:125,yield:2,salePrice:1180,xp:56,ingredients:[['fish','pirarara',1],['crop','tomate',1],['crop','milho',1],['supply','honey',1]]},
  piranha_brasa:{name:'Piranha na Brasa com Ervas',icon:'🔥',minutes:70,yield:2,salePrice:520,xp:28,ingredients:[['fish','piranha',1],['crop','tomate',1],['supply','seasoning',1]]},
- matrinxa_assada:{name:'Matrinxã Assada Recheada',icon:'🐟',minutes:85,yield:2,salePrice:720,xp:36,ingredients:[['fish','matrinxa',1],['crop','cebola',1],['crop','farinha_mandioca',1],['supply','seasoning',1]]},
+ matrinxa_assada:{name:'Matrinxã Assada Recheada',icon:'🐟',minutes:85,yield:2,salePrice:720,xp:36,ingredients:[['fish','matrinxa',1],['crop','cebola',1],['crop','mandioca',1],['supply','seasoning',1]]},
  piraputanga_grelhada:{name:'Piraputanga Grelhada Pantaneira',icon:'🐠',minutes:80,yield:2,salePrice:690,xp:34,ingredients:[['fish','piraputanga',1],['crop','tomate',1],['crop','pimenta',1]]},
  jundia_na_folha:{name:'Jundiá na Folha de Bananeira',icon:'🍃',minutes:65,yield:2,salePrice:470,xp:24,ingredients:[['fish','jundia',1],['supply','banana_leaf',1],['supply','seasoning',1]]},
- cachara_brasa:{name:'Cachara na Brasa com Alho',icon:'🐟',minutes:100,yield:2,salePrice:880,xp:43,ingredients:[['fish','cachara',1],['crop','alho',2],['crop','limão',1],['supply','seasoning',1]]},
+ cachara_brasa:{name:'Cachara na Brasa com Alho',icon:'🐟',minutes:100,yield:2,salePrice:880,xp:43,ingredients:[['fish','cachara',1],['crop','alho',2],['crop','limao',1],['supply','seasoning',1]]},
  barbado_assado:{name:'Barbado Assado à Beira-Rio',icon:'🔥',minutes:105,yield:2,salePrice:940,xp:46,ingredients:[['fish','barbado',1],['crop','cebola',1],['crop','tomate',2],['supply','seasoning',1]]},
  aruana_grelhado:{name:'Aruanã Grelhado com Pimenta',icon:'🐠',minutes:90,yield:2,salePrice:790,xp:39,ingredients:[['fish','aruana',1],['crop','pimenta',1],['crop','alho',1],['supply','seasoning',1]]},
  apaiari_assado:{name:'Apaiari Assado Amazônico',icon:'🐟',minutes:75,yield:2,salePrice:560,xp:29,ingredients:[['fish','apaiari',1],['crop','tomate',1],['crop','cebola',1],['supply','seasoning',1]]},
  salmao_brasa:{name:'Salmão na Brasa com Ervas',icon:'🐟',minutes:115,yield:2,salePrice:1120,xp:54,ingredients:[['sea','salmao',1],['crop','alho',1],['crop','batata',1],['supply','seasoning',1]]},
- bacalhau_grelhado:{name:'Bacalhau Grelhado à Portuguesa',icon:'🐟',minutes:145,yield:2,salePrice:1480,xp:68,ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['supply','olive_oil',1]]}
+ bacalhau_grelhado:{name:'Bacalhau Grelhado à Portuguesa',icon:'🐟',minutes:145,yield:2,salePrice:1480,xp:68,ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['supply','dende_oil',1]]}
 };
 Object.assign(GRILL_RECIPES,{
  goat_grilled:{name:'Cabrito na Brasa com Ervas',icon:'🍖',minutes:105,yield:2,salePrice:780,xp:42,ingredients:[['meat','goat',1],['crop','pimenta',1],['supply','seasoning',1]]},
@@ -223,7 +223,7 @@ Object.assign(GRILL_RECIPES,{
  kitchen_matrinxa_moqueca:{name:'Moqueca de Matrinxã',icon:'🍲',minutes:92,yield:2,salePrice:890,xp:44,kitchenOnly:true,ingredients:[['fish','matrinxa',1],['crop','tomate',2],['crop','cebola',1],['supply','dende_oil',1]]},
  kitchen_piraputanga_rice:{name:'Arroz Cremoso de Piraputanga',icon:'🍚',minutes:82,yield:3,salePrice:820,xp:40,kitchenOnly:true,ingredients:[['fish','piraputanga',1],['crop','arroz',2],['crop','tomate',1],['crop','alho',1]]},
  kitchen_jundia_stew:{name:'Ensopado Caipira de Jundiá',icon:'🥘',minutes:70,yield:2,salePrice:590,xp:30,kitchenOnly:true,ingredients:[['fish','jundia',1],['crop','batata',2],['crop','cebola',1],['crop','tomate',1]]},
- kitchen_cachara_pirao:{name:'Cachara ao Molho com Pirão',icon:'🍲',minutes:110,yield:2,salePrice:1080,xp:52,kitchenOnly:true,ingredients:[['fish','cachara',1],['crop','farinha_mandioca',2],['crop','tomate',2],['crop','cebola',1]]},
+ kitchen_cachara_pirao:{name:'Cachara ao Molho com Pirão',icon:'🍲',minutes:110,yield:2,salePrice:1080,xp:52,kitchenOnly:true,ingredients:[['fish','cachara',1],['crop','mandioca',2],['crop','tomate',2],['crop','cebola',1]]},
  kitchen_barbado_stew:{name:'Barbado Ensopado com Legumes',icon:'🥘',minutes:118,yield:2,salePrice:1160,xp:56,kitchenOnly:true,ingredients:[['fish','barbado',1],['crop','batata',2],['crop','cenoura',1],['crop','tomate',1]]},
  kitchen_aruana_coconut:{name:'Aruanã ao Leite de Coco',icon:'🍛',minutes:105,yield:2,salePrice:1020,xp:50,kitchenOnly:true,ingredients:[['fish','aruana',1],['crop','coco',1],['crop','tomate',1],['crop','cebola',1]]},
  kitchen_apaiari_stew:{name:'Apaiari ao Molho Amazônico',icon:'🍲',minutes:86,yield:2,salePrice:760,xp:38,kitchenOnly:true,ingredients:[['fish','apaiari',1],['crop','tomate',2],['crop','pimenta',1],['crop','cebola',1]]},
