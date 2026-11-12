@@ -1575,30 +1575,7 @@ function updateDayNight(){
   <rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="${opacity}"/>
   <g opacity="${night?.78:.28}" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g>
  </g>`);
- // A casa usa a mesma caixa de imagem de 440x430. As máscaras abaixo seguem
- // o desenho real dos vidros, deixando molduras e cruzetas totalmente livres.
- let lights=layer.querySelector('#house-window-lights');
- if(!lights){
-  layer.insertAdjacentHTML('beforeend',`<g id="house-window-lights" class="house-window-lights" transform="translate(780 84.8) scale(.7678883)" opacity="0" pointer-events="none">
-   <defs>
-    <linearGradient id="houseGlassWarm" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e9c987"/><stop offset=".55" stop-color="#d8ad68"/><stop offset="1" stop-color="#bd8c50"/></linearGradient>
-    <!-- Vidros mapeados sobre a arte original casa.png (573x430); molduras e cruzetas preservadas. -->
-   </defs>
-   <g fill="url(#houseGlassWarm)" opacity=".42">
-    <!-- Esquerda: vidro interno entre x64-121 / y265-337 -->
-    <path d="M65 266L88 268L88 295L65 293Z M96 269L119 271L119 295L96 294Z M65 305L88 307L88 333L65 331Z M96 307L119 308L119 335L96 334Z"/>
-    <!-- Centro: vidro interno entre x346-423 / y260-330 -->
-    <path d="M348 263L381 260L381 289L348 292Z M391 259L421 256L421 286L391 289Z M348 301L381 298L381 327L348 330Z M391 296L421 293L421 322L391 325Z"/>
-    <!-- Direita: vidro interno entre x458-520 / y254-318 -->
-    <path d="M460 258L485 258L485 281L460 281Z M493 258L517 259L517 282L493 282Z M460 290L485 290L485 315L460 315Z M493 290L517 291L517 316L493 316Z"/>
-    <!-- Sótão: quatro segmentos internos do vidro circular -->
-    <path d="M472 91A25 25 0 0 0 450 116L470 116Z M476 91A25 25 0 0 1 499 116L478 116Z M450 121A25 25 0 0 0 472 145L472 121Z M478 121L499 121A25 25 0 0 1 476 145Z"/>
-   </g>
-  </g>`);
-  lights=layer.querySelector('#house-window-lights');
- }
- const lightLevel=hour>=19||hour<5 ? .68 : hour>=18 ? .68*(hour-18) : hour>=5&&hour<6 ? .68*(6-hour) : 0;
- lights.style.opacity=String(Math.max(0,Math.min(.68,lightLevel)));
+
 }
 function applyMenuThemeColors(){
  const root=document.querySelector('.app');if(!root)return;
