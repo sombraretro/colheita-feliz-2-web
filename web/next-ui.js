@@ -39,7 +39,14 @@
           event.preventDefault();
           event.stopPropagation();
           if (menu.classList.contains('is-open')) close();
-          else open(toggle);
+          else {
+            document.querySelector('.more-menu')?.classList.remove('is-open');
+            document.querySelectorAll('[data-more-toggle]').forEach(moreToggle => {
+              moreToggle.setAttribute('aria-expanded', 'false');
+              moreToggle.setAttribute('aria-label', 'Abrir mais opções');
+            });
+            open(toggle);
+          }
         });
       });
       menu.addEventListener('click', event => {
@@ -70,6 +77,13 @@
         event.preventDefault();
         event.stopPropagation();
         const opening = !moreMenu.classList.contains('is-open');
+        if (opening) {
+          document.querySelector('.side-menu')?.classList.remove('is-open');
+          document.querySelectorAll('[data-sidebar-toggle]').forEach(sideToggle => {
+            sideToggle.setAttribute('aria-expanded', 'false');
+            sideToggle.setAttribute('aria-label', 'Abrir menu lateral');
+          });
+        }
         moreMenu.classList.toggle('is-open', opening);
         syncMoreToggles(opening);
       }));
