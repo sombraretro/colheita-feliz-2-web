@@ -1241,53 +1241,40 @@ function renderPondArea(){
   </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   ${[
-   [-1260,-120,-12,108,'#b7834d',0],
-   [-1205,180,-24,104,'#477da8',1],
+   [-1235,-120,-6,128,'#b7834d',0],
+   [-1115,180,-32,126,'#477da8',1],
    [-1107,500,-30,92,'#568b58',2],
-   [-1090,830,-18,104,'#a34f43',3]
+   [-1048,830,-21,128,'#a34f43',3]
   ].map(b=>renderRiverBridgeMarkup(...b)).join('')}
   <g class="river-left-grove" pointer-events="none">
-   <g transform="translate(-1515 -135) scale(1.12)">
-    <ellipse cx="0" cy="14" rx="74" ry="18" fill="#365b2b" opacity=".25"/>
-    <path d="M-5 8L-8-62L7-62L10 8Z" fill="#80502e" stroke="#5e3c26" stroke-width="4"/>
-    <ellipse cx="-29" cy="-76" rx="43" ry="36" fill="#397b39" stroke="#28612e" stroke-width="5"/>
-    <ellipse cx="12" cy="-92" rx="49" ry="43" fill="#4f9140" stroke="#28612e" stroke-width="5"/>
-    <ellipse cx="43" cy="-62" rx="39" ry="34" fill="#6aa64b" stroke="#367331" stroke-width="4"/>
-    <ellipse cx="-2" cy="-55" rx="47" ry="34" fill="#5b9a43"/>
-   </g>
-   <g transform="translate(-1450 155) scale(.82)">
-    <ellipse cy="13" rx="62" ry="15" fill="#365b2b" opacity=".24"/>
-    <path d="M-5 8L-6-65L7-65L8 8Z" fill="#875431" stroke="#5e3c26" stroke-width="4"/>
-    <path d="M0-148L-55-55H-25L-67-5H66L25-55H55Z" fill="#286b37" stroke="#20562e" stroke-width="5" stroke-linejoin="round"/>
-    <path d="M0-128L-38-61H-17L-48-15H48L17-61H38Z" fill="#438b43"/>
-   </g>
-   <g transform="translate(-1535 425) scale(1.02)">
-    <ellipse cy="13" rx="72" ry="17" fill="#365b2b" opacity=".24"/>
-    <path d="M-6 8L-8-70L8-70L10 8Z" fill="#80502e" stroke="#5e3c26" stroke-width="4"/>
-    <ellipse cx="-33" cy="-82" rx="46" ry="37" fill="#759b3e" stroke="#4d762f" stroke-width="5"/>
-    <ellipse cx="16" cy="-98" rx="52" ry="43" fill="#8eae4b" stroke="#587e31" stroke-width="5"/>
-    <ellipse cx="47" cy="-64" rx="38" ry="32" fill="#6c963d" stroke="#4d762f" stroke-width="4"/>
-   </g>
-   <g transform="translate(-1430 700) scale(.92)">
-    <ellipse cy="13" rx="68" ry="16" fill="#365b2b" opacity=".24"/>
-    <path d="M-5 8L-7-64L7-64L9 8Z" fill="#80502e" stroke="#5e3c26" stroke-width="4"/>
-    <ellipse cx="-28" cy="-76" rx="42" ry="35" fill="#347b46" stroke="#28612e" stroke-width="5"/>
-    <ellipse cx="15" cy="-92" rx="49" ry="41" fill="#4c9852" stroke="#28612e" stroke-width="5"/>
-    <ellipse cx="45" cy="-62" rx="37" ry="32" fill="#70a95b" stroke="#367331" stroke-width="4"/>
-   </g>
-   <g transform="translate(-1545 965) scale(.72)">
-    <ellipse cy="13" rx="65" ry="15" fill="#365b2b" opacity=".24"/>
-    <path d="M-5 8L-7-62L7-62L9 8Z" fill="#875431" stroke="#5e3c26" stroke-width="4"/>
-    <path d="M0-142L-52-52H-25L-65-5H65L25-52H52Z" fill="#34743a" stroke="#245d30" stroke-width="5" stroke-linejoin="round"/>
-    <path d="M0-120L-35-58H-16L-45-15H45L16-58H35Z" fill="#5a9845"/>
-   </g>
+   ${[
+    [-1715,-245,.64,'hue-rotate(-8deg) saturate(1.12)'],
+    [-1585,-270,.78,'hue-rotate(12deg) saturate(1.18)'],
+    [-1460,-235,.58,'hue-rotate(-18deg) saturate(1.2)'],
+    [-1650,-80,.82,'hue-rotate(28deg) saturate(1.1)'],
+    [-1510,-65,.68,'hue-rotate(-4deg) saturate(1.25)'],
+    [-1740,105,.58,'hue-rotate(42deg) saturate(1.15)'],
+    [-1615,130,.76,'hue-rotate(-12deg) saturate(1.2)'],
+    [-1480,115,.62,'hue-rotate(18deg) saturate(1.16)'],
+    [-1690,300,.72,'hue-rotate(6deg) saturate(1.2)'],
+    [-1550,285,.86,'hue-rotate(34deg) saturate(1.12)'],
+    [-1435,325,.56,'hue-rotate(-20deg) saturate(1.22)'],
+    [-1650,485,.62,'hue-rotate(22deg) saturate(1.18)'],
+    [-1510,475,.8,'hue-rotate(-8deg) saturate(1.15)'],
+    [-1730,635,.72,'hue-rotate(38deg) saturate(1.1)'],
+    [-1590,650,.88,'hue-rotate(-15deg) saturate(1.2)'],
+    [-1460,625,.62,'hue-rotate(12deg) saturate(1.18)'],
+    [-1680,805,.62,'hue-rotate(-5deg) saturate(1.16)'],
+    [-1540,820,.82,'hue-rotate(30deg) saturate(1.15)'],
+    [-1425,790,.56,'hue-rotate(-18deg) saturate(1.2)'],
+    [-1645,970,.78,'hue-rotate(16deg) saturate(1.14)'],
+    [-1500,985,.7,'hue-rotate(-10deg) saturate(1.2)'],
+    [-1730,1110,.6,'hue-rotate(35deg) saturate(1.12)'],
+    [-1590,1135,.76,'hue-rotate(-20deg) saturate(1.18)'],
+    [-1460,1090,.62,'hue-rotate(8deg) saturate(1.2)']
+   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%5===0?.94:1}"/></g>`).join('')}
    <g class="grove-flowers" stroke="#557b35" stroke-width="2">
-    <g transform="translate(-1585 -30)"><path d="M0 0v-15" stroke-width="3"/><circle cy="-19" r="6" fill="#f3d35e"/><circle cx="-7" cy="-19" r="5" fill="#fff0d5"/><circle cx="7" cy="-19" r="5" fill="#fff0d5"/></g>
-    <g transform="translate(-1485 20)"><path d="M0 0v-13" stroke-width="3"/><circle cy="-17" r="5" fill="#e978a5"/><circle cx="-6" cy="-17" r="4.5" fill="#f8d9e7"/><circle cx="6" cy="-17" r="4.5" fill="#f8d9e7"/></g>
-    <g transform="translate(-1595 300)"><path d="M0 0v-15" stroke-width="3"/><circle cy="-19" r="6" fill="#f3d35e"/><circle cx="-7" cy="-19" r="5" fill="#fff0d5"/><circle cx="7" cy="-19" r="5" fill="#fff0d5"/></g>
-    <g transform="translate(-1475 560)"><path d="M0 0v-13" stroke-width="3"/><circle cy="-17" r="5" fill="#9b83d5"/><circle cx="-6" cy="-17" r="4.5" fill="#e9dcff"/><circle cx="6" cy="-17" r="4.5" fill="#e9dcff"/></g>
-    <g transform="translate(-1585 820)"><path d="M0 0v-15" stroke-width="3"/><circle cy="-19" r="6" fill="#e978a5"/><circle cx="-7" cy="-19" r="5" fill="#f8d9e7"/><circle cx="7" cy="-19" r="5" fill="#f8d9e7"/></g>
-    <g transform="translate(-1480 1060)"><path d="M0 0v-13" stroke-width="3"/><circle cy="-17" r="5" fill="#f3d35e"/><circle cx="-6" cy="-17" r="4.5" fill="#fff0d5"/><circle cx="6" cy="-17" r="4.5" fill="#fff0d5"/></g>
+    ${[[-1660,-12,'#f0c94f'],[-1510,48,'#e879a5'],[-1735,245,'#f5e7d2'],[-1465,225,'#9d83d2'],[-1600,405,'#efc84f'],[-1740,555,'#e879a5'],[-1485,535,'#f4e4c7'],[-1650,755,'#9d83d2'],[-1510,905,'#f0c94f'],[-1730,1030,'#e879a5'],[-1450,1015,'#f4e4c7']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><path d="M0 7v-12" stroke-width="2.5"/><circle cy="-16" r="4.5" fill="${c}"/><circle cx="-5.5" cy="-13" r="4" fill="${c}"/><circle cx="5.5" cy="-13" r="4" fill="${c}"/><circle cy="-10" r="3.8" fill="${c}"/><circle cy="-13" r="2" fill="#f8e6a7"/></g>`).join('')}
    </g>
   </g>
   <text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text>
