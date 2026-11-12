@@ -1455,6 +1455,19 @@ function selectFishingRod(id){
  if(!FISHING_RODS[id]||!state.fishing.rods.includes(id))return;
  state.fishing.rod=id;remember(`Equipou a vara ${FISHING_RODS[id].name}.`);markDirty();refresh();notify(`Vara ${FISHING_RODS[id].name} equipada.`);
 }
+function updateFishingCooldownButtons(){
+ const now=Date.now(),body=$('modal-body');if(!body)return;
+ const fishing=body.querySelector('[data-cast-fish]');if(fishing){
+  const remaining=Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
+  fishing.disabled=writeLocked||waiting;
+  fishing.textContent=waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
+ }
+ const sea=body.querySelector('[data-cast-sea]');if(sea){
+  const remaining=Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
+  sea.disabled=writeLocked||waiting||farmLevel()<22;
+  sea.textContent=waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
+ }
+}
 function castFishingRod(){
  if(writeLocked)return notify('Salvamento protegido.');
  if(!state.expansions.pond)return notify('Libere primeiro o Lago nas Expansões.');
@@ -2162,6 +2175,7 @@ async function start(){
   catch(error){console.error('Auth session:',error);$('save-status').textContent='Salvo localmente · nuvem indisponível'}
  }
  setInterval(()=>{if(dirty)save()},60000);
+ setInterval(updateFishingCooldownButtons,250);
  setInterval(()=>{updateDayNight();infest();expireDecorations();expireFarmTheme();expireTemporaryDogBreeds();const lakeChanged=syncLakeFish(),animalsChanged=syncAnimalCycles(),treesChanged=syncOrchardTrees();if(animalsChanged)renderAnimals();if(treesChanged)renderFarmAddons();if(!currentModal)renderPlots();else if(['kitchen','grill','factory','animals','orchard','pond','lake','sea'].includes(currentModal)&&!modalHasFocusedEditor())renderModal()},15000);
 }
 start();
