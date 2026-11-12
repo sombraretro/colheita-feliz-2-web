@@ -730,3 +730,16 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .plot-selection{fill:#ffe45c;stroke:#fff5c4;stroke-width:8;opacity:.52;pointer-events:none}
 @media(min-width:1200px){.playfield{width:100%;max-width:none}.side-menu{max-width:min(390px,28vw)}.quick-actions{right:22px}.farm-stats{max-width:380px}}
 @media(max-width:700px){.quick-actions{right:8px;bottom:calc(92px + env(safe-area-inset-bottom));max-width:160px}.quick-actions button{min-width:130px;font-size:10px;padding:7px}.crop-icon-art svg{width:1.3em;height:1.3em}}
+
+@media(min-width:701px) and (max-width:1024px){
+ .mobile-navigation{position:fixed;z-index:40;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-height:70px;padding:7px 14px calc(7px + env(safe-area-inset-bottom));gap:12px;background:linear-gradient(180deg,#fff4d9f5,#e5c48ff5);border-top:2px solid #a87839;box-shadow:0 -3px 12px #263b1d55}
+ .mobile-navigation button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;border-radius:12px}
+ .mobile-navigation button span{font-size:23px}.mobile-navigation button small{font-size:12px}
+ .tool-bar{bottom:88px;max-width:calc(100% - 24px);width:min(700px,calc(100% - 24px))}
+ .quick-actions{bottom:164px;right:12px}.footer{display:none}
+}
+@media(min-width:1025px){
+ .side-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:min(270px,25vw);max-height:calc(100% - 165px);overflow:auto;gap:5px;padding:8px;background:#fff6e5d9;border:1px solid #c79045;border-radius:14px;box-shadow:0 4px 12px #29411c55;backdrop-filter:blur(4px)}
+ .side-menu button{width:100%;min-width:0;padding:7px 8px;font-size:11px;background:linear-gradient(#fff5dded,#e9c88fe8)}
+ .tool-bar{width:min(760px,calc(100% - 300px));gap:6px}
+}
