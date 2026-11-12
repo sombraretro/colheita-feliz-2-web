@@ -413,7 +413,7 @@ const WORLD={left:-2600,right:4400,top:-300,bottom:1140,w:7000,h:980}, view={zoo
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false;
 const SUPABASE_URL='https://osmoolsywhlorgqqybhk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable__pNF0EfJMbM_a6Jdmpylvg_HY3nzRpo';
-let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,localSaveExists=false,cloudDirty=false,supabaseAuthSubscription=null,cloudSessionReadyUserId=null;
+let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,cloudDirty=false,supabaseAuthSubscription=null,cloudSessionReadyUserId=null;
 function initSupabase(){
  if(!supabaseClient){
   if(!window.supabase||typeof window.supabase.createClient!=='function')return false;
@@ -424,7 +424,7 @@ function initSupabase(){
    if(session&&['SIGNED_IN','INITIAL_SESSION'].includes(event)){
     window.setTimeout(()=>{if(state)handleAuthSession(session).catch(error=>console.error('Falha ao concluir autenticação:',error));},0);
    }else if(event==='SIGNED_OUT'){
-    cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;updateConnectionLabel();
+    cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();if(currentModal==='account')renderModal();refresh();
    }
   });
   supabaseAuthSubscription=listener?.data?.subscription||true;
@@ -445,33 +445,22 @@ async function processEmailConfirmationCallback(){
 
 function updateConnectionLabel(){
  const label=$('connection-label'),dot=$('connection-dot');
- if(label)label.textContent=cloudUser?'NUVEM + LOCAL':'LOCAL';
- if(dot)dot.classList.toggle('online',!!cloudUser);
+ if(label)label.textContent=cloudUser?'NUVEM':'ENTRE NA CONTA';
+ if(dot)dot.classList.toggle('online',!!cloudUser&&cloudSessionReadyUserId===cloudUser.id);
 }
-async function loadLocalPayload(){
- let apiError=null;
- try{
-  const res=await fetch('/api/load',{cache:'no-store'});
-  if(res.ok){const data=await res.json();if(data&&data.version===1&&data.state)return {data,source:'computer'};if(data===null)apiError=null;else throw new Error('Formato de salvamento local inválido.');}
-  else if(res.status!==404&&res.status!==405)throw new Error('Não foi possível ler o salvamento local.');
- }catch(error){apiError=error}
+function readLegacyFarmSave(){
  try{
   const raw=localStorage.getItem('cf2.save');
-  if(raw){const data=JSON.parse(raw);if(data&&data.version===1&&data.state)return {data,source:'browser'};throw new Error('Backup do navegador inválido.')}
- }catch(error){if(error instanceof SyntaxError)throw error}
- if(apiError)throw apiError;
- return {data:null,source:'new'};
+  if(!raw)return null;
+  const parsed=JSON.parse(raw);
+  if(!parsed||parsed.version!==1||!parsed.state)throw new Error('O antigo salvamento local está em formato inválido.');
+  const restored=normalize(parsed.state);
+  if(!restored)throw new Error('O antigo salvamento local não pôde ser recuperado.');
+  return restored;
+ }catch(error){if(error instanceof SyntaxError)throw new Error('O antigo salvamento local está corrompido.');throw error}
 }
-async function saveLocalPayload(payload){
- try{
-  const res=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:payload});
-  if(res.ok){try{localStorage.setItem('cf2.save',payload)}catch{}return 'computador'}
-  if(res.status!==404&&res.status!==405)throw new Error('O servidor local recusou o salvamento.');
- }catch(error){
-  if(error?.message==='O servidor local recusou o salvamento.')throw error;
- }
- try{localStorage.setItem('cf2.save',payload);return 'navegador'}catch{throw new Error('Não foi possível gravar uma cópia local.')}
-}
+function clearLegacyFarmSave(){try{localStorage.removeItem('cf2.save')}catch(error){console.warn('Não foi possível limpar o antigo salvamento local:',error)}}
+
 async function saveCloud(){
  if(!supabaseClient||!cloudUser)return;
  const nextRevision=cloudRevision+1;
@@ -490,45 +479,29 @@ async function saveCloud(){
 async function handleAuthSession(session){
  if(!session?.user||!supabaseClient)return;
  if(cloudSessionReadyUserId===session.user.id||cloudSyncing)return;
- cloudSyncing=true;let syncSucceeded=false;
+ cloudSyncing=true;let syncSucceeded=false;writeLocked=true;
  if(cloudUser?.id!==session.user.id){onlineFriends=[];onlineFriendRequests=[];onlineSearchResults=[];onlineSocialLoaded=false;onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null}
- cloudUser=session.user;updateConnectionLabel();
+ cloudUser=session.user;updateConnectionLabel();$('save-status').textContent='Carregando fazenda da nuvem...';
  try{
   const {data,error}=await supabaseClient.from('farm_saves').select('state,revision,updated_at').eq('user_id',cloudUser.id).maybeSingle();
   if(error)throw error;
   if(!data){
-   cloudRevision=0;await saveCloud();
-   $('save-status').textContent='Fazenda enviada para a nuvem';
-   notify('Conta conectada. Sua fazenda local foi enviada para a nuvem.');
+   const legacy=readLegacyFarmSave();
+   state=legacy||newGame();dirty=false;cloudDirty=false;cloudRevision=0;cloudUpdatedAt=null;writeLocked=false;
+   await saveCloud();clearLegacyFarmSave();
+   $('save-status').textContent=legacy?'Fazenda antiga migrada para a nuvem':'Nova fazenda salva na nuvem';
+   notify(legacy?'Seu antigo progresso foi migrado para a nuvem.':'Conta conectada. Sua nova fazenda foi criada na nuvem.');
   }else{
-   cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;
-   const localStamp=Number(state?.updatedAt)||0,cloudStamp=Date.parse(data.updated_at||'')||0;
    const restored=normalize(data.state);
    if(!restored)throw new Error('A fazenda da nuvem está em um formato inválido.');
-   const localNormalized=normalize(state);
-   const sameFarm=JSON.stringify(localNormalized)===JSON.stringify(restored);
-   let useCloud=!localSaveExists||sameFarm||localStamp<=cloudStamp+1000;
-   if(localSaveExists&&!sameFarm&&localStamp>cloudStamp+1000)useCloud=window.confirm('Encontramos uma fazenda salva na nuvem e outra mais recente neste dispositivo.\\n\\nOK: carregar a fazenda da nuvem.\\nCancelar: manter a fazenda deste dispositivo e enviá-la para a nuvem.');
-   if(useCloud){
-    if(!sameFarm){
-     state=restored;dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;refresh();
-     const payload=JSON.stringify({version:1,state});await saveLocalPayload(payload);localSaveExists=true;
-     $('save-status').textContent='Sincronizado com a nuvem';
-     notify('Fazenda carregada da nuvem e salva também neste dispositivo.');
-    }else{
-     dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;
-     $('save-status').textContent='Sincronizado com a nuvem';
-     $('save-dot').className='savedot';
-    }
-   }else{
-    await saveCloud();$('save-status').textContent='Fazenda local enviada para a nuvem';
-    notify('Fazenda deste dispositivo enviada para a nuvem.');
-   }
+   state=restored;cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;writeLocked=false;clearLegacyFarmSave();
+   $('save-status').textContent='Fazenda carregada da nuvem';
+   notify('Fazenda carregada da nuvem com sucesso.');
   }
-  syncSucceeded=true;
+  refresh();$('save-dot').className='savedot';syncSucceeded=true;
  }catch(error){
-  console.error('Supabase:',error);cloudDirty=true;$('save-status').textContent='Salvo localmente · nuvem pendente';
-  notify('A conta conectou, mas a sincronização falhou: '+(error.message||'verifique a configuração do Supabase.'));
+  console.error('Supabase:',error);writeLocked=true;cloudDirty=false;$('save-status').textContent='Falha ao carregar a nuvem · jogo bloqueado';
+  notify('Não foi possível carregar ou sincronizar sua fazenda na nuvem. O jogo ficará bloqueado para proteger seu progresso: '+(error.message||'verifique sua conexão.'));
  }finally{
   if(syncSucceeded)cloudSessionReadyUserId=session.user.id;
   cloudSyncing=false;updateConnectionLabel();if(cloudUser)publishSocialProfile().catch(error=>console.error('Perfil social:',error));if(currentModal==='account')renderModal();
@@ -547,8 +520,10 @@ async function authenticate(mode){
 }
 async function disconnectCloud(){
  if(!supabaseClient)return;
+ if(dirty){await save();if(dirty||cloudDirty)return notify('Não foi possível concluir o salvamento na nuvem. A sessão foi mantida para proteger seu progresso.')}
+ else if(cloudDirty){try{await saveCloud()}catch(error){return notify('Não foi possível sincronizar antes de sair: '+(error.message||'tente novamente.'))}}
  const {error}=await supabaseClient.auth.signOut();if(error)return notify(error.message||'Não foi possível sair da conta.');
- cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;onlineFriends=[];onlineFriendRequests=[];onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineSocialLoaded=false;onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();notify('Sessão encerrada. Sua fazenda continua salva localmente.');renderModal();
+ cloudUser=null;cloudSessionReadyUserId=null;cloudRevision=0;cloudUpdatedAt=null;cloudDirty=false;dirty=false;writeLocked=true;state=newGame();onlineFriends=[];onlineFriendRequests=[];onlineMessages=[];onlineNotifications=[];activeConversationId='';onlineSocialLoaded=false;onlineInboxLoaded=false;onlineGifts=[];onlineGiftsLoaded=false;visitedFarm=null;updateConnectionLabel();refresh();notify('Sessão encerrada. Entre novamente para carregar sua fazenda da nuvem.');renderModal();
 }
 
 let soundEnabled=true,musicEnabled=true;
@@ -1432,12 +1407,12 @@ function remember(message){state.history.unshift({message,time:Date.now()});stat
 function acceptTutorialTask(id){const t=TUTORIAL_TASKS.find(x=>x.id===id),next=TUTORIAL_TASKS.find(x=>!state.tutorial.completed.includes(x.id));if(!t||!next||t.id!==next.id||state.tutorial.acceptedId)return;state.tutorial.acceptedId=id;state.taskProgress[id]=0;markDirty();renderModal()}
 function confirmTutorialTask(id){const t=TUTORIAL_TASKS.find(x=>x.id===id);if(!t||state.tutorial.acceptedId!==id||(state.taskProgress[id]||0)<t.goal)return;state.coins+=t.reward;awardXP(t.xp,'tarefa do livro');state.tutorial.completed.push(id);state.tutorial.acceptedId=null;state.tutorial.finished=state.tutorial.completed.length===TUTORIAL_TASKS.length;remember(`Concluiu a tarefa: ${t.title}.`);markDirty();refresh();notify(`Tarefa concluída! +${fmt(t.reward)} moedas.`)}
 function claimAchievement(id){const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a||state.claimedAchievements.includes(id)||!a.test())return;state.claimedAchievements.push(id);state.coins+=a.reward;awardXP(a.xp,'conquista');remember(`Conquistou: ${a.title}.`);markDirty();refresh();notify(`Conquista resgatada: +${fmt(a.reward)} moedas!`)}
-function markDirty(deferUntilAutosave=false){if(writeLocked){notify('O salvamento não foi carregado. Por segurança, nenhuma gravação será feita.');return}dirty=true;state.updatedAt=Date.now();$('save-status').textContent=deferUntilAutosave?'Alterações automáticas pendentes · salvamento em até 1 minuto':'Salvando...';$('save-dot').className='savedot saving';if(!deferUntilAutosave){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save()},0)}}
-async function save(){if(!dirty)return saving;dirty=false;const payload=JSON.stringify({version:1,state});saving=saving.then(async()=>{
- const localTarget=await saveLocalPayload(payload);localSaveExists=true;
- if(cloudUser){try{await saveCloud()}catch(error){console.error('Cloud save:',error);cloudDirty=true}}
- if(!dirty){$('save-status').textContent=cloudUser?(cloudDirty?'Salvo localmente · nuvem pendente':'Salvo localmente e na nuvem'):(localTarget==='computador'?'Salvo no computador':'Salvo neste navegador');$('save-dot').className=cloudDirty?'savedot error':'savedot'}
- }).catch(e=>{console.error(e);dirty=true;$('save-status').textContent='Falha ao salvar localmente';$('save-dot').className='savedot error'});return saving}
+function markDirty(deferUntilAutosave=false){if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id){notify('Entre na sua conta e aguarde o carregamento da fazenda na nuvem antes de jogar.');return}dirty=true;state.updatedAt=Date.now();$('save-status').textContent=deferUntilAutosave?'Alterações pendentes · salvamento em até 1 minuto':'Salvando na nuvem...';$('save-dot').className='savedot saving';if(!deferUntilAutosave){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save()},0)}}
+async function save(){if(!dirty)return saving;if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id){dirty=true;$('save-status').textContent='Aguardando conexão com a nuvem';$('save-dot').className='savedot error';return saving}dirty=false;saving=saving.then(async()=>{
+ if(!cloudUser)throw new Error('Nenhuma conta conectada para salvar na nuvem.');
+ await saveCloud();
+ if(!dirty){$('save-status').textContent='Salvo na nuvem';$('save-dot').className='savedot'}
+ }).catch(e=>{console.error('Cloud save:',e);dirty=true;cloudDirty=true;$('save-status').textContent='Falha no salvamento na nuvem · alterações pendentes';$('save-dot').className='savedot error';notify('Não foi possível salvar na nuvem. Mantenha a sessão aberta e verifique sua conexão.')});return saving}
 function progress(p){return Math.max(0,Math.min(1,(Date.now()-p.plantedAt)/(cropHours(p.crop,p.regrowing)*HOUR)))}
 function timeRemain(p){return formatHours((1-progress(p))*cropHours(p.crop,p.regrowing))}
 function plotAction(i){if(writeLocked){notify('Salvamento protegido. Veja Configurações.');return}const p=state.plots[i];if(!p)return;if(i>=EXPANSION_PLOT_START&&farmLevel()<50+(i-EXPANSION_PLOT_START)){notify('Este canteiro será liberado no nível '+(50+i-EXPANSION_PLOT_START)+'.');return}if(i>=EXPANSION_PLOT_START&&p.status==='grass'){p.status='dirt';markDirty()}lastSelected=i;renderPlots();
@@ -2102,7 +2077,7 @@ async function applySocialFarmState(row){
  if(!result?.state||!Number.isFinite(Number(result.revision)))throw new Error('O servidor não retornou o salvamento atualizado.');
  const restored=normalize(result.state);if(!restored)throw new Error('O salvamento atualizado retornou em formato inválido.');
  clearTimeout(saveTimer);saveTimer=null;state=restored;dirty=false;cloudDirty=false;cloudRevision=Number(result.revision);cloudUpdatedAt=new Date().toISOString();
- const payload=JSON.stringify({version:1,state});await saveLocalPayload(payload);localSaveExists=true;refresh();
+ refresh();
  publishSocialProfile().catch(error=>console.error('Perfil social:',error));
 }
 async function sendOnlineGift(encoded){
@@ -2266,8 +2241,8 @@ case 'friend-farm':title='Fazenda do amigo';html=renderVisitedFarm();break;
 case 'inbox':title='Caixa de entrada';if(!cloudUser){html='<div class="gift-summary"><span class="symbol">🔐</span><div><b>Entre na sua conta para acessar as mensagens</b><small>As mensagens privadas e notificações são sincronizadas online.</small></div></div><button class="modal-action" data-open="account">Entrar ou criar conta</button>';break;}html=renderOnlineInbox();break;
 case 'daily':title='Recompensa diária';html=dailyRewardAvailable()?`<div class="daily-reward"><span>🎁</span><b>Seu presente de hoje está esperando!</b><p>Receba sementes, fertilizantes ou flores. A quantidade cresce com sua sequência de visitas (até 5 itens nesta adaptação offline).</p><p><b>Sequência atual: ${fmt((state.dailyRewardDate===yesterdayKey()?(state.dailyStreak||0)+1:1))} dia(s)</b></p><button class="modal-action" data-claim-daily="true">Resgatar recompensa</button></div>`:`<div class="daily-reward claimed"><span>🌟</span><b>Recompensa de hoje já recebida!</b><p>Sequência atual: ${fmt(state.dailyStreak||1)} dia(s). Volte amanhã para receber outra recompensa.</p></div>`;break;
 case 'help':title='Como jogar';html='<p><b>Animais:</b> abra Animais, compre o alimento correspondente e alimente cada animal. Galinhas, vacas e porcos também podem receber rações históricas de melhoria (4, 10 e 2 moedas verdes, respectivamente), elevando o nível até 5; a fórmula de aumento de produção é um balanceamento local. O canil inclui dez raças históricas permanentes e dois cães temporários do evento de Dia dos Namorados (30 dias); os preços das raças permanentes são estimados. Galinha, peru, pato e todos os animais do curral, exceto o burro, podem produzir e crescer simultaneamente até o nível 10. No nível máximo, podem ser abatidos; quanto maior o nível, maior a quantidade de carne. Pombo e pavão mantêm o sistema de produção atual. Pato, Pombo e Pavão têm parâmetros estimados; o Iaque conserva o preço histórico de 55 moedas verdes, mas duração, ração e venda são estimadas. O cão pode ser alimentado para ativar a proteção local preparada para o modo online.</p><p><b>1.</b> Escolha sementes no inventário e clique na terra disponível.<br/><b>2.</b> Aguarde o crescimento (os ciclos desta edição duram 1/5 do tempo-base).<br/><b>3.</b> Selecione a mão e colha plantas maduras.<br/><b>4.</b> Use fertilizantes de 2h30, 5h50, 5h30, 6h, 8h, 15h ou 20h (reduções ajustadas para 1/5); os tempos/preços sem confirmação estão identificados como estimativas. O Surf Líquido Concentrado só funciona em flores. O Fertilizante do Amor foi adaptado para uso local porque originalmente era destinado às fazendas de amigos.<br/><b>5.</b> Venda a produção no depósito e use a pá para preparar a terra.</p><p><b>Flores:</b> compre sementes de crisântemo, peônia, cravo ou rosa vermelha; plante e colha. As flores vão para a aba própria do depósito e começam bloqueadas contra venda acidental. <b>Fábrica:</b> use as quantidades indicadas para produzir buquês. <b>Popularidade:</b> aumenta ao fabricar buquês e concede bônus nas vendas nesta adaptação offline. <b>Casa de presentes:</b> guarda buquês e uma coleção local de itens históricos; o envio real depende do modo online. <b>Pomar:</b> libere a expansão, plante árvores usando sementes do inventário e colha seus frutos em oito espaços. <b>Lago:</b> libere a área visual nas Expansões.</p><p><b>Recompensa diária:</b> resgate um presente uma vez por dia. <b>Humor:</b> escolha um emoticon diário; a segunda troca custa 1.000 moedas. <b>Presentes grátis:</b> itens liberados por nível ficam disponíveis para envio quando houver modo online. <b>Churrasqueira:</b> compre por 1.000 moedas, reúna os componentes, abata opcionalmente animais para obter carne, compre mel/tempero e produza receitas. Os tempos de preparo da réplica são 1/5 do balanceamento-base; os valores exatos históricos não foram recuperados em texto legível. <b>Decoração:</b> compre e instale objetos em pontos seguros. Ao subir de nível, receba 1 moeda verde.</p><p><b>Terra vermelha:</b> compre a Varinha da Terra Vermelha por 2 moedas verdes (compra única e reutilizável). A primeira aplicação custa 15.000 moedas amarelas; a segunda, 60.000 amarelas + 1 verde. As aplicações seguintes usam uma progressão local porque a tabela histórica completa não foi recuperada. Sementes avançadas só crescem nesse solo; sementes comuns também podem ser plantadas nele. A Varinha de Restauração custa 3.000 moedas amarelas por uso e não devolve o valor gasto na terra vermelha. <b>Expansão:</b> libere canteiros bloqueados na Loja; os seis primeiros custam 1.500 moedas cada e os seis adicionais custam 2.200, com nível 10 exigido para a segunda faixa. <b>Atalhos:</b> Colheita rápida recolhe todas as plantas maduras; Escavada rápida limpa todos os canteiros colhidos. Com a ferramenta Selecionar, clicar em uma planta madura colhe automaticamente e clicar em um animal faminto alimenta-o se houver ração.</p><p><b>Zoom:</b> botões + / −, roda do mouse ou teclas + e −. <b>Câmera:</b> Alt + arrastar ou arrastar com botão central. Tecla 0 restaura a vista.</p><p>Os gráficos são objetos próprios, sem capturas de tela como fundo.</p>';break;
-case 'account':title='Conta e sincronização';if(!initSupabase()){html='<p>O serviço de autenticação ainda não carregou. Verifique a conexão com a internet e tente novamente.</p><p>O jogo continua funcionando e salvando localmente.</p>';break;}if(cloudUser){html=`<div class="account-card"><b>☁️ Conta conectada</b><p>${safe(cloudUser.email||'Jogador')}</p><small>${cloudDirty?'Há uma sincronização pendente.':'Sua fazenda está vinculada a esta conta.'}</small></div><div class="actions"><button class="modal-action" id="cloud-sync">Sincronizar agora</button><button class="modal-action alt" id="cloud-signout">Sair da conta</button></div><p><small>O salvamento local continua ativo como cópia de segurança. Seus dados na nuvem são privados e protegidos por políticas de acesso por usuário.</small></p>`;}else{html=`<p>Entre ou crie uma conta para salvar sua fazenda na nuvem e acessá-la em outros dispositivos. Sem entrar, o jogo continua funcionando localmente.</p><label class="auth-field">E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="seu@email.com"></label><label class="auth-field">Senha<input id="auth-password" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label><div class="actions"><button class="modal-action" id="auth-signin">Entrar</button><button class="modal-action alt" id="auth-signup">Criar conta</button></div><p><small>O cadastro pode exigir confirmação do endereço de e-mail, conforme as configurações de autenticação do seu projeto Supabase.</small></p>`;}break;
-case 'settings':title='Configurações e backup';html=`<p>O salvamento é automático e mantém uma cópia local da fazenda. Quando você entrar na sua conta, poderá sincronizar uma cópia na nuvem.</p><div class="audio-settings"><h3>🔊 Sons e música</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros das ferramentas</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente suave da fazenda</label><small>Melodia instrumental leve, com variações e pausas para acompanhar o jogo sem cansar.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json">`;break;
+case 'account':title='Conta e salvamento na nuvem';if(!initSupabase()){html='<p>O serviço de autenticação não carregou. Verifique sua conexão e recarregue a página. O jogo permanece bloqueado até que seja possível conectar à nuvem.</p>';break;}if(cloudUser){html=`<div class="account-card"><b>☁️ Conta conectada</b><p>${safe(cloudUser.email||'Jogador')}</p><small>${writeLocked?'Aguardando carregamento ou recuperação da fazenda na nuvem.':'Sua fazenda está salva exclusivamente na nuvem.'}</small></div><div class="actions"><button class="modal-action" id="cloud-sync">Carregar / sincronizar nuvem</button><button class="modal-action alt" id="cloud-signout">Sair da conta</button></div><p><small>O progresso do jogo é salvo somente na nuvem e fica privado na sua conta. Sem conexão, alterações não podem ser persistidas.</small></p>`;}else{html=`<div class="gift-summary"><span class="symbol">☁️</span><div><b>Entre para jogar</b><small>O jogo utiliza salvamento exclusivamente na nuvem. É necessário entrar ou criar uma conta antes de acessar sua fazenda.</small></div></div><label class="auth-field">E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="seu@email.com"></label><label class="auth-field">Senha<input id="auth-password" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label><div class="actions"><button class="modal-action" id="auth-signin">Entrar</button><button class="modal-action alt" id="auth-signup">Criar conta</button></div><p><small>O cadastro pode exigir confirmação do endereço de e-mail, conforme as configurações de autenticação do projeto Supabase.</small></p>`;}break;
+case 'settings':title='Configurações e backup';html=`<p>O progresso é salvo automaticamente e exclusivamente na nuvem. O arquivo JSON abaixo é um backup manual opcional, exportado somente quando você solicitar.</p><div class="audio-settings"><h3>🔊 Sons e música</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros das ferramentas</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente suave da fazenda</label><small>Melodia instrumental leve, com variações e pausas para acompanhar o jogo sem cansar.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json">`;break;
 }
 $('modal-title').textContent=title;body.innerHTML=html;body.scrollTop=modalScrollTop;
 if(currentModal==='inventory'){
@@ -2315,7 +2290,7 @@ function toggleFlowerLock(id){if(!FLOWER_IDS.includes(id))return;state.flowerLoc
 function sellFlower(id,requested){const cfg=CROPS[id],available=state.flowerWarehouse[id]||0;if(!cfg||cfg.kind!=='flower'||available<=0)return;if(state.flowerLocks[id])return notify('Esta flor está bloqueada contra venda acidental. Desbloqueie-a no depósito.');const num=requested===undefined?available:requested;if(!Number.isSafeInteger(num)||num<1||num>available)return notify('Quantidade de venda inválida.');const money=saleWithPopularity(num*cfg.unitPrice);state.coins+=money;state.flowerWarehouse[id]-=num;remember(`Vendeu ${num} ${cfg.name} com bônus de popularidade.`);markDirty();refresh();notify(`Flores vendidas: ${num} unidade(s) · +${fmt(money)} moedas.`)}
 function makeBouquet(id){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const recipe=BOUQUETS[id];if(!recipe)return;const missing=Object.entries(recipe.recipe).filter(([flower,amount])=>(state.flowerWarehouse[flower]||0)<amount);if(missing.length)return notify('Ainda faltam flores para este buquê.');for(const [flower,amount] of Object.entries(recipe.recipe))state.flowerWarehouse[flower]-=amount;state.bouquets[id]=(state.bouquets[id]||0)+1;state.popularity+=recipe.popularity;awardXP(recipe.xp,'fábrica de buquês');remember(`Fabricou ${recipe.name}: +${recipe.popularity} de popularidade.`);markDirty();refresh();notify(`${recipe.name} produzido! +${recipe.popularity} popularidade · +${recipe.xp} XP.`)}
 function downloadBackup(){const data=JSON.stringify({version:1,state},null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='ColheitaFeliz2-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
-async function importBackup(file){if(!file||file.size>1024*1024)return notify('Arquivo inválido ou muito grande.');try{const parsed=JSON.parse(await file.text()),data=normalize(parsed.state);if(parsed.version!==1||!data)throw Error();if(!confirm('Substituir a fazenda atual pelo conteúdo deste backup?'))return;state=data;writeLocked=false;markDirty();refresh();closeModal();notify('Backup importado!')}catch(e){notify('O backup não é compatível.')}}
+async function importBackup(file){if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id)return notify('Entre na sua conta e carregue a fazenda da nuvem antes de importar um backup.');if(!file||file.size>1024*1024)return notify('Arquivo inválido ou muito grande.');try{const parsed=JSON.parse(await file.text()),data=normalize(parsed.state);if(parsed.version!==1||!data)throw Error();if(!confirm('Substituir a fazenda atual pelo conteúdo deste backup?'))return;state=data;writeLocked=false;markDirty();refresh();closeModal();notify('Backup importado!')}catch(e){notify('O backup não é compatível.')}}
 function updateView(){const v=Math.min(2.5,Math.max(.22,view.zoom));view.zoom=v;const rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),h=WORLD.h/v,w=h*aspect;const minX=WORLD.left+w/2,maxX=WORLD.right-w/2,minY=WORLD.top+h/2,maxY=WORLD.bottom-h/2;view.cx=minX>maxX?(WORLD.left+WORLD.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(WORLD.top+WORLD.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`}
 function setZoom(next){view.zoom=Math.round(Math.max(.22,Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),fit=Math.min(WORLD.h/(WORLD.bottom-WORLD.top),WORLD.h*aspect/(WORLD.right-WORLD.left));view.cx=(WORLD.left+WORLD.right)/2;view.cy=(WORLD.top+WORLD.bottom)/2;setZoom(fit*.97)}
@@ -2338,7 +2313,7 @@ if(d.mixHerb)produceHerbMix(d.mixHerb);if(d.collectHerbMix)collectHerbMix();if(d
 if(d.buy){if(writeLocked)return notify('Gravação bloqueada para proteger seu salvamento.');const c=CROPS[d.buy];if(!c||!cropLevelAllowed(c))return;const wallet=cropCurrency(c);if(state[wallet]<c.price)return notify(`Moedas insuficientes para comprar ${c.name}.`);state[wallet]-=c.price;state.inventory[d.buy]=(state.inventory[d.buy]||0)+1;remember('Comprou '+c.name);markDirty();refresh();notify('Semente comprada!')}
 if(d.buyAnimal)buyAnimal(d.buyAnimal);if(d.buyFeed)buyAnimalFeed(d.buyFeed);if(d.feedAnimal)feedAnimal(d.feedAnimal,d.feedMode||'legacy');if(d.collectAnimal)collectAnimal(d.collectAnimal);if(d.sellAnimal)sellAnimal(d.sellAnimal);if(d.sellAnimalProduct){const qty=saleQuantity('animal',d.sellAnimalProduct,state.animalWarehouse[d.sellAnimalProduct]||0);if(qty)sellAnimalProduct(d.sellAnimalProduct,qty)}if(d.makeBouquet)makeBouquet(d.makeBouquet);if(d.sellFlower){const qty=saleQuantity('flower',d.sellFlower,state.flowerWarehouse[d.sellFlower]||0);if(qty)sellFlower(d.sellFlower,qty)}if(d.toggleFlowerLock)toggleFlowerLock(d.toggleFlowerLock);
 if(d.seed)chooseSeed(d.seed);if(d.open)openModal(d.open);if(d.tool){closeModal();setTool(d.tool)}if(d.claimDaily)claimDailyReward();if(d.toggleCropLock)toggleCropLock(d.toggleCropLock);if(d.sell){const qty=saleQuantity('crop',d.sell,state.warehouse[d.sell]||0);if(qty)sellCrop(d.sell,qty)}if(d.sellall){for(const id of FIELD_CROP_IDS)sellCrop(id)}
-if(d.export)downloadBackup();if(d.import)$('import-file').click();if(d.reset&&confirm('Deseja realmente iniciar uma NOVA fazenda? Recomendamos exportar um backup primeiro.')){state=newGame();writeLocked=false;markDirty();refresh();closeModal();notify('Nova fazenda iniciada.')}});
+if(d.export){if(writeLocked||!cloudUser)return notify('Entre na sua conta para exportar o backup da fazenda.');downloadBackup()}if(d.import){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de importar um backup.');$('import-file').click()}if(d.reset&&confirm('Deseja realmente iniciar uma NOVA fazenda? Recomendamos exportar um backup primeiro.')){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de reiniciar a fazenda.');state=newGame();markDirty();refresh();closeModal();notify('Nova fazenda iniciada e será salva na nuvem.')}});
 $('modal-body').addEventListener('change',e=>{if(e.target.id==='social-import-file')importSocialPackage(e.target.files[0]);if(e.target.id==='import-file')importBackup(e.target.files[0]);if(e.target.id==='profile-photo-file')processProfilePhoto(e.target.files?.[0])});$('modal-body').addEventListener('keydown',e=>{if(e.target.id==='farm-name-input'&&e.key==='Enter'){e.preventDefault();saveFarmName()}});
 $('quick-harvest').addEventListener('click',quickHarvest);$('quick-dig').addEventListener('click',quickDig);
 $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',()=>{view.cx=950;view.cy=490;setZoom(1)});$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));
@@ -2351,19 +2326,16 @@ $('playfield').addEventListener('pointerup',e=>{drag=null});$('playfield').addEv
 window.addEventListener('beforeunload',()=>{if(dirty)save()});
 }
 async function start(){
- initScene();setupEvents();updateView();
- try{
-  const local=await loadLocalPayload();localSaveExists=!!local.data;
-  state=local.data?normalize(local.data.state):newGame();
-  if(!state)throw new Error('Salvamento inválido.');
- }catch(err){console.error(err);state=newGame();writeLocked=true;notify('Salvamento não carregado: dados protegidos contra substituição. Abra Configurações!')}
+ initScene();setupEvents();updateView();state=newGame();writeLocked=true;
  refresh();updateConnectionLabel();
- $('save-status').textContent=writeLocked?'BLOQUEADO: salvamento não carregado':(localSaveExists?'Salvamento local carregado':'Nova fazenda pronta');
- $('save-dot').className=writeLocked?'savedot error':'savedot';
+ $('save-status').textContent='Entre na sua conta para carregar a fazenda da nuvem';
+ $('save-dot').className='savedot error';
+ let sessionFound=false;
  if(initSupabase()){
-  try{await processEmailConfirmationCallback();const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;if(data?.session)await handleAuthSession(data.session);}
-  catch(error){console.error('Auth session:',error);$('save-status').textContent='Salvo localmente · nuvem indisponível'}
+  try{await processEmailConfirmationCallback();const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;if(data?.session){sessionFound=true;await handleAuthSession(data.session);}}
+  catch(error){console.error('Auth session:',error);$('save-status').textContent='Falha ao conectar à nuvem · jogo bloqueado';notify('Não foi possível acessar a nuvem. Verifique sua conexão e tente novamente.')}
  }
+ if(!sessionFound&&currentModal!=='account')openModal('account');
  setInterval(()=>{if(dirty)save()},60000);
  setInterval(updateFishingCooldownButtons,250);
  setInterval(()=>{updateDayNight();infest();expireDecorations();expireFarmTheme();expireTemporaryDogBreeds();const lakeChanged=syncLakeFish(),animalsChanged=syncAnimalCycles(),treesChanged=syncOrchardTrees();if(animalsChanged)renderAnimals();if(treesChanged)renderFarmAddons();if(!currentModal)renderPlots();else if(['kitchen','grill','factory','animals','orchard','pond','lake','sea','carpentry'].includes(currentModal)&&!modalHasFocusedEditor())renderModal()},15000);
