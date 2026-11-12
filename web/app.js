@@ -2342,8 +2342,8 @@ $('playfield').addEventListener('pointerdown',e=>{
  if(!e.target.closest('#world'))return;
  const point=pointerGeometry(e);
  activePointers.set(e.pointerId,{x:point.x,y:point.y});
- try{$('playfield').setPointerCapture(e.pointerId)}catch{}
  if(activePointers.size>=2){
+  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
   const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=point.rect;
   const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2,dist=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
   const visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);
@@ -2354,6 +2354,7 @@ $('playfield').addEventListener('pointerdown',e=>{
  const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
+ try{$('playfield').setPointerCapture(e.pointerId)}catch{}
  e.preventDefault();drag={x:point.x,y:point.y,cx:view.cx,cy:view.cy,moved:false};
 });
 $('playfield').addEventListener('pointermove',e=>{
