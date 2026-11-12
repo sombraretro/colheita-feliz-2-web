@@ -1241,11 +1241,55 @@ function renderPondArea(){
   </g>
   <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
   ${[
-   [-1228,-120,42,108,'#b7834d',0],
-   [-1118,180,-38,104,'#477da8',1],
+   [-1260,-120,-12,108,'#b7834d',0],
+   [-1205,180,-24,104,'#477da8',1],
    [-1107,500,-30,92,'#568b58',2],
-   [-1075,830,36,104,'#a34f43',3]
+   [-1090,830,-18,104,'#a34f43',3]
   ].map(b=>renderRiverBridgeMarkup(...b)).join('')}
+  <g class="river-left-grove" pointer-events="none">
+   <g transform="translate(-1515 -135) scale(1.12)">
+    <ellipse cx="0" cy="14" rx="74" ry="18" fill="#365b2b" opacity=".25"/>
+    <path d="M-5 8L-8-62L7-62L10 8Z" fill="#80502e" stroke="#5e3c26" stroke-width="4"/>
+    <ellipse cx="-29" cy="-76" rx="43" ry="36" fill="#397b39" stroke="#28612e" stroke-width="5"/>
+    <ellipse cx="12" cy="-92" rx="49" ry="43" fill="#4f9140" stroke="#28612e" stroke-width="5"/>
+    <ellipse cx="43" cy="-62" rx="39" ry="34" fill="#6aa64b" stroke="#367331" stroke-width="4"/>
+    <ellipse cx="-2" cy="-55" rx="47" ry="34" fill="#5b9a43"/>
+   </g>
+   <g transform="translate(-1450 155) scale(.82)">
+    <ellipse cy="13" rx="62" ry="15" fill="#365b2b" opacity=".24"/>
+    <path d="M-5 8L-6-65L7-65L8 8Z" fill="#875431" stroke="#5e3c26" stroke-width="4"/>
+    <path d="M0-148L-55-55H-25L-67-5H66L25-55H55Z" fill="#286b37" stroke="#20562e" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M0-128L-38-61H-17L-48-15H48L17-61H38Z" fill="#438b43"/>
+   </g>
+   <g transform="translate(-1535 425) scale(1.02)">
+    <ellipse cy="13" rx="72" ry="17" fill="#365b2b" opacity=".24"/>
+    <path d="M-6 8L-8-70L8-70L10 8Z" fill="#80502e" stroke="#5e3c26" stroke-width="4"/>
+    <ellipse cx="-33" cy="-82" rx="46" ry="37" fill="#759b3e" stroke="#4d762f" stroke-width="5"/>
+    <ellipse cx="16" cy="-98" rx="52" ry="43" fill="#8eae4b" stroke="#587e31" stroke-width="5"/>
+    <ellipse cx="47" cy="-64" rx="38" ry="32" fill="#6c963d" stroke="#4d762f" stroke-width="4"/>
+   </g>
+   <g transform="translate(-1430 700) scale(.92)">
+    <ellipse cy="13" rx="68" ry="16" fill="#365b2b" opacity=".24"/>
+    <path d="M-5 8L-7-64L7-64L9 8Z" fill="#80502e" stroke="#5e3c26" stroke-width="4"/>
+    <ellipse cx="-28" cy="-76" rx="42" ry="35" fill="#347b46" stroke="#28612e" stroke-width="5"/>
+    <ellipse cx="15" cy="-92" rx="49" ry="41" fill="#4c9852" stroke="#28612e" stroke-width="5"/>
+    <ellipse cx="45" cy="-62" rx="37" ry="32" fill="#70a95b" stroke="#367331" stroke-width="4"/>
+   </g>
+   <g transform="translate(-1545 965) scale(.72)">
+    <ellipse cy="13" rx="65" ry="15" fill="#365b2b" opacity=".24"/>
+    <path d="M-5 8L-7-62L7-62L9 8Z" fill="#875431" stroke="#5e3c26" stroke-width="4"/>
+    <path d="M0-142L-52-52H-25L-65-5H65L25-52H52Z" fill="#34743a" stroke="#245d30" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M0-120L-35-58H-16L-45-15H45L16-58H35Z" fill="#5a9845"/>
+   </g>
+   <g class="grove-flowers" stroke="#557b35" stroke-width="2">
+    <g transform="translate(-1585 -30)"><path d="M0 0v-15" stroke-width="3"/><circle cy="-19" r="6" fill="#f3d35e"/><circle cx="-7" cy="-19" r="5" fill="#fff0d5"/><circle cx="7" cy="-19" r="5" fill="#fff0d5"/></g>
+    <g transform="translate(-1485 20)"><path d="M0 0v-13" stroke-width="3"/><circle cy="-17" r="5" fill="#e978a5"/><circle cx="-6" cy="-17" r="4.5" fill="#f8d9e7"/><circle cx="6" cy="-17" r="4.5" fill="#f8d9e7"/></g>
+    <g transform="translate(-1595 300)"><path d="M0 0v-15" stroke-width="3"/><circle cy="-19" r="6" fill="#f3d35e"/><circle cx="-7" cy="-19" r="5" fill="#fff0d5"/><circle cx="7" cy="-19" r="5" fill="#fff0d5"/></g>
+    <g transform="translate(-1475 560)"><path d="M0 0v-13" stroke-width="3"/><circle cy="-17" r="5" fill="#9b83d5"/><circle cx="-6" cy="-17" r="4.5" fill="#e9dcff"/><circle cx="6" cy="-17" r="4.5" fill="#e9dcff"/></g>
+    <g transform="translate(-1585 820)"><path d="M0 0v-15" stroke-width="3"/><circle cy="-19" r="6" fill="#e978a5"/><circle cx="-7" cy="-19" r="5" fill="#f8d9e7"/><circle cx="7" cy="-19" r="5" fill="#f8d9e7"/></g>
+    <g transform="translate(-1480 1060)"><path d="M0 0v-13" stroke-width="3"/><circle cy="-17" r="5" fill="#f3d35e"/><circle cx="-6" cy="-17" r="4.5" fill="#fff0d5"/><circle cx="6" cy="-17" r="4.5" fill="#fff0d5"/></g>
+   </g>
+  </g>
   <text x="-1260" y="-205" text-anchor="middle" font-size="27" font-weight="bold" fill="#fff7d9" stroke="#476d34" stroke-width="5" paint-order="stroke">RIO DA FAZENDA</text>
  </g>`;
 }
