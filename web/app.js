@@ -314,7 +314,7 @@ const SEA_TYPES={
  peixe_lua:{name:'Peixe-lua',icon:'🐟',rarity:'Extraordinário',xp:44,minNet:0,weight:0.75,extraordinaryOnly:true},
  celacanto:{name:'Celacanto',icon:'🐟',rarity:'Extraordinário',xp:50,minNet:0,weight:0.5,extraordinaryOnly:true}
 };
-const SEA_NETS={normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},novato:{name:'Novato',level:8,coins:3800,greenCoins:2,order:1},junior:{name:'Junior',level:16,coins:12500,greenCoins:5,order:2},senior:{name:'Sênior',level:26,coins:36000,greenCoins:12,order:3},profissional:{name:'Profissional',level:38,coins:90000,greenCoins:25,order:4}};
+const SEA_NETS={normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},novato:{name:'Novato',level:8,coins:3800,greenCoins:2,order:1},junior:{name:'Junior',level:16,coins:12500,greenCoins:5,order:2},senior:{name:'Sênior',level:26,coins:36000,greenCoins:12,order:3},profissional:{name:'Profissional',level:38,coins:90000,greenCoins:25,order:4},extraordinaria_teste:{name:'Extraordinária · TESTE',level:22,coins:1,greenCoins:0,order:5,extraordinaryOnly:true}};
 const LAKE_FISH={lambari:{name:"Lambari",icon:"🐟",egg:180,price:260,hours:3},tilapia:{name:"Tilápia",icon:"🐠",egg:260,price:420,hours:4},carpa:{name:"Carpa",icon:"🐟",egg:420,price:680,hours:5},koi:{name:"Carpa Koi",icon:"🎏",egg:900,price:1500,hours:6},pacu:{name:"Pacu",icon:"🐟",egg:620,price:980,hours:5},tambaqui:{name:"Tambaqui",icon:"🐠",egg:780,price:1250,hours:6},pintado:{name:"Pintado",icon:"🐟",egg:1100,price:1850,hours:7},dourado:{name:"Dourado",icon:"🐠",egg:1250,price:2100,hours:7},pirarucu:{name:"Pirarucu",icon:"🐟",egg:1800,price:3200,hours:9},esturjao:{name:"Esturjão",icon:"🐟",egg:2400,price:4400,hours:10}};
 const LAKE_FEED_PRICE=95,LAKE_TIME_FACTOR=.2;
 const LAKE_DECOR_SLOTS=[[-170,-8],[-130,-118],[0,-154],[132,-112],[174,12],[130,118],[0,152],[-132,112]];
@@ -360,7 +360,8 @@ const FISHING_RODS={
  novato:{name:'Novato',level:5,coins:2500,greenCoins:2,order:1},
  junior:{name:'Junior',level:12,coins:9000,greenCoins:5,order:2},
  senior:{name:'Sênior',level:22,coins:28000,greenCoins:12,order:3},
- profissional:{name:'Profissional',level:35,coins:75000,greenCoins:25,order:4}
+ profissional:{name:'Profissional',level:35,coins:75000,greenCoins:25,order:4},
+  extraordinaria_teste:{name:'Extraordinária · TESTE',level:1,coins:1,greenCoins:0,order:5,extraordinaryOnly:true}
 };
 const FISH_COOLDOWN=8000,SEA_FISH_COOLDOWN=12000;
 
@@ -1739,7 +1740,7 @@ function buyFishingRod(id,currency){
  if(farmLevel()<rod.level)return notify(`A vara ${rod.name} exige nível ${rod.level}.`);
  const wallet=currency==='greenCoins'?'greenCoins':'coins',price=currency==='greenCoins'?rod.greenCoins:rod.coins;
  if(state[wallet]<price)return notify(currency==='greenCoins'?'Moedas verdes insuficientes.':'Moedas douradas insuficientes.');
- state[wallet]-=price;state.fishing.rods.push(id);discoverItem('equipamentos','vara_'+id,'Vara '+cfg.name,'🪝');state.fishing.rod=id;
+ state[wallet]-=price;state.fishing.rods.push(id);discoverItem('equipamentos','vara_'+id,'Vara '+rod.name,'🪝');state.fishing.rod=id;
  remember(`Comprou a vara de pesca ${rod.name}.`);markDirty();refresh();notify(`Vara ${rod.name} comprada e equipada!`);
 }
 function selectFishingRod(id){if(!farmWriteAllowed())return;
@@ -1810,8 +1811,9 @@ function castFishingRod(){
  const misses=state.fishing.extraordinaryMisses||0;
  const chance=Math.min(8,2+Math.floor(misses/5)*.5);
  const extraordinary=misses>=40-1||Math.random()*100<chance;
- let fishId=extraordinary?extraordinaryFishingChoice(FISH_TYPES,'minRod',rod.order):null;
+ let fishId=rod.extraordinaryOnly?extraordinaryFishingChoice(FISH_TYPES,'minRod',rod.order):(extraordinary?extraordinaryFishingChoice(FISH_TYPES,'minRod',rod.order):null);
  const isExtraordinary=!!fishId;
+ if(rod.extraordinaryOnly&&!fishId)return notify('Nenhum peixe extraordinário disponível para esta vara.');
  if(!fishId)fishId=weightedFishingChoice(available,'minRod',rod.order);
  if(!fishId)return notify('Nenhum peixe disponível para este equipamento.');
  state.fishing.lastCastAt=now;
@@ -2335,8 +2337,9 @@ function castSeaNet(){
  const misses=state.seaFishing.extraordinaryMisses||0;
  const chance=Math.min(8,1.5+Math.floor(misses/5)*.5);
  const extraordinary=misses>=50-1||Math.random()*100<chance;
- let id=extraordinary?extraordinaryFishingChoice(SEA_TYPES,'minNet',net.order):null;
+ let id=net.extraordinaryOnly?extraordinaryFishingChoice(SEA_TYPES,'minNet',net.order):(extraordinary?extraordinaryFishingChoice(SEA_TYPES,'minNet',net.order):null);
  const isExtraordinary=!!id;
+ if(net.extraordinaryOnly&&!id)return notify('Nenhuma captura extraordinária disponível para esta rede.');
  if(!id)id=weightedFishingChoice(available,'minNet',net.order);
  if(!id)return notify('Nenhum item disponível para esta rede.');
  state.seaFishing.lastCastAt=now;
