@@ -3189,7 +3189,7 @@ $('playfield').addEventListener('pointerup',finishPointer);
 $('playfield').addEventListener('pointercancel',finishPointer);
 window.addEventListener('offline',()=>{clearCloudRetry();if(hasPendingCloudChanges()){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
 window.addEventListener('online',()=>{if(dirty&&farmWriteAllowed(false)){clearCloudRetry();cloudPermanentSaveError=null;save()}});
-window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save();else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
+window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){updateDayNight();if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()}else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pageshow',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pagehide',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('beforeunload',event=>{if(hasPendingCloudChanges()){event.preventDefault();event.returnValue='';return ''}});
