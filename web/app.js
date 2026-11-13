@@ -1748,7 +1748,7 @@ function selectFishingRod(id){if(!farmWriteAllowed())return;
 }
 function syncPendingFishing(){
  if(!state||!farmWriteAllowed(false))return false;
- const now=Date.now();let changed=false;
+ const now=Date.now();let changed=false;const resultMessages=[];
  const river=state.fishing?.pendingCatch;
  if(river&&river.readyAt<=now&&FISH_TYPES[river.id]){
   const fish=FISH_TYPES[river.id];state.fishing.pendingCatch=null;
@@ -1757,7 +1757,7 @@ function syncPendingFishing(){
   discoverItem('rio',river.id,fish.name,fish.icon);awardXP(fish.xp,'pescaria');awardSpecialistXP('fisher',fish.xp);
   const rod=FISHING_RODS[river.rod]||FISHING_RODS.normal;
   remember((river.isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
-  changed=true;notify((river.isExtraordinary?'✨🎣 PESCA EXTRAORDINÁRIA! ':'🎣 PEIXE PESCADO! ')+fish.icon+' '+fish.name+' · '+fish.rarity+' · +'+fish.xp+' XP!');
+  changed=true;resultMessages.push((river.isExtraordinary?'✨🎣 PESCA EXTRAORDINÁRIA! ':'🎣 PEIXE PESCADO! ')+fish.icon+' '+fish.name+' · '+fish.rarity+' · +'+fish.xp+' XP!');
  }
  const sea=state.seaFishing?.pendingCatch;
  if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
@@ -1767,9 +1767,9 @@ function syncPendingFishing(){
   discoverItem('mar',sea.id,item.name,item.icon);awardXP(item.xp,'pesca no mar');awardSpecialistXP('fisher',item.xp);
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
   remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'.');
-  changed=true;notify((sea.isExtraordinary?'✨🌊 PESCA EXTRAORDINÁRIA! ':'🌊 PEIXE PESCADO! ')+item.icon+' '+item.name+' · '+(quantity>1?quantity+' unidades · ':'')+item.rarity+' · +'+item.xp+' XP!');
+  changed=true;resultMessages.push((sea.isExtraordinary?'✨🌊 PESCA EXTRAORDINÁRIA! ':'🌊 PEIXE PESCADO! ')+item.icon+' '+item.name+' · '+(quantity>1?quantity+' unidades · ':'')+item.rarity+' · +'+item.xp+' XP!');
  }
- if(changed){markDirty();refresh()}
+ if(changed){markDirty();refresh();notify(resultMessages.join(' | '))}
  return changed;
 }
 function updateFishingCooldownButtons(){
