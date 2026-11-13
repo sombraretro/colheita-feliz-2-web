@@ -1695,22 +1695,6 @@ function timeRemain(p){return formatHours((1-progress(p))*cropHours(p.crop,p.reg
 function plotAction(i){if(writeLocked){notify('Salvamento protegido. Veja Configurações.');return}const p=state.plots[i];if(!p)return;if(i>=EXPANSION_PLOT_START&&farmLevel()<50+(i-EXPANSION_PLOT_START)){notify('Este canteiro será liberado no nível '+(50+i-EXPANSION_PLOT_START)+'.');return}if(multiSelectMode){if(p.status!=='growing'||progress(p)<1)return notify('Selecione somente canteiros com plantas maduras.');if(selectedPlotIndices.has(i))selectedPlotIndices.delete(i);else selectedPlotIndices.add(i);renderPlots();updateMultiSelectControls();return}if(i>=EXPANSION_PLOT_START&&p.status==='grass'){p.status='dirt';markDirty()}lastSelected=i;renderPlots();
 if(tool==='soil-red'||tool==='soil-restore'){applySoilWand(p,tool==='soil-red'?'red':'restore');return}
 if(tool==='inspect'){if(p.status==='growing'&&progress(p)>=1){tool='hand';plotAction(i);tool='inspect';
-$('modal-body').addEventListener('click',e=>{
- const plot=e.target.closest('[data-help-plot]');
- if(plot){
-  const index=Number(plot.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
-  if(!Number.isInteger(index)||!item||item.status==='grass')return;
-  selectedFriendPlot=index;renderModal();return;
- }
- const action=e.target.closest('button[data-farm-help-action]');
- if(action)performFriendFarmHelp(Number(action.dataset.farmHelpPlot),action.dataset.farmHelpAction);
-});
-$('modal-body').addEventListener('keydown',e=>{
- if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-help-plot]')){
-  e.preventDefault();const index=Number(e.target.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
-  if(!item||item.status==='grass')return;selectedFriendPlot=index;renderModal();
- }
-});
 document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='inspect'));return}if(p.status==='growing'&&p.weed){p.weed=false;p.weedCleared=true;awardXP(2,'remoção contextual de ervas');playSfx('weed');remember('Removeu ervas daninhas com a ação contextual.');markDirty();refresh();notify('Ervas daninhas removidas automaticamente.');return}if(p.status==='growing'&&p.pest){p.pest=false;p.pestCleared=true;awardXP(2,'controle contextual de pragas');playSfx('pest');remember('Eliminou insetos com a ação contextual.');markDirty();refresh();notify('Insetos eliminados automaticamente.');return}if(p.status==='growing'&&p.wateredAt&&Date.now()-p.wateredAt>=4*HOUR*CROP_TIME_FACTOR){p.wateredAt=Date.now();awardXP(2,'irrigação contextual');playSfx('water');remember('Regou a plantação com a ação contextual.');markDirty();refresh();notify('Plantação regada automaticamente.');return}notify(p.status==='grass'?'Terreno reservado para expansão.':p.status==='dirt'?'Terra limpa pronta para plantar.':p.status==='spent'?'Use a pá para limpar este canteiro.':`${CROPS[p.crop].name}: ${timeRemain(p)} restantes`);return}
 if(p.status==='grass'){notify('Terreno ainda não liberado.');return}
 if(tool==='seed'){if(p.status!=='dirt'){notify('Plante em terreno livre e limpo.');return}if(!chosenCrop||!state.inventory[chosenCrop]){openModal('inventory');return}const c=CROPS[chosenCrop];if(!cropLevelAllowed(c)){notify(`Você precisa alcançar o nível ${c.minLevel} ou ativar um Cartão VIP válido.`);return}if(c.advanced&&p.soil!=='red'){notify('Esta semente avançada só pode ser plantada em terra vermelha. Use a Varinha da Terra Vermelha na loja.');return}Object.assign(p,{status:'growing',crop:chosenCrop,plantedAt:Date.now(),wateredAt:Date.now(),weed:false,pest:false,harvestsRemaining:c.seasons||1,regrowing:false,weedCleared:false,pestCleared:false});delete p.initialGift;state.inventory[chosenCrop]--;discoverItem('canteiros',chosenCrop,c.name,c.icon);awardXP(5,'plantio');playSfx('plant');remember('Plantou '+c.name);markDirty();refresh();notify(`${c.name} plantado!`);if(!state.inventory[chosenCrop])setTool('inspect');return}
@@ -2769,6 +2753,28 @@ if(d.buy){if(writeLocked)return notify('Gravação bloqueada para proteger seu s
 if(d.buyAnimal)buyAnimal(d.buyAnimal);if(d.buyFeed)buyAnimalFeed(d.buyFeed);if(d.feedAnimal)feedAnimal(d.feedAnimal,d.feedMode||'legacy');if(d.collectAnimal)collectAnimal(d.collectAnimal);if(d.sellAnimal)sellAnimal(d.sellAnimal);if(d.sellAnimalProduct){const qty=saleQuantity('animal',d.sellAnimalProduct,state.animalWarehouse[d.sellAnimalProduct]||0);if(qty)sellAnimalProduct(d.sellAnimalProduct,qty)}if(d.makeBouquet)makeBouquet(d.makeBouquet);if(d.sellFlower){const qty=saleQuantity('flower',d.sellFlower,state.flowerWarehouse[d.sellFlower]||0);if(qty)sellFlower(d.sellFlower,qty)}if(d.toggleFlowerLock)toggleFlowerLock(d.toggleFlowerLock);
 if(d.seed)chooseSeed(d.seed);if(d.open)openModal(d.open);if(d.tool){closeModal();setTool(d.tool)}if(d.claimDaily)claimDailyReward();if(d.toggleCropLock)toggleCropLock(d.toggleCropLock);if(d.sell){const qty=saleQuantity('crop',d.sell,state.warehouse[d.sell]||0);if(qty)sellCrop(d.sell,qty)}if(d.sellall){for(const id of FIELD_CROP_IDS)sellCrop(id)}
 if(d.export){if(writeLocked||!cloudUser)return notify('Entre na sua conta para exportar o backup da fazenda.');downloadBackup()}if(d.import){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de importar um backup.');$('import-file').click()}if(d.reset&&confirm('Deseja realmente iniciar uma NOVA fazenda? Recomendamos exportar um backup primeiro.')){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de reiniciar a fazenda.');state=newGame();markDirty();refresh();closeModal();notify('Nova fazenda iniciada e será salva na nuvem.')}});
+
+$('modal-body').addEventListener('click',e=>{
+ const plot=e.target.closest('[data-help-plot]');
+ if(plot){
+  const index=Number(plot.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
+  if(!Number.isInteger(index)||!item||item.status==='grass')return;
+  selectedFriendPlot=index;renderModal();return;
+ }
+ const action=e.target.closest('button[data-farm-help-action]');
+ if(action){
+  e.preventDefault();
+  if(action.disabled)return;
+  const plotIndex=Number(action.dataset.farmHelpPlot),kind=action.dataset.farmHelpAction;
+  if(Number.isInteger(plotIndex)&&['harvest','water','pest','weed'].includes(kind))performFriendFarmHelp(plotIndex,kind);
+ }
+});
+$('modal-body').addEventListener('keydown',e=>{
+ if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-help-plot]')){
+  e.preventDefault();const index=Number(e.target.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
+  if(!item||item.status==='grass')return;selectedFriendPlot=index;renderModal();
+ }
+});
 $('modal-body').addEventListener('change',e=>{if(e.target.id==='social-import-file')importSocialPackage(e.target.files[0]);if(e.target.id==='import-file')importBackup(e.target.files[0]);if(e.target.id==='profile-photo-file')processProfilePhoto(e.target.files?.[0])});$('modal-body').addEventListener('keydown',e=>{if(e.target.id==='farm-name-input'&&e.key==='Enter'){e.preventDefault();saveFarmName()}});
 $('quick-harvest').addEventListener('click',quickHarvest);$('quick-dig').addEventListener('click',quickDig);$('multi-select-plots')?.addEventListener('click',toggleMultiSelectPlots);$('multi-harvest-selected')?.addEventListener('click',harvestSelectedPlots);
 $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',()=>{view.cx=950;view.cy=490;setZoom(1)});$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));
