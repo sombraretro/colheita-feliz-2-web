@@ -1647,7 +1647,74 @@ function updateNotificationBadges(){
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
  }
 }
-function notify(message){const e=$('toast');e.textContent=message;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),2500)}
+function notify(message){const e=$('toast');e.className='toast';e.textContent=message;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),2500)}
+let fishingCelebrationQueue=[],fishingCelebrationActive=false,fishingCelebrationTimer=null;
+const FISHING_RARITY_STYLE={'Comum':'common','Incomum':'uncommon','Raro':'rare','Muito raro':'very-rare','Lendário':'legendary','Extraordinário':'extraordinary'};
+function playFishingSfx(rarity,isExtraordinary=false){
+ if(!soundEnabled)return;
+ const ctx=ensureAudio();if(!ctx)return;
+ const key=isExtraordinary?'Extraordinário':rarity;
+ const notes={
+  'Comum':[523,659],
+  'Incomum':[587,740,880],
+  'Raro':[659,784,988],
+  'Muito raro':[587,740,988,1175],
+  'Lendário':[523,659,784,1047,1319],
+  'Extraordinário':[392,587,784,1047,1319,1568]
+ }[key]||[523,659];
+ notes.forEach((freq,index)=>setTimeout(()=>playTone(freq,key==='Extraordinário'?.2:.14,'sine',key==='Extraordinário'?.055:.04,index===notes.length-1?freq*.08:0),index*(key==='Extraordinário'?115:90)));
+ if(key==='Extraordinário'){setTimeout(()=>playNoise(.32,.035,1450),180);setTimeout(()=>playTone(1760,.38,'triangle',.05,280),650)}
+}
+function showFishingCelebration(catchInfo){
+ const e=$('toast');if(!e)return;
+ const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
+ const style=FISHING_RARITY_STYLE[rarity]||'common';
+ e.className='toast fishing-toast rarity-'+style;
+ e.replaceChildren();
+ const content=document.createElement('div');content.className='fishing-toast-content';
+ const heading=document.createElement('strong');heading.className='fishing-toast-heading';
+ heading.textContent=catchInfo.isExtraordinary?'✨ PESCA EXTRAORDINÁRIA! ✨':'🎣 PEIXE PESCADO!';
+ const fish=document.createElement('div');fish.className='fishing-toast-fish';
+ const icon=document.createElement('span');icon.className='fishing-toast-icon';icon.textContent=catchInfo.icon||'🐟';
+ const name=document.createElement('span');name.className='fishing-toast-name';name.textContent=catchInfo.name;
+ fish.append(icon,name);
+ const detail=document.createElement('small');detail.className='fishing-toast-detail';
+ detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+' · +'+catchInfo.xp+' XP';
+ content.append(heading,fish,detail);e.append(content);
+ const sparkleCount=({common:3,uncommon:5,rare:8,'very-rare':11,legendary:15,extraordinary:20})[style]||3;
+ for(let i=0;i<sparkleCount;i++){
+  const sparkle=document.createElement('span');sparkle.className='fish-sparkle';
+  sparkle.style.left=(8+(i*37)%84)+'%';sparkle.style.top=(12+(i*53)%76)+'%';
+  sparkle.style.setProperty('--sparkle-delay',(i%5)*.075+'s');e.append(sparkle);
+ }
+ if(style==='extraordinary'){
+  for(let burst=0;burst<4;burst++){
+   const firework=document.createElement('span');firework.className='fish-firework';
+   firework.style.left=([18,78,34,68][burst])+'%';firework.style.top=([22,18,76,70][burst])+'%';
+   firework.style.setProperty('--firework-delay',burst*.22+'s');
+   for(let ray=0;ray<12;ray++){
+    const particle=document.createElement('i');particle.style.setProperty('--angle',(ray*30)+'deg');
+    particle.style.setProperty('--firework-color',['#ff4b65','#ffd447','#46d9ff','#b86cff','#6ff08a','#ff8bdb'][((ray+burst)%6)]);
+    firework.append(particle);
+   }
+   e.append(firework);
+  }
+ }
+ clearTimeout(toastTimer);e.classList.add('show');
+ playFishingSfx(rarity,catchInfo.isExtraordinary);
+ toastTimer=setTimeout(()=>{e.classList.remove('show');e.classList.remove('fishing-toast');},3600);
+}
+function queueFishingCelebration(catchInfo){
+ fishingCelebrationQueue.push(catchInfo);
+ if(fishingCelebrationActive)return;
+ const next=()=>{
+  const item=fishingCelebrationQueue.shift();
+  if(!item){fishingCelebrationActive=false;fishingCelebrationTimer=null;return}
+  fishingCelebrationActive=true;showFishingCelebration(item);
+  fishingCelebrationTimer=setTimeout(next,3800);
+ };
+ next();
+}
 function remember(message){state.history.unshift({message,time:Date.now()});state.history=state.history.slice(0,40);const m=String(message);let event=null;if(/^Colheu\b/.test(m))event='harvest';else if(/^Plantou\b/.test(m))event='plant';else if(/^Regou\b/.test(m))event='water';else if(/^Vendeu\b/.test(m))event='sell';else if(/^Alimentou\b/.test(m))event='feed';else if(/^Recolheu \d+ /.test(m))event='produce';else if(/^Comprou .+\.$/.test(m)&&Object.values(ANIMALS).some(a=>a.name&&m===`Comprou ${a.name}.`))event='animal';if(event){state.progressCounters=state.progressCounters||{};state.progressCounters[event]=(state.progressCounters[event]||0)+1;bumpMissionProgress(event,1);const active=state.tutorial?.acceptedId,task=TUTORIAL_TASKS.find(t=>t.id===active);if(task&&task.event===event)state.taskProgress[task.id]=Math.min(task.goal,(state.taskProgress[task.id]||0)+1)}}
 function acceptTutorialTask(id){if(!farmWriteAllowed())return;const t=TUTORIAL_TASKS.find(x=>x.id===id),next=TUTORIAL_TASKS.find(x=>!state.tutorial.completed.includes(x.id));if(!t||!next||t.id!==next.id||state.tutorial.acceptedId)return;state.tutorial.acceptedId=id;state.taskProgress[id]=0;markDirty();renderModal()}
 function confirmTutorialTask(id){if(!farmWriteAllowed())return;const t=TUTORIAL_TASKS.find(x=>x.id===id);if(!t||state.tutorial.acceptedId!==id||(state.taskProgress[id]||0)<t.goal)return;state.coins+=t.reward;awardXP(t.xp,'tarefa do livro');state.tutorial.completed.push(id);state.tutorial.acceptedId=null;state.tutorial.finished=state.tutorial.completed.length===TUTORIAL_TASKS.length;remember(`Concluiu a tarefa: ${t.title}.`);markDirty();refresh();notify(`Tarefa concluída! +${fmt(t.reward)} moedas.`)}
@@ -1749,7 +1816,7 @@ function selectFishingRod(id){if(!farmWriteAllowed())return;
 }
 function syncPendingFishing(){
  if(!state||!farmWriteAllowed(false))return false;
- const now=Date.now();let changed=false;const resultMessages=[];
+ const now=Date.now();let changed=false;const celebrations=[];
  const river=state.fishing?.pendingCatch;
  if(river&&river.readyAt<=now&&FISH_TYPES[river.id]){
   const fish=FISH_TYPES[river.id];state.fishing.pendingCatch=null;
@@ -1758,7 +1825,8 @@ function syncPendingFishing(){
   discoverItem('rio',river.id,fish.name,fish.icon);awardXP(fish.xp,'pescaria');awardSpecialistXP('fisher',fish.xp);
   const rod=FISHING_RODS[river.rod]||FISHING_RODS.normal;
   remember((river.isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
-  changed=true;resultMessages.push((river.isExtraordinary?'✨🎣 PESCA EXTRAORDINÁRIA! ':'🎣 PEIXE PESCADO! ')+fish.icon+' '+fish.name+' · '+fish.rarity+' · +'+fish.xp+' XP!');
+  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:fish.xp,isExtraordinary:!!river.isExtraordinary});
+  changed=true;
  }
  const sea=state.seaFishing?.pendingCatch;
  if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
@@ -1768,9 +1836,10 @@ function syncPendingFishing(){
   discoverItem('mar',sea.id,item.name,item.icon);awardXP(item.xp,'pesca no mar');awardSpecialistXP('fisher',item.xp);
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
   remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'.');
-  changed=true;resultMessages.push((sea.isExtraordinary?'✨🌊 PESCA EXTRAORDINÁRIA! ':'🌊 PEIXE PESCADO! ')+item.icon+' '+item.name+' · '+(quantity>1?quantity+' unidades · ':'')+item.rarity+' · +'+item.xp+' XP!');
+  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:item.xp,quantity,isExtraordinary:!!sea.isExtraordinary});
+  changed=true;
  }
- if(changed){markDirty();refresh();notify(resultMessages.join(' | '))}
+ if(changed){markDirty();refresh();celebrations.forEach(queueFishingCelebration)}
  return changed;
 }
 function updateFishingCooldownButtons(){
@@ -1802,6 +1871,7 @@ function extraordinaryFishingChoice(types,levelKey,level){
  return weighted[0]?.id||null;
 }
 function castFishingRod(){
+ if(soundEnabled)ensureAudio();
  if(writeLocked)return notify('Salvamento protegido.');
  if(!state.expansions.pond)return notify('Libere primeiro o Lago nas Expansões.');
  const now=Date.now(),remaining=FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0));
@@ -2328,6 +2398,7 @@ function harvestForestTree(slot){if(writeLocked)return notify('Salvamento proteg
 function buySeaNet(id,currency){if(writeLocked)return notify('Salvamento protegido.');if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');const cfg=SEA_NETS[id];if(!cfg||id==='normal')return;if(cfg.extraordinaryOnly&&currency!=='coins')return notify('Esta rede provisória só pode ser comprada com moedas amarelas.');if(state.seaFishing.nets.includes(id))return selectSeaNet(id);if(farmLevel()<cfg.level)return notify('A rede '+cfg.name+' exige nível '+cfg.level+'.');const wallet=currency==='greenCoins'?'greenCoins':'coins',price=currency==='greenCoins'?cfg.greenCoins:cfg.coins;if(state[wallet]<price)return notify(currency==='greenCoins'?'Moedas verdes insuficientes.':'Moedas amarelas insuficientes.');state[wallet]-=price;state.seaFishing.nets.push(id);discoverItem('equipamentos','rede_'+id,'Rede '+cfg.name,'🪢');state.seaFishing.net=id;remember('Comprou a rede '+cfg.name+'.');markDirty();refresh();notify('Rede '+cfg.name+' adquirida e equipada.')}
 function selectSeaNet(id){if(!farmWriteAllowed())return;if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');if(!SEA_NETS[id]||!state.seaFishing.nets.includes(id))return;state.seaFishing.net=id;markDirty();refresh();notify('Rede '+SEA_NETS[id].name+' equipada.')}
 function castSeaNet(){
+ if(soundEnabled)ensureAudio();
  if(writeLocked)return notify('Salvamento protegido.');
  if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');
  const now=Date.now(),remaining=SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0));
