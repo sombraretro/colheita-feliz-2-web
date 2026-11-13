@@ -805,3 +805,23 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .fishing-fx-firework i{position:absolute;left:0;top:0;width:6px;height:6px;border-radius:50%;background:var(--fx-color);box-shadow:0 0 10px 3px var(--fx-color);animation:fishing-fx-firework-burst 1.65s cubic-bezier(.12,.7,.2,1) var(--fx-delay,0s) both}
 @keyframes fishing-fx-firework-burst{0%{opacity:0;transform:rotate(var(--fx-angle)) translateY(0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:rotate(var(--fx-angle)) translateY(-105px) scale(.08)}}
 @media(prefers-reduced-motion:reduce){.fishing-fx-layer{display:none!important}}
+
+/* Central de conquistas progressivas */
+.achievement-hub{margin:18px 0;padding:12px;border:2px solid #c69a4f;border-radius:14px;background:linear-gradient(145deg,#fffdf4,#f5e8c8);box-shadow:0 3px 10px #69491b16}
+.achievement-hub>summary,.achievement-category>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;font-weight:900;color:#65441f}
+.achievement-hub>summary::-webkit-details-marker,.achievement-category>summary::-webkit-details-marker{display:none}
+.achievement-hub>summary:after,.achievement-category>summary:after{content:'＋';font-size:17px;color:#8b652e}
+.achievement-hub[open]>summary:after,.achievement-category[open]>summary:after{content:'−'}
+.achievement-hub>summary span{font-size:16px}.achievement-hub>summary small,.achievement-category>summary small{font-size:11px;font-weight:700;color:#80663c;text-align:right}
+.achievement-category{margin:8px 0;border:1px solid #ddc99d;border-radius:10px;background:#fffaf0;overflow:hidden}
+.achievement-category>summary{padding:10px 12px;background:linear-gradient(90deg,#f9edce,#fff9e9)}
+.achievement-category[open]>summary{border-bottom:1px solid #e4d2aa}
+.achievement-category .achievement-list{padding:7px;gap:6px}
+.achievement-category .achievement-card{margin:0;gap:9px}
+.achievement-card.locked{opacity:.9}.achievement-card.claimed{background:#f0f5e7;border-color:#c4d2a8}
+.achievement-card .achievement-main{gap:4px}
+.achievement-progress{height:7px;width:100%;overflow:hidden;border-radius:20px;background:#e5dcc7;border:1px solid #d4c4a0}
+.achievement-progress i{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#82b94a,#c6d96d);transition:width .25s ease}
+.achievement-card.unlocked .achievement-progress i{background:linear-gradient(90deg,#d7a43c,#f0d26d)}
+.achievement-state{font-weight:700}.achievement-lock{font-size:17px;color:#8c7848;white-space:nowrap}
+@media(max-width:600px){.achievement-hub{padding:8px}.achievement-card{padding:8px}.achievement-card .achievement-icon{flex-basis:32px;width:32px;height:32px}.achievement-hub>summary small,.achievement-category>summary small{font-size:10px}}
