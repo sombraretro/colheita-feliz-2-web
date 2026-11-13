@@ -1,16 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Cachorro apaixonado">
-<defs><linearGradient id="coat" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#b87943"/><stop offset=".6" stop-color="#b87943"/><stop offset="1" stop-color="#4a3023"/></linearGradient><linearGradient id="chest" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f3e4cc"/><stop offset="1" stop-color="#4a3023"/></linearGradient></defs>
-<ellipse cx="760" cy="1035" rx="520" ry="32" fill="#18380f" opacity=".16"/>
-<path d="M330 600Q180 500 220 330Q285 410 395 520" fill="none" stroke="url(#coat)" stroke-width="75" stroke-linecap="round"/>
-<path d="M420 740L405 980Q405 1020 470 1020L515 1000L500 730M780 760L770 1000Q770 1030 835 1025L870 1005L850 735M960 730L990 990Q1000 1030 1060 1015L1080 990L1030 700" fill="url(#coat)" stroke="#3b281d" stroke-width="22" stroke-linejoin="round"/>
-<ellipse cx="700" cy="650" rx="430" ry="245" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
-<path d="M820 500Q920 520 980 690Q925 850 780 900Q690 810 700 690Z" fill="url(#chest)" opacity=".95"/>
-<path d="M960 225Q860 85 800 170Q830 300 1010 350M1210 225Q1300 75 1400 160Q1380 300 1260 355" fill="#f5e4d0" stroke="#9a643d" stroke-width="12"/>
-<ellipse cx="1110" cy="370" rx="245" ry="205" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
-<path d="M930 330Q790 100 845 90Q1000 110 1050 330Z" fill="url(#coat)" stroke="#3b281d" stroke-width="18"/><path d="M1210 300Q1320 80 1390 130Q1430 245 1280 365Z" fill="url(#coat)" stroke="#3b281d" stroke-width="18"/>
-<ellipse cx="1260" cy="465" rx="150" ry="105" fill="url(#chest)" stroke="#3b281d" stroke-width="16"/><ellipse cx="1360" cy="430" rx="35" ry="26" fill="#201c1b"/>
-<ellipse cx="1090" cy="315" rx="35" ry="44" fill="#fff9eb"/><ellipse cx="1186" cy="285" rx="34" ry="43" fill="#fff9eb"/>
-<circle cx="1098" cy="319" r="17" fill="#211b18"/><circle cx="1193" cy="289" r="17" fill="#211b18"/><circle cx="1092" cy="311" r="6" fill="#fff"/><circle cx="1187" cy="281" r="6" fill="#fff"/>
-<path d="M900 500Q1080 570 1220 500" fill="none" stroke="#3569a8" stroke-width="32" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#efc94f" stroke="#986d27" stroke-width="9"/>
-<g fill="#e43d62" stroke="#8f2743" stroke-width="10"><path d="M520 500Q470 430 405 470Q340 545 520 675Q700 545 635 470Q570 430 520 500Z"/><path d="M760 650Q720 590 665 625Q610 690 760 790Q910 690 855 625Q800 590 760 650Z"/></g><path d="M900 500Q1080 570 1220 500" fill="none" stroke="#c52e48" stroke-width="34" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#f3d46a" stroke="#986d27" stroke-width="9"/><path d="M1160 545Q1190 590 1235 565" stroke="#3b251d" stroke-width="12" fill="none" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Border Collie apaixonado">
+<defs>
+<linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#6c9b42" stop-opacity=".05"/><stop offset="1" stop-color="#304d2a" stop-opacity=".24"/></linearGradient>
+<linearGradient id="metal" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#e3f8ff"/><stop offset=".28" stop-color="#7cb7c9"/><stop offset=".58" stop-color="#294c62"/><stop offset="1" stop-color="#152936"/></linearGradient>
+<linearGradient id="red" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f45d63"/><stop offset="1" stop-color="#922d39"/></linearGradient>
+
+<linearGradient id="black" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#42464b"/><stop offset=".35" stop-color="#20252b"/><stop offset="1" stop-color="#080d12"/></linearGradient>
+<linearGradient id="white" x1="0" y1="0" x2=".5" y2="1"><stop stop-color="#fffefb"/><stop offset=".65" stop-color="#eee8dd"/><stop offset="1" stop-color="#c4b8a6"/></linearGradient>
+
+</defs>
+<ellipse cx="735" cy="1000" rx="505" ry="38" fill="url(#ground)"/>
+
+<!-- long plumed tail -->
+<path d="M354 630Q235 626 204 510Q188 440 227 405Q232 505 383 533Z" fill="url(#black)" stroke="#10161c" stroke-width="17"/>
+<path d="M218 455Q259 531 345 558M221 488Q264 559 333 581" fill="none" stroke="#f3eee5" stroke-width="17" stroke-linecap="round"/>
+<!-- legs -->
+<path d="M441 747Q420 831 428 951L410 985Q407 1017 454 1021L512 1012Q532 994 511 970L491 946L524 746Z" fill="url(#black)" stroke="#10161c" stroke-width="17"/>
+<path d="M420 956Q453 975 500 959L523 1008Q474 1034 409 1012Z" fill="url(#white)" stroke="#b8b0a4" stroke-width="8"/>
+<path d="M802 748Q824 838 821 955L804 983Q797 1017 844 1022L901 1013Q923 996 902 970L881 947L902 746Z" fill="url(#white)" stroke="#aaa397" stroke-width="15"/>
+<path d="M811 957Q846 976 891 958L915 1008Q863 1034 798 1012Z" fill="#222831"/>
+<!-- athletic collie body, white ruff -->
+<path d="M348 587Q398 500 558 495Q715 487 866 539Q966 576 984 685Q981 804 863 858Q668 910 470 828Q369 786 348 687Z" fill="url(#black)" stroke="#10161c" stroke-width="20"/>
+<path d="M731 533Q860 519 923 620Q975 710 893 821Q834 867 764 817Q812 705 731 533Z" fill="url(#white)"/>
+<path d="M411 624Q454 696 430 788Q494 835 568 847Q530 752 546 692Q485 650 491 542Z" fill="url(#white)"/>
+<!-- chest bib and fur tufts -->
+<path d="M797 533Q858 536 912 605Q960 674 927 777Q900 825 842 842Q868 747 815 688Q780 631 797 533Z" fill="#fffdf8"/>
+<g fill="none" stroke="#d7cfc2" stroke-width="13" stroke-linecap="round"><path d="M832 665Q865 724 841 785M870 650Q902 714 882 765M899 679Q923 724 907 757"/></g>
+<!-- neck and head -->
+<path d="M838 540Q867 441 955 420Q1051 419 1086 528L1053 663Q956 701 881 625Z" fill="url(#white)" stroke="#b7afa4" stroke-width="12"/>
+<path d="M902 510Q928 442 1002 436L1070 540L1012 630L931 601Z" fill="url(#black)"/>
+<path d="M929 357Q936 259 1024 220Q1115 185 1190 247Q1242 298 1225 388Q1212 474 1121 490Q1022 485 965 421Z" fill="url(#white)" stroke="#a9a196" stroke-width="16"/>
+<!-- black cap and eye patch -->
+<path d="M933 352Q933 250 1025 219Q1114 189 1191 251L1200 328Q1145 280 1092 319Q1041 353 1014 438Q961 424 933 352Z" fill="url(#black)"/>
+<path d="M1090 302Q1134 272 1174 304L1177 377Q1137 403 1094 369Z" fill="#171d23"/>
+<!-- semi-erect ears -->
+<path d="M975 271L950 116Q1031 149 1061 254Z" fill="#161c22" stroke="#080d12" stroke-width="16"/>
+<path d="M1154 247L1210 107Q1270 191 1210 304Z" fill="#171d23" stroke="#080d12" stroke-width="16"/>
+<path d="M981 226L970 158L1029 243M1182 239L1210 155L1222 250" fill="none" stroke="#b77c70" stroke-width="12"/>
+<!-- white blaze down forehead -->
+<path d="M1072 232Q1095 280 1080 331Q1068 380 1093 424Q1064 441 1039 418Q1050 365 1044 322Q1040 276 1072 232Z" fill="#fffdf7"/>
+<!-- long collie muzzle -->
+<path d="M1062 390Q1120 365 1194 400Q1256 432 1240 485Q1217 527 1143 510Q1073 494 1046 451Z" fill="url(#white)" stroke="#b8b0a5" stroke-width="10"/>
+<ellipse cx="1240" cy="433" rx="28" ry="22" fill="#171719"/>
+<path d="M1152 487Q1188 511 1223 486" fill="none" stroke="#4b3430" stroke-width="9" stroke-linecap="round"/>
+<!-- eyes -->
+<ellipse cx="1030" cy="331" rx="19" ry="24" fill="#f8f2e8"/><ellipse cx="1150" cy="342" rx="19" ry="24" fill="#f8f2e8"/>
+<circle cx="1036" cy="334" r="11" fill="#3b281d"/><circle cx="1154" cy="345" r="11" fill="#3b281d"/>
+<circle cx="1040" cy="328" r="5" fill="#fff"/><circle cx="1158" cy="339" r="5" fill="#fff"/>
+<!-- romantic bandana and hearts -->
+<path d="M862 591Q956 651 1058 590L1069 639Q965 712 856 646Z" fill="url(#red)" stroke="#982d48" stroke-width="12"/>
+<path d="M1000 628L1031 766L1081 741L1064 612Z" fill="#e94f75" stroke="#982d48" stroke-width="10"/>
+<g fill="#f14c78" stroke="#a62e50" stroke-width="8"><path d="M1130 154Q1103 122 1074 147Q1045 179 1130 236Q1214 179 1186 147Q1157 122 1130 154Z"/><path d="M1302 258Q1280 231 1255 250Q1230 278 1302 326Q1374 278 1349 250Q1324 231 1302 258Z"/></g>
+
 </svg>
