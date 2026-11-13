@@ -2434,7 +2434,7 @@ function updateDayNight(){
  const now=new Date(),hour=now.getHours()+now.getMinutes()/60;
  const night=hour>=19||hour<6,twilight=(hour>=5&&hour<7)||(hour>=17&&hour<20);
  const blend=night?1:twilight?.45:0,opacity=night?.08:twilight?.04:0;
- if(ground)ground.innerHTML=blend>0?'<image id="day-night-ground" href="'+HORSE_ASSETS.night+'" x="-2600" y="-400" width="7000" height="1700" preserveAspectRatio="none" opacity="'+blend+'"/>':'';
+ if(ground)ground.innerHTML=blend>0?'<image id="day-night-ground" href="'+HORSE_ASSETS.night+'" x="-2600" y="-400" width="7000" height="1700" preserveAspectRatio="none" opacity="'+blend+'"/><rect x="-3400" y="-900" width="8600" height="2700" fill="#071b3c" opacity="'+(blend*.12)+'"/>':'';
  layer.querySelector('#day-night-sky')?.remove();
  if(opacity>0)layer.insertAdjacentHTML('afterbegin','<g id="day-night-sky" pointer-events="none"><rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="'+opacity+'"/><g opacity="'+(night?.78:.28)+'" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g></g>');
 }
