@@ -865,6 +865,7 @@ function blocked(x,y){
  if(nearRoad(x,y))return true;
  if(x>2000&&x<3315&&y>-110&&y<590)return true;
  if(x>-2070&&x<-1440)return true;
+ if(x>-1020&&x<-500&&y>-410&&y<-80)return true;
  return false;
 }
 const treePlacements=[
@@ -960,10 +961,13 @@ function renderAnimals(){
  let markup='';
  const animals=[...state.animals].sort((a,b)=>isBirdType(a.type)&&isBirdType(b.type)?(a.aviarySlot??99)-(b.aviarySlot??99):(a.slot??99)-(b.slot??99));
  for(const a of animals){
-  if(!ANIMALS[a.type])continue;
+  const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
   if(a.type==='cachorro'){x=500;y=155;w=150;h=112.5;}
-  else if(isBirdType(a.type)){
+  else if(cfg.role==='horse'){
+   const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
+   x=pos.x;y=pos.y;w=pos.w;h=pos.h;
+  }else if(isBirdType(a.type)){
    const birdSlot=Math.max(0,Number.isInteger(a.aviarySlot)?a.aviarySlot:0),col=birdSlot%AVIARY_COLUMNS,row=Math.floor(birdSlot/AVIARY_COLUMNS);
    w=46;h=34;x=368+col*54;y=-185+row*40;
   }else{
@@ -973,9 +977,13 @@ function renderAnimals(){
   }
   const feetRatio={cachorro:1,burro:1068/1086,ovelha:1,vaca:1,bufala:1,boi:1,cabra:1,coelho:.92,galinha:1050/1086,porco:1070/1086,pombo:.92,pato:.92,pavao:.92};
   const baseY=y+h*(feetRatio[a.type]||1)-3,shadowRx=Math.max(18,w*.31),scaleX=w/1448,scaleY=h/1086;
-  const sheepEyes=a.type==='ovelha'?`<g class="sheep-open-eyes"><ellipse cx="260" cy="535" rx="12" ry="18" fill="#33201d"/><ellipse cx="425" cy="550" rx="12" ry="18" fill="#33201d"/><circle cx="257" cy="528" r="4.2" fill="#fff8e9"/><circle cx="422" cy="543" r="4.2" fill="#fff8e9"/></g>`:'';
-  const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;const assetName=breed?.asset||`animal-${a.type}`;const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','pavao','iaque'].includes(a.type)?'svg':'png');const animalGraphic=['peru','boi','cabra','bufala','coelho'].includes(a.type)?`<text x="724" y="850" text-anchor="middle" font-size="760">${ANIMALS[a.type].icon}</text>`:`<image class="animal-sprite" href="/assets/${assetName}.${assetExt}" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>`;
-  markup+=`<g class="animal-wrap animal-${a.type}" data-animal="${a.type}" data-animal-id="${safe(a.id)}" data-world-x="${x}" data-world-y="${y}" data-world-w="${w}" data-world-h="${h}" data-world-ground-y="${baseY}"><rect class="animal-hitbox" x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="${x+w*.5}" cy="${baseY+2}" rx="${shadowRx*1.22}" ry="${Math.max(12,w*.085)}" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="${x+w*.5}" cy="${baseY+1}" rx="${shadowRx*.7}" ry="${Math.max(6,w*.04)}" fill="#102b0d" opacity=".32"/><g transform="translate(${x} ${y}) scale(${scaleX} ${scaleY})">${animalGraphic}${sheepEyes}<g class="blink-overlay">${blinkMarkup(a.type)}</g></g></g>`;
+  const sheepEyes=a.type==='ovelha'?'<g class="sheep-open-eyes"><ellipse cx="260" cy="535" rx="12" ry="18" fill="#33201d"/><ellipse cx="425" cy="550" rx="12" ry="18" fill="#33201d"/><circle cx="257" cy="528" r="4.2" fill="#fff8e9"/><circle cx="422" cy="543" r="4.2" fill="#fff8e9"/></g>':'';
+  const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;
+  const assetName=breed?.asset||('animal-'+a.type);
+  const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','iaque'].includes(a.type)?'svg':'png');
+  const assetUrl=cfg.role==='horse'?HORSE_ASSETS.horse:(a.type==='cachorro'&&breed?.image?breed.image:a.type==='pavao'?HORSE_ASSETS.peacock:a.type==='cabra'?HORSE_ASSETS.goat:null);
+  const animalGraphic=['peru','boi','bufala','coelho'].includes(a.type)?'<text x="724" y="850" text-anchor="middle" font-size="760">'+cfg.icon+'</text>':'<image class="animal-sprite" href="'+(assetUrl||('/assets/'+assetName+'.'+assetExt))+'" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>';
+  markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
  }
  $('animal-layer').innerHTML=markup;
  scheduleAnimalBlinking();
@@ -1493,6 +1501,22 @@ function orchardTreeMarkup(slot,tree){
  const fruit=colors[tree.type]||crop.fruit||'#d4a13a',progress=orchardTreeProgress(tree),count=ready?6:Math.max(0,Math.floor(progress*6)),treeHue=({maca:'hue-rotate(-8deg) saturate(1.3)',laranja:'hue-rotate(18deg) saturate(1.25)',limao:'hue-rotate(48deg) saturate(1.35)',coco:'sepia(.25) saturate(.8)',jabuticaba:'hue-rotate(55deg) saturate(1.4)',pinheiro_natal:'hue-rotate(25deg) saturate(1.5)',arvore_jujuba:'hue-rotate(-28deg) saturate(1.5)',caju:'hue-rotate(10deg) saturate(1.35)',goiaba:'hue-rotate(-15deg) saturate(1.3)'})[tree.type]||'saturate(1.08)';
  const fruits=Array.from({length:count},(_,i)=>{const a=i*2.4;return `<circle cx="${Math.cos(a)*56}" cy="${-178+Math.sin(a)*23}" r="9" fill="${fruit}" stroke="#80512c" stroke-width="3"/><circle cx="${Math.cos(a)*56-2}" cy="${-181+Math.sin(a)*23}" r="2.5" fill="#fff0bd" opacity=".75"/>`}).join('');
  return `<g class="orchard-tree" data-orchard-slot="${slot}" transform="translate(${x} ${y})" style="cursor:pointer;pointer-events:all"><ellipse cy="17" rx="88" ry="16" fill="#245b18" opacity=".25"/><rect x="-100" y="-270" width="200" height="320" fill="transparent" pointer-events="all"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" pointer-events="none" style="filter:${treeHue}"/>${fruits}${ready?'<circle cx="75" cy="-230" r="17" fill="#f4d55f" stroke="#a8742c" stroke-width="3"/><path d="M75-242V-218M63-230H87" stroke="#fff8dc" stroke-width="4"/>':''}<text y="43" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff5d4" stroke="#5d421e" stroke-width="3" paint-order="stroke">${ready?'PRONTA':`${Math.round(progress*100)}%`}</text><title>${crop.name} · ${ready?'Clique para colher':formatHours((1-progress)*cropHours(tree.type,!!tree.regrowing))+' restantes'}</title></g>`;
+}
+function renderHarasArea(){
+ if(!state?.expansions?.haras)return '';
+ const points='-940,-375 -580,-375 -515,-310 -515,-180 -580,-115 -940,-115 -1005,-180 -1005,-310';
+ const posts=[[-940,-375],[-580,-375],[-515,-310],[-515,-180],[-580,-115],[-940,-115],[-1005,-180],[-1005,-310]];
+ const postMarkup=posts.map(p=>'<rect x="'+(p[0]-8)+'" y="'+(p[1]-15)+'" width="16" height="32" rx="3"/>').join('');
+ return '<g id="haras-area" pointer-events="none">'+
+  '<polygon points="'+points+'" fill="#83ad50" stroke="#624326" stroke-width="17" stroke-linejoin="round"/>'+
+  '<polygon points="-922,-357 -598,-357 -533,-292 -533,-198 -598,-133 -922,-133 -987,-198 -987,-292" fill="#b99a6d" opacity=".42" stroke="#d8bc8b" stroke-width="5" stroke-linejoin="round"/>'+
+  '<path d="M-940 -375L-580 -375L-515 -310L-515 -180L-580 -115L-940 -115L-1005 -180L-1005 -310Z" fill="none" stroke="#a66f3d" stroke-width="13" stroke-linejoin="round"/>'+
+  '<path d="M-940 -355L-580 -355L-535 -310L-535 -180L-580 -135L-940 -135L-985 -180L-985 -310Z" fill="none" stroke="#d5a36a" stroke-width="9" stroke-linejoin="round"/>'+
+  '<path d="M-1005 -245H-985M-535 -245H-515M-760 -135V-115" stroke="#754b2a" stroke-width="9"/>'+
+  '<g fill="#87572f" stroke="#58391f" stroke-width="4">'+postMarkup+'</g>'+
+  '<g transform="translate(-760 -382)"><path d="M-90 0L0 -42L90 0V42H-90Z" fill="#9a6035" stroke="#5e3c23" stroke-width="6"/><path d="M-73 3H73V31H-73Z" fill="#f0d49a" stroke="#80502d" stroke-width="4"/><text y="24" text-anchor="middle" font-size="25" font-weight="900" fill="#70451f">HARAS</text></g>'+
+  '<g transform="translate(-760 -118)"><path d="M-55 0V-27M55 0V-27" stroke="#754b2a" stroke-width="10"/><path d="M-55 -27H55M-55 -7H55" stroke="#c28a50" stroke-width="8"/></g>'+
+ '</g>';
 }
 function renderOrchardArea(){
  if(!state?.expansions?.orchard)return '';
@@ -2467,7 +2491,7 @@ function placeLakeDecoration(id){if(writeLocked)return notify('Salvamento proteg
 function removeLakeDecoration(slot){if(!farmWriteAllowed())return;const i=state.lake.decorations.findIndex(d=>d.slot===slot);if(i<0)return;const d=state.lake.decorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;markDirty();refresh();notify('Decoração devolvida ao inventário.')}
 function placeLakeBridge(id){if(writeLocked)return notify('Salvamento protegido.');if(!WOODWORK_RECIPES[id]?.lakeBridge||(state.furnitureWarehouse[id]||0)<1)return;if(state.lake.bridges.some(b=>b.id===id))return notify('Esta ponte já está instalada.');const slot=[0,1,2,3].find(i=>!state.lake.bridges.some(b=>b.slot===i));if(slot===undefined)return notify('O Lago já possui quatro posições de ponte ocupadas.');state.furnitureWarehouse[id]--;state.lake.bridges.push({id,slot});markDirty();refresh();notify(WOODWORK_RECIPES[id].name+' instalada de uma margem a outra.')}
 function removeLakeBridge(slot){if(!farmWriteAllowed())return;const i=state.lake.bridges.findIndex(b=>b.slot===slot);if(i<0)return;const b=state.lake.bridges.splice(i,1)[0];state.furnitureWarehouse[b.id]=(state.furnitureWarehouse[b.id]||0)+1;markDirty();refresh();notify('Ponte devolvida à marcenaria.')}
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-1368 620L-768 350L-168 620L-768 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1345 620L-768 370L-191 620L-768 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderLakeArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-1368 620L-768 350L-168 620L-768 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1345 620L-768 370L-191 620L-768 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
