@@ -1411,7 +1411,7 @@ function normalize(data){
  data.forestPlots=Array.isArray(data.forestPlots)?data.forestPlots.slice(0,FOREST_PLOTS):[];while(data.forestPlots.length<FOREST_PLOTS)data.forestPlots.push({type:null,status:'empty',plantedAt:0});data.forestPlots=data.forestPlots.map(t=>t&&FOREST_TREES[t.type]?{type:t.type,status:['growing','ready'].includes(t.status)?t.status:'growing',plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:Date.now()}:{type:null,status:'empty',plantedAt:0});
  data.woodWarehouse=(data.woodWarehouse&&typeof data.woodWarehouse==='object')?data.woodWarehouse:{};for(const id of [...new Set(Object.values(FOREST_TREES).map(t=>t.wood))])data.woodWarehouse[id]=Number.isFinite(data.woodWarehouse[id])?Math.max(0,Math.floor(data.woodWarehouse[id])):0;
  data.furnitureWarehouse=(data.furnitureWarehouse&&typeof data.furnitureWarehouse==='object')?data.furnitureWarehouse:{};for(const id of Object.keys(WOODWORK_RECIPES))data.furnitureWarehouse[id]=Number.isFinite(data.furnitureWarehouse[id])?Math.max(0,Math.floor(data.furnitureWarehouse[id])):0;data.carpentry=(data.carpentry&&typeof data.carpentry==='object')?data.carpentry:{queue:[]};data.carpentry.queue=Array.isArray(data.carpentry.queue)?data.carpentry.queue.filter(j=>j&&WOODWORK_RECIPES[j.recipe]&&typeof j.id==='string'&&Number.isFinite(j.startedAt)&&Number.isFinite(j.readyAt)&&j.readyAt>=j.startedAt).slice(-100).map(j=>({...j,xpEarned:Number.isSafeInteger(j.xpEarned)?Math.max(0,j.xpEarned):12,woodConsumed:Number.isSafeInteger(j.woodConsumed)?Math.max(0,j.woodConsumed):WOODWORK_RECIPES[j.recipe].qty})):[];
- data.seaFishing=(data.seaFishing&&typeof data.seaFishing==='object')?data.seaFishing:{};data.seaFishing.nets=Array.isArray(data.seaFishing.nets)?[...new Set(data.seaFishing.nets.map(id=>id==='extraordinaria_teste'?'lendaria':id).filter(id=>SEA_NETS[id]))]:['normal'];if(!data.seaFishing.nets.includes('normal'))data.seaFishing.nets.unshift('normal');if(data.seaFishing.net==='extraordinaria_teste')data.seaFishing.net='lendaria';data.seaFishing.net=SEA_NETS[data.seaFishing.net]&&data.seaFishing.nets.includes(data.seaFishing.net)?data.seaFishing.net:'normal';data.seaFishing.lastCastAt=Number.isFinite(data.seaFishing.lastCastAt)?Math.max(0,data.seaFishing.lastCastAt):0;data.seaFishing.extraordinaryMisses=Number.isFinite(data.seaFishing.extraordinaryMisses)?Math.max(0,Math.min(50,Math.floor(data.seaFishing.extraordinaryMisses))):0;data.seaFishing.pendingCatch=data.seaFishing.pendingCatch&&SEA_TYPES[data.seaFishing.pendingCatch.id]&&Number.isFinite(data.seaFishing.pendingCatch.readyAt)?{id:data.seaFishing.pendingCatch.id,readyAt:data.seaFishing.pendingCatch.readyAt,isExtraordinary:!!data.seaFishing.pendingCatch.isExtraordinary,quantity:data.seaFishing.pendingCatch.id==='caviar'?3:1,net:data.seaFishing.pendingCatch.net==='extraordinaria_teste'?'lendaria':(data.seaFishing.pendingCatch.net&&SEA_NETS[data.seaFishing.pendingCatch.net]?data.seaFishing.pendingCatch.net:data.seaFishing.net)}:null;
+ data.seaFishing=(data.seaFishing&&typeof data.seaFishing==='object')?data.seaFishing:{};data.seaFishing.nets=Array.isArray(data.seaFishing.nets)?[...new Set(data.seaFishing.nets.map(id=>id==='extraordinaria_teste'?'lendaria':id).filter(id=>SEA_NETS[id]))]:['normal'];if(!data.seaFishing.nets.includes('normal'))data.seaFishing.nets.unshift('normal');if(data.seaFishing.net==='extraordinaria_teste')data.seaFishing.net='lendaria';data.seaFishing.net=SEA_NETS[data.seaFishing.net]&&data.seaFishing.nets.includes(data.seaFishing.net)?data.seaFishing.net:'normal';data.seaFishing.lastCastAt=Number.isFinite(data.seaFishing.lastCastAt)?Math.max(0,data.seaFishing.lastCastAt):0;data.seaFishing.extraordinaryMisses=Number.isFinite(data.seaFishing.extraordinaryMisses)?Math.max(0,Math.min(50,Math.floor(data.seaFishing.extraordinaryMisses))):0;data.seaFishing.pendingCatch=data.seaFishing.pendingCatch&&SEA_TYPES[data.seaFishing.pendingCatch.id]&&Number.isFinite(data.seaFishing.pendingCatch.readyAt)?{id:data.seaFishing.pendingCatch.id,readyAt:data.seaFishing.pendingCatch.readyAt,isExtraordinary:!!data.seaFishing.pendingCatch.isExtraordinary,quantity:1,net:data.seaFishing.pendingCatch.net==='extraordinaria_teste'?'lendaria':(data.seaFishing.pendingCatch.net&&SEA_NETS[data.seaFishing.pendingCatch.net]?data.seaFishing.pendingCatch.net:data.seaFishing.net)}:null;
  data.seaWarehouse=(data.seaWarehouse&&typeof data.seaWarehouse==='object')?data.seaWarehouse:{};for(const id of Object.keys(SEA_TYPES))data.seaWarehouse[id]=Number.isFinite(data.seaWarehouse[id])?Math.max(0,Math.floor(data.seaWarehouse[id])):0;const legacyCaviarStock=data.seaWarehouse.caviar||0;if(legacyCaviarStock){data.inventory.caviar=(Number(data.inventory.caviar)||0)+legacyCaviarStock;data.seaWarehouse.caviar=0;}data.inventory.caviar=Math.max(0,Math.floor(Number(data.inventory.caviar)||0));
  data.fishing=(data.fishing&&typeof data.fishing==='object')?data.fishing:{};data.fishing.rods=Array.isArray(data.fishing.rods)?[...new Set(data.fishing.rods.filter(id=>FISHING_RODS[id]))]:['normal'];if(!data.fishing.rods.includes('normal'))data.fishing.rods.unshift('normal');data.fishing.rod=FISHING_RODS[data.fishing.rod]&&data.fishing.rods.includes(data.fishing.rod)?data.fishing.rod:'normal';data.fishing.lastCastAt=Number.isFinite(data.fishing.lastCastAt)?Math.max(0,data.fishing.lastCastAt):0;data.fishing.extraordinaryMisses=Number.isFinite(data.fishing.extraordinaryMisses)?Math.max(0,Math.min(40,Math.floor(data.fishing.extraordinaryMisses))):0;data.fishing.pendingCatch=data.fishing.pendingCatch&&FISH_TYPES[data.fishing.pendingCatch.id]&&Number.isFinite(data.fishing.pendingCatch.readyAt)?{id:data.fishing.pendingCatch.id,readyAt:data.fishing.pendingCatch.readyAt,isExtraordinary:!!data.fishing.pendingCatch.isExtraordinary,rod:data.fishing.pendingCatch.rod&&FISHING_RODS[data.fishing.pendingCatch.rod]?data.fishing.pendingCatch.rod:data.fishing.rod}:null;
  data.fishWarehouse=(data.fishWarehouse&&typeof data.fishWarehouse==='object')?data.fishWarehouse:{};for(const id of Object.keys(FISH_TYPES))data.fishWarehouse[id]=Number.isFinite(data.fishWarehouse[id])?Math.max(0,Math.floor(data.fishWarehouse[id])):0;
@@ -1843,7 +1843,7 @@ function showFishingCelebration(catchInfo){
  const name=document.createElement('span');name.className='fishing-toast-name';name.textContent=catchInfo.name;
  fish.append(icon,name);
  const detail=document.createElement('small');detail.className='fishing-toast-detail';
- detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+' · +'+catchInfo.xp+' XP';
+ detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+(catchInfo.reward?' · '+catchInfo.reward:'')+' · +'+catchInfo.xp+' XP';
  content.append(heading,fish,detail);e.append(content);
  const sparkleCount=({common:3,uncommon:5,rare:8,'very-rare':11,legendary:15,extraordinary:20})[style]||3;
  for(let i=0;i<sparkleCount;i++){
@@ -1994,13 +1994,14 @@ function syncPendingFishing(){
  }
  const sea=state.seaFishing?.pendingCatch;
  if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
-  const item=SEA_TYPES[sea.id],quantity=sea.quantity||1;state.seaFishing.pendingCatch=null;
-  state.seaWarehouse[sea.id]=(state.seaWarehouse[sea.id]||0)+quantity;
+  const item=SEA_TYPES[sea.id];state.seaFishing.pendingCatch=null;
+  if(sea.id!=='caviar')state.seaWarehouse[sea.id]=(state.seaWarehouse[sea.id]||0)+1;
+  state.inventory.caviar=(state.inventory.caviar||0)+3;
   state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
   discoverItem('mar',sea.id,item.name,item.icon);const earnedXP=awardProfessionXP('fisher',item.xp,'pesca no mar');
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
-  remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'.');
-  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity,isExtraordinary:!!sea.isExtraordinary});
+  remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'. Recompensa adicional: 3 caviares.');
+  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:1,reward:'+3 caviares',isExtraordinary:!!sea.isExtraordinary});
   changed=true;
  }
  if(changed){markDirty();refresh();celebrations.forEach(queueFishingCelebration)}
@@ -2577,8 +2578,7 @@ function castSeaNet(){
  if(!id)return notify('Nenhum item disponível para esta rede.');
  state.seaFishing.lastCastAt=now;
  state.seaFishing.extraordinaryMisses=isExtraordinary?0:Math.min(50,misses+1);
- const catchQty=id==='caviar'?3:1;
- state.seaFishing.pendingCatch={id,readyAt:now+SEA_FISH_COOLDOWN,isExtraordinary,quantity:catchQty,net:state.seaFishing.net};
+ state.seaFishing.pendingCatch={id,readyAt:now+SEA_FISH_COOLDOWN,isExtraordinary,quantity:1,net:state.seaFishing.net};
  markDirty();refresh();
  notify('🌊 Rede lançada! Aguarde a contagem para descobrir a captura.');
 }
