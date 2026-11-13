@@ -414,9 +414,6 @@ const DOG_BREEDS={
  shetland:{name:'Pastor de Shetland',id:'56_0',asset:'dog-shetland',price:4300,ext:'png'},
  sharpei:{name:'Shar-Pei',id:'57_0',asset:'dog-sharpei',price:4100,ext:'png'},
  mastiff:{name:'Mastiff',id:'58_0',asset:'dog-mastiff',price:5800,ext:'png'},
- renas:{name:'Papai Noel Renas',id:'59_0',asset:'dog-renas',price:8500,event:true},
- apaixonado:{name:'Cachorro apaixonado',id:'evento Dia dos Namorados 2010',asset:'dog-apaixonado',price:50,currency:'greenCoins',event:true},
- namorados:{name:'Cachorro dos namorados',id:'evento Dia dos Namorados 2010',asset:'dog-namorados',price:40,currency:'greenCoins',event:true}
 };
 const ANIMAL_RATIONS={
  galinha:{key:'ration_chicken',name:'Ração para Galinha',price:4,animal:'galinha',historical:true},
@@ -1337,7 +1334,7 @@ function normalize(data){
  data.inventory=(data.inventory&&typeof data.inventory==='object')?data.inventory:{};
  const forestSeedMoves=[['pinheiro_natal','pinheiro_natal'],['eucalipto','eucalipto'],['pinha','pinha'],['arvore_garrafa','uvaia'],['nepenthes','cambuca']];
  for(const [oldId,newId] of forestSeedMoves){const target='tree_'+newId,legacyKeys=oldId===newId?[oldId]:[oldId,'tree_'+oldId];for(const key of legacyKeys){if(key===target)continue;const qty=Math.max(0,Math.floor(Number(data.inventory[key])||0));if(qty){data.inventory[target]=(Number(data.inventory[target])||0)+qty;data.inventory[key]=0}}}
- data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string'&&!(x.category==='equipamentos'&&x.id==='vara_extraordinaria_teste')).map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
+ data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string'&&!(x.category==='equipamentos'&&x.id==='vara_extraordinaria_teste')&&!(x.category==='caes'&&['renas','apaixonado','namorados'].includes(x.id))).map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
  data.giftInventory=(data.giftInventory&&typeof data.giftInventory==='object')?data.giftInventory:{};
  for(const id of Object.keys(GIFT_ITEMS))data.giftInventory[id]=Number.isFinite(data.giftInventory[id])?Math.max(0,Math.floor(data.giftInventory[id])):0;
  data.expansions=(data.expansions&&typeof data.expansions==='object')?data.expansions:{};data.expansions.orchard=!!data.expansions.orchard;data.expansions.pond=!!data.expansions.pond;data.expansions.haras=!!data.expansions.haras;
