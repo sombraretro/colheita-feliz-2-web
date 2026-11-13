@@ -825,3 +825,19 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .achievement-card.unlocked .achievement-progress i{background:linear-gradient(90deg,#d7a43c,#f0d26d)}
 .achievement-state{font-weight:700}.achievement-lock{font-size:17px;color:#8c7848;white-space:nowrap}
 @media(max-width:600px){.achievement-hub{padding:8px}.achievement-card{padding:8px}.achievement-card .achievement-icon{flex-basis:32px;width:32px;height:32px}.achievement-hub>summary small,.achievement-category>summary small{font-size:10px}}
+
+
+/* Haras: raças, cercado e ícones de moeda */
+.currency-icon{width:20px;height:20px;object-fit:contain;display:block}
+.horse-breed-grid .horse-breed-card{align-items:center;text-align:center}
+.horse-breed-preview{width:100%;height:88px;object-fit:contain;display:block;margin:2px auto 8px}
+.horse-card-preview{width:68px;height:52px;object-fit:contain;display:block}
+.animal-wrap[data-horse-breed="horse_percheron"] .animal-sprite,.horse-breed-preview.horse-breed-horse_percheron,.horse-card-preview.horse-breed-horse_percheron{filter:grayscale(.72) brightness(1.22) contrast(.92)}
+.animal-wrap[data-horse-breed="horse_quarto_milha"] .animal-sprite,.horse-breed-preview.horse-breed-horse_quarto_milha,.horse-card-preview.horse-breed-horse_quarto_milha{filter:sepia(.48) saturate(1.45) hue-rotate(-12deg) brightness(.88)}
+.animal-wrap[data-horse-breed="horse_puro_sangue"] .animal-sprite,.horse-breed-preview.horse-breed-horse_puro_sangue,.horse-card-preview.horse-breed-horse_puro_sangue{filter:sepia(.82) saturate(1.7) hue-rotate(-16deg) brightness(.86)}
+.animal-wrap[data-horse-breed="horse_frisio"] .animal-sprite,.horse-breed-preview.horse-breed-horse_frisio,.horse-card-preview.horse-breed-horse_frisio{filter:grayscale(1) brightness(.34) contrast(1.3)}
+.animal-wrap[data-horse-breed="horse_andaluz"] .animal-sprite,.horse-breed-preview.horse-breed-horse_andaluz,.horse-card-preview.horse-breed-horse_andaluz{filter:grayscale(1) brightness(1.75) contrast(.72)}
+.horse-breed-card small{line-height:1.45}
+.horse-breed-card b{margin-top:5px}
+#haras-area{pointer-events:none}
+@media(max-width:700px){.horse-breed-preview{height:68px}.horse-card-preview{width:56px;height:44px}}
