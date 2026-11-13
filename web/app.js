@@ -415,6 +415,7 @@ const DOG_BREEDS={
  sharpei:{name:'Shar-Pei',id:'57_0',asset:'dog-sharpei',price:4100,ext:'png'},
  mastiff:{name:'Mastiff',id:'58_0',asset:'dog-mastiff',price:5800,ext:'png'},
 };
+const RETIRED_DOG_BREED_IDS=['renas','apaixonado','namorados'];
 const ANIMAL_RATIONS={
  galinha:{key:'ration_chicken',name:'Ração para Galinha',price:4,animal:'galinha',historical:true},
  vaca:{key:'ration_cow',name:'Ração para Vaca',price:10,animal:'vaca',historical:true},
@@ -611,17 +612,17 @@ async function handleAuthSession(session){
    $('save-status').textContent=legacy?'Fazenda antiga migrada para a nuvem':'Nova fazenda salva na nuvem';
    notify(legacy?'Seu antigo progresso foi migrado para a nuvem.':'Conta conectada. Sua nova fazenda foi criada na nuvem.');
   }else{
-   const hasLegacyDogBreedEntries=!!data.state?.temporaryDogBreeds&&typeof data.state.temporaryDogBreeds==='object'&&Object.keys(data.state.temporaryDogBreeds).length>0;
+   const hasLegacyDogBreedEntries=(!!data.state?.temporaryDogBreeds&&typeof data.state.temporaryDogBreeds==='object'&&Object.keys(data.state.temporaryDogBreeds).length>0)||(Array.isArray(data.state?.dogBreedsOwned)&&data.state.dogBreedsOwned.some(id=>RETIRED_DOG_BREED_IDS.includes(id)))||(Array.isArray(data.state?.animals)&&data.state.animals.some(a=>a?.type==='cachorro'&&RETIRED_DOG_BREED_IDS.includes(a.breed)))||(Array.isArray(data.state?.catalog)&&data.state.catalog.some(x=>x?.category==='caes'&&RETIRED_DOG_BREED_IDS.includes(x.id)));
    const restored=normalizeFarmSnapshot(data.state);
    if(!restored)throw new Error('A fazenda da nuvem está em um formato inválido.');
    state=restored;cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;writeLocked=hasLegacyDogBreedEntries;clearLegacyFarmSave();
    if(hasLegacyDogBreedEntries){
     await saveCloud();
     writeLocked=false;
-    recordCloudSyncEvent('success','Migração das raças de cães concluída','Raças temporárias ainda válidas foram convertidas em propriedade permanente; registros expirados foram descartados.');
+    recordCloudSyncEvent('success','Migração das raças de cães concluída','Raças removidas foram excluídas das contas e cães equipados foram restaurados à raça clássica.');
    }
-   $('save-status').textContent=hasLegacyDogBreedEntries?'Fazenda carregada · raças antigas migradas':'Fazenda carregada da nuvem';recordCloudSyncEvent('success','Fazenda carregada da nuvem','Revisão '+cloudRevision+'.');
-   notify(hasLegacyDogBreedEntries?'Fazenda carregada e raças antigas migradas para propriedade permanente.':'Fazenda carregada da nuvem com sucesso.');
+   $('save-status').textContent=hasLegacyDogBreedEntries?'Fazenda carregada · raças removidas':'Fazenda carregada da nuvem';recordCloudSyncEvent('success','Fazenda carregada da nuvem','Revisão '+cloudRevision+'.');
+   notify(hasLegacyDogBreedEntries?'Fazenda carregada; raças descontinuadas removidas e cães restaurados à raça clássica.':'Fazenda carregada da nuvem com sucesso.');
   }
   refresh();$('save-dot').className='savedot';syncSucceeded=true;
  }catch(error){
@@ -1334,7 +1335,7 @@ function normalize(data){
  data.inventory=(data.inventory&&typeof data.inventory==='object')?data.inventory:{};
  const forestSeedMoves=[['pinheiro_natal','pinheiro_natal'],['eucalipto','eucalipto'],['pinha','pinha'],['arvore_garrafa','uvaia'],['nepenthes','cambuca']];
  for(const [oldId,newId] of forestSeedMoves){const target='tree_'+newId,legacyKeys=oldId===newId?[oldId]:[oldId,'tree_'+oldId];for(const key of legacyKeys){if(key===target)continue;const qty=Math.max(0,Math.floor(Number(data.inventory[key])||0));if(qty){data.inventory[target]=(Number(data.inventory[target])||0)+qty;data.inventory[key]=0}}}
- data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string'&&!(x.category==='equipamentos'&&x.id==='vara_extraordinaria_teste')&&!(x.category==='caes'&&['renas','apaixonado','namorados'].includes(x.id))).map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
+ data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string'&&!(x.category==='equipamentos'&&x.id==='vara_extraordinaria_teste')&&!(x.category==='caes'&&RETIRED_DOG_BREED_IDS.includes(x.id))).map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
  data.giftInventory=(data.giftInventory&&typeof data.giftInventory==='object')?data.giftInventory:{};
  for(const id of Object.keys(GIFT_ITEMS))data.giftInventory[id]=Number.isFinite(data.giftInventory[id])?Math.max(0,Math.floor(data.giftInventory[id])):0;
  data.expansions=(data.expansions&&typeof data.expansions==='object')?data.expansions:{};data.expansions.orchard=!!data.expansions.orchard;data.expansions.pond=!!data.expansions.pond;data.expansions.haras=!!data.expansions.haras;
