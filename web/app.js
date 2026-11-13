@@ -2,7 +2,7 @@
 /* Build refresh: redeploy XP progression fix (2026-11-10). */
 /* Colheita Feliz 2 1.9.0: cloud save and visual revision, inbox, friend cards and gift packages. */
 let inventorySortMode='default';
-const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1300;
+const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1932;
 const CROPS={
  pimentao_verde:{name:'Pimentão Verde',icon:'🫑',price:1650,hours:34,regrowHours:14,yield:42,unitPrice:68,xp:105,minLevel:12,seasons:3,flower:'#d9e9a5',fruit:'#4f9b45'},
  pimentao_vermelho:{name:'Pimentão Vermelho',icon:'🫑',iconAccent:'#d8433b',price:1850,hours:36,regrowHours:15,yield:40,unitPrice:78,xp:118,minLevel:15,seasons:3,flower:'#f1c1a8',fruit:'#d8433b'},
@@ -439,15 +439,15 @@ const FERTILIZERS={
  surfConcentrate:{name:'Surf Líquido Concentrado · 20h',icon:'🧼',hours:20,price:0,currency:'gift',flowerOnly:true,balance:'historical',note:'Presente diário ou de amigos; reduz 20h e só pode ser usado em flores.'}
 };
 const ANIMAL_SLOTS=[
- {x:1280,y:-105,w:140,h:105},{x:1440,y:-105,w:140,h:105},{x:1600,y:-105,w:140,h:105},
- {x:1280,y:35,w:140,h:105},{x:1440,y:35,w:140,h:105},{x:1600,y:35,w:140,h:105},
- {x:1280,y:175,w:140,h:105},{x:1440,y:175,w:140,h:105},{x:1600,y:175,w:140,h:105}
+ {x:1280,y:295,w:140,h:105},{x:1440,y:295,w:140,h:105},{x:1600,y:295,w:140,h:105},
+ {x:1280,y:435,w:140,h:105},{x:1440,y:435,w:140,h:105},{x:1600,y:435,w:140,h:105},
+ {x:1280,y:575,w:140,h:105},{x:1440,y:575,w:140,h:105},{x:1600,y:575,w:140,h:105}
  ];
 // As vagas mantêm exatamente a disposição anterior dos cavalos, deslocada
  // junto com o Haras (+580, +370) para dentro da nova área.
  const HORSE_SLOTS=[
- {x:-350,y:70,w:80,h:60},{x:-270,y:70,w:80,h:60},{x:-190,y:70,w:80,h:60},{x:-110,y:70,w:80,h:60},{x:-30,y:70,w:80,h:60},
- {x:-350,y:150,w:80,h:60},{x:-270,y:150,w:80,h:60},{x:-190,y:150,w:80,h:60},{x:-110,y:150,w:80,h:60},{x:-30,y:150,w:80,h:60}
+ {x:-550,y:470,w:80,h:60},{x:-470,y:470,w:80,h:60},{x:-390,y:470,w:80,h:60},{x:-310,y:470,w:80,h:60},{x:-230,y:470,w:80,h:60},
+ {x:-550,y:550,w:80,h:60},{x:-470,y:550,w:80,h:60},{x:-390,y:550,w:80,h:60},{x:-310,y:550,w:80,h:60},{x:-230,y:550,w:80,h:60}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -466,7 +466,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-2600,right:4400,top:-300,bottom:1140,w:7000,h:980},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1100},river:{label:'Rio',left:-2200,right:-1400,top:-350,bottom:1200},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-300,bottom:950}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1100},river:{label:'Rio',left:-3000,right:-700,top:-350,bottom:1400},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-300,bottom:950}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -881,30 +881,30 @@ $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 updateSceneLandscapeVisibility();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
-const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-768,350],[-168,620],[-768,890],[-1368,620]];
+const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-1400,350],[-800,620],[-1400,890],[-2000,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
 const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[420,1010],[120,1040],[-300,1035],[-700,1025],[-1050,1030],[-1320,1020]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
  if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
- if(x>250&&x<720&&y>285&&y<700)return true;
- if(x>755&&x<1240&&y>-365&&y<25)return true;
- if(x>305&&x<755&&y>-330&&y<-25)return true;
+ if(x>250&&x<720&&y>465&&y<800)return true;
+ if(x>755&&x<1240&&y>465&&y<900)return true;
+ if(x>305&&x<755&&y>465&&y<800)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>510&&x<730&&y>125&&y<300)return true;
- if(x>1240&&x<1800&&y>-180&&y<455)return true;
+ if(x>1240&&x<1800&&y>220&&y<855)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
  if(x>2000&&x<3315&&y>-110&&y<590)return true;
- if(x>-2070&&x<-1440)return true;
- if(x>-1020&&x<-500&&y>-410&&y<-80)return true;
+ if(x>-2750&&x<-2100)return true;
+ if(x>-660&&x<-100&&y>360&&y<700)return true;
  for(const [tx,ty,tw,th] of treePlacements)if(x>tx-35&&x<tx+tw+35&&y>ty-35&&y<ty+th+30)return true;
  return false;
 }
 const treePlacements=[
- [-2300,620,210,265,'hue-rotate(24deg) saturate(1.25)'],[-160,265,230,270,'hue-rotate(-18deg)'],
+ 
  [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
@@ -931,17 +931,17 @@ for(let i=0;i<95;i++){
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
 // Bases orgânicas de grama substituem as sombras dos prédios.
-scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 285Q1870 276 1945 286L1935 310Q1870 315 1820 306Z" fill="#4d982d" opacity=".72"/></g>`;
-for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,300,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
+scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 685Q1870 676 1945 686L1935 710Q1870 715 1820 706Z" fill="#4d982d" opacity=".72"/></g>`;
+for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,700,.55],[1935,702,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
-scenery+=`<g pointer-events="none">${svgImage('celeiro',785,-345,430,350)}</g>`;
+scenery+=`<g pointer-events="none">${svgImage('celeiro',785,500,430,350)}</g>`;
 scenery+=`<g pointer-events="none">
  <path d="M790 -13Q845 -22 900 -13T1015 -14T1110 -13T1210 -15" fill="none" stroke="#477d2d" stroke-width="10" stroke-linecap="round"/>
  <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="-10" rx="12" ry="6"/><ellipse cx="866" cy="-9" rx="9" ry="5"/><ellipse cx="930" cy="-12" rx="14" ry="6"/><ellipse cx="1080" cy="-11" rx="11" ry="5"/><ellipse cx="1150" cy="-13" rx="13" ry="6"/><ellipse cx="1198" cy="-9" rx="9" ry="5"/></g>
  <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 -12q-3-13-9-16m9 16q8-12 15-13M970 -13q-3-14-10-17m10 17q8-12 15-13M1120 -13q-3-13-9-16m9 16q8-12 15-13"/></g>
  <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 -7l12-9 17 7-7 8Z"/><path d="M1035 -8l11-8 15 7-8 8Z"/></g>
  </g>`;
-scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
+scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 500)">
  <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
  <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
  <path d="M4 108L205 -4L406 108L385 125L205 29L25 125Z" fill="#a95f3d" stroke="#70432c" stroke-width="8"/>
@@ -964,17 +964,17 @@ scenery+=`<g pointer-events="none">
  <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M845 10q-3-18-12-21m12 21q9-16 18-17M1060 10q-4-17-13-21m13 21q9-15 18-16"/></g>
  </g>`;
 scenery+=svgImage('casinha-cachorro',370,145,145,140);
-scenery+=fencePath([[1260,-150],[1780,-150]],'rear');
-scenery+=fencePath([[1260,-150],[1260,430]],'side');
-scenery+=fencePath([[1780,-150],[1780,430]],'side');
+scenery+=fencePath([[1260,250],[1780,250]],'rear');
+scenery+=fencePath([[1260,250],[1260,830]],'side');
+scenery+=fencePath([[1780,250],[1780,830]],'side');
 
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
-front+=fencePath([[1260,430],[1430,430]],'front');
-front+=fencePath([[1560,430],[1780,430]],'front');
-front+=`<g transform="translate(1430 430)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
-front+=`<g transform="translate(1495 325) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
+front+=fencePath([[1260,830],[1430,830]],'front');
+front+=fencePath([[1560,830],[1780,830]],'front');
+front+=`<g transform="translate(1430 830)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
+front+=`<g transform="translate(1495 725) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
 front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
 for(let i=0;i<38;i++){
@@ -1014,7 +1014,7 @@ function renderAnimals(){
    x=pos.x;y=pos.y;w=pos.w;h=pos.h;
   }else if(isBirdType(a.type)){
    const birdSlot=Math.max(0,Number.isInteger(a.aviarySlot)?a.aviarySlot:0),col=birdSlot%AVIARY_COLUMNS,row=Math.floor(birdSlot/AVIARY_COLUMNS);
-   w=46;h=34;x=368+col*54;y=-185+row*40;
+   w=46;h=34;x=368+col*54;y=515+row*40;
   }else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
@@ -1521,7 +1521,7 @@ function useFertilizerOnPlot(plot){if(!farmWriteAllowed())return;
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('farm');view.zoom=1.15;view.cx=-760;view.cy=125;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-180;view.cy=125;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('farm');view.zoom=1.05;view.cx=-768;view.cy=620;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1800;view.cy=400;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3250;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
+function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-1200;view.cy=1150;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-180;view.cy=125;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1400;view.cy=620;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3250;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
 function buyExpansion(id,currency='coins'){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(cfg.name+' já está liberado.');
@@ -1564,7 +1564,7 @@ function renderHarasArea(){
  const points='-940,-375 -580,-375 -515,-310 -515,-180 -580,-115 -940,-115 -1005,-180 -1005,-310';
  const posts=[[-940,-375],[-580,-375],[-515,-310],[-515,-180],[-580,-115],[-940,-115],[-1005,-180],[-1005,-310]];
  const postMarkup=posts.map(p=>'<rect x="'+(p[0]-8)+'" y="'+(p[1]-15)+'" width="16" height="32" rx="3"/>').join('');
- return '<g id="haras-area" pointer-events="none" transform="translate(580 370)">'+
+ return '<g id="haras-area" pointer-events="none" transform="translate(380 770)">'+
   '<polygon points="'+points+'" fill="#83ad50" stroke="#624326" stroke-width="17" stroke-linejoin="round"/>'+
   '<polygon points="-922,-357 -598,-357 -533,-292 -533,-198 -598,-133 -922,-133 -987,-198 -987,-292" fill="#b99a6d" opacity=".42" stroke="#d8bc8b" stroke-width="5" stroke-linejoin="round"/>'+
   '<path d="M-940 -375L-580 -375L-515 -310L-515 -180L-580 -115L-940 -115L-1005 -180L-1005 -310Z" fill="none" stroke="#a66f3d" stroke-width="13" stroke-linejoin="round"/>'+
@@ -1614,7 +1614,7 @@ function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
 }
 function renderPondArea(){
  if(!state?.expansions?.pond)return '';
- return `<g id="pond-area" pointer-events="none" transform="translate(-650 0)">
+ return `<g id="pond-area" pointer-events="none" transform="translate(-1300 0)">
   <defs>
    <linearGradient id="riverBank" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#d7c18e"/><stop offset=".5" stop-color="#ad9160"/><stop offset="1" stop-color="#806342"/></linearGradient>
    <linearGradient id="riverWater" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2e8296"/><stop offset=".38" stop-color="#55b7c0"/><stop offset=".7" stop-color="#287d98"/><stop offset="1" stop-color="#1c617b"/></linearGradient>
@@ -2500,7 +2500,7 @@ function applyMenuThemeColors(){
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
 function renderLakeArea(){
- const x=-760,y=125,waterY=y-8;
+ const x=-1200,y=1150,waterY=y-8;
  let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer">
  <ellipse cx="${x}" cy="${y+25}" rx="238" ry="166" fill="#315b2a" opacity=".25"/>
  <ellipse cx="${x}" cy="${y}" rx="236" ry="158" fill="#b79a69" stroke="#755b3a" stroke-width="12"/>
@@ -2560,7 +2560,7 @@ function renderLakeArea(){
  });
  return s+"</g>";
 }
-function focusLakeArea(close=true){view.zoom=1.15;view.cx=-760;view.cy=125;updateView();if(close)closeModal()}
+function focusLakeArea(close=true){switchFarmScene('river');view.zoom=1.15;view.cx=-1200;view.cy=1150;updateView();if(close)closeModal()}
 function lakeFishProgress(f){if(!f||f.status!=='growing'||!f.readyAt)return 0;return Math.max(0,Math.min(1,1-(f.readyAt-Date.now())/(LAKE_TIME_FACTOR*LAKE_FISH[f.type].hours*HOUR)))}
 function syncLakeFish(){if(!farmWriteAllowed(false))return false;if(!state?.lake?.fish)return false;let changed=false;for(const f of state.lake.fish){if(f.status==='growing'&&f.readyAt<=Date.now()){f.stage=Math.min(5,f.stage+1);f.readyAt=0;f.status=f.stage>=5?'adult':'hungry';changed=true;remember(f.status==='adult'?`${LAKE_FISH[f.type].name} chegou à fase adulta.`:`${LAKE_FISH[f.type].name} cresceu para a fase ${f.stage}/5.`);if(f.status==='adult')awardXP(18,'crescimento de peixe')}}if(changed)markDirty(true);return changed}
 function renderLakeModal(){const fish=state.lake.fish||[],adult=fish.filter(f=>f.status==='adult').length;let s=`<div class="gift-summary"><span class="symbol">🐟</span><div><b>Lago artificial · Piscicultura</b><small>${fish.length} peixe(s) · ${adult} adulto(s). Criação comercial independente das capturas do Rio e do Mar.</small></div></div><button class="modal-action alt" data-focus-area="lake">Centralizar Lago</button><h3>🥚 Loja de ovos de peixes</h3><p>Compre ovos e alimente os peixes a cada etapa até a fase adulta.</p><div class="grid-cards">${Object.entries(LAKE_FISH).map(([id,f])=>`<div class="store-card"><span class="symbol">${f.icon}</span><strong>${f.name}</strong><small>Ovo · ${f.hours} h por etapa · Venda adulta: 🟡 ${fmt(f.price)}</small><b>🟡 ${fmt(f.egg)}</b><button data-buy-lake-egg="${id}" ${state.coins<f.egg?'disabled':''}>Comprar ovo</button></div>`).join('')}</div><h3>🪣 Ração para peixes</h3><p>Estoque: ${fmt(state.inventory.lake_fish_feed||0)} · 🟡 ${fmt(LAKE_FEED_PRICE)} cada</p><button class="modal-action" data-buy-lake-feed="true" ${state.coins<LAKE_FEED_PRICE?'disabled':''}>Comprar ração</button><h3>🐠 Seus peixes</h3>${fish.length?`<div class="grid-cards">${fish.map(f=>{const c=LAKE_FISH[f.type],p=lakeFishProgress(f);return `<div class="store-card"><span class="symbol">${c.icon}</span><strong>${c.name}</strong><small>Fase ${f.stage}/5 · ${f.status==='adult'?'Adulto':f.status==='growing'?'Crescendo · '+Math.ceil((f.readyAt-Date.now())/60000)+' min':'Precisa de alimento'}</small><div class="lake-growth"><i style="width:${Math.round(p*100)}%"></i></div>${f.status==='adult'?`<b>Venda: 🟡 ${fmt(c.price)}</b><button data-sell-lake-fish="${f.id}">Vender adulto</button>`:f.status==='hungry'?`<button data-feed-lake-fish="${f.id}" ${!(state.inventory.lake_fish_feed>0)?'disabled':''}>Alimentar</button>`:'<button disabled>Crescimento em andamento</button>'}</div>`}).join('')}</div>`:'<p>Compre ovos para começar sua criação.</p>'}<h3>🌿 Decoração das margens</h3><p>Instale itens que já possui no menu Decorações.</p><div class="grid-cards">${Object.entries(DECORATIONS).filter(([id])=>(state.decorInventory[id]||0)>0).map(([id,d])=>`<div class="store-card"><span class="symbol">${d.icon}</span><strong>${d.name}</strong><small>Disponível: ${state.decorInventory[id]}</small><button data-place-lake-decor="${id}">Colocar na margem</button></div>`).join('')||'<p>Nenhuma decoração disponível no inventário.</p>'}</div>${state.lake.decorations.length?'<h4>Decorações instaladas</h4>'+state.lake.decorations.map(d=>'<div class="list-line"><span>'+DECORATIONS[d.id].icon+' '+DECORATIONS[d.id].name+'</span><button class="modal-action alt" data-remove-lake-decor="'+d.slot+'">Retirar</button></div>').join(''):''}<h3>🌉 Pontes instaladas</h3>${state.lake.bridges.length?state.lake.bridges.map(b=>'<div class="list-line"><span>🌉 '+WOODWORK_RECIPES[b.id].name+'</span><button class="modal-action alt" data-remove-lake-bridge="'+b.slot+'">Remover</button></div>').join(''):'<p>Nenhuma ponte instalada.</p>'}<h3>Fabricar na Marcenaria</h3>${['ponte_carvalho','ponte_azul','ponte_verde','ponte_rubra'].map(id=>{const r=WOODWORK_RECIPES[id],n=state.furnitureWarehouse[id]||0;return `<div class="list-line"><span>${r.icon} <b>${r.name}</b><br><small>Fabricadas: ${n}</small></span><button data-place-lake-bridge="${id}" ${!n||state.lake.bridges.includes(id)?'disabled':''}>${state.lake.bridges.includes(id)?'Instalada':'Instalar ponte'}</button></div>`}).join('')}`;return s}
@@ -2572,7 +2572,7 @@ function placeLakeDecoration(id){if(writeLocked)return notify('Salvamento proteg
 function removeLakeDecoration(slot){if(!farmWriteAllowed())return;const i=state.lake.decorations.findIndex(d=>d.slot===slot);if(i<0)return;const d=state.lake.decorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;markDirty();refresh();notify('Decoração devolvida ao inventário.')}
 function placeLakeBridge(id){if(writeLocked)return notify('Salvamento protegido.');if(!WOODWORK_RECIPES[id]?.lakeBridge||(state.furnitureWarehouse[id]||0)<1)return;if(state.lake.bridges.some(b=>b.id===id))return notify('Esta ponte já está instalada.');const slot=[0,1,2,3].find(i=>!state.lake.bridges.some(b=>b.slot===i));if(slot===undefined)return notify('O Lago já possui quatro posições de ponte ocupadas.');state.furnitureWarehouse[id]--;state.lake.bridges.push({id,slot});markDirty();refresh();notify(WOODWORK_RECIPES[id].name+' instalada de uma margem a outra.')}
 function removeLakeBridge(slot){if(!farmWriteAllowed())return;const i=state.lake.bridges.findIndex(b=>b.slot===slot);if(i<0)return;const b=state.lake.bridges.splice(i,1)[0];state.furnitureWarehouse[b.id]=(state.furnitureWarehouse[b.id]||0)+1;markDirty();refresh();notify('Ponte devolvida à marcenaria.')}
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-1368 620L-768 350L-168 620L-768 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1345 620L-768 370L-191 620L-768 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
