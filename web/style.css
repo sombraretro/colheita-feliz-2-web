@@ -841,3 +841,8 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .horse-breed-card b{margin-top:5px}
 #haras-area{pointer-events:none}
 @media(max-width:700px){.horse-breed-preview{height:68px}.horse-card-preview{width:56px;height:44px}}
+
+
+/* Correção definitiva: marcadores de notificação do mundo sem animação ou transição. */
+#world .world-notification,
+#world .world-notification *{animation:none!important;animation-play-state:paused!important;transition:none!important}
