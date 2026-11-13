@@ -878,10 +878,10 @@ function blocked(x,y){
  return false;
 }
 const treePlacements=[
- [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-2300,620,210,265,'saturate(.96)'],[-160,265,230,270,'hue-rotate(-18deg)'],
+ [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-2300,620,210,265,'saturate(.96)'],[-160,265,230,270,'saturate(.96)'],
  [120,-190,205,250,'saturate(.82)'],
- [1810,-190,235,285,'hue-rotate(32deg)'],
- [3420,20,255,300,'saturate(.96)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
+ [1810,-190,235,285,'saturate(.96)'],
+ [3420,20,255,300,'saturate(.96)'],[3820,45,225,270,'saturate(1.02)'],[4300,30,265,315,'saturate(.78)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:${filter}"`);
 for(let i=0;i<330;i++){
