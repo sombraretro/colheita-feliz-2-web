@@ -984,7 +984,7 @@ function renderAnimals(){
    x=pos.x;y=pos.y;w=pos.w;h=pos.h;
   }else if(isBirdType(a.type)){
    const birdSlot=Math.max(0,Number.isInteger(a.aviarySlot)?a.aviarySlot:0),col=birdSlot%AVIARY_COLUMNS,row=Math.floor(birdSlot/AVIARY_COLUMNS);
-   w=42;h=32;x=-125+col*57;y=(row%2===0?255:385);
+   w=42;h=32;x=-125+col*57;y=(row%2===0?175:305);
   }else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
