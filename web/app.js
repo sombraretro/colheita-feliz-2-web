@@ -875,7 +875,6 @@ function blocked(x,y){
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
  if(x>2000&&x<3315&&y>-110&&y<590)return true;
- if(x>-2070&&x<-1440)return true;
  if(x>-450&&x<100&&y>-40&&y<300)return true;
  return false;
 }
@@ -1581,7 +1580,7 @@ function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
 }
 function renderPondArea(){
  if(!state?.expansions?.pond)return '';
- return `<g id="pond-area" pointer-events="none" transform="translate(-650 0)">
+ return `<g id="pond-area" pointer-events="none" transform="translate(229 425)">
   <defs>
    <linearGradient id="riverBank" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#d7c18e"/><stop offset=".5" stop-color="#ad9160"/><stop offset="1" stop-color="#806342"/></linearGradient>
    <linearGradient id="riverWater" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2e8296"/><stop offset=".38" stop-color="#55b7c0"/><stop offset=".7" stop-color="#287d98"/><stop offset="1" stop-color="#1c617b"/></linearGradient>
