@@ -851,25 +851,6 @@ const ground=`<defs>
 <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
 </defs>
 <image href="${HORSE_ASSETS.day}" x="-2600" y="-400" width="7000" height="1700" preserveAspectRatio="none"/>
-<!-- Protótipo isométrico da Fazenda: terreno e faces próprios; nenhum sprite ou hitbox é transformado. -->
-<defs>
- <linearGradient id="farmIsoSideLeft" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#477d32"/><stop offset="1" stop-color="#244e25"/></linearGradient>
- <linearGradient id="farmIsoSideRight" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#3c702d"/><stop offset="1" stop-color="#1e4823"/></linearGradient>
- <linearGradient id="farmIsoTop" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#91c95c"/><stop offset=".55" stop-color="#6eae46"/><stop offset="1" stop-color="#4c9137"/></linearGradient>
- <clipPath id="farmIsoTopClip"><path d="M532 -250L1800 350L532 1100L-1450 350Z"/></clipPath>
-</defs>
-<g id="farm-isometric-ground" pointer-events="none">
- <path d="M-1450 350L532 1100L532 1192L-1450 442Z" fill="url(#farmIsoSideLeft)" stroke="#315f2a" stroke-width="8" stroke-linejoin="round"/>
- <path d="M532 1100L1800 350L1800 442L532 1192Z" fill="url(#farmIsoSideRight)" stroke="#294f27" stroke-width="8" stroke-linejoin="round"/>
- <path d="M532 -250L1800 350L532 1100L-1450 350Z" fill="url(#farmIsoTop)" stroke="#477e32" stroke-width="18" stroke-linejoin="round"/>
- <g clip-path="url(#farmIsoTopClip)">
-  <path d="M532 -250L1800 350L532 1100L-1450 350Z" fill="url(#grass)" opacity=".23"/>
-  <path d="M532 -180L1680 350L532 1030L-1320 350Z" fill="none" stroke="#c3df83" stroke-width="10" opacity=".28"/>
-  <path d="M532 -120L1570 350L532 970L-1180 350Z" fill="none" stroke="#e0edaa" stroke-width="3" stroke-dasharray="18 24" opacity=".22"/>
- </g>
- <path d="M532 -250L1800 350L532 1100L-1450 350Z" fill="none" stroke="#c0dc83" stroke-width="7" stroke-linejoin="round" opacity=".72"/>
- <path d="M-1450 350L532 1100L1800 350" fill="none" stroke="#d5e99a" stroke-width="4" opacity=".55"/>
-</g>
 <!-- Estradas secundárias são integradas à rede viária única. -->
 `;
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
