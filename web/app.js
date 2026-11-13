@@ -2573,7 +2573,7 @@ function downloadSocialPackage(payload,filename){const blob=new Blob([JSON.strin
 
 
 function buildPublicFarmSnapshot(){
- const plots=(state.plots||[]).slice(0,72).map(p=>({status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',crop:CROPS[p.crop]?p.crop:null,progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'}));
+ const plots=(state.plots||[]).slice(0,72).map(p=>({status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',crop:CROPS[p.crop]?p.crop:null,progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,regrowing:!!p.regrowing,weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'}));
  const animals=(state.animals||[]).filter(a=>ANIMALS[a.type]).slice(0,80).map(a=>({type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,stage:Math.max(1,Math.min(5,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null}));
  const orchard=(state.orchardTrees||[]).slice(0,8).map(t=>({type:CROPS[t.type]?t.type:null,status:t.status==='ready'||(t.type&&orchardTreeProgress(t)>=1)?'ready':t.type?'growing':'empty',progress:t.type?orchardTreeProgress(t):0,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0)}));
  const forest=(state.forestPlots||[]).slice(0,36).map(t=>({type:FOREST_TREES[t.type]?t.type:null,status:t.type&&forestProgress(t)>=1?'ready':t.type?'growing':'empty',progress:t.type?forestProgress(t):0}));
