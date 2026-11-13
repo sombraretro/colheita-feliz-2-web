@@ -883,7 +883,7 @@ const treePlacements=[
  [1810,-190,235,285,'hue-rotate(32deg)'],
  [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
 ];
-for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:${filter}"`);
+for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
 for(let i=0;i<330;i++){
  const x=seedNoise(i*17+3)*6800-2600,y=seedNoise(i*31+8)*1160-140;
  if(blocked(x,y))continue;
@@ -1657,7 +1657,7 @@ function renderPondArea(){
     [-1730,1110,.6,'hue-rotate(35deg) saturate(1.12)'],
     [-1590,1135,.76,'hue-rotate(-20deg) saturate(1.18)'],
     [-1460,1090,.62,'hue-rotate(8deg) saturate(1.2)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%5===0?.94:1}"/></g>`).join('')} 
+   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:none" opacity="${i%5===0?.94:1}"/></g>`).join('')} 
    ${[
     [-1845,-300,.72,'hue-rotate(68deg) saturate(1.35)'],
     [-1980,-270,.86,'sepia(.42) saturate(1.45) hue-rotate(350deg)'],
@@ -1690,7 +1690,7 @@ function renderPondArea(){
     [-1900,1110,.76,'hue-rotate(255deg) saturate(1.3)'],
     [-2050,1140,.86,'hue-rotate(105deg) saturate(1.4)'],
     [-2200,1170,.68,'hue-rotate(25deg) saturate(1.5)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".22"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%6===0?.96:1}"/></g>`).join('')}
+   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".22"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:none" opacity="${i%6===0?.96:1}"/></g>`).join('')}
    <g class="grove-flowers" stroke="#557b35" stroke-width="2">
     ${[[-1660,-12,'#f0c94f'],[-1510,48,'#e879a5'],[-1735,245,'#f5e7d2'],[-1465,225,'#9d83d2'],[-1600,405,'#efc84f'],[-1740,555,'#e879a5'],[-1485,535,'#f4e4c7'],[-1650,755,'#9d83d2'],[-1510,905,'#f0c94f'],[-1730,1030,'#e879a5'],[-1450,1015,'#f4e4c7']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><path d="M0 7v-12" stroke-width="2.5"/><circle cy="-16" r="4.5" fill="${c}"/><circle cx="-5.5" cy="-13" r="4" fill="${c}"/><circle cx="5.5" cy="-13" r="4" fill="${c}"/><circle cy="-10" r="3.8" fill="${c}"/><circle cy="-13" r="2" fill="#f8e6a7"/></g>`).join('')}
    </g>
