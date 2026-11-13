@@ -617,9 +617,10 @@ async function handleAuthSession(session){
    const hasLegacyDogBreedEntries=!!data.state?.temporaryDogBreeds&&typeof data.state.temporaryDogBreeds==='object'&&Object.keys(data.state.temporaryDogBreeds).length>0;
    const restored=normalizeFarmSnapshot(data.state);
    if(!restored)throw new Error('A fazenda da nuvem está em um formato inválido.');
-   state=restored;cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;writeLocked=false;clearLegacyFarmSave();
+   state=restored;cloudRevision=Number(data.revision)||1;cloudUpdatedAt=data.updated_at||null;dirty=false;cloudDirty=false;clearTimeout(saveTimer);saveTimer=null;writeLocked=hasLegacyDogBreedEntries;clearLegacyFarmSave();
    if(hasLegacyDogBreedEntries){
     await saveCloud();
+    writeLocked=false;
     recordCloudSyncEvent('success','Migração das raças de cães concluída','Raças temporárias ainda válidas foram convertidas em propriedade permanente; registros expirados foram descartados.');
    }
    $('save-status').textContent=hasLegacyDogBreedEntries?'Fazenda carregada · raças antigas migradas':'Fazenda carregada da nuvem';recordCloudSyncEvent('success','Fazenda carregada da nuvem','Revisão '+cloudRevision+'.');
