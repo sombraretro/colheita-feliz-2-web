@@ -934,7 +934,7 @@ for(let i=0;i<95;i++){
 scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
 for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
-scenery+=`<g pointer-events="none">${svgImage('celeiro',-650,700,430,350)}</g>`;
+scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,130,430,350)}</g>`;
 scenery+=`<g pointer-events="none">
  <path d="M790 -13Q845 -22 900 -13T1015 -14T1110 -13T1210 -15" fill="none" stroke="#477d2d" stroke-width="10" stroke-linecap="round"/>
  <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="-10" rx="12" ry="6"/><ellipse cx="866" cy="-9" rx="9" ry="5"/><ellipse cx="930" cy="-12" rx="14" ry="6"/><ellipse cx="1080" cy="-11" rx="11" ry="5"/><ellipse cx="1150" cy="-13" rx="13" ry="6"/><ellipse cx="1198" cy="-9" rx="9" ry="5"/></g>
@@ -964,16 +964,16 @@ scenery+=`<g pointer-events="none">
  <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M845 10q-3-18-12-21m12 21q9-16 18-17M1060 10q-4-17-13-21m13 21q9-15 18-16"/></g>
  </g>`;
 scenery+=svgImage('casinha-cachorro',370,145,145,140);
-scenery+=fencePath([[1260,180],[1780,180]],'rear');
-scenery+=fencePath([[1260,180],[1260,760]],'side');
-scenery+=fencePath([[1780,180],[1780,760]],'side');
+scenery+=fencePath([[1260,380],[1780,380]],'rear');
+scenery+=fencePath([[1260,380],[1260,960]],'side');
+scenery+=fencePath([[1780,380],[1780,960]],'side');
 
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
-front+=fencePath([[1260,760],[1430,760]],'front');
-front+=fencePath([[1560,760],[1780,760]],'front');
-front+=`<g transform="translate(1430 760)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
+front+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,960],[1430,960]],'front');
+front+=fencePath([[1560,960],[1780,960]],'front')+'</g>';
+front+=`<g transform="rotate(4 1510 760) translate(0 200)"><g transform="translate(1430 760)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
 front+=`<g transform="translate(1495 655) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
 front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
@@ -1028,7 +1028,7 @@ function renderAnimals(){
   const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','iaque'].includes(a.type)?'svg':'png');
   const assetUrl=cfg.role==='horse'?HORSE_ASSETS.horse:(a.type==='cachorro'&&breed?.image?breed.image:a.type==='pavao'?HORSE_ASSETS.peacock:a.type==='cabra'?HORSE_ASSETS.goat:null);
   const animalGraphic=['peru','boi','bufala','coelho'].includes(a.type)?'<text x="724" y="850" text-anchor="middle" font-size="760">'+cfg.icon+'</text>':'<image class="animal-sprite" href="'+(assetUrl||('/assets/'+assetName+'.'+assetExt))+'" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>';
-  markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
+  markup+='<g class="animal-wrap animal-'+a.type+'"'+(!isBirdType(a.type)&&a.type!=='cachorro'&&ANIMALS[a.type]?.role!=='horse'?' transform="rotate(4 1510 760)"':'')+' data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
  }
  $('animal-layer').innerHTML=markup;
  scheduleAnimalBlinking();
@@ -1564,7 +1564,7 @@ function renderHarasArea(){
  const points='-940,-375 -580,-375 -515,-310 -515,-180 -580,-115 -940,-115 -1005,-180 -1005,-310';
  const posts=[[-940,-375],[-580,-375],[-515,-310],[-515,-180],[-580,-115],[-940,-115],[-1005,-180],[-1005,-310]];
  const postMarkup=posts.map(p=>'<rect x="'+(p[0]-8)+'" y="'+(p[1]-15)+'" width="16" height="32" rx="3"/>').join('');
- return '<g id="haras-area" pointer-events="none" transform="translate(380 575)">'+
+ return '<g id="haras-area" pointer-events="none" transform="translate(380 1120)">'+
   '<polygon points="'+points+'" fill="#83ad50" stroke="#624326" stroke-width="17" stroke-linejoin="round"/>'+
   '<polygon points="-922,-357 -598,-357 -533,-292 -533,-198 -598,-133 -922,-133 -987,-198 -987,-292" fill="#b99a6d" opacity=".42" stroke="#d8bc8b" stroke-width="5" stroke-linejoin="round"/>'+
   '<path d="M-940 -375L-580 -375L-515 -310L-515 -180L-580 -115L-940 -115L-1005 -180L-1005 -310Z" fill="none" stroke="#a66f3d" stroke-width="13" stroke-linejoin="round"/>'+
@@ -1835,7 +1835,7 @@ function updateNotificationBadges(){
    marker(1060,55,'🍳',counts.kitchen,'Receita pronta na cozinha')+
    marker(650,165,'🔥',counts.grill,'Receita pronta na churrasqueira')+
    marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
-   marker(535,-55,'🐦',readyBirds,'Produção pronta no viveiro')+
+   marker(45,45,'🐦',readyBirds,'Produção pronta no viveiro')+
    marker(2750,-18,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
  }
