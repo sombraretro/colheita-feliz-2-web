@@ -416,7 +416,7 @@ const DOG_BREEDS={
  mastiff:{name:'Mastiff',id:'58_0',asset:'dog-mastiff',price:5800,ext:'png'},
  renas:{name:'Papai Noel Renas',id:'59_0',asset:'dog-renas',price:8500,event:true},
  apaixonado:{name:'Cachorro apaixonado',id:'evento Dia dos Namorados 2010',asset:'dog-apaixonado',price:50,currency:'greenCoins',event:true},
- namorados:{name:'Cachorro dos namorados',id:'evento Dia dos Namorados 2010',asset:'dog-namorados',price:40,currency:'greenCoins',temporary:true,durationDays:30,event:true}
+ namorados:{name:'Cachorro dos namorados',id:'evento Dia dos Namorados 2010',asset:'dog-namorados',price:40,currency:'greenCoins',event:true}
 };
 const ANIMAL_RATIONS={
  galinha:{key:'ration_chicken',name:'Ração para Galinha',price:4,animal:'galinha',historical:true},
