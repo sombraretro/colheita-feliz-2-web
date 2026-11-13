@@ -910,10 +910,11 @@ const treePlacements=[
  [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
-for(let i=0;i<230;i++){
+for(let i=0;i<330;i++){
  const x=seedNoise(i*17+3)*6800-2600,y=seedNoise(i*31+8)*1160-140;
  if(blocked(x,y))continue;
- scenery+=grassClump(x,y,.5+seedNoise(i)*.8);
+ if(x>=-1450&&x<=1800){if(i<230)scenery+=grassClump(x,y,.5+seedNoise(i)*.8)}
+ else scenery+=i%6===0?flower(x,y,.4+seedNoise(i*13)*.5,['#fff5df','#f79cc4','#e4a3ef','#fff7ae'][i%4]):grassClump(x,y,.5+seedNoise(i)*.8);
 }
 const groundFlowerSpots=[
  [-1400,400,.75,'#fff2d2'],[-1380,470,.58,'#e9a9d1'],[-1370,540,.68,'#fff3bd'],
