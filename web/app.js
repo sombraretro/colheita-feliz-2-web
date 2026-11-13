@@ -216,7 +216,9 @@ const GRILL_RECIPES={
  aruana_grelhado:{name:'Aruanã Grelhado com Pimenta',icon:'🐠',minutes:90,yield:2,salePrice:790,xp:39,ingredients:[['fish','aruana',1],['crop','pimenta',1],['crop','alho',1],['supply','seasoning',1]]},
  apaiari_assado:{name:'Apaiari Assado Amazônico',icon:'🐟',minutes:75,yield:2,salePrice:560,xp:29,ingredients:[['fish','apaiari',1],['crop','tomate',1],['crop','cebola',1],['supply','seasoning',1]]},
  salmao_brasa:{name:'Salmão na Brasa com Ervas',icon:'🐟',minutes:115,yield:2,salePrice:1120,xp:54,ingredients:[['sea','salmao',1],['crop','alho',1],['crop','batata',1],['supply','seasoning',1]]},
- bacalhau_grelhado:{name:'Bacalhau Grelhado à Portuguesa',icon:'🐟',minutes:145,yield:2,salePrice:1480,xp:68,ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['supply','dende_oil',1]]}
+ bacalhau_grelhado:{name:'Bacalhau Grelhado à Portuguesa',icon:'🐟',minutes:145,yield:2,salePrice:1480,xp:68,ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['supply','dende_oil',1]]},
+ tubarao_baleia_brasa:{name:'Tubarão-baleia na Brasa com Limão',icon:'🦈',minutes:190,yield:2,salePrice:2180,xp:94,ingredients:[['sea','tubarao_baleia',1],['crop','limao',2],['crop','alho',2],['supply','seasoning',1]]},
+ peixe_remo_imperial_grelhado:{name:'Peixe-remo Imperial Grelhado',icon:'🐟',minutes:210,yield:3,salePrice:2460,xp:104,ingredients:[['sea','peixe_remo_imperial',1],['crop','cebola',2],['crop','tomate',2],['supply','dende_oil',1]]}
 };
 Object.assign(GRILL_RECIPES,{
  goat_grilled:{name:'Cabrito na Brasa com Ervas',icon:'🍖',minutes:105,yield:2,salePrice:780,xp:42,ingredients:[['meat','goat',1],['crop','pimenta',1],['supply','seasoning',1]]},
@@ -241,6 +243,8 @@ Object.assign(GRILL_RECIPES,{
  kitchen_barbado_stew:{name:'Barbado Ensopado com Legumes',icon:'🥘',minutes:118,yield:2,salePrice:1160,xp:56,kitchenOnly:true,category:'savory',ingredients:[['fish','barbado',1],['crop','batata',2],['crop','cenoura',1],['crop','tomate',1]]},
  kitchen_aruana_coconut:{name:'Aruanã ao Leite de Coco',icon:'🍛',minutes:105,yield:2,salePrice:1020,xp:50,kitchenOnly:true,category:'savory',ingredients:[['fish','aruana',1],['crop','coco',1],['crop','tomate',1],['crop','cebola',1]]},
  kitchen_apaiari_stew:{name:'Apaiari ao Molho Amazônico',icon:'🍲',minutes:86,yield:2,salePrice:760,xp:38,kitchenOnly:true,category:'savory',ingredients:[['fish','apaiari',1],['crop','tomate',2],['crop','pimenta',1],['crop','cebola',1]]},
+ kitchen_pirarucu_dourado:{name:'Pirarucu Dourado ao Creme de Ervas',icon:'🍲',minutes:165,yield:2,salePrice:1980,xp:88,kitchenOnly:true,category:'savory',ingredients:[['fish','pirarucu_dourado',1],['animal','milk',1],['crop','alho',2],['crop','cebola',1]]},
+ kitchen_surubim_cristalino:{name:'Caldeirada de Surubim Cristalino',icon:'🥘',minutes:180,yield:3,salePrice:2240,xp:96,kitchenOnly:true,category:'savory',ingredients:[['fish','surubim_cristalino',1],['crop','tomate',2],['crop','batata',2],['crop','cebola',1]]},
  kitchen_salmao_creamy:{name:'Salmão Cremoso com Ervas',icon:'🍝',minutes:125,yield:2,salePrice:1320,xp:62,kitchenOnly:true,category:'savory',ingredients:[['sea','salmao',1],['animal','milk',1],['crop','alho',1],['crop','batata',1]]},
  kitchen_bacalhau_bras:{name:'Bacalhau à Brás',icon:'🍳',minutes:155,yield:3,salePrice:1680,xp:76,kitchenOnly:true,category:'savory',ingredients:[['sea','bacalhau',1],['crop','batata',2],['crop','cebola',1],['animal','eggs',2]]},
  kitchen_galinhada:{name:'Galinhada Caipira',icon:'🍗',minutes:58,yield:3,salePrice:760,xp:42,kitchenOnly:true,category:'savory',ingredients:[['meat','chicken',1],['crop','arroz',2],['crop','cebola',1],['crop','alho',1],['crop','tomate',1],['crop','milho',1],['mix','tempero_aromatico',1]]},
@@ -312,7 +316,9 @@ const SEA_TYPES={
  bacalhau:{name:'Bacalhau',icon:'🐟',rarity:'Lendário',xp:28,minNet:4,weight:3},
  caviar:{name:'Caviar',icon:'🖤',rarity:'Lendário',xp:52,minNet:4,weight:1.2},
  peixe_lua:{name:'Peixe-lua',icon:'🐟',rarity:'Extraordinário',xp:44,minNet:0,weight:0.75,extraordinaryOnly:true},
- celacanto:{name:'Celacanto',icon:'🐟',rarity:'Extraordinário',xp:50,minNet:0,weight:0.5,extraordinaryOnly:true}
+ celacanto:{name:'Celacanto',icon:'🐟',rarity:'Extraordinário',xp:50,minNet:0,weight:0.5,extraordinaryOnly:true},
+ tubarao_baleia:{name:'Tubarão-baleia',icon:'🦈',rarity:'Extraordinário',xp:56,minNet:0,weight:0.55,extraordinaryOnly:true},
+ peixe_remo_imperial:{name:'Peixe-remo Imperial',icon:'🐟',rarity:'Extraordinário',xp:60,minNet:0,weight:0.45,extraordinaryOnly:true}
 };
 const SEA_NETS={normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},novato:{name:'Novato',level:8,coins:3800,greenCoins:2,order:1},junior:{name:'Junior',level:16,coins:12500,greenCoins:5,order:2},senior:{name:'Sênior',level:26,coins:36000,greenCoins:12,order:3},profissional:{name:'Profissional',level:38,coins:90000,greenCoins:25,order:4},extraordinaria_teste:{name:'Extraordinária · TESTE',level:22,coins:1,greenCoins:0,order:5,extraordinaryOnly:true}};
 const LAKE_FISH={lambari:{name:"Lambari",icon:"🐟",egg:180,price:260,hours:3},tilapia:{name:"Tilápia",icon:"🐠",egg:260,price:420,hours:4},carpa:{name:"Carpa",icon:"🐟",egg:420,price:680,hours:5},koi:{name:"Carpa Koi",icon:"🎏",egg:900,price:1500,hours:6},pacu:{name:"Pacu",icon:"🐟",egg:620,price:980,hours:5},tambaqui:{name:"Tambaqui",icon:"🐠",egg:780,price:1250,hours:6},pintado:{name:"Pintado",icon:"🐟",egg:1100,price:1850,hours:7},dourado:{name:"Dourado",icon:"🐠",egg:1250,price:2100,hours:7},pirarucu:{name:"Pirarucu",icon:"🐟",egg:1800,price:3200,hours:9},esturjao:{name:"Esturjão",icon:"🐟",egg:2400,price:4400,hours:10}};
@@ -354,14 +360,15 @@ const FISH_TYPES={
  apaiari:{name:'Apaiari (acará-açu)',rarity:'Incomum',xp:8,icon:'🐠',minRod:1,weight:12},
  pirarucu_albino:{name:'Pirarucu Albino',rarity:'Extraordinário',xp:42,icon:'🐟',minRod:0,weight:0.8,extraordinaryOnly:true},
  arraia_gigante:{name:'Arraia Gigante de Água Doce',rarity:'Extraordinário',xp:46,icon:'🪽',minRod:0,weight:0.65,extraordinaryOnly:true},
+ pirarucu_dourado:{name:'Pirarucu Dourado',rarity:'Extraordinário',xp:54,icon:'🐠',minRod:0,weight:0.55,extraordinaryOnly:true},
+ surubim_cristalino:{name:'Surubim Cristalino',rarity:'Extraordinário',xp:58,icon:'🐟',minRod:0,weight:0.45,extraordinaryOnly:true}
 };
 const FISHING_RODS={
  normal:{name:'Normal',level:1,coins:0,greenCoins:0,order:0},
  novato:{name:'Novato',level:5,coins:2500,greenCoins:2,order:1},
  junior:{name:'Junior',level:12,coins:9000,greenCoins:5,order:2},
  senior:{name:'Sênior',level:22,coins:28000,greenCoins:12,order:3},
- profissional:{name:'Profissional',level:35,coins:75000,greenCoins:25,order:4},
-  extraordinaria_teste:{name:'Extraordinária · TESTE',level:1,coins:1,greenCoins:0,order:5,extraordinaryOnly:true}
+ profissional:{name:'Profissional',level:35,coins:75000,greenCoins:25,order:4}
 };
 const FISH_COOLDOWN=8000,SEA_FISH_COOLDOWN=12000;
 
@@ -1262,7 +1269,7 @@ function normalize(data){
  data.inventory=(data.inventory&&typeof data.inventory==='object')?data.inventory:{};
  const forestSeedMoves=[['pinheiro_natal','pinheiro_natal'],['eucalipto','eucalipto'],['pinha','pinha'],['arvore_garrafa','uvaia'],['nepenthes','cambuca']];
  for(const [oldId,newId] of forestSeedMoves){const target='tree_'+newId,legacyKeys=oldId===newId?[oldId]:[oldId,'tree_'+oldId];for(const key of legacyKeys){if(key===target)continue;const qty=Math.max(0,Math.floor(Number(data.inventory[key])||0));if(qty){data.inventory[target]=(Number(data.inventory[target])||0)+qty;data.inventory[key]=0}}}
- data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string').map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
+ data.catalog=Array.isArray(data.catalog)?data.catalog.filter(x=>x&&typeof x.category==='string'&&typeof x.id==='string'&&typeof x.name==='string'&&!(x.category==='equipamentos'&&x.id==='vara_extraordinaria_teste')).map(x=>({category:x.category,id:x.id,name:x.name,icon:typeof x.icon==='string'?x.icon:'📌',discoveredAt:Number.isFinite(x.discoveredAt)?x.discoveredAt:Date.now()})):[];
  data.giftInventory=(data.giftInventory&&typeof data.giftInventory==='object')?data.giftInventory:{};
  for(const id of Object.keys(GIFT_ITEMS))data.giftInventory[id]=Number.isFinite(data.giftInventory[id])?Math.max(0,Math.floor(data.giftInventory[id])):0;
  data.expansions=(data.expansions&&typeof data.expansions==='object')?data.expansions:{};data.expansions.orchard=!!data.expansions.orchard;data.expansions.pond=!!data.expansions.pond;
