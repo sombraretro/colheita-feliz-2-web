@@ -760,3 +760,34 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .pepper-icon img{width:1.45em;height:1.45em;display:block;object-fit:contain}.pepper-icon:after{display:none}
 .pepper-icon img[src*="pimentao-amarelo"]{filter:saturate(1.85) contrast(1.06)}
 \n.help-feature-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px;margin:8px 0 14px}.help-feature-item{display:flex;align-items:center;gap:8px;min-width:0;padding:9px 11px;border:1px solid #d9bd8c;border-radius:9px;background:#fff9eb;color:#684a27;font-size:13px}.help-feature-item>span{color:#7c9b45;font-size:18px;line-height:1}.help-feature-item b{font-weight:650}.help-tool-list{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.help-tool-list span{padding:6px 10px;border-radius:20px;background:#edf2dc;border:1px solid #c6d2a5;color:#4d6332;font-size:12px}
+/* Notificações festivas da pesca: intensidade visual proporcional à raridade. */
+.toast.fishing-toast{width:min(440px,90vw);min-height:112px;padding:17px 24px;overflow:visible;border-width:3px;isolation:isolate;transform:translate(-50%,-50%);transition:opacity .2s;animation:fish-toast-common .55s cubic-bezier(.2,.8,.2,1) both}
+.toast.fishing-toast.show{opacity:1}
+.fishing-toast-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px}
+.fishing-toast-heading{font-size:13px;letter-spacing:.08em}
+.fishing-toast-fish{display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px}
+.fishing-toast-icon{font-size:34px;filter:drop-shadow(0 2px 2px #0003)}
+.fishing-toast-name{font-size:20px}
+.fishing-toast-detail{font-size:12px;opacity:.82}
+.fish-sparkle{position:absolute;z-index:1;width:7px;height:7px;border-radius:50%;background:#fff6a5;box-shadow:0 0 9px 3px #ffe58a;pointer-events:none;animation:fish-sparkle-pop .9s ease-out var(--sparkle-delay,0s) both}
+@keyframes fish-toast-common{0%{transform:translate(-50%,-50%) scale(.9)}65%{transform:translate(-50%,-50%) scale(1.035)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes fish-sparkle-pop{0%{opacity:0;scale:.2}35%{opacity:1;scale:1.2}100%{opacity:0;scale:.15}}
+.toast.fishing-toast.rarity-common{border-color:#bb9b68}
+.toast.fishing-toast.rarity-uncommon{border-color:#64a96b;box-shadow:0 6px 24px #3d873d88}
+.toast.fishing-toast.rarity-uncommon .fishing-toast-heading{color:#397b42}
+.toast.fishing-toast.rarity-rare{border-color:#4b9ac8;box-shadow:0 7px 27px #278fc099;animation:fish-toast-rare .72s ease-out both}
+.toast.fishing-toast.rarity-rare .fishing-toast-heading{color:#176c9d}
+.toast.fishing-toast.rarity-very-rare{border-color:#a06bc8;box-shadow:0 8px 30px #9a54c899;animation:fish-toast-rare .85s ease-out both}
+.toast.fishing-toast.rarity-very-rare .fishing-toast-heading{color:#78409c}
+.toast.fishing-toast.rarity-legendary{border-color:#e4ad2e;box-shadow:0 0 12px 4px #ffda68,0 8px 32px #b77a2eaa;animation:fish-toast-legendary 1.05s ease-out both}
+.toast.fishing-toast.rarity-legendary .fishing-toast-heading{color:#a66a13;text-shadow:0 0 8px #f4cf70}
+.toast.fishing-toast.rarity-extraordinary{border-color:#e44e9b;background:linear-gradient(135deg,#fff2bd,#ffe0ef 48%,#e4f5ff);box-shadow:0 0 14px 5px #ff79c8,0 0 34px 12px #7e7bff99,0 8px 34px #572a7eaa;animation:fish-toast-extraordinary 1.25s cubic-bezier(.2,.9,.2,1) both}
+.toast.fishing-toast.rarity-extraordinary .fishing-toast-heading{color:#a52a86;text-shadow:0 0 9px #ffb1e2}
+.toast.fishing-toast.rarity-extraordinary .fishing-toast-name{color:#6032a0}
+@keyframes fish-toast-rare{0%{transform:translate(-50%,-50%) scale(.75) rotate(-2deg);filter:brightness(1.5)}55%{transform:translate(-50%,-50%) scale(1.07) rotate(1deg)}100%{transform:translate(-50%,-50%) scale(1);filter:brightness(1)}}
+@keyframes fish-toast-legendary{0%{transform:translate(-50%,-50%) scale(.65);filter:brightness(1.8)}45%{transform:translate(-50%,-50%) scale(1.12)}70%{transform:translate(-50%,-50%) scale(.97)}100%{transform:translate(-50%,-50%) scale(1);filter:brightness(1)}}
+@keyframes fish-toast-extraordinary{0%{transform:translate(-50%,-50%) scale(.45) rotate(-7deg);filter:brightness(2)}35%{transform:translate(-50%,-50%) scale(1.16) rotate(3deg)}60%{transform:translate(-50%,-50%) scale(.96) rotate(-1deg)}100%{transform:translate(-50%,-50%) scale(1);filter:brightness(1)}}
+.fish-firework{position:absolute;z-index:1;width:1px;height:1px;pointer-events:none}
+.fish-firework i{position:absolute;left:0;top:0;width:5px;height:5px;border-radius:50%;background:var(--firework-color);box-shadow:0 0 7px 2px var(--firework-color);animation:fish-firework-burst 1.15s ease-out var(--firework-delay,0s) both}
+@keyframes fish-firework-burst{0%{opacity:0;transform:rotate(var(--angle)) translateY(0) scale(.3)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--angle)) translateY(-48px) scale(.15)}}
+@media(prefers-reduced-motion:reduce){.toast.fishing-toast,.toast.fishing-toast.rarity-rare,.toast.fishing-toast.rarity-very-rare,.toast.fishing-toast.rarity-legendary,.toast.fishing-toast.rarity-extraordinary,.fish-sparkle,.fish-firework i{animation:none!important}.fish-sparkle,.fish-firework{display:none!important}}
