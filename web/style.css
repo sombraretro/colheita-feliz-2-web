@@ -843,8 +843,4 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 @media(max-width:700px){.horse-breed-preview{height:68px}.horse-card-preview{width:56px;height:44px}}
 
 
-/* Ícones clássicos de sementes recortados para ocultar a embalagem e a expressão facial. */
-.crop-seed-image{position:relative;display:inline-block;width:46px;height:46px;overflow:hidden;clip-path:ellipse(48% 49% at 50% 50%);vertical-align:middle}
-.crop-seed-image img{position:absolute;width:265%;height:330%;max-width:none;object-fit:cover;left:-82.5%;top:-115%;pointer-events:none}
-.crop-seed-image::after{content:"";position:absolute;left:39%;top:42%;width:22%;height:16%;border-radius:50%;background:radial-gradient(ellipse,rgba(222,183,119,.94) 0%,rgba(222,183,119,.68) 48%,rgba(222,183,119,0) 100%);filter:blur(2px);pointer-events:none}
-.crop-object image{pointer-events:none}
+.crop-object image{pointer-events:none;opacity:1}
