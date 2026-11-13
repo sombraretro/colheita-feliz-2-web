@@ -1015,7 +1015,8 @@ function plotGeometry(p,r,c,i){
  if(p.status==='growing'){
   const progress=Math.min(1,Math.max(0,(Date.now()-p.plantedAt)/(cropHours(p.crop,p.regrowing)*HOUR))),scale=.38+progress*.7;
   const [plantX,plantY]=farmPoint(x+100,y+5),[weedX,weedY]=farmPoint(x+140,y+25),[pestX,pestY]=farmPoint(x+77,y+5),[waterX,waterY]=farmPoint(x+153,y-8);
-  crop+=`<g class="crop-object" data-crop-plot="${i}"><ellipse cx="${plantX}" cy="${plantY+10}" rx="27" ry="9" fill="${red?'#71382f':'#553520'}" opacity=".78"/><g transform="translate(${plantX} ${plantY}) scale(${scale})"><g class="sway" style="animation-delay:${i*.17}s">${cropArt(p.crop,progress)}</g></g>`;
+  const phaseImage=progress<.12?cropPhaseImageMarkup(p.crop,1):progress>=1?cropPhaseImageMarkup(p.crop,5):'';
+  crop+=`<g class="crop-object" data-crop-plot="${i}"><ellipse cx="${plantX}" cy="${plantY+10}" rx="27" ry="9" fill="${red?'#71382f':'#553520'}" opacity=".78"/><g transform="translate(${plantX} ${plantY}) scale(${scale})"><g class="sway" style="animation-delay:${i*.17}s">${phaseImage||cropArt(p.crop,progress)}</g></g>`;
   if(p.weed)crop+=`<g transform="translate(${weedX} ${weedY})"><path d="M0 0l-4-26m4 26l15-22m-15 22l-18-15" stroke="#1b7d2a" stroke-width="5" fill="none"/><path d="M-4-20q-17-6-8-15q12 0 8 15m4 7q12-20 23-15q0 19-23 15" fill="#1f9e24"/></g>`;
   if(p.pest)crop+=`<g transform="translate(${pestX} ${pestY})"><ellipse rx="10" ry="7" fill="#c34225"/><circle cx="-4" cy="-1" r="2.3" fill="#242424"/><circle cx="3" cy="-3" r="2.3" fill="#242424"/><path d="M-9-4l-9-8m10 14l-10 9m23-15l9-7m-8 14l9 9" stroke="#472c1e" stroke-width="2"/></g>`;
   if(p.wateredAt&&Date.now()-p.wateredAt>6*CROP_TIME_FACTOR*HOUR&&progress<1)crop+=`<text x="${waterX}" y="${waterY}" font-size="22">💧</text>`;
@@ -1112,6 +1113,8 @@ if(hasFruit){
 }
 return a;
 }
+
+function cropPhaseImageMarkup(id,phase){const slug=CLASSIC_CROP_ASSET_SLUGS[id];if(!slug)return '';const src=CLASSIC_CROP_ASSET_BASE+'plants_phase_one_to_five/'+slug+'_'+phase+'.png';return '<image href="'+src+'" x="-66" y="-112" width="132" height="132" preserveAspectRatio="xMidYMid meet" style="mix-blend-mode:multiply" clip-path="inset(2% round 22%)"/>';}
 function renderPlots(){
  const perimeter='532,350 1132,620 532,890 -68,620';
  const base=(offset)=>`<g transform="translate(${offset} 0)"><polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/><polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/><polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/></g>`;
