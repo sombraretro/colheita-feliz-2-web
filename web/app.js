@@ -443,9 +443,11 @@ const ANIMAL_SLOTS=[
  {x:1280,y:35,w:140,h:105},{x:1440,y:35,w:140,h:105},{x:1600,y:35,w:140,h:105},
  {x:1280,y:175,w:140,h:105},{x:1440,y:175,w:140,h:105},{x:1600,y:175,w:140,h:105}
  ];
-const HORSE_SLOTS=[
- {x:-930,y:-300,w:80,h:60},{x:-850,y:-300,w:80,h:60},{x:-770,y:-300,w:80,h:60},{x:-690,y:-300,w:80,h:60},{x:-610,y:-300,w:80,h:60},
- {x:-930,y:-220,w:80,h:60},{x:-850,y:-220,w:80,h:60},{x:-770,y:-220,w:80,h:60},{x:-690,y:-220,w:80,h:60},{x:-610,y:-220,w:80,h:60}
+// As vagas mantêm exatamente a disposição anterior dos cavalos, deslocada
+ // junto com o Haras (+580, +370) para dentro da nova área.
+ const HORSE_SLOTS=[
+ {x:-350,y:70,w:80,h:60},{x:-270,y:70,w:80,h:60},{x:-190,y:70,w:80,h:60},{x:-110,y:70,w:80,h:60},{x:-30,y:70,w:80,h:60},
+ {x:-350,y:150,w:80,h:60},{x:-270,y:150,w:80,h:60},{x:-190,y:150,w:80,h:60},{x:-110,y:150,w:80,h:60},{x:-30,y:150,w:80,h:60}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -1483,7 +1485,7 @@ function useFertilizerOnPlot(plot){if(!farmWriteAllowed())return;
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='lake'){focusLakeArea(close);return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');view.zoom=1.25;view.cx=-760;view.cy=-245;updateView();if(close)closeModal();return}if(id==='new-fields'){view.zoom=1.05;view.cx=-768;view.cy=620;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}view.zoom=id==='orchard'?.95:1.45;view.cx=id==='orchard'?2670:-1760;view.cy=id==='orchard'?245:420;updateView();if(close)closeModal();}
+function focusFarmArea(id,close=true){if(id==='lake'){focusLakeArea(close);return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');view.zoom=1.25;view.cx=-180;view.cy=125;updateView();if(close)closeModal();return}if(id==='new-fields'){view.zoom=1.05;view.cx=-768;view.cy=620;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}view.zoom=id==='orchard'?.95:1.45;view.cx=id==='orchard'?2670:-1760;view.cy=id==='orchard'?245:420;updateView();if(close)closeModal();}
 function buyExpansion(id,currency='coins'){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(cfg.name+' já está liberado.');
