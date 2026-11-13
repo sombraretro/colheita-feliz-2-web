@@ -916,14 +916,14 @@ for(let i=0;i<230;i++){
  scenery+=grassClump(x,y,.5+seedNoise(i)*.8);
 }
 const groundFlowerSpots=[
- [-1980,430,.75,'#fff2d2'],[-1880,505,.58,'#e9a9d1'],[-1785,455,.68,'#fff3bd'],
+ [-1400,400,.75,'#fff2d2'],[-1380,470,.58,'#e9a9d1'],[-1370,540,.68,'#fff3bd'],
  [-1180,185,.62,'#fff0d0'],[-1100,210,.72,'#f5a5c8'],[-1020,180,.55,'#e7a6e9'],
  [-145,180,.62,'#fff2d2'],[-85,215,.72,'#f5a5c8'],[15,185,.56,'#fff0c0'],
- [1660,570,.65,'#fff1cf'],[1740,610,.78,'#efa4ca'],[1830,565,.58,'#fff1cf']
+ [1660,570,.65,'#fff1cf'],[1740,610,.78,'#efa4ca'],[1690,690,.58,'#fff1cf']
 ];
 for(const [x,y,s,color] of groundFlowerSpots)if(!blocked(x,y))scenery+=flower(x,y,s,color);
 const groundStoneSpots=[
- [-1940,570,1],[-1815,535,.78],[-1260,145,.82],[-1045,250,.7],
+ [-1410,580,1],[-1390,650,.78],[-1260,145,.82],[-1045,250,.7],
  [-205,250,.72],[-55,155,.9],[1580,650,.8],[1765,540,.7]
 ];
 for(const [x,y,s] of groundStoneSpots)if(!blocked(x,y))scenery+=`<g pointer-events="none" opacity=".9" transform="translate(${x} ${y}) scale(${s})"><ellipse cx="2" cy="5" rx="15" ry="5" fill="#315a2a" opacity=".22"/><path d="M-13 1Q-12-8-3-10Q5-15 13-7Q18 0 10 5Q-2 10-13 1Z" fill="#b8b4a2" stroke="#8c897b" stroke-width="1.7"/><path d="M-6-5Q0-11 7-6" fill="none" stroke="#e2dfd0" stroke-width="2" stroke-linecap="round" opacity=".8"/></g>`;
