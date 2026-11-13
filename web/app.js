@@ -1803,7 +1803,7 @@ function updateNotificationBadges(){
   const readyBirds=state.animals.filter(a=>a.status==='ready'&&isBirdType(a.type)).length,readyLivestock=counts.animals-readyBirds;
   layer.innerHTML=marker(532,320,'🌾',counts.crops,'Plantação pronta para colher')+
    marker(1060,55,'🍳',counts.kitchen,'Receita pronta na cozinha')+
-   marker(650,165,'🔥',counts.grill,'Receita pronta na churrasqueira')+
+   marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
    marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
    marker(45,45,'🐦',readyBirds,'Produção pronta no viveiro')+
    marker(2750,-18,'🍎',counts.orchard,'Frutas prontas no pomar')+
