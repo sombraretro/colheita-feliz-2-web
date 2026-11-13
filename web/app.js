@@ -1694,7 +1694,24 @@ function progress(p){return Math.max(0,Math.min(1,(Date.now()-p.plantedAt)/(crop
 function timeRemain(p){return formatHours((1-progress(p))*cropHours(p.crop,p.regrowing))}
 function plotAction(i){if(writeLocked){notify('Salvamento protegido. Veja Configurações.');return}const p=state.plots[i];if(!p)return;if(i>=EXPANSION_PLOT_START&&farmLevel()<50+(i-EXPANSION_PLOT_START)){notify('Este canteiro será liberado no nível '+(50+i-EXPANSION_PLOT_START)+'.');return}if(multiSelectMode){if(p.status!=='growing'||progress(p)<1)return notify('Selecione somente canteiros com plantas maduras.');if(selectedPlotIndices.has(i))selectedPlotIndices.delete(i);else selectedPlotIndices.add(i);renderPlots();updateMultiSelectControls();return}if(i>=EXPANSION_PLOT_START&&p.status==='grass'){p.status='dirt';markDirty()}lastSelected=i;renderPlots();
 if(tool==='soil-red'||tool==='soil-restore'){applySoilWand(p,tool==='soil-red'?'red':'restore');return}
-if(tool==='inspect'){if(p.status==='growing'&&progress(p)>=1){tool='hand';plotAction(i);tool='inspect';document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='inspect'));return}if(p.status==='growing'&&p.weed){p.weed=false;p.weedCleared=true;awardXP(2,'remoção contextual de ervas');playSfx('weed');remember('Removeu ervas daninhas com a ação contextual.');markDirty();refresh();notify('Ervas daninhas removidas automaticamente.');return}if(p.status==='growing'&&p.pest){p.pest=false;p.pestCleared=true;awardXP(2,'controle contextual de pragas');playSfx('pest');remember('Eliminou insetos com a ação contextual.');markDirty();refresh();notify('Insetos eliminados automaticamente.');return}if(p.status==='growing'&&p.wateredAt&&Date.now()-p.wateredAt>=4*HOUR*CROP_TIME_FACTOR){p.wateredAt=Date.now();awardXP(2,'irrigação contextual');playSfx('water');remember('Regou a plantação com a ação contextual.');markDirty();refresh();notify('Plantação regada automaticamente.');return}notify(p.status==='grass'?'Terreno reservado para expansão.':p.status==='dirt'?'Terra limpa pronta para plantar.':p.status==='spent'?'Use a pá para limpar este canteiro.':`${CROPS[p.crop].name}: ${timeRemain(p)} restantes`);return}
+if(tool==='inspect'){if(p.status==='growing'&&progress(p)>=1){tool='hand';plotAction(i);tool='inspect';
+$('modal-body').addEventListener('click',e=>{
+ const plot=e.target.closest('[data-help-plot]');
+ if(plot){
+  const index=Number(plot.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
+  if(!Number.isInteger(index)||!item||item.status==='grass')return;
+  selectedFriendPlot=index;renderModal();return;
+ }
+ const action=e.target.closest('button[data-farm-help-action]');
+ if(action)performFriendFarmHelp(Number(action.dataset.farmHelpPlot),action.dataset.farmHelpAction);
+});
+$('modal-body').addEventListener('keydown',e=>{
+ if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-help-plot]')){
+  e.preventDefault();const index=Number(e.target.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
+  if(!item||item.status==='grass')return;selectedFriendPlot=index;renderModal();
+ }
+});
+document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='inspect'));return}if(p.status==='growing'&&p.weed){p.weed=false;p.weedCleared=true;awardXP(2,'remoção contextual de ervas');playSfx('weed');remember('Removeu ervas daninhas com a ação contextual.');markDirty();refresh();notify('Ervas daninhas removidas automaticamente.');return}if(p.status==='growing'&&p.pest){p.pest=false;p.pestCleared=true;awardXP(2,'controle contextual de pragas');playSfx('pest');remember('Eliminou insetos com a ação contextual.');markDirty();refresh();notify('Insetos eliminados automaticamente.');return}if(p.status==='growing'&&p.wateredAt&&Date.now()-p.wateredAt>=4*HOUR*CROP_TIME_FACTOR){p.wateredAt=Date.now();awardXP(2,'irrigação contextual');playSfx('water');remember('Regou a plantação com a ação contextual.');markDirty();refresh();notify('Plantação regada automaticamente.');return}notify(p.status==='grass'?'Terreno reservado para expansão.':p.status==='dirt'?'Terra limpa pronta para plantar.':p.status==='spent'?'Use a pá para limpar este canteiro.':`${CROPS[p.crop].name}: ${timeRemain(p)} restantes`);return}
 if(p.status==='grass'){notify('Terreno ainda não liberado.');return}
 if(tool==='seed'){if(p.status!=='dirt'){notify('Plante em terreno livre e limpo.');return}if(!chosenCrop||!state.inventory[chosenCrop]){openModal('inventory');return}const c=CROPS[chosenCrop];if(!cropLevelAllowed(c)){notify(`Você precisa alcançar o nível ${c.minLevel} ou ativar um Cartão VIP válido.`);return}if(c.advanced&&p.soil!=='red'){notify('Esta semente avançada só pode ser plantada em terra vermelha. Use a Varinha da Terra Vermelha na loja.');return}Object.assign(p,{status:'growing',crop:chosenCrop,plantedAt:Date.now(),wateredAt:Date.now(),weed:false,pest:false,harvestsRemaining:c.seasons||1,regrowing:false,weedCleared:false,pestCleared:false});delete p.initialGift;state.inventory[chosenCrop]--;discoverItem('canteiros',chosenCrop,c.name,c.icon);awardXP(5,'plantio');playSfx('plant');remember('Plantou '+c.name);markDirty();refresh();notify(`${c.name} plantado!`);if(!state.inventory[chosenCrop])setTool('inspect');return}
 if(tool==='hand'){if(p.status!=='growing'){notify('Não há planta madura neste terreno.');return}if(progress(p)<1){notify('Aguarde '+timeRemain(p));return}const cropId=p.crop,c=CROPS[cropId],target=c.kind==='flower'?state.flowerWarehouse:state.warehouse;target[cropId]=(target[cropId]||0)+c.yield;const fieldLeafMap={cana:'folha_cana',eucalipto:'folha_eucalipto',louro:'folha_louro'};if(fieldLeafMap[cropId]){const leaf='herb_'+fieldLeafMap[cropId];state.inventory[leaf]=(state.inventory[leaf]||0)+Math.max(1,Math.floor(c.yield/4));}const gained=Math.floor(c.xp/(c.seasons||1));awardXP(gained,'colheita');playSfx('harvest');if(cropId==='pinheiro_natal'&&p.harvestsRemaining<=1){state.decorInventory.christmas_tree=(state.decorInventory.christmas_tree||0)+1;remember('Recebeu um Pinheiro de Natal pronto para decorar.')}p.harvestsRemaining=Math.max(0,p.harvestsRemaining-1);if(p.harvestsRemaining>0){Object.assign(p,{plantedAt:Date.now(),wateredAt:Date.now(),weed:false,pest:false,weedCleared:false,pestCleared:false,regrowing:true})}else{Object.assign(p,{status:'spent',crop:null,plantedAt:null,wateredAt:null,weed:false,pest:false})}remember(`Colheu ${c.yield} ${c.name}`);markDirty();refresh();notify(`Colheu ${c.yield} ${c.name} · +${gained} XP${fieldLeafMap[cropId]?' · folhas recolhidas para o Mix de Ervas':''}`);return}
@@ -2409,7 +2426,7 @@ function updateSocialNotificationBadge(){
  });
 }
 
-let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null;farmVisitSettings={allow_visits:true,like_count:0};
+let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null,selectedFriendPlot=null;farmVisitSettings={allow_visits:true,like_count:0};
 async function refreshOnlineGifts(showError=true){
  if(!cloudUser||onlineGiftsBusy)return;
  onlineGiftsBusy=true;
@@ -2456,8 +2473,21 @@ function renderOnlineGifts(){
 }
 async function visitOnlineFriendFarm(friendId){
  const friend=onlineFriends.find(f=>f.user_id===friendId);if(!friend)return notify('Amigo não encontrado.');
- try{const result=await socialRpc('social_visit_friend_farm',{p_friend:friendId});visitedFarm={...result,friendId};openModal('friend-farm');socialRpc('social_notify_farm_visit',{p_owner:friendId}).catch(error=>console.warn('Notificação de visita:',error))}
- catch(error){notify(error.message||'Não foi possível visitar esta fazenda.')}
+ try{
+  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});
+  if(!farm||typeof farm!=='object')throw new Error('O servidor não retornou os dados desta fazenda.');
+  visitedFarm={...farm,friendId,helpUsed:0,helpLimit:15};selectedFriendPlot=null;
+  openModal('friend-farm');
+  socialRpc('social_notify_farm_visit',{p_owner:friendId}).catch(error=>console.warn('Notificação de visita:',error));
+  try{
+   const help=await socialRpc('social_help_friend_status',{p_owner:friendId});
+   const quota=Array.isArray(help)?help[0]:help;
+   if(currentModal==='friend-farm'&&visitedFarm?.friendId===friendId){
+    visitedFarm={...visitedFarm,helpUsed:Number(quota?.used)||0,helpLimit:Number(quota?.limit)||15};
+    renderModal();
+   }
+  }catch(error){console.warn('Não foi possível consultar o limite de ajudas; a visita continua disponível:',error)}
+ }catch(error){notify(error.message||'Não foi possível visitar esta fazenda.')}
 }
 async function toggleVisitedFarmLike(){
  if(!visitedFarm?.friendId)return notify('Abra primeiro a fazenda de um amigo.');
@@ -2468,17 +2498,91 @@ async function toggleFarmVisitPermission(){
  try{const next=!farmVisitSettings.allow_visits;const response=await socialRpc('social_set_farm_visit_permission',{p_allow:next});const result=Array.isArray(response)?response[0]:response;farmVisitSettings={...farmVisitSettings,...(result||{}),allow_visits:next};renderModal();notify(next?'Seus amigos agora podem visitar sua fazenda.':'As visitas à sua fazenda foram bloqueadas.')}
  catch(error){notify(error.message||'Não foi possível atualizar a privacidade da fazenda.')}
 }
+function friendPlotProgress(plot){
+ const base=Math.max(0,Math.min(1,Number(plot&&plot.progress)||0));
+ if(!plot||plot.status!=='growing'||!CROPS[plot.crop])return base;
+ const updated=Date.parse(visitedFarm&&visitedFarm.updated_at||'');
+ if(!Number.isFinite(updated)||updated<=0)return base;
+ const cfg=CROPS[plot.crop],hours=plot.regrowing&&cfg.regrowHours?cfg.regrowHours:cfg.hours;
+ return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,Number(hours)||1)*CROP_TIME_FACTOR*HOUR)));
+}
+function renderFriendFarmScene(snap){
+ const plots=snap.plots||[];let field='';
+ for(let i=0;i<72;i++){
+  const p=plots[i]||{status:'grass'},r=Math.floor((i%36)/6),c=i%6,index=i;
+  const xy=plotTilePoint(r,c,index),x=xy[0],y=xy[1],pts=diamondPoints(r,c,index),points=pts.map(q=>q.join(',')).join(' ');
+  const locked=p.status==='grass',red=p.soil==='red',selected=selectedFriendPlot===i;
+  field+='<g class="friend-farm-plot '+(locked?'is-locked ':'')+(selected?'is-selected':'')+'" data-help-plot="'+i+'" role="button" tabindex="0" aria-label="Canteiro '+(i+1)+'" style="cursor:'+(locked?'default':'pointer')+'">';
+  field+='<polygon points="'+pts.map(q=>(q[0]+2)+','+(q[1]+8)).join(' ')+'" fill="#214d18" opacity=".42"/>';
+  field+='<polygon points="'+points+'" fill="'+(locked?'#56604a':p.status==='spent'?'#765137':red?'#a9473f':'#60b62e')+'" stroke="'+(selected?'#ffe06b':locked?'#5a6255':red?'#78382f':'#3a7622')+'" stroke-width="'+(selected?7:3)+'"/>';
+  if(!locked&&p.status!=='spent')field+='<path d="M'+(x+12)+' '+(y-2)+'Q'+(x+53)+' '+(y-39)+' '+(x+100)+' '+(y-36)+'Q'+(x+153)+' '+(y-24)+' '+(x+188)+' '+(y-2)+'Q'+(x+145)+' '+(y-8)+' '+(x+100)+' '+(y+12)+'Q'+(x+55)+' '+(y+22)+' '+(x+12)+' '+(y-2)+'Z" fill="'+(red?'#cf7665':'#c7ed9b')+'" opacity=".86"/>';
+  if(p.status==='growing'&&CROPS[p.crop]){
+   const progress=friendPlotProgress(p),scale=.38+progress*.7,plant=farmPoint(x+100,y+5);
+   field+='<g transform="translate('+plant[0]+' '+plant[1]+')"><ellipse cy="10" rx="27" ry="9" fill="#553520" opacity=".78"/><g transform="scale('+scale+')">'+cropArt(p.crop,progress)+'</g></g>';
+   if(p.weed){const w=farmPoint(x+140,y+25);field+='<g transform="translate('+w[0]+' '+w[1]+')"><path d="M0 0l-4-26m4 26l15-22m-15 22l-18-15" stroke="#1b7d2a" stroke-width="5" fill="none"/><path d="M-4-20q-17-6-8-15q12 0 8 15m4 7q12-20 23-15q0 19-23 15" fill="#1f9e24"/></g>'}
+   if(p.pest){const q=farmPoint(x+77,y+5);field+='<g transform="translate('+q[0]+' '+q[1]+')"><ellipse rx="10" ry="7" fill="#c34225"/><circle cx="-4" cy="-1" r="2.3" fill="#242424"/><circle cx="3" cy="-3" r="2.3" fill="#242424"/><path d="M-9-4l-9-8m10 14l-10 9m23-15l9-7m-8 14l9 9" stroke="#472c1e" stroke-width="2"/></g>'}
+  }else if(p.status==='spent'){field+='<text x="'+(x+100)+'" y="'+(y+8)+'" text-anchor="middle" font-size="24">🪏</text>'}
+  else if(!locked){field+='<text x="'+(x+100)+'" y="'+(y+8)+'" text-anchor="middle" font-size="23">🌱</text>'}
+  if(p.weed||p.pest)field+='<g transform="translate('+(x+166)+' '+(y-18)+')"><circle r="13" fill="#fff7df" stroke="#a44b24" stroke-width="2"/><text text-anchor="middle" y="6" font-size="17">'+(p.pest?'🐛':'🌿')+'</text></g>';
+  if(locked)field+='<text x="'+(x+100)+'" y="'+(y+7)+'" text-anchor="middle" font-size="19">🔒</text>';
+  field+='<title>Canteiro '+(i+1)+(p.status==='growing'&&CROPS[p.crop]?' · '+safe(CROPS[p.crop].name):'')+'</title></g>';
+ }
+ const theme=FARM_THEMES[snap.farmTheme]||FARM_THEMES.classic;
+ const decorations=(snap.decorations||[]).map(d=>{const pos=DECORATION_SLOTS[d.slot];return pos?renderDecorationMarkup(d.id,pos[0],pos[1]):''}).join('');
+ const animalIcons=(snap.animals||[]).slice(0,16).map(a=>ANIMALS[a.type]?.icon||'🐾').join(' ');
+ const orchardIcons=(snap.orchard||[]).filter(t=>t.type).map(t=>CROPS[t.type]?.icon||'🌳').join(' ');
+ const forestCount=(snap.forest||[]).filter(t=>t.type).length;
+ const bg='<defs><linearGradient id="friendGrass" x2="0" y2="1"><stop stop-color="'+(snap.farmTheme==='christmas'?'#dbe9d4':'#9bd45d')+'"/><stop offset="1" stop-color="#65ae37"/></linearGradient></defs><rect x="-1500" y="-220" width="3000" height="1350" fill="url(#friendGrass)"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#c7a36b" stroke-width="90"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#ead2a0" stroke-width="8" stroke-dasharray="5 28"/>';
+ const fields='<g><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="#398d2b" opacity=".23"/><polygon points="-68,620 532,350 1132,620 532,890" fill="#398d2b" opacity=".23"/><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="none" stroke="#3c8127" stroke-width="14"/><polygon points="-68,620 532,350 1132,620 532,890" fill="none" stroke="#3c8127" stroke-width="14"/></g>';
+ const buildings='<g transform="translate(820 120)"><ellipse cy="150" rx="170" ry="25" fill="#315d24" opacity=".25"/><path d="M-150 35L0-65L150 35V145H-150Z" fill="#f3dba8" stroke="#754a2b" stroke-width="12"/><path d="M-170 35L0-90L170 35" fill="#b84d38" stroke="#713c2b" stroke-width="13"/><rect x="-36" y="65" width="72" height="80" rx="6" fill="#81502e" stroke="#57351f" stroke-width="7"/><rect x="-112" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><rect x="64" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><text y="178" text-anchor="middle" font-size="26" font-weight="bold" fill="#fff8d8" stroke="#684323" stroke-width="4" paint-order="stroke">CASA</text></g><g transform="translate(1240 430)"><path d="M-115 10L0-70L115 10V110H-115Z" fill="#e5c88d" stroke="#79502d" stroke-width="10"/><path d="M-135 10L0-95L135 10" fill="#9b4931" stroke="#683d27" stroke-width="10"/><rect x="-38" y="38" width="76" height="72" fill="#80502f" stroke="#573b25" stroke-width="7"/><text y="142" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff5d4" stroke="#5b4025" stroke-width="4" paint-order="stroke">VIVEIRO</text></g>';
+ const tint=snap.farmTheme&&snap.farmTheme!=='classic'?'<rect x="-1500" y="-220" width="3000" height="1350" fill="'+(theme?.accent||'#ffffff')+'" opacity=".045"/>':'';
+ return '<svg class="friend-farm-scene" viewBox="-1500 -220 3000 1350" role="group" aria-label="Fazenda real de '+safe(visitedFarm?.farm_name||'amigo')+'" xmlns="http://www.w3.org/2000/svg">'+bg+fields+buildings+tint+field+decorations+'</svg><div class="friend-farm-areas"><span>🐾 '+safe(animalIcons||'Sem animais')+'</span><span>🌳 Pomar: '+safe(orchardIcons||'sem árvores')+' · Mata: '+forestCount+' árvore(s)</span><span>🔥 Churrasqueira: '+(snap.grill?'construída':'não construída')+'</span></div>';
+}
+async function performFriendFarmHelp(plotIndex,action){
+ if(!visitedFarm?.friendId)return notify('Abra primeiro a fazenda de um amigo.');
+ if(!farmWriteAllowed())return;
+ if(hasPendingCloudChanges())return notify('Aguarde a sincronização da sua fazenda antes de ajudar um amigo.');
+ if((Number(visitedFarm.helpUsed)||0)>=15)return notify('Você já realizou as 15 interações permitidas com este amigo.');
+ try{
+  const response=await socialRpc('social_help_friend_farm',{p_owner:visitedFarm.friendId,p_plot_index:plotIndex,p_action:action});
+  const row=Array.isArray(response)?response[0]:response;
+  if(!row?.state||!row?.revision)throw new Error('O servidor não confirmou a interação.');
+  const restored=normalizeFarmSnapshot(row.state);
+  if(!restored||!validateFarmSnapshot(restored))throw new Error('O salvamento atualizado não passou pela verificação de integridade.');
+  state=restored;cloudRevision=Number(row.revision)||cloudRevision+1;cloudUpdatedAt=row.updated_at||new Date().toISOString();dirty=false;cloudDirty=false;cloudRetryContext=null;clearTimeout(saveTimer);saveTimer=null;
+  const friendId=visitedFarm.friendId;
+  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});
+  visitedFarm={...farm,friendId,helpUsed:Math.min(15,(Number(visitedFarm.helpUsed)||0)+1),helpLimit:15};
+  try{
+   const quota=await socialRpc('social_help_friend_status',{p_owner:friendId});
+   const status=Array.isArray(quota)?quota[0]:quota;
+   visitedFarm={...visitedFarm,helpUsed:Number(status?.used)||visitedFarm.helpUsed};
+  }catch(error){console.warn('Não foi possível atualizar o contador de ajudas:',error)}
+  selectedFriendPlot=plotIndex;refresh();
+  const labels={harvest:'Colheita concluída. A produção foi para o depósito do proprietário.',water:'Plantação regada com sucesso.',pest:'Pragas removidas.',weed:'Ervas daninhas removidas.'};
+  notify((labels[action]||'Ajuda realizada')+' +1 🟢');
+ }catch(error){notify(error.message||'Não foi possível concluir a ajuda.')}
+}
+
 function renderVisitedFarm(){
  if(!visitedFarm)return '<p>Nenhuma fazenda selecionada.</p>';
  const snap=visitedFarm.snapshot||{},theme=FARM_THEMES[snap.farmTheme]?.name||'Fazenda clássica';
- const plots=(snap.plots||[]).map((p,i)=>{const crop=p.crop?CROPS[p.crop]:null;const locked=p.status==='grass';const ready=p.status==='growing'&&Number(p.progress)>=1;const label=locked?'Bloqueado':p.status==='dirt'?'Livre':p.status==='spent'?'Colhida':ready?'Pronta':crop?.name||'Vazio';return '<div class="friend-plot '+(locked?'locked':p.status)+'" title="Canteiro '+(i+1)+' · '+safe(label)+'" style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:62px;padding:4px 2px;border:1px solid '+(locked?'#68717b':'#72934e')+';border-radius:8px;background:'+(locked?'#343b43':p.status==='spent'?'#72543d':p.status==='growing'?'#dceec8':'#a8ce83')+';color:'+(locked?'#e4e8ec':'#263b20')+';font-size:11px;overflow:hidden"><b style="font-size:19px">'+(locked?'🔒':crop?.icon||(p.status==='spent'?'🪏':'🌱'))+'</b><small style="font-size:9px;text-align:center;line-height:1.1">'+(locked?'Bloqueado':crop?safe(crop.name):safe(label))+'</small>'+(crop&&!ready&&p.status==='growing'?'<i style="display:block;position:absolute;bottom:0;left:0;height:4px;background:#3d9b47;width:'+Math.round(Math.max(0,Math.min(1,Number(p.progress)||0))*100)+'%"></i>':'')+(p.weed||p.pest?'<em style="position:absolute;right:2px;top:1px;font-size:10px">'+(p.weed?'🌿':'')+(p.pest?'🐛':'')+'</em>':'')+'</div>'}).join('');
- const animals=(snap.animals||[]).map(a=>'<div class="list-line"><span>'+(ANIMALS[a.type]?.icon||'🐾')+' <b>'+safe(a.name||ANIMALS[a.type]?.name||'Animal')+'</b><br><small>'+safe(({hungry:'Precisa de alimento',producing:'Produzindo',ready:'Produção pronta',growing:'Crescendo',adult:'Adulto',guarding:'Proteção ativa'})[a.status]||'Na fazenda')+'</small></span></div>').join('');
- const trees=(snap.orchard||[]).filter(t=>t.type).map(t=>'<span class="queue-state ready">'+(CROPS[t.type]?.icon||'🌳')+' '+safe(CROPS[t.type]?.name||'Árvore')+' · '+(t.status==='ready'?'Pronta':'Crescendo')+'</span>').join('');
- const forest=(snap.forest||[]).filter(t=>t.type).length;
- const decorations=(snap.decorations||[]).map(d=>DECORATIONS[d.id]?.icon||'🌷').join(' ');
- const pcount=(snap.plots||[]).filter(p=>p.status!=='grass').length,readyCount=(snap.plots||[]).filter(p=>p.status==='growing'&&Number(p.progress)>=1).length;
+ const plots=snap.plots||[],pcount=plots.filter(p=>p.status!=='grass').length,readyCount=plots.filter(p=>p.status==='growing'&&friendPlotProgress(p)>=1).length;
  const likeCount=Math.max(0,Number(visitedFarm.like_count)||0),liked=!!visitedFarm.liked_by_me;
- return '<div class="gift-summary"><span class="symbol">🌾</span><div><b>'+safe(visitedFarm.farm_name||'Fazenda do amigo')+'</b><small>Nível '+fmt(visitedFarm.level||1)+' · Popularidade '+fmt(visitedFarm.popularity||0)+' · Tema: '+safe(theme)+'</small></div></div><div class="actions"><button class="modal-action alt" data-open="friends">← Voltar aos amigos</button><button class="modal-action alt" data-conversation="'+safe(visitedFarm.friendId)+'">Conversar</button><button class="modal-action" data-farm-like="true">'+(liked?'♥ Curtida registrada':'♡ Curtir fazenda')+' · '+fmt(likeCount)+'</button></div><h3>🌱 Canteiros ('+pcount+'/72 · '+readyCount+' prontos)</h3><div class="friend-farm-plots" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px">'+plots+'</div><h3>🐾 Animais ('+(snap.animals||[]).length+')</h3>'+(animals||'<p>Esta fazenda ainda não possui animais.</p>')+'<h3>🌳 Pomar e Mata</h3><p>Pomar: '+(snap.expansions?.orchard?(trees||'Sem árvores plantadas'):'Área bloqueada')+'<br>Mata: '+forest+' árvore(s) plantada(s)<br>Rio: '+(snap.expansions?.pond?'Liberado':'Bloqueado')+'</p><h3>🏡 Decorações</h3><p>'+(decorations||'Nenhuma decoração instalada')+(snap.grill?' · 🔥 Churrasqueira':'')+'</p><p class="historical-note">Modo visitante: somente visualização. Nenhuma ação altera plantações, animais, itens, moedas, XP ou o salvamento do proprietário.</p>';
+ const used=Math.max(0,Number(visitedFarm.helpUsed)||0),limit=15,remaining=Math.max(0,limit-used),plot=Number.isInteger(selectedFriendPlot)?plots[selectedFriendPlot]:null;
+ const crop=plot?.crop?CROPS[plot.crop]:null,ready=!!plot&&plot.status==='growing'&&friendPlotProgress(plot)>=1;
+ let actionPanel='<p class="historical-note">Toque em um canteiro da fazenda para ver as ações disponíveis.</p>';
+ if(plot){
+  const actions=[];
+  if(plot.status==='growing'){
+   if(ready)actions.push('<button class="modal-action" data-farm-help-action="harvest" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>🌾 Colher</button>');
+   actions.push('<button class="modal-action" data-farm-help-action="water" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>💧 Regar</button>');
+   if(plot.pest)actions.push('<button class="modal-action" data-farm-help-action="pest" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>🐛 Remover pragas</button>');
+   if(plot.weed)actions.push('<button class="modal-action" data-farm-help-action="weed" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>🌿 Remover ervas daninhas</button>');
+  }
+  actionPanel='<div class="friend-help-selected"><b>Canteiro '+(selectedFriendPlot+1)+' · '+safe(crop?.name||(plot.status==='grass'?'Bloqueado':plot.status==='spent'?'Colhido':'Livre'))+'</b><div class="actions">'+(actions.length?actions.join(''):'<small>Não há ações disponíveis neste canteiro.</small>')+'</div></div>';
+ }
+ return '<div class="gift-summary"><span class="symbol">🌾</span><div><b>'+safe(visitedFarm.farm_name||'Fazenda do amigo')+'</b><small>Nível '+fmt(visitedFarm.level||1)+' · Popularidade '+fmt(visitedFarm.popularity||0)+' · Tema: '+safe(theme)+'</small></div></div><div class="actions"><button class="modal-action alt" data-open="friends">← Voltar aos amigos</button><button class="modal-action alt" data-conversation="'+safe(visitedFarm.friendId)+'">Conversar</button><button class="modal-action" data-farm-like="true">'+(liked?'♥ Curtida registrada':'♡ Curtir fazenda')+' · '+fmt(likeCount)+'</button></div><div class="friend-help-quota"><b>🟢 Ajuda a este amigo: '+used+'/'+limit+'</b><span>'+(remaining?remaining+' interação(ões) restante(s) · +1 moeda verde por ação':'Limite de 15 interações atingido para este amigo')+'</span></div><h3>🌱 Fazenda ('+pcount+'/72 canteiros · '+readyCount+' prontos)</h3>'+renderFriendFarmScene(snap)+actionPanel+'<p class="historical-note">As ações são aplicadas diretamente na fazenda e no depósito do proprietário. A recompensa é creditada na sua própria fazenda, com limite de 15 interações por amigo.</p>';
 }
 function renderOnlineInbox(){
  const friendName=id=>onlineFriends.find(f=>f.user_id===id)?.farm_name||'Amigo';
