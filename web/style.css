@@ -534,6 +534,21 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
  .currencies b{font-size:10px}
 }
 
+.friend-farm-scene{display:block;width:100%;height:auto;max-height:440px;border:2px solid #8cae55;border-radius:13px;background:#8bc653;touch-action:pan-y;user-select:none}
+.friend-farm-plot:focus polygon:nth-child(2){stroke:#ffe06b;stroke-width:7}
+.friend-farm-plot.is-selected polygon:nth-child(2){stroke:#ffe06b;stroke-width:8;filter:drop-shadow(0 0 5px #fff1a8)}
+.friend-farm-plot.is-locked{cursor:default!important}
+.friend-farm-areas{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 14px}
+.friend-farm-areas span{padding:6px 9px;border:1px solid #d0b27a;border-radius:9px;background:#fff8e8;color:#664b2c;font-size:11px}
+.friend-help-quota{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px solid #a7bd77;border-radius:10px;background:#f2f8e6;color:#42612b;margin:10px 0}
+.friend-help-quota span{font-size:11px}
+.friend-help-selected{margin:10px 0;padding:10px;border:1px solid #c7a56b;border-radius:10px;background:#fff9e9}
+.friend-help-selected .actions{margin-bottom:0}
+.friend-help-selected button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:700px){.friend-farm-scene{max-height:340px}.friend-help-quota{align-items:flex-start;flex-direction:column}.friend-farm-areas span{font-size:10px}}
+
+/* Os marcadores de notificações no cenário ficam sempre imóveis. */
+
 .world-notification{filter:drop-shadow(0 3px 3px #38231388);animation:worldNoticePulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes worldNoticePulse{0%,100%{scale:1}50%{scale:1.09}}
 @media(prefers-reduced-motion:reduce){.world-notification{animation:none}}
