@@ -442,7 +442,9 @@ function starterAnimals(){return [
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
 const WORLD={left:-2600,right:4400,top:-300,bottom:1140,w:7000,h:980}, view={zoom:.8,cx:950,cy:490},svg=$('world');let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
-let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false;
+let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
+let musicVolume=100,sfxVolume=100,musicMode='random';
+try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
 const SUPABASE_URL='https://osmoolsywhlorgqqybhk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable__pNF0EfJMbM_a6Jdmpylvg_HY3nzRpo';
 let supabaseClient=null,cloudUser=null,cloudRevision=0,cloudUpdatedAt=null,cloudSyncing=false,cloudDirty=false,cloudConflict=false,supabaseAuthSubscription=null,cloudSessionReadyUserId=null;
@@ -630,9 +632,11 @@ async function disconnectCloud(){
 
 let soundEnabled=true,musicEnabled=true;
 try{soundEnabled=localStorage.getItem('cf2.sound')!=='off';musicEnabled=localStorage.getItem('cf2.music')!=='off'}catch{}
+function applyAudioVolumes(){if(musicBus)musicBus.gain.setTargetAtTime((musicVolume/100)*2.15,audioCtx.currentTime,.04);if(sfxBus)sfxBus.gain.setTargetAtTime((sfxVolume/100)*1.8,audioCtx.currentTime,.025)}
 function ensureAudio(){
  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return null;
- if(!audioCtx)audioCtx=new Ctx();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+ if(!audioCtx){audioCtx=new Ctx();musicBus=audioCtx.createGain();sfxBus=audioCtx.createGain();musicBus.connect(audioCtx.destination);sfxBus.connect(audioCtx.destination);applyAudioVolumes()}
+ if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
  return audioCtx;
 }
 function playTone(freq,duration=.12,wave='sine',volume=.045,slide=0){
@@ -641,7 +645,7 @@ function playTone(freq,duration=.12,wave='sine',volume=.045,slide=0){
  osc.type=wave;osc.frequency.setValueAtTime(Math.max(40,freq),now);
  if(slide)osc.frequency.exponentialRampToValueAtTime(Math.max(40,freq+slide),now+duration);
  gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(volume,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
- osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+duration+.02);
+ osc.connect(gain);gain.connect(sfxBus||ctx.destination);osc.start(now);osc.stop(now+duration+.02);
 }
 function playNoise(duration=.12,volume=.025,frequency=900){
  const ctx=ensureAudio();if(!ctx)return;
@@ -650,7 +654,7 @@ function playNoise(duration=.12,volume=.025,frequency=900){
  const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain(),now=ctx.currentTime;
  source.buffer=buffer;filter.type='bandpass';filter.frequency.value=frequency;filter.Q.value=.7;
  gain.gain.setValueAtTime(volume,now);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
- source.connect(filter);filter.connect(gain);gain.connect(ctx.destination);source.start(now);source.stop(now+duration);
+ source.connect(filter);filter.connect(gain);gain.connect(sfxBus||ctx.destination);source.start(now);source.stop(now+duration);
 }
 function playSfx(kind){
  if(!soundEnabled)return;ensureAudio();
@@ -678,6 +682,12 @@ const FARM_CHORDS=[
  [55,59,62],[52,55,59],[48,52,55],[50,54,57],
  [55,59,62],[48,52,55],[50,54,57],[43,47,50]
 ];
+// Três arranjos instrumentais originais, com variações de frase, harmonia e duração.
+const FARM_TRACKS=[
+ [...FARM_MELODY,...FARM_MELODY.slice(8),...FARM_MELODY.slice(0,8)],
+ [...FARM_MELODY.slice(16),...FARM_MELODY.slice(0,16),...FARM_MELODY.slice(16),...FARM_MELODY.slice(0,16)],
+ FARM_MELODY.map((note,index)=>note===null?null:note+(index%8<4?2:-2)).concat(FARM_MELODY.map((note,index)=>note===null?null:note+(index%8<4?-2:2)))
+];
 const farmHz=midi=>440*Math.pow(2,(midi-69)/12);
 function playFarmNote(midi,duration=.48,volume=.012,wave='triangle'){
  const ctx=ensureAudio();if(!ctx)return;
@@ -686,7 +696,7 @@ function playFarmNote(midi,duration=.48,volume=.012,wave='triangle'){
  filter.type='lowpass';filter.frequency.setValueAtTime(wave==='triangle'?1900:1250,now);filter.Q.value=.55;
  gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(volume,now+.055);
  gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
- osc.connect(filter);filter.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+duration+.025);
+ osc.connect(filter);filter.connect(gain);gain.connect(musicBus||ctx.destination);osc.start(now);osc.stop(now+duration+.025);
 }
 function playFarmPad(chord){
  const ctx=ensureAudio();if(!ctx)return;
@@ -695,33 +705,37 @@ function playFarmPad(chord){
   osc.type='sine';osc.frequency.setValueAtTime(farmHz(midi),now);
   gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(.0028,now+.22);
   gain.gain.setValueAtTime(.0028,now+.82);gain.gain.exponentialRampToValueAtTime(.0001,now+1.42);
-  osc.connect(gain);gain.connect(ctx.destination);osc.start(now+index*.035);osc.stop(now+1.46);
+  osc.connect(gain);gain.connect(musicBus||ctx.destination);osc.start(now+index*.035);osc.stop(now+1.46);
  });
 }
 function startFarmMusic(){
  if(!musicEnabled||musicPlaying)return;
  const ctx=ensureAudio();if(!ctx)return;
+ if(musicTrackPosition>=musicTrackOrder.length){
+  musicTrackOrder=musicMode==='sequential'?[0,1,2]:[0,1,2].sort(()=>Math.random()-.5);
+  if(musicTrackOrder.length>1&&musicTrackOrder[0]===lastMusicTrack)[musicTrackOrder[0],musicTrackOrder[1]]=[musicTrackOrder[1],musicTrackOrder[0]];
+  musicTrackPosition=0;
+ }
+ const trackId=musicTrackOrder[musicTrackPosition++],melody=FARM_TRACKS[trackId]||FARM_MELODY;lastMusicTrack=trackId;
  musicPlaying=true;musicIndex=0;
  const step=()=>{
   if(!musicEnabled){musicPlaying=false;musicTimer=null;return;}
-  const beat=musicIndex%FARM_MELODY.length,bar=Math.floor(beat/3)%FARM_CHORDS.length;
-  const note=FARM_MELODY[beat];
-  if(note!==null)playFarmNote(note,.47,.0115,'triangle');
-  if(beat%3===0){
-   playFarmNote(FARM_BASS[bar],1.25,.008,'sine');
-   playFarmPad(FARM_CHORDS[bar]);
-  }
+  const beat=musicIndex%melody.length,bar=Math.floor(beat/3)%FARM_CHORDS.length;
+  const note=melody[beat];
+  if(note!==null)playFarmNote(note,.52,.023,'triangle');
+  if(beat%3===0){playFarmNote(FARM_BASS[bar],1.35,.015,'sine');playFarmPad(FARM_CHORDS[bar]);}
   musicIndex++;
-  if(musicIndex>=FARM_MELODY.length){
-   musicIndex=0;
-   musicTimer=setTimeout(step,4200);
-  }else musicTimer=setTimeout(step,560);
+  if(musicIndex>=melody.length){musicTimer=setTimeout(()=>{musicPlaying=false;startFarmMusic()},1500)}
+  else musicTimer=setTimeout(step,560);
  };
  step();
 }
 function stopFarmMusic(){if(musicTimer)clearTimeout(musicTimer);musicTimer=null;musicPlaying=false}
-function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.025)}
+function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.04)}
 function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startFarmMusic();else stopFarmMusic()}
+function setMusicVolume(value){musicVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.musicVolume',String(musicVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('music-volume-value');if(out)out.textContent=musicVolume+'%'}
+function setSfxVolume(value){sfxVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.sfxVolume',String(sfxVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('sfx-volume-value');if(out)out.textContent=sfxVolume+'%'}
+function setMusicMode(value){musicMode=value==='sequential'?'sequential':'random';try{localStorage.setItem('cf2.musicMode',musicMode)}catch{}musicTrackOrder=[];musicTrackPosition=0}
 let landscapeModeActive=false;
 function syncLandscapeControls(active){
  const desktop=$('orientation-toggle'),mobile=$('orientation-toggle-mobile');
@@ -1665,8 +1679,17 @@ function playFishingSfx(rarity,isExtraordinary=false){
  notes.forEach((freq,index)=>setTimeout(()=>playTone(freq,key==='Extraordinário'?.2:.14,'sine',key==='Extraordinário'?.055:.04,index===notes.length-1?freq*.08:0),index*(key==='Extraordinário'?115:90)));
  if(key==='Extraordinário'){setTimeout(()=>playNoise(.32,.035,1450),180);setTimeout(()=>playTone(1760,.38,'triangle',.05,280),650)}
 }
+function launchFishingCelebrationEffects(style){
+ const layer=document.createElement('div');layer.className='fishing-fx-layer rarity-'+style;layer.setAttribute('aria-hidden','true');document.body.append(layer);
+ const palette={common:['#fff2b0'],uncommon:['#8de49b','#e7ffd0'],rare:['#75d5ff','#d7f4ff'], 'very-rare':['#c58cff','#f4d9ff'],legendary:['#ffd35c','#fff0a6','#ff9d3d'],extraordinary:['#ff4b65','#ffd447','#46d9ff','#b86cff','#6ff08a','#ff8bdb']}[style]||['#fff2b0'];
+ const count={common:9,uncommon:15,rare:23,'very-rare':30,legendary:40,extraordinary:54}[style]||9;
+ for(let i=0;i<count;i++){const p=document.createElement('i');p.className='fishing-fx-particle';p.style.left=(4+Math.random()*92)+'%';p.style.top=(12+Math.random()*76)+'%';p.style.setProperty('--fx-color',palette[i%palette.length]);p.style.setProperty('--fx-angle',(Math.random()*360)+'deg');p.style.setProperty('--fx-distance',(24+Math.random()*100)+'px');p.style.setProperty('--fx-delay',(Math.random()*.35)+'s');layer.append(p)}
+ if(style==='extraordinary')for(let b=0;b<5;b++){const burst=document.createElement('span');burst.className='fishing-fx-firework';burst.style.left=([12,82,31,68,50][b])+'%';burst.style.top=([24,20,72,68,42][b])+'%';burst.style.setProperty('--fx-delay',(b*.16)+'s');for(let j=0;j<18;j++){const ray=document.createElement('i');ray.style.setProperty('--fx-angle',(j*20)+'deg');ray.style.setProperty('--fx-color',palette[(j+b)%palette.length]);burst.append(ray)}layer.append(burst)}
+ setTimeout(()=>layer.remove(),2600);
+}
 function showFishingCelebration(catchInfo){
  const e=$('toast');if(!e)return;
+ launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
  const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
  const style=FISHING_RARITY_STYLE[rarity]||'common';
  e.className='toast fishing-toast rarity-'+style;
@@ -2775,7 +2798,7 @@ case 'inbox':title='Caixa de entrada';if(!cloudUser){html='<div class="gift-summ
 case 'daily':title='Recompensa diária';html=dailyRewardAvailable()?`<div class="daily-reward"><span>🎁</span><b>Seu presente de hoje está esperando!</b><p>Receba sementes, fertilizantes ou flores. A quantidade cresce com sua sequência de visitas (até 5 itens nesta adaptação offline).</p><p><b>Sequência atual: ${fmt((state.dailyRewardDate===yesterdayKey()?(state.dailyStreak||0)+1:1))} dia(s)</b></p><button class="modal-action" data-claim-daily="true">Resgatar recompensa</button></div>`:`<div class="daily-reward claimed"><span>🌟</span><b>Recompensa de hoje já recebida!</b><p>Sequência atual: ${fmt(state.dailyStreak||1)} dia(s). Volte amanhã para receber outra recompensa.</p></div>`;break;
 case 'help':title='Ajuda por seções';html=renderDynamicHelp();break;
 case 'account':title='Conta e salvamento na nuvem';if(!initSupabase()){html='<p>O serviço de autenticação não carregou. Verifique sua conexão e recarregue a página. O jogo permanece bloqueado até que seja possível conectar à nuvem.</p>';break;}if(cloudUser){html=`<div class="account-card"><b>☁️ Conta conectada</b><p>${safe(cloudUser.email||'Jogador')}</p><small>${cloudConflict?'Conflito detectado: outra sessão possui uma versão mais recente. As alterações desta sessão estão preservadas apenas enquanto esta página permanecer aberta.':writeLocked?'Aguardando carregamento ou recuperação da fazenda na nuvem.':'Sua fazenda está salva exclusivamente na nuvem.'}</small></div><div class="gift-summary"><span class="symbol">🔎</span><div><b>Diagnóstico de integridade</b><small>Compara os dados desta sessão com o registro da nuvem sem modificar ou recuperar informações automaticamente.</small></div></div><div class="actions"><button class="modal-action alt" id="cloud-integrity-check" ${cloudIntegrityChecking||cloudSessionReadyUserId!==cloudUser.id?'disabled':''}>${cloudIntegrityChecking?'Verificando dados...':'Verificar consistência dos dados'}</button></div>${cloudIntegrityReport?.error?'<p class="historical-note">Falha no diagnóstico: '+safe(cloudIntegrityReport.error)+'</p>':renderFarmIntegrityReport()}${cloudConflict?`<div class="gift-summary"><span class="symbol">⚠️</span><div><b>Conflito de sincronização</b><small>Para evitar perda de dados, nenhuma gravação será feita automaticamente. Carregar a nuvem substituirá as alterações ainda não sincronizadas desta página.</small></div></div><div class="actions"><button class="modal-action" id="cloud-resolve-load">Carregar versão mais recente da nuvem</button></div>`:''}<div class="actions"><button class="modal-action" id="cloud-sync" ${cloudConflict?'disabled':''}>Carregar / sincronizar nuvem</button><button class="modal-action alt" id="cloud-signout">Sair da conta</button></div><div class="gift-summary"><span class="symbol">🕘</span><div><b>Histórico de sincronização</b><small>Eventos recentes desta sessão, com data e horário. Este diagnóstico não altera nem substitui o salvamento da fazenda.</small></div></div><div id="cloud-sync-history">${renderCloudSyncHistory()}</div><p><small>O progresso do jogo é salvo somente na nuvem e fica privado na sua conta. Sem conexão, alterações não podem ser persistidas.</small></p>`;}else{html=`<div class="gift-summary"><span class="symbol">☁️</span><div><b>Entre para jogar</b><small>O jogo utiliza salvamento exclusivamente na nuvem. É necessário entrar ou criar uma conta antes de acessar sua fazenda.</small></div></div><label class="auth-field">E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="seu@email.com"></label><label class="auth-field">Senha<input id="auth-password" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label><div class="actions"><button class="modal-action" id="auth-signin">Entrar</button><button class="modal-action alt" id="auth-signup">Criar conta</button></div><p><small>O cadastro pode exigir confirmação do endereço de e-mail, conforme as configurações de autenticação do projeto Supabase.</small></p>`;}break;
-case 'settings':title='Configurações e backup';html=`<p>O progresso é salvo automaticamente e exclusivamente na nuvem. O arquivo JSON abaixo é um backup manual opcional, exportado somente quando você solicitar.</p><div class="audio-settings"><h3>🔊 Sons e música</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros das ferramentas</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente suave da fazenda</label><small>Melodia instrumental leve, com variações e pausas para acompanhar o jogo sem cansar.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json">`;break;
+case 'settings':title='Configurações e backup';html=`<p>O progresso é salvo automaticamente e exclusivamente na nuvem. O arquivo JSON abaixo é um backup manual opcional, exportado somente quando você solicitar.</p><div class="audio-settings"><h3>🔊 Mixer de áudio</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros e notificações</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente da fazenda</label><div class="audio-mixer-control"><label for="music-volume">🎵 Volume da música <output id="music-volume-value">${musicVolume}%</output></label><input id="music-volume" type="range" min="0" max="100" step="1" value="${musicVolume}"></div><div class="audio-mixer-control"><label for="sfx-volume">🔔 Volume dos efeitos e notificações <output id="sfx-volume-value">${sfxVolume}%</output></label><input id="sfx-volume" type="range" min="0" max="100" step="1" value="${sfxVolume}"></div><label for="music-mode">🎼 Reprodução das músicas</label><select id="music-mode"><option value="random" ${musicMode==='random'?'selected':''}>Aleatória, sem repetir a faixa anterior</option><option value="sequential" ${musicMode==='sequential'?'selected':''}>Em sequência</option></select><small>Três arranjos instrumentais originais, com aproximadamente 50 segundos cada, alternados com transições suaves.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json">`;break;
 }
 $('modal-title').textContent=title;body.innerHTML=html;body.scrollTop=modalScrollTop;
 if(currentModal==='inventory'){
@@ -2783,9 +2806,12 @@ if(currentModal==='inventory'){
  if(sortSelect)sortSelect.addEventListener('change',()=>{inventorySortMode=['default','alphabetical','available'].includes(sortSelect.value)?sortSelect.value:'default';sortSelect.blur();requestAnimationFrame(()=>{if(currentModal==='inventory')renderModal();});});
 }
 if(currentModal==='settings'){
- const sound=$('sound-toggle'),music=$('music-toggle');
+ const sound=$('sound-toggle'),music=$('music-toggle'),musicSlider=$('music-volume'),sfxSlider=$('sfx-volume'),mode=$('music-mode');
  if(sound)sound.addEventListener('change',()=>setSoundEnabled(sound.checked));
  if(music)music.addEventListener('change',()=>setMusicEnabled(music.checked));
+ if(musicSlider)musicSlider.addEventListener('input',()=>setMusicVolume(musicSlider.value));
+ if(sfxSlider)sfxSlider.addEventListener('input',()=>setSfxVolume(sfxSlider.value));
+ if(mode)mode.addEventListener('change',()=>setMusicMode(mode.value));
 }
 if(currentModal==='friends'&&cloudUser&&!onlineSocialLoaded){refreshOnlineSocial(false)}else if(currentModal==='friends'&&cloudUser&&!onlineInboxLoaded){refreshOnlineInbox(false)}
 if(currentModal==='inbox'&&cloudUser&&!onlineInboxLoaded){refreshOnlineInbox(false)}
