@@ -2469,14 +2469,14 @@ function updateDayNight(){
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
  if(layer.dataset.phase===phase)return;
  layer.dataset.phase=phase;
- const environmentLayers=['farm-landscape','day-night-ground-layer','theme-ground-layer'];
+ const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
  for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
  layer.innerHTML='';
- const landscape=$('farm-landscape');if(!landscape)return;
- landscape.querySelector('#farm-night-overlay')?.remove();
+ const environment=$('day-night-ground-layer');if(!environment)return;
+ environment.innerHTML='';
  if(phase==='night'){
-  landscape.insertAdjacentHTML('beforeend','<g id="farm-night-overlay" pointer-events="none"><rect x="-2100" y="-400" width="4200" height="1540" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-1880" cy="-165" r="4"/><circle cx="-1660" cy="-95" r="3"/><circle cx="-1450" cy="-205" r="3"/><circle cx="-1120" cy="-125" r="4"/><circle cx="-780" cy="-185" r="3"/><circle cx="-420" cy="-95" r="4"/><circle cx="-120" cy="-205" r="3"/><circle cx="180" cy="-160" r="4"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/></g><g><circle cx="1190" cy="-175" r="43" fill="#f5e9bf"/><circle cx="1207" cy="-190" r="39" fill="#07152f" opacity=".22"/></g></g>');
+  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g><circle cx="990" cy="-175" r="43" fill="#f5e9bf"/><circle cx="1007" cy="-190" r="39" fill="#07152f" opacity=".22"/></g></g>';
  }
 }
 function applyMenuThemeColors(){
