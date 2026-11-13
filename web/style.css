@@ -841,3 +841,6 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .horse-breed-card b{margin-top:5px}
 #haras-area{pointer-events:none}
 @media(max-width:700px){.horse-breed-preview{height:68px}.horse-card-preview{width:56px;height:44px}}
+
+
+.crop-object image{pointer-events:none;opacity:1}
