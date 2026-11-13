@@ -2472,9 +2472,12 @@ function updateDayNight(){
  const environmentLayers=['farm-landscape','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
  for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
+ layer.innerHTML='';
+ const landscape=$('farm-landscape');if(!landscape)return;
+ landscape.querySelector('#farm-night-overlay')?.remove();
  if(phase==='night'){
-  layer.innerHTML='<g id="day-night-sky" pointer-events="none"><rect x="-2600" y="-400" width="7000" height="1700" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-1880" cy="-165" r="4"/><circle cx="-1660" cy="-95" r="3"/><circle cx="-1450" cy="-205" r="3"/><circle cx="-1120" cy="-125" r="4"/><circle cx="-780" cy="-185" r="3"/><circle cx="-420" cy="-95" r="4"/><circle cx="-120" cy="-205" r="3"/><circle cx="180" cy="-160" r="4"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g><g><circle cx="1190" cy="-175" r="43" fill="#f5e9bf"/><circle cx="1207" cy="-190" r="39" fill="#07152f" opacity=".22"/></g></g>';
- }else layer.innerHTML='';
+  landscape.insertAdjacentHTML('beforeend','<g id="farm-night-overlay" pointer-events="none"><rect x="-2100" y="-400" width="4200" height="1540" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-1880" cy="-165" r="4"/><circle cx="-1660" cy="-95" r="3"/><circle cx="-1450" cy="-205" r="3"/><circle cx="-1120" cy="-125" r="4"/><circle cx="-780" cy="-185" r="3"/><circle cx="-420" cy="-95" r="4"/><circle cx="-120" cy="-205" r="3"/><circle cx="180" cy="-160" r="4"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/></g><g><circle cx="1190" cy="-175" r="43" fill="#f5e9bf"/><circle cx="1207" cy="-190" r="39" fill="#07152f" opacity=".22"/></g></g>');
+ }
 }
 function applyMenuThemeColors(){
  const root=document.querySelector('.app');if(!root)return;
