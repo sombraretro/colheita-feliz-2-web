@@ -439,15 +439,15 @@ const FERTILIZERS={
  surfConcentrate:{name:'Surf Líquido Concentrado · 20h',icon:'🧼',hours:20,price:0,currency:'gift',flowerOnly:true,balance:'historical',note:'Presente diário ou de amigos; reduz 20h e só pode ser usado em flores.'}
 };
 const ANIMAL_SLOTS=[
- {x:1280,y:225,w:140,h:105},{x:1440,y:225,w:140,h:105},{x:1600,y:225,w:140,h:105},
- {x:1280,y:365,w:140,h:105},{x:1440,y:365,w:140,h:105},{x:1600,y:365,w:140,h:105},
- {x:1280,y:505,w:140,h:105},{x:1440,y:505,w:140,h:105},{x:1600,y:505,w:140,h:105}
+ {x:1280,y:425,w:140,h:105},{x:1440,y:425,w:140,h:105},{x:1600,y:425,w:140,h:105},
+ {x:1280,y:565,w:140,h:105},{x:1440,y:565,w:140,h:105},{x:1600,y:565,w:140,h:105},
+ {x:1280,y:705,w:140,h:105},{x:1440,y:705,w:140,h:105},{x:1600,y:705,w:140,h:105}
  ];
 // As vagas mantêm exatamente a disposição anterior dos cavalos, deslocada
  // junto com o Haras (+580, +370) para dentro da nova área.
  const HORSE_SLOTS=[
- {x:-550,y:275,w:80,h:60},{x:-470,y:275,w:80,h:60},{x:-390,y:275,w:80,h:60},{x:-310,y:275,w:80,h:60},{x:-230,y:275,w:80,h:60},
- {x:-550,y:355,w:80,h:60},{x:-470,y:355,w:80,h:60},{x:-390,y:355,w:80,h:60},{x:-310,y:355,w:80,h:60},{x:-230,y:355,w:80,h:60}
+  {x:-550,y:820,w:80,h:60},{x:-470,y:820,w:80,h:60},{x:-390,y:820,w:80,h:60},{x:-310,y:820,w:80,h:60},{x:-230,y:820,w:80,h:60},
+  {x:-550,y:900,w:80,h:60},{x:-470,y:900,w:80,h:60},{x:-390,y:900,w:80,h:60},{x:-310,y:900,w:80,h:60},{x:-230,y:900,w:80,h:60}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -941,22 +941,16 @@ scenery+=`<g pointer-events="none">
  <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 -12q-3-13-9-16m9 16q8-12 15-13M970 -13q-3-14-10-17m10 17q8-12 15-13M1120 -13q-3-13-9-16m9 16q8-12 15-13"/></g>
  <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 -7l12-9 17 7-7 8Z"/><path d="M1035 -8l11-8 15 7-8 8Z"/></g>
  </g>`;
-scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(700 920)">
- <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
- <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
- <path d="M4 108L205 -4L406 108L385 125L205 29L25 125Z" fill="#a95f3d" stroke="#70432c" stroke-width="8"/>
- <path d="M38 112H372V236H38Z" fill="#9bdcf0" fill-opacity=".19" stroke="#795a3c" stroke-width="7"/>
- <path d="M43 117H367V231H43Z" fill="#c8f2fb" fill-opacity=".12" stroke="#e9f8f5" stroke-opacity=".78" stroke-width="2"/>
- <path d="M52 116V231M116 116V231M180 116V231M244 116V231M308 116V231M353 116V231" stroke="#80684a" stroke-width="4" stroke-opacity=".72"/>
- <path d="M38 151H372M38 194H372" stroke="#80684a" stroke-width="3" stroke-opacity=".62"/>
- <path d="M54 121L112 121L78 226H54Z M255 121H290L326 226H300Z" fill="#ffffff" fill-opacity=".13"/>
- <path d="M168 236V150Q205 119 242 150V236Z" fill="#6d4930" stroke="#563720" stroke-width="6"/>
- <path d="M177 168H233M177 184H233M177 200H233" stroke="#c79b63" stroke-width="3"/>
- <g font-size="31"><text x="75" y="158">🕊️</text><text x="285" y="160">🐦</text><text x="105" y="210">🦜</text><text x="310" y="210">🐤</text></g>
- <path d="M10 248Q75 238 130 249T245 248T400 250" fill="none" stroke="#4b842d" stroke-width="10" stroke-linecap="round"/>
- <g fill="#b9aa8e" stroke="#89795d" stroke-width="2"><ellipse cx="50" cy="252" rx="14" ry="7"/><ellipse cx="102" cy="255" rx="11" ry="6"/><ellipse cx="310" cy="254" rx="16" ry="7"/><ellipse cx="365" cy="250" rx="12" ry="6"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M70 251q-5-20-14-24m14 24q8-17 17-19M340 251q-4-18-12-22m12 22q9-16 17-18"/></g>
- 
+scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-165 75)">
+ <ellipse cx="210" cy="420" rx="220" ry="24" fill="#36551e" opacity=".25"/>
+ <path d="M15 78L210 8L405 78V405H15Z" fill="#b98b55" fill-opacity=".16" stroke="#795333" stroke-width="10"/>
+ <path d="M0 82L210 0L420 82" fill="none" stroke="#a95f3d" stroke-width="15" stroke-linejoin="round"/>
+ <path d="M28 92V397M392 92V397M15 145H405M15 260H405M15 395H405" fill="none" stroke="#80684a" stroke-width="7"/>
+ <path d="M48 98V390M108 98V390M168 98V390M228 98V390M288 98V390M348 98V390" stroke="#c5b18e" stroke-width="3" opacity=".9"/>
+ <path d="M15 185H405M15 320H405" stroke="#d6c29e" stroke-width="3" stroke-dasharray="5 5"/>
+ <path d="M80 205H340M80 335H340" stroke="#704a2b" stroke-width="13" stroke-linecap="round"/>
+ <path d="M80 198H340M80 328H340" stroke="#c28a50" stroke-width="6" stroke-linecap="round"/>
+ <path d="M190 405V280Q210 260 230 280V405" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  </g>`;
 scenery+=`<g pointer-events="none">
  <path d="M770 8Q835 -5 900 7T1030 8T1225 10" fill="none" stroke="#438c2e" stroke-width="12" stroke-linecap="round"/>
@@ -973,8 +967,8 @@ $('animal-layer').innerHTML='';
 let front='';
 front+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,960],[1430,960]],'front');
 front+=fencePath([[1560,960],[1780,960]],'front')+'</g>';
-front+=`<g transform="rotate(4 1510 760) translate(0 200)"><g transform="translate(1430 760)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
-front+=`<g transform="translate(1495 655) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
+front+=`<g transform="translate(1430 960)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
+front+=`<g transform="translate(1495 855) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
 front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
 for(let i=0;i<38;i++){
@@ -1014,7 +1008,7 @@ function renderAnimals(){
    x=pos.x;y=pos.y;w=pos.w;h=pos.h;
   }else if(isBirdType(a.type)){
    const birdSlot=Math.max(0,Number.isInteger(a.aviarySlot)?a.aviarySlot:0),col=birdSlot%AVIARY_COLUMNS,row=Math.floor(birdSlot/AVIARY_COLUMNS);
-   w=46;h=34;x=738+col*54;y=935+row*40;
+   w=42;h=32;x=-125+col*57;y=(row%2===0?255:385);
   }else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
