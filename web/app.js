@@ -935,28 +935,6 @@ scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T12
 for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
 scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,130,430,350)}</g>`;
-scenery+=`<g pointer-events="none">
- <path d="M790 -13Q845 -22 900 -13T1015 -14T1110 -13T1210 -15" fill="none" stroke="#477d2d" stroke-width="10" stroke-linecap="round"/>
- <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="-10" rx="12" ry="6"/><ellipse cx="866" cy="-9" rx="9" ry="5"/><ellipse cx="930" cy="-12" rx="14" ry="6"/><ellipse cx="1080" cy="-11" rx="11" ry="5"/><ellipse cx="1150" cy="-13" rx="13" ry="6"/><ellipse cx="1198" cy="-9" rx="9" ry="5"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 -12q-3-13-9-16m9 16q8-12 15-13M970 -13q-3-14-10-17m10 17q8-12 15-13M1120 -13q-3-13-9-16m9 16q8-12 15-13"/></g>
- <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 -7l12-9 17 7-7 8Z"/><path d="M1035 -8l11-8 15 7-8 8Z"/></g>
- </g>`;
-scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-165 75)">
- <ellipse cx="210" cy="420" rx="220" ry="24" fill="#36551e" opacity=".25"/>
- <path d="M15 78L210 8L405 78V405H15Z" fill="#b98b55" fill-opacity=".16" stroke="#795333" stroke-width="10"/>
- <path d="M0 82L210 0L420 82" fill="none" stroke="#a95f3d" stroke-width="15" stroke-linejoin="round"/>
- <path d="M28 92V397M392 92V397M15 145H405M15 260H405M15 395H405" fill="none" stroke="#80684a" stroke-width="7"/>
- <path d="M48 98V390M108 98V390M168 98V390M228 98V390M288 98V390M348 98V390" stroke="#c5b18e" stroke-width="3" opacity=".9"/>
- <path d="M15 185H405M15 320H405" stroke="#d6c29e" stroke-width="3" stroke-dasharray="5 5"/>
- <path d="M80 205H340M80 335H340" stroke="#704a2b" stroke-width="13" stroke-linecap="round"/>
- <path d="M80 198H340M80 328H340" stroke="#c28a50" stroke-width="6" stroke-linecap="round"/>
- <path d="M190 405V280Q210 260 230 280V405" fill="#704a2b" stroke="#563720" stroke-width="6"/>
- </g>`;
-scenery+=`<g pointer-events="none">
- <path d="M770 8Q835 -5 900 7T1030 8T1225 10" fill="none" stroke="#438c2e" stroke-width="12" stroke-linecap="round"/>
- <g fill="#b7a58a" stroke="#88775c" stroke-width="2"><ellipse cx="810" cy="11" rx="17" ry="8"/><ellipse cx="875" cy="9" rx="13" ry="6"/><ellipse cx="1125" cy="12" rx="18" ry="8"/><ellipse cx="1190" cy="9" rx="14" ry="7"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M845 10q-3-18-12-21m12 21q9-16 18-17M1060 10q-4-17-13-21m13 21q9-15 18-16"/></g>
- </g>`;
 scenery+=svgImage('casinha-cachorro',370,145,145,140);
 scenery+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,380],[1780,380]],'rear')+fencePath([[1260,380],[1260,960]],'side')+fencePath([[1780,380],[1780,960]],'side')+'</g>';
 
