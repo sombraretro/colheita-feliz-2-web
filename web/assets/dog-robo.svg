@@ -1,16 +1,64 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Cachorro robo">
-<defs><linearGradient id="coat" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#aebdc7"/><stop offset=".6" stop-color="#aebdc7"/><stop offset="1" stop-color="#202d38"/></linearGradient><linearGradient id="chest" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#596c7b"/><stop offset="1" stop-color="#202d38"/></linearGradient></defs>
-<ellipse cx="760" cy="1035" rx="520" ry="32" fill="#18380f" opacity=".16"/>
-<path d="M330 600Q180 500 220 330Q285 410 395 520" fill="none" stroke="url(#coat)" stroke-width="75" stroke-linecap="round"/>
-<path d="M420 740L405 980Q405 1020 470 1020L515 1000L500 730M780 760L770 1000Q770 1030 835 1025L870 1005L850 735M960 730L990 990Q1000 1030 1060 1015L1080 990L1030 700" fill="url(#coat)" stroke="#3b281d" stroke-width="22" stroke-linejoin="round"/>
-<ellipse cx="700" cy="650" rx="430" ry="245" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
-<path d="M820 500Q920 520 980 690Q925 850 780 900Q690 810 700 690Z" fill="url(#chest)" opacity=".95"/>
-<path d="M420 520L520 470L600 520L580 640L460 650Z M700 470L830 470L900 560L850 660L710 650Z" fill="#7e929f" stroke="#344956" stroke-width="16"/><path d="M520 570H585M735 560H820" stroke="#dce9ee" stroke-width="16"/>
-<ellipse cx="1110" cy="370" rx="245" ry="205" fill="url(#coat)" stroke="#3b281d" stroke-width="22"/>
-<path d="M920 300L920 95L1065 280Z" fill="#8298a6" stroke="#394c5a" stroke-width="20"/><path d="M1195 275L1300 90L1310 345Z" fill="#8298a6" stroke="#394c5a" stroke-width="20"/>
-<path d="M1170 390L1350 410L1390 520L1210 555L1135 480Z" fill="#c7d4db" stroke="#394c5a" stroke-width="20"/><circle cx="1360" cy="440" r="27" fill="#1c2932"/>
-<ellipse cx="1090" cy="315" rx="35" ry="44" fill="#fff9eb"/><ellipse cx="1186" cy="285" rx="34" ry="43" fill="#fff9eb"/>
-<circle cx="1098" cy="319" r="17" fill="#211b18"/><circle cx="1193" cy="289" r="17" fill="#211b18"/><circle cx="1092" cy="311" r="6" fill="#fff"/><circle cx="1187" cy="281" r="6" fill="#fff"/>
-<path d="M900 500Q1080 570 1220 500" fill="none" stroke="#3569a8" stroke-width="32" stroke-linecap="round"/><circle cx="1080" cy="535" r="28" fill="#efc94f" stroke="#986d27" stroke-width="9"/>
-<path d="M1160 545Q1190 590 1235 565" stroke="#3b251d" stroke-width="12" fill="none" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" width="1448" height="1086" role="img" aria-label="Doberman robô">
+<defs>
+<linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#6c9b42" stop-opacity=".05"/><stop offset="1" stop-color="#304d2a" stop-opacity=".24"/></linearGradient>
+<linearGradient id="metal" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#e3f8ff"/><stop offset=".28" stop-color="#7cb7c9"/><stop offset=".58" stop-color="#294c62"/><stop offset="1" stop-color="#152936"/></linearGradient>
+<linearGradient id="red" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f45d63"/><stop offset="1" stop-color="#922d39"/></linearGradient>
+
+<linearGradient id="black" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#48515b"/><stop offset=".35" stop-color="#202a34"/><stop offset=".78" stop-color="#101820"/><stop offset="1" stop-color="#050b10"/></linearGradient>
+<linearGradient id="tan" x1="0" y1="0" x2=".5" y2="1"><stop stop-color="#e5a15d"/><stop offset="1" stop-color="#a6532d"/></linearGradient>
+<linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b5f5ff"/><stop offset=".4" stop-color="#35b8dc"/><stop offset="1" stop-color="#12516e"/></linearGradient>
+
+</defs>
+<ellipse cx="735" cy="1000" rx="505" ry="38" fill="url(#ground)"/>
+
+<!-- tail -->
+<path d="M330 615Q214 573 204 454Q197 400 228 374Q225 476 370 525" fill="none" stroke="#111b24" stroke-width="54" stroke-linecap="round"/>
+<path d="M330 615Q214 573 204 454" fill="none" stroke="#59636b" stroke-width="8" opacity=".7"/>
+<!-- hind legs -->
+<path d="M465 730Q438 817 430 933L414 974Q405 1007 450 1014L516 1009Q540 994 521 973L499 948L535 758Z" fill="url(#black)" stroke="#080f15" stroke-width="20"/>
+<path d="M443 960L511 961L526 1001Q479 1027 414 1006Z" fill="#17232c" stroke="#080f15" stroke-width="13"/>
+<path d="M830 750Q846 849 842 958L824 990Q813 1021 861 1027L923 1015Q946 1000 923 974L900 950L911 737Z" fill="url(#black)" stroke="#080f15" stroke-width="20"/>
+<path d="M835 980L914 974L935 1010Q886 1037 819 1014Z" fill="#18232c" stroke="#080f15" stroke-width="13"/>
+<!-- torso, athletic waist and deep chest -->
+<path d="M348 564Q414 492 572 500L828 505Q937 523 985 635L947 789Q894 857 716 861L493 824Q392 794 355 697Z" fill="url(#black)" stroke="#080f15" stroke-width="25"/>
+<path d="M765 533Q897 527 946 645Q966 739 891 829Q827 852 762 815Q812 720 765 533Z" fill="#283744" stroke="#0b141b" stroke-width="14"/>
+<!-- tan points on legs and chest -->
+<path d="M405 734Q462 752 499 713L486 811L460 926L436 956L414 932Z" fill="url(#tan)"/>
+<path d="M812 752Q864 774 919 728L902 876L875 956L846 966L841 899Z" fill="url(#tan)"/>
+<path d="M760 578Q825 586 866 655Q890 716 859 786Q822 815 779 784Q815 687 760 578Z" fill="url(#tan)" opacity=".95"/>
+<!-- chest harness panels -->
+<path d="M430 559L572 530L613 615L575 760L430 733Z" fill="#263b4a" stroke="#607887" stroke-width="16"/>
+<path d="M453 579L554 557L578 616L549 714L450 698Z" fill="url(#metal)" stroke="#0c2735" stroke-width="12"/>
+<path d="M614 538L744 545L783 635L754 777L613 757L585 650Z" fill="#182d3a" stroke="#6b8796" stroke-width="17"/>
+<path d="M637 562L722 569L749 631L727 742L632 724L616 644Z" fill="url(#blue)" stroke="#091b28" stroke-width="12"/>
+<path d="M650 582L710 590L726 626L717 674" fill="none" stroke="#d9fbff" stroke-width="12" opacity=".75"/>
+<path d="M790 552L894 582L918 660L879 711L789 684Z" fill="url(#metal)" stroke="#091b28" stroke-width="16"/>
+<circle cx="845" cy="624" r="28" fill="#0b1d29" stroke="#8ddbed" stroke-width="13"/><circle cx="845" cy="624" r="10" fill="#a7f5ff"/>
+<!-- neck -->
+<path d="M838 518Q895 442 963 433L1047 565L974 682L884 664Z" fill="url(#black)" stroke="#080f15" stroke-width="20"/>
+<path d="M906 505L1003 481L1037 559L965 632L905 611Z" fill="url(#tan)"/>
+<!-- Doberman narrow wedge head and long muzzle -->
+<path d="M925 363Q933 264 1021 222Q1100 181 1190 229Q1254 269 1252 348L1221 427Q1173 472 1084 457L1000 430Z" fill="url(#black)" stroke="#080f15" stroke-width="22"/>
+<!-- cropped pointed ears -->
+<path d="M987 287L972 111Q1008 145 1051 243Z" fill="#151f29" stroke="#070d13" stroke-width="19"/>
+<path d="M1117 231L1150 80Q1192 142 1186 275Z" fill="#18232e" stroke="#070d13" stroke-width="19"/>
+<path d="M995 242L989 165L1026 236M1144 215L1161 136L1171 230" fill="none" stroke="#8a4b38" stroke-width="13"/>
+<!-- tan eyebrow and cheeks -->
+<path d="M1020 307Q1048 285 1078 310L1065 342Q1038 337 1017 329Z M1130 295Q1162 277 1186 304L1176 335Q1147 333 1128 320Z" fill="url(#tan)"/>
+<path d="M1032 362Q1090 333 1144 367Q1188 392 1240 380L1277 417Q1233 466 1155 455L1060 432Q1024 412 1032 362Z" fill="url(#tan)" stroke="#131c24" stroke-width="15"/>
+<path d="M1140 405Q1200 397 1272 418L1289 451Q1241 477 1176 457Z" fill="#1a2025"/>
+<ellipse cx="1280" cy="427" rx="28" ry="22" fill="#070b0e"/>
+<!-- eyes -->
+<ellipse cx="1062" cy="321" rx="22" ry="29" fill="#d9faff"/><ellipse cx="1157" cy="309" rx="22" ry="29" fill="#d9faff"/>
+<circle cx="1068" cy="324" r="12" fill="#06121b"/><circle cx="1162" cy="312" r="12" fill="#06121b"/>
+<circle cx="1072" cy="317" r="5" fill="#fff"/><circle cx="1166" cy="305" r="5" fill="#fff"/>
+<!-- glowing robotic visor and jaw -->
+<path d="M1034 349Q1107 327 1192 353" fill="none" stroke="url(#blue)" stroke-width="12" stroke-linecap="round"/>
+<path d="M1100 438Q1153 466 1209 441" fill="none" stroke="#1a2229" stroke-width="13" stroke-linecap="round"/>
+<!-- metallic plates and bolts -->
+<path d="M945 590L1004 566L1036 623L994 676L937 651Z" fill="url(#metal)" stroke="#0a202d" stroke-width="13"/>
+<circle cx="974" cy="622" r="10" fill="#e6fcff"/><circle cx="1001" cy="642" r="8" fill="#e6fcff"/>
+<path d="M1167 250L1205 266L1221 314L1182 326Z" fill="url(#metal)" stroke="#0b1b26" stroke-width="9"/>
+<path d="M505 778Q631 819 764 790" fill="none" stroke="#748c98" stroke-width="10" opacity=".7"/>
+
 </svg>
