@@ -791,3 +791,17 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .fish-firework i{position:absolute;left:0;top:0;width:5px;height:5px;border-radius:50%;background:var(--firework-color);box-shadow:0 0 7px 2px var(--firework-color);animation:fish-firework-burst 1.15s ease-out var(--firework-delay,0s) both}
 @keyframes fish-firework-burst{0%{opacity:0;transform:rotate(var(--angle)) translateY(0) scale(.3)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--angle)) translateY(-48px) scale(.15)}}
 @media(prefers-reduced-motion:reduce){.toast.fishing-toast,.toast.fishing-toast.rarity-rare,.toast.fishing-toast.rarity-very-rare,.toast.fishing-toast.rarity-legendary,.toast.fishing-toast.rarity-extraordinary,.fish-sparkle,.fish-firework i{animation:none!important}.fish-sparkle,.fish-firework{display:none!important}}
+
+/* Mixer de áudio e celebrações de pesca expandidas */
+.audio-mixer-control{display:grid;gap:5px;padding:8px 10px;border:1px solid #e0c99d;border-radius:9px;background:#fffdf4}
+.audio-mixer-control label{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.audio-mixer-control output{font-variant-numeric:tabular-nums;color:#477d2b;font-weight:900}
+.audio-mixer-control input[type=range]{width:100%;accent-color:#5d9f2b;cursor:pointer}
+.audio-settings select{width:100%;padding:9px;border:1px solid #c7b58e;border-radius:8px;background:#fffdf7;color:#543713;font:inherit}
+.fishing-fx-layer{position:fixed;inset:0;z-index:999;overflow:hidden;pointer-events:none;contain:layout paint}
+.fishing-fx-particle{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--fx-color);box-shadow:0 0 12px 4px var(--fx-color);animation:fishing-fx-particle-burst 1.45s cubic-bezier(.12,.75,.3,1) var(--fx-delay,0s) both}
+@keyframes fishing-fx-particle-burst{0%{opacity:0;transform:rotate(var(--fx-angle)) translateY(0) scale(.2)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--fx-angle)) translateY(calc(var(--fx-distance)*-1)) scale(.05)}}
+.fishing-fx-firework{position:absolute;width:1px;height:1px}
+.fishing-fx-firework i{position:absolute;left:0;top:0;width:6px;height:6px;border-radius:50%;background:var(--fx-color);box-shadow:0 0 10px 3px var(--fx-color);animation:fishing-fx-firework-burst 1.65s cubic-bezier(.12,.7,.2,1) var(--fx-delay,0s) both}
+@keyframes fishing-fx-firework-burst{0%{opacity:0;transform:rotate(var(--fx-angle)) translateY(0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:rotate(var(--fx-angle)) translateY(-105px) scale(.08)}}
+@media(prefers-reduced-motion:reduce){.fishing-fx-layer{display:none!important}}
