@@ -1124,7 +1124,7 @@ function newGame(){
  const warehouseLocks=Object.fromEntries(FIELD_CROP_IDS.map(id=>[id,false]));
  const decorInventory=Object.fromEntries(Object.keys(DECORATIONS).map(id=>[id,0]));
  const giftInventory=Object.fromEntries(Object.keys(GIFT_ITEMS).map(id=>[id,0]));
- return {farmName:'Minha fazenda',catalog:[],profilePhoto:'',coins:3500,greenCoins:5,vipUntil:0,dogBreedsOwned:['classico'],temporaryDogBreeds:{},redSoilApplications:0,xp:0,xpProgressionVersion:2,lastLevelRewarded:1,specialistProgress:{chef:{xp:0},grill:{xp:0},lumberjack:{xp:0},carpenter:{xp:0},alchemist:{xp:0},fisher:{xp:0}},popularity:0,flowers:0,mood:'happy',moodDate:'',grill:{owned:false,assembled:false,parts:{iron:0,screws:0,paint:0},queue:[]},kitchen:{queue:[]},herbMix:{queue:[]},fishing:{rod:'normal',rods:['normal'],lastCastAt:0},fishWarehouse:Object.fromEntries(Object.keys(FISH_TYPES).map(id=>[id,0])),seaFishing:{net:'normal',nets:['normal'],lastCastAt:0},seaWarehouse:Object.fromEntries(Object.keys(SEA_TYPES).map(id=>[id,0])),forestPlots:Array.from({length:FOREST_PLOTS},()=>({type:null,status:'empty',plantedAt:0})),woodWarehouse:Object.fromEntries([...new Set(Object.values(FOREST_TREES).map(t=>t.wood))].map(id=>[id,0])),furnitureWarehouse:Object.fromEntries(Object.keys(WOODWORK_RECIPES).map(id=>[id,0])),carpentry:{queue:[]},meatWarehouse:{chicken:0,beef:0,pork:0,lamb:0,turkey:0,goat:0},meatLocks:{chicken:true,beef:true,pork:true,lamb:true,turkey:true,goat:true},processedWarehouse:{},processedLocks:{},warehouseLocks,decorInventory,placedDecorations:[],farmTheme:'classic',farmThemeExpiries:{},ownedFarmThemes:[],giftInventory,expansions:{orchard:false,pond:false},lake:{fish:[],decorations:[],bridges:[]},orchardTrees:Array.from({length:8},()=>({type:null,status:'empty',plantedAt:0,harvestsRemaining:0})),butterflyTreeClaimed:false,flowerWarehouse,flowerLocks,bouquets,dailyRewardDate:'',dailyStreak:0,inventory,warehouse:{},animalWarehouse:{},animals:starterAnimals(),plots,history:[],tutorial:{acceptedId:null,completed:[],finished:false},taskProgress:{},mobileShortcuts:['shop','kitchen','animals','friends'],progressCounters:{harvest:0,plant:0,water:0,sell:0,animal:0,feed:0,produce:0,fish:0,cook:0,explore:0,discover:0},missionDay:todayKey(),missionWeek:missionWeekKey(),missionDailyProgress:{},missionWeeklyProgress:{},missionDailyClaims:[],missionWeeklyClaims:[],unlockedTitles:[],activeTitle:'',claimedAchievements:[],social:{friends:[],inbox:[],sent:[]},createdAt:Date.now(),updatedAt:Date.now()};
+ return {farmName:'Minha fazenda',catalog:[],profilePhoto:'',coins:3500,greenCoins:5,vipUntil:0,dogBreedsOwned:['classico'],temporaryDogBreeds:{},redSoilApplications:0,xp:0,xpProgressionVersion:2,lastLevelRewarded:1,specialistProgress:{chef:{xp:0},grill:{xp:0},lumberjack:{xp:0},carpenter:{xp:0},alchemist:{xp:0},fisher:{xp:0}},popularity:0,flowers:0,mood:'happy',moodDate:'',grill:{owned:false,assembled:false,parts:{iron:0,screws:0,paint:0},queue:[]},kitchen:{queue:[]},herbMix:{queue:[]},fishing:{rod:'normal',rods:['normal'],lastCastAt:0,pendingCatch:null},fishWarehouse:Object.fromEntries(Object.keys(FISH_TYPES).map(id=>[id,0])),seaFishing:{net:'normal',nets:['normal'],lastCastAt:0,pendingCatch:null},seaWarehouse:Object.fromEntries(Object.keys(SEA_TYPES).map(id=>[id,0])),forestPlots:Array.from({length:FOREST_PLOTS},()=>({type:null,status:'empty',plantedAt:0})),woodWarehouse:Object.fromEntries([...new Set(Object.values(FOREST_TREES).map(t=>t.wood))].map(id=>[id,0])),furnitureWarehouse:Object.fromEntries(Object.keys(WOODWORK_RECIPES).map(id=>[id,0])),carpentry:{queue:[]},meatWarehouse:{chicken:0,beef:0,pork:0,lamb:0,turkey:0,goat:0},meatLocks:{chicken:true,beef:true,pork:true,lamb:true,turkey:true,goat:true},processedWarehouse:{},processedLocks:{},warehouseLocks,decorInventory,placedDecorations:[],farmTheme:'classic',farmThemeExpiries:{},ownedFarmThemes:[],giftInventory,expansions:{orchard:false,pond:false},lake:{fish:[],decorations:[],bridges:[]},orchardTrees:Array.from({length:8},()=>({type:null,status:'empty',plantedAt:0,harvestsRemaining:0})),butterflyTreeClaimed:false,flowerWarehouse,flowerLocks,bouquets,dailyRewardDate:'',dailyStreak:0,inventory,warehouse:{},animalWarehouse:{},animals:starterAnimals(),plots,history:[],tutorial:{acceptedId:null,completed:[],finished:false},taskProgress:{},mobileShortcuts:['shop','kitchen','animals','friends'],progressCounters:{harvest:0,plant:0,water:0,sell:0,animal:0,feed:0,produce:0,fish:0,cook:0,explore:0,discover:0},missionDay:todayKey(),missionWeek:missionWeekKey(),missionDailyProgress:{},missionWeeklyProgress:{},missionDailyClaims:[],missionWeeklyClaims:[],unlockedTitles:[],activeTitle:'',claimedAchievements:[],social:{friends:[],inbox:[],sent:[]},createdAt:Date.now(),updatedAt:Date.now()};
 }
 function cropIconMarkup(id){const crop=CROPS[id];if(!crop)return '';if(id==='pimentao_verde'||id==='pimentao_vermelho'||id==='pimentao_amarelo')return '<span class="crop-icon-mark crop-icon-art pepper-icon"><img alt="" src="assets/pimentao-'+id.replace('pimentao_','')+'.png"></span>';const art={
  pimentao_verde:'<svg viewBox="0 0 48 48"><path d="M22 9c-2 5-1 8 2 9-8-5-17 1-16 12 1 10 8 15 16 12 8 3 15-2 16-12 1-11-8-17-16-12 3-3 4-6 2-9Z" fill="#4f9b45" stroke="#286b32" stroke-width="2"/><path d="M23 13q-5-8-12-5 4 7 12 7m2-2q4-8 12-6-3 7-12 8" fill="#43863b" stroke="#28622c" stroke-width="1.5"/></svg>',
@@ -1299,9 +1299,9 @@ function normalize(data){
  data.forestPlots=Array.isArray(data.forestPlots)?data.forestPlots.slice(0,FOREST_PLOTS):[];while(data.forestPlots.length<FOREST_PLOTS)data.forestPlots.push({type:null,status:'empty',plantedAt:0});data.forestPlots=data.forestPlots.map(t=>t&&FOREST_TREES[t.type]?{type:t.type,status:['growing','ready'].includes(t.status)?t.status:'growing',plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:Date.now()}:{type:null,status:'empty',plantedAt:0});
  data.woodWarehouse=(data.woodWarehouse&&typeof data.woodWarehouse==='object')?data.woodWarehouse:{};for(const id of [...new Set(Object.values(FOREST_TREES).map(t=>t.wood))])data.woodWarehouse[id]=Number.isFinite(data.woodWarehouse[id])?Math.max(0,Math.floor(data.woodWarehouse[id])):0;
  data.furnitureWarehouse=(data.furnitureWarehouse&&typeof data.furnitureWarehouse==='object')?data.furnitureWarehouse:{};for(const id of Object.keys(WOODWORK_RECIPES))data.furnitureWarehouse[id]=Number.isFinite(data.furnitureWarehouse[id])?Math.max(0,Math.floor(data.furnitureWarehouse[id])):0;data.carpentry=(data.carpentry&&typeof data.carpentry==='object')?data.carpentry:{queue:[]};data.carpentry.queue=Array.isArray(data.carpentry.queue)?data.carpentry.queue.filter(j=>j&&WOODWORK_RECIPES[j.recipe]&&typeof j.id==='string'&&Number.isFinite(j.startedAt)&&Number.isFinite(j.readyAt)&&j.readyAt>=j.startedAt).slice(-100).map(j=>({...j,xpEarned:Number.isSafeInteger(j.xpEarned)?Math.max(0,j.xpEarned):12,woodConsumed:Number.isSafeInteger(j.woodConsumed)?Math.max(0,j.woodConsumed):WOODWORK_RECIPES[j.recipe].qty})):[];
- data.seaFishing=(data.seaFishing&&typeof data.seaFishing==='object')?data.seaFishing:{};data.seaFishing.nets=Array.isArray(data.seaFishing.nets)?[...new Set(data.seaFishing.nets.filter(id=>SEA_NETS[id]))]:['normal'];if(!data.seaFishing.nets.includes('normal'))data.seaFishing.nets.unshift('normal');data.seaFishing.net=SEA_NETS[data.seaFishing.net]&&data.seaFishing.nets.includes(data.seaFishing.net)?data.seaFishing.net:'normal';data.seaFishing.lastCastAt=Number.isFinite(data.seaFishing.lastCastAt)?Math.max(0,data.seaFishing.lastCastAt):0;data.seaFishing.extraordinaryMisses=Number.isFinite(data.seaFishing.extraordinaryMisses)?Math.max(0,Math.min(50,Math.floor(data.seaFishing.extraordinaryMisses))):0;
+ data.seaFishing=(data.seaFishing&&typeof data.seaFishing==='object')?data.seaFishing:{};data.seaFishing.nets=Array.isArray(data.seaFishing.nets)?[...new Set(data.seaFishing.nets.filter(id=>SEA_NETS[id]))]:['normal'];if(!data.seaFishing.nets.includes('normal'))data.seaFishing.nets.unshift('normal');data.seaFishing.net=SEA_NETS[data.seaFishing.net]&&data.seaFishing.nets.includes(data.seaFishing.net)?data.seaFishing.net:'normal';data.seaFishing.lastCastAt=Number.isFinite(data.seaFishing.lastCastAt)?Math.max(0,data.seaFishing.lastCastAt):0;data.seaFishing.extraordinaryMisses=Number.isFinite(data.seaFishing.extraordinaryMisses)?Math.max(0,Math.min(50,Math.floor(data.seaFishing.extraordinaryMisses))):0;data.seaFishing.pendingCatch=data.seaFishing.pendingCatch&&SEA_TYPES[data.seaFishing.pendingCatch.id]&&Number.isFinite(data.seaFishing.pendingCatch.readyAt)?{id:data.seaFishing.pendingCatch.id,readyAt:data.seaFishing.pendingCatch.readyAt,isExtraordinary:!!data.seaFishing.pendingCatch.isExtraordinary,quantity:data.seaFishing.pendingCatch.id==='caviar'?3:1,net:data.seaFishing.pendingCatch.net&&SEA_NETS[data.seaFishing.pendingCatch.net]?data.seaFishing.pendingCatch.net:data.seaFishing.net}:null;
  data.seaWarehouse=(data.seaWarehouse&&typeof data.seaWarehouse==='object')?data.seaWarehouse:{};for(const id of Object.keys(SEA_TYPES))data.seaWarehouse[id]=Number.isFinite(data.seaWarehouse[id])?Math.max(0,Math.floor(data.seaWarehouse[id])):0;
- data.fishing=(data.fishing&&typeof data.fishing==='object')?data.fishing:{};data.fishing.rods=Array.isArray(data.fishing.rods)?[...new Set(data.fishing.rods.filter(id=>FISHING_RODS[id]))]:['normal'];if(!data.fishing.rods.includes('normal'))data.fishing.rods.unshift('normal');data.fishing.rod=FISHING_RODS[data.fishing.rod]&&data.fishing.rods.includes(data.fishing.rod)?data.fishing.rod:'normal';data.fishing.lastCastAt=Number.isFinite(data.fishing.lastCastAt)?Math.max(0,data.fishing.lastCastAt):0;data.fishing.extraordinaryMisses=Number.isFinite(data.fishing.extraordinaryMisses)?Math.max(0,Math.min(40,Math.floor(data.fishing.extraordinaryMisses))):0;
+ data.fishing=(data.fishing&&typeof data.fishing==='object')?data.fishing:{};data.fishing.rods=Array.isArray(data.fishing.rods)?[...new Set(data.fishing.rods.filter(id=>FISHING_RODS[id]))]:['normal'];if(!data.fishing.rods.includes('normal'))data.fishing.rods.unshift('normal');data.fishing.rod=FISHING_RODS[data.fishing.rod]&&data.fishing.rods.includes(data.fishing.rod)?data.fishing.rod:'normal';data.fishing.lastCastAt=Number.isFinite(data.fishing.lastCastAt)?Math.max(0,data.fishing.lastCastAt):0;data.fishing.extraordinaryMisses=Number.isFinite(data.fishing.extraordinaryMisses)?Math.max(0,Math.min(40,Math.floor(data.fishing.extraordinaryMisses))):0;data.fishing.pendingCatch=data.fishing.pendingCatch&&FISH_TYPES[data.fishing.pendingCatch.id]&&Number.isFinite(data.fishing.pendingCatch.readyAt)?{id:data.fishing.pendingCatch.id,readyAt:data.fishing.pendingCatch.readyAt,isExtraordinary:!!data.fishing.pendingCatch.isExtraordinary,rod:data.fishing.pendingCatch.rod&&FISHING_RODS[data.fishing.pendingCatch.rod]?data.fishing.pendingCatch.rod:data.fishing.rod}:null;
  data.fishWarehouse=(data.fishWarehouse&&typeof data.fishWarehouse==='object')?data.fishWarehouse:{};for(const id of Object.keys(FISH_TYPES))data.fishWarehouse[id]=Number.isFinite(data.fishWarehouse[id])?Math.max(0,Math.floor(data.fishWarehouse[id])):0;
  data.meatWarehouse=(data.meatWarehouse&&typeof data.meatWarehouse==='object')?data.meatWarehouse:{};
  data.meatLocks=(data.meatLocks&&typeof data.meatLocks==='object')?data.meatLocks:{};
@@ -1746,17 +1746,44 @@ function selectFishingRod(id){if(!farmWriteAllowed())return;
  if(!FISHING_RODS[id]||!state.fishing.rods.includes(id))return;
  state.fishing.rod=id;remember(`Equipou a vara ${FISHING_RODS[id].name}.`);markDirty();refresh();notify(`Vara ${FISHING_RODS[id].name} equipada.`);
 }
+function syncPendingFishing(){
+ if(!state||!farmWriteAllowed(false))return false;
+ const now=Date.now();let changed=false;
+ const river=state.fishing?.pendingCatch;
+ if(river&&river.readyAt<=now&&FISH_TYPES[river.id]){
+  const fish=FISH_TYPES[river.id];state.fishing.pendingCatch=null;
+  state.fishWarehouse[river.id]=(state.fishWarehouse[river.id]||0)+1;
+  state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
+  discoverItem('rio',river.id,fish.name,fish.icon);awardXP(fish.xp,'pescaria');awardSpecialistXP('fisher',fish.xp);
+  const rod=FISHING_RODS[river.rod]||FISHING_RODS.normal;
+  remember((river.isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
+  changed=true;notify((river.isExtraordinary?'✨🎣 PESCA EXTRAORDINÁRIA! ':'🎣 PEIXE PESCADO! ')+fish.icon+' '+fish.name+' · '+fish.rarity+' · +'+fish.xp+' XP!');
+ }
+ const sea=state.seaFishing?.pendingCatch;
+ if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
+  const item=SEA_TYPES[sea.id],quantity=sea.quantity||1;state.seaFishing.pendingCatch=null;
+  state.seaWarehouse[sea.id]=(state.seaWarehouse[sea.id]||0)+quantity;
+  state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
+  discoverItem('mar',sea.id,item.name,item.icon);awardXP(item.xp,'pesca no mar');awardSpecialistXP('fisher',item.xp);
+  const net=SEA_NETS[sea.net]||SEA_NETS.normal;
+  remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'.');
+  changed=true;notify((sea.isExtraordinary?'✨🌊 PESCA EXTRAORDINÁRIA! ':'🌊 PEIXE PESCADO! ')+item.icon+' '+item.name+' · '+(quantity>1?quantity+' unidades · ':'')+item.rarity+' · +'+item.xp+' XP!');
+ }
+ if(changed){markDirty();refresh()}
+ return changed;
+}
 function updateFishingCooldownButtons(){
+ syncPendingFishing();
  const now=Date.now(),body=$('modal-body');if(!body)return;
  const fishing=body.querySelector('[data-cast-fish]');if(fishing){
-  const remaining=Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
+  const pending=state.fishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
   fishing.disabled=writeLocked||waiting;
-  fishing.textContent=waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
+  fishing.textContent=pending?'🐟 Peixe fisgado · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
  }
  const sea=body.querySelector('[data-cast-sea]');if(sea){
-  const remaining=Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
+  const pending=state.seaFishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
   sea.disabled=writeLocked||waiting||farmLevel()<22;
-  sea.textContent=waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
+  sea.textContent=pending?'🐟 Captura na rede · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
  }
 }
 function weightedFishingChoice(entries,levelKey,level){
@@ -1787,14 +1814,11 @@ function castFishingRod(){
  const isExtraordinary=!!fishId;
  if(!fishId)fishId=weightedFishingChoice(available,'minRod',rod.order);
  if(!fishId)return notify('Nenhum peixe disponível para este equipamento.');
- const fish=FISH_TYPES[fishId];discoverItem('rio',fishId,fish.name,fish.icon);
  state.fishing.lastCastAt=now;
  state.fishing.extraordinaryMisses=isExtraordinary?0:Math.min(40,misses+1);
- state.fishWarehouse[fishId]=(state.fishWarehouse[fishId]||0)+1;state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
- awardXP(fish.xp,'pescaria');awardSpecialistXP('fisher',fish.xp);
- remember((isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
+ state.fishing.pendingCatch={id:fishId,readyAt:now+FISH_COOLDOWN,isExtraordinary,rod:state.fishing.rod};
  markDirty();refresh();
- notify((isExtraordinary?'✨🎣 PESCA EXTRAORDINÁRIA! ':'🎣 Você pescou ')+fish.name+' · '+fish.rarity+' · +'+fish.xp+' XP!');
+ notify('🎣 Linha lançada! Aguarde a contagem para descobrir o peixe.');
 }
 
 function buyGrill(){if(writeLocked)return notify('Salvamento protegido.');if(state.grill.owned)return;if(state.coins<1000)return notify('A churrasqueira custa 1.000 moedas amarelas.');state.coins-=1000;state.grill.owned=true;remember('Comprou a churrasqueira desmontada.');markDirty();renderFarmAddons();refresh();notify('Churrasqueira comprada! Agora reúna os componentes para montá-la.')}
@@ -2315,14 +2339,12 @@ function castSeaNet(){
  const isExtraordinary=!!id;
  if(!id)id=weightedFishingChoice(available,'minNet',net.order);
  if(!id)return notify('Nenhum item disponível para esta rede.');
- const item=SEA_TYPES[id];discoverItem('mar',id,item.name,item.icon);
  state.seaFishing.lastCastAt=now;
  state.seaFishing.extraordinaryMisses=isExtraordinary?0:Math.min(50,misses+1);
- const catchQty=id==='caviar'?3:1;state.seaWarehouse[id]=(state.seaWarehouse[id]||0)+catchQty;state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
- awardXP(item.xp,'pesca no mar');awardSpecialistXP('fisher',item.xp);
- remember((isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'.');
+ const catchQty=id==='caviar'?3:1;
+ state.seaFishing.pendingCatch={id,readyAt:now+SEA_FISH_COOLDOWN,isExtraordinary,quantity:catchQty,net:state.seaFishing.net};
  markDirty();refresh();
- notify((isExtraordinary?'✨🌊 PESCA EXTRAORDINÁRIA! ':'🌊 ')+item.name+' capturado · '+(catchQty>1?catchQty+' unidades · ':'')+item.rarity+' · +'+item.xp+' XP!');
+ notify('🌊 Rede lançada! Aguarde a contagem para descobrir a captura.');
 }
 function craftWoodItem(id){if(writeLocked)return notify('Salvamento protegido.');const cfg=WOODWORK_RECIPES[id];if(!cfg)return;const have=state.woodWarehouse[cfg.wood]||0;if(have<cfg.qty)return notify('Madeira insuficiente: '+cfg.qty+' unidades de '+ingredientName('wood',cfg.wood)+'.');state.carpentry=state.carpentry||{queue:[]};if(state.carpentry.queue.length>=100)return notify('A fila da marcenaria atingiu o limite de 100 fabricações.');state.woodWarehouse[cfg.wood]-=cfg.qty;const now=Date.now(),startedAt=state.carpentry.queue.filter(j=>j.readyAt>now).reduce((m,j)=>Math.max(m,j.readyAt),now),minutes=cfg.minutes||Math.max(25,20+cfg.qty*9+(cfg.lakeBridge?35:0)),readyAt=startedAt+minutes*60000;state.carpentry.queue.push({id:'wood-'+now+'-'+Math.floor(Math.random()*100000),recipe:id,startedAt,readyAt,xpEarned:12,woodConsumed:cfg.qty});remember('Iniciou a fabricação de '+cfg.name+' na marcenaria.');markDirty();refresh();notify(cfg.name+' entrou na fila. Aguarde '+minutes+' minutos para recolher.')}
 function collectWoodwork(){if(writeLocked)return notify('Salvamento protegido.');const now=Date.now(),ready=(state.carpentry?.queue||[]).filter(j=>j.readyAt<=now);if(!ready.length)return notify('Ainda não há móveis ou itens prontos para recolher.');let xp=0;for(const job of ready){if(!WOODWORK_RECIPES[job.recipe])continue;state.furnitureWarehouse[job.recipe]=(state.furnitureWarehouse[job.recipe]||0)+1;discoverItem('marcenaria',job.recipe,WOODWORK_RECIPES[job.recipe].name,'🪚');xp+=job.xpEarned||12;}state.carpentry.queue=state.carpentry.queue.filter(j=>j.readyAt>now);awardSpecialistXP('carpenter',xp);remember('Recolheu '+ready.length+' item(ns) fabricado(s) na marcenaria.');markDirty();refresh();notify(ready.length+' item(ns) recolhido(s) · +'+xp+' XP de Marceneiro.')}
