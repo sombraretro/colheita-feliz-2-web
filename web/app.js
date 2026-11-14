@@ -452,7 +452,7 @@ const isBirdType=type=>BIRD_TYPES.includes(type);
 const AVIARY_COLUMNS=6;
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,coelho:.55,porco:.82,cabra:.78,ovelha:.88,burro:.94,vaca:1.00,bufala:1.02,boi:1.02,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','manga','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
-const ORCHARD_SLOTS=[[2185,585],[2470,605],[2760,585],[3050,610],[2330,745],[2615,765],[2905,745],[3190,765]];
+const ORCHARD_SLOTS=[[2185,365],[2470,385],[2760,365],[3050,390],[2330,525],[2615,545],[2905,525],[3190,545]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Rio da fazenda',icon:'🌊',price:9000,level:12},haras:{name:'Haras',icon:'🐎',price:16000,greenPrice:25,level:20}};
 function starterAnimals(){return [
  {id:'dog-1',type:'cachorro',name:'Cachorro',breed:'classico',slot:-1,status:'hungry',stage:1,readyAt:0,guardUntil:0},
@@ -909,7 +909,7 @@ const ground=`<defs>
   </g>
  </g>
 </g>
-<!-- Cenário panorâmico do Pomar e Mata: sobreposição gradual à direita da Fazenda. -->
+<!-- Cenário panorâmico do Pomar e Mata: continuação texturizada da Fazenda. -->
 <g id="nature-landscape" pointer-events="none">
  <defs>
   <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0">
@@ -920,10 +920,11 @@ const ground=`<defs>
    <stop offset="1" stop-color="white" stop-opacity="1"/>
   </linearGradient>
   <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4400" height="2475">
-   <rect x="1300" y="-250" width="4200" height="2362" fill="url(#nature-farm-seam-gradient)"/>
+   <rect x="1300" y="-250" width="4400" height="2475" fill="url(#nature-farm-seam-gradient)"/>
+   <rect x="1245" y="175" width="550" height="630" fill="black"/>
   </mask>
  </defs>
- <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/d73c12a45a2d047832826d8f935d13ba80ec4eb4/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4400" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4400" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
@@ -964,8 +965,7 @@ function blocked(x,y){
  return false;
 }
 const treePlacements=[
- 
- [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
+ [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
 for(let i=0;i<330;i++){
@@ -1630,36 +1630,36 @@ function renderHarasArea(){
 function renderOrchardArea(){
   if(!state?.expansions?.orchard)return '';
   let html=`<g id="orchard-ground" pointer-events="none">
-   <!-- Canteiro de pomar compacto, com contorno regular e livre da estrada. -->
-   <path d="M2075 555Q2075 465 2185 450L3125 450Q3240 465 3250 565L3240 755Q3230 835 3130 850L2185 850Q2075 835 2065 755Z" fill="#75452f" stroke="#51301f" stroke-width="17" stroke-linejoin="round"/>
-   <path d="M2095 558Q2095 485 2195 470L3115 470Q3220 485 3230 570L3220 745Q3210 815 3120 830L2195 830Q2095 815 2085 745Z" fill="#9a6240" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
-   <path d="M2120 625Q2360 590 2540 620T2900 615T3200 625M2110 745Q2350 715 2550 745T2910 740T3210 750" fill="none" stroke="#68412d" stroke-width="12" stroke-linecap="round" opacity=".28"/>
-   <path d="M2150 570Q2370 550 2560 575T2920 570T3180 580M2140 790Q2370 770 2570 795T2930 790T3170 800" fill="none" stroke="#d2a078" stroke-width="5" stroke-linecap="round" opacity=".32"/>
-   <g fill="#6f4933" opacity=".34"><ellipse cx="2220" cy="700" rx="18" ry="6"/><ellipse cx="2510" cy="650" rx="14" ry="5"/><ellipse cx="2810" cy="700" rx="20" ry="6"/><ellipse cx="3110" cy="670" rx="17" ry="5"/><ellipse cx="2350" cy="805" rx="19" ry="5"/><ellipse cx="2940" cy="810" rx="16" ry="5"/></g>
+   <!-- Pomar reposicionado para cima, com afastamento claro da estrada e de sua cerca. -->
+   <path d="M2075 335Q2075 245 2185 230L3125 230Q3240 245 3250 345L3240 535Q3230 615 3130 630L2185 630Q2075 615 2065 535Z" fill="#75452f" stroke="#51301f" stroke-width="17" stroke-linejoin="round"/>
+   <path d="M2095 338Q2095 265 2195 250L3115 250Q3220 265 3230 350L3220 525Q3210 595 3120 610L2195 610Q2095 595 2085 525Z" fill="#9a6240" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
+   <path d="M2120 405Q2360 370 2540 400T2900 395T3200 405M2110 525Q2350 495 2550 525T2910 520T3210 530" fill="none" stroke="#68412d" stroke-width="12" stroke-linecap="round" opacity=".28"/>
+   <path d="M2150 350Q2370 330 2560 355T2920 350T3180 360M2140 570Q2370 550 2570 575T2930 570T3170 580" fill="none" stroke="#d2a078" stroke-width="5" stroke-linecap="round" opacity=".32"/>
+   <g fill="#6f4933" opacity=".34"><ellipse cx="2220" cy="480" rx="18" ry="6"/><ellipse cx="2510" cy="430" rx="14" ry="5"/><ellipse cx="2810" cy="480" rx="20" ry="6"/><ellipse cx="3110" cy="450" rx="17" ry="5"/><ellipse cx="2350" cy="585" rx="19" ry="5"/><ellipse cx="2940" cy="590" rx="16" ry="5"/></g>
    <!-- Cerca regular: lateral esquerda com abertura para porteira. -->
    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M2070 555Q2075 440 2190 425H3120Q3260 445 3270 565" stroke="#523725" stroke-width="16"/>
-    <path d="M2070 555Q2075 440 2190 425H3120Q3260 445 3270 565" stroke="#bd8954" stroke-width="8"/>
-    <path d="M2070 710V755Q2080 865 2190 875H3130Q3250 860 3260 755V565" stroke="#523725" stroke-width="16"/>
-    <path d="M2070 710V755Q2080 865 2190 875H3130Q3250 860 3260 755V565" stroke="#bd8954" stroke-width="8"/>
-    <path d="M2070 555V610M2070 690V710" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 335Q2075 220 2190 205H3120Q3260 225 3270 345" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 335Q2075 220 2190 205H3120Q3260 225 3270 345" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 490V535Q2080 645 2190 655H3130Q3250 640 3260 535V345" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 490V535Q2080 645 2190 655H3130Q3250 640 3260 535V345" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 335V390M2070 470V490" stroke="#523725" stroke-width="16"/>
    </g>
    <g fill="#70482d" stroke="#4b3324" stroke-width="4">
-    <path d="M2058 530l25-3 7 78-25 3Z"/><path d="M2058 675l25-3 7 78-25 3Z"/>
-    <path d="M2175 395l27-2 4 76-27 2Z"/><path d="M2400 395l27-2 2 76-27 2Z"/>
-    <path d="M2630 395l27-2 2 76-27 2Z"/><path d="M2860 395l27-2 2 76-27 2Z"/>
-    <path d="M3105 395l27-2 5 76-27 2Z"/><path d="M3255 535l27-2 6 78-27 2Z"/>
-    <path d="M3245 735l27 2-6 78-27-2Z"/><path d="M3110 835l27 2-4 72-27-2Z"/>
-    <path d="M2870 840l27 1-2 72-27-1Z"/><path d="M2630 840l27 1-1 72-27-1Z"/>
-    <path d="M2390 838l27 2-3 72-27-2Z"/><path d="M2175 830l27 2-5 72-27-2Z"/>
+    <path d="M2058 310l25-3 7 78-25 3Z"/><path d="M2058 455l25-3 7 78-25 3Z"/>
+    <path d="M2175 175l27-2 4 76-27 2Z"/><path d="M2400 175l27-2 2 76-27 2Z"/>
+    <path d="M2630 175l27-2 2 76-27 2Z"/><path d="M2860 175l27-2 2 76-27 2Z"/>
+    <path d="M3105 175l27-2 5 76-27 2Z"/><path d="M3255 315l27-2 6 78-27 2Z"/>
+    <path d="M3245 515l27 2-6 78-27-2Z"/><path d="M3110 615l27 2-4 72-27-2Z"/>
+    <path d="M2870 620l27 1-2 72-27-1Z"/><path d="M2630 620l27 1-1 72-27-1Z"/>
+    <path d="M2390 618l27 2-3 72-27-2Z"/><path d="M2175 610l27 2-5 72-27-2Z"/>
    </g>
-   <g transform="translate(2070 635)">
+   <g transform="translate(2070 415)">
     <path d="M0 -16L90 -10V45L0 38Z" fill="#70472d" stroke="#4b3324" stroke-width="6"/>
     <path d="M8 -8L82 -3M8 8L82 13M8 24L82 29" stroke="#c18a5c" stroke-width="7" stroke-linecap="round"/>
     <path d="M8 -10L82 35" stroke="#e0b77d" stroke-width="6"/>
     <circle cx="72" cy="10" r="4" fill="#f1d18e"/>
    </g>
-   <g fill="#d5a16a" opacity=".9"><path d="M2060 532l20-2 2 10-20 2Z"/><path d="M2178 397l21-2 1 10-21 2Z"/><path d="M2403 397l21-2 1 10-21 2Z"/><path d="M2633 397l21-2 1 10-21 2Z"/><path d="M2863 397l21-2 1 10-21 2Z"/><path d="M3108 397l21-2 1 10-21 2Z"/></g>
+   <g fill="#d5a16a" opacity=".9"><path d="M2060 312l20-2 2 10-20 2Z"/><path d="M2178 177l21-2 1 10-21 2Z"/><path d="M2403 177l21-2 1 10-21 2Z"/><path d="M2633 177l21-2 1 10-21 2Z"/><path d="M2863 177l21-2 1 10-21 2Z"/><path d="M3108 177l21-2 1 10-21 2Z"/></g>
   </g>`;
   html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
   return html;
@@ -1815,7 +1815,7 @@ function updateNotificationBadges(){
    marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
    marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
    marker(45,-10,'🐦',readyBirds,'Produção pronta no viveiro')+
-   marker(2670,375,'🍎',counts.orchard,'Frutas prontas no pomar')+
+   marker(2670,155,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
  }
 }
