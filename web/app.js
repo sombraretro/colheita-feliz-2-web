@@ -2673,7 +2673,7 @@ function renderSeaLandscapeMarkup(){
    <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
   </defs>
   <rect x="3000" y="-700" width="11000" height="2500" fill="url(#sea-sky-gradient)"/>
-  <path d="M6000 270Q6500 210 6900 255T7700 245T8500 250T9300 230T11000 260V500H6000Z" fill="url(#sea-horizon-glow)"/>
+  <path d="M3000 270Q3500 215 4000 255T5000 245T6000 250T7000 245T8000 250T9000 240T10000 250T11000 230T12000 250T13000 235T14000 260V500H3000Z" fill="url(#sea-horizon-glow)"/>
   <g fill="#fff" opacity=".56">
    <path d="M6600 105Q6640 65 6690 91Q6730 42 6790 78Q6845 66 6865 112Q6900 145 6850 155H6650Q6590 150 6600 105Z"/>
    <path d="M9100 145Q9140 104 9190 126Q9230 79 9290 111Q9340 99 9365 144Q9395 174 9350 185H9150Q9090 180 9100 145Z"/>
@@ -2693,8 +2693,8 @@ function renderSeaLandscapeMarkup(){
   <g fill="none" stroke="#455e5b" stroke-width="9" stroke-linecap="round" opacity=".72">
    <path d="M7600 170Q7640 130 7680 170Q7720 130 7760 170M7920 225Q7960 185 8000 225Q8040 185 8080 225M10100 165Q10140 125 10180 165Q10220 125 10260 165"/>
   </g>
-  <path d="M6000 475Q6500 465 6900 477T7700 474T8500 478T9300 470T11000 476V1800H6000Z" fill="url(#sea-water-gradient)"/>
-  <path d="M6000 484Q6600 472 7100 486T8100 482T9100 481T11000 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
+  <path d="M3000 480Q3500 465 4000 478T5000 474T6000 478T7000 470T8000 476T9000 472T10000 478T11000 470T12000 476T13000 474T14000 480V1800H3000Z" fill="url(#sea-water-gradient)"/>
+  <path d="M3000 484Q3600 472 4200 486T5400 482T6600 481T7800 484T9000 481T10200 482T11400 480T12600 484T14000 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
   <g fill="none" stroke-linecap="round">
    <g stroke="#bcecf0" opacity=".42" stroke-width="7">
     <path d="M6350 570Q6510 552 6660 565M6900 625Q7070 604 7230 619M7620 555Q7780 540 7940 555M8450 655Q8650 631 8830 649M9400 570Q9560 550 9720 565M9900 735Q10070 716 10230 731"/>
