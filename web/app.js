@@ -444,8 +444,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:-550,y:820,w:80,h:60},{x:-470,y:820,w:80,h:60},{x:-390,y:820,w:80,h:60},{x:-310,y:820,w:80,h:60},{x:-230,y:820,w:80,h:60},
-  {x:-550,y:900,w:80,h:60},{x:-470,y:900,w:80,h:60},{x:-390,y:900,w:80,h:60},{x:-310,y:900,w:80,h:60},{x:-230,y:900,w:80,h:60}
+  {x:-625,y:785,w:88,h:66},{x:-525,y:785,w:88,h:66},{x:-425,y:785,w:88,h:66},{x:-325,y:785,w:88,h:66},{x:-225,y:785,w:88,h:66},
+  {x:-625,y:875,w:88,h:66},{x:-525,y:875,w:88,h:66},{x:-425,y:875,w:88,h:66},{x:-325,y:875,w:88,h:66},{x:-225,y:875,w:88,h:66}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -812,13 +812,30 @@ function flower(x,y,s=1,color='#ffe8c3'){let a='';for(let i=0;i<5;i++){const ang
 function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#68452c" stroke-width="15" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-30}L${b[0]} ${b[1]-30}M${a[0]} ${a[1]-10}L${b[0]} ${b[1]-10}" fill="none" stroke="#b77a43" stroke-width="9" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-34}L${b[0]} ${b[1]-34}M${a[0]} ${a[1]-14}L${b[0]} ${b[1]-14}" fill="none" stroke="#e8bd79" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="14" ry="7" fill="#31551e" opacity=".28"/><path d="M${x-12} ${y-55}L${x-10} ${y-65}L${x+1} ${y-72}L${x+12} ${y-65}L${x+13} ${y+8}L${x-11} ${y+8}Z" fill="#85512f" stroke="#57391f" stroke-width="3.5"/><path d="M${x-10} ${y-55}L${x-8} ${y-64}L${x+1} ${y-69}L${x+10} ${y-63}L${x+10} ${y+3}L${x-8} ${y+3}Z" fill="#b87943"/><path d="M${x-8} ${y-55}L${x+1} ${y-63}L${x+9} ${y-55}" fill="none" stroke="#e8bd79" stroke-width="3.5" stroke-linecap="round"/><path d="M${x-4} ${y-43}V${y-2}" stroke="#d59a5b" stroke-width="3" opacity=".8"/><ellipse cx="${x+1}" cy="${y-29}" rx="3" ry="5" fill="#71452a" opacity=".7"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none"><path d="${points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y+4}`).join(' ')}" fill="none" stroke="#6f5836" stroke-width="20" stroke-linecap="round" opacity=".14"/>${rails}${posts}</g>`}
+const ROAD_POINTS=[[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[360,1020],[445,990],[490,950],[532,890],[700,920],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
+function roadOffsetPoints(side,spacing=118){
+ const out=[];
+ for(let i=1;i<ROAD_POINTS.length;i++){
+  const a=ROAD_POINTS[i-1],b=ROAD_POINTS[i],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*side*70,ny=dx/len*side*70,steps=Math.max(1,Math.ceil(len/spacing));
+  for(let j=0;j<steps;j++){const t=j/steps;out.push([a[0]+dx*t+nx,a[1]+dy*t+ny])}
+ }
+ const a=ROAD_POINTS[ROAD_POINTS.length-2],b=ROAD_POINTS[ROAD_POINTS.length-1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1;
+ out.push([b[0]-dy/len*side*70,b[1]+dx/len*side*70]);return out;
+}
+function roadFenceMarkup(side){
+ const pts=roadOffsetPoints(side),isGate=p=>side<0&&p[0]>1135&&p[0]<1260;
+ const segments=[];let current=[];
+ for(const p of pts){if(isGate(p)){if(current.length>1)segments.push(current);current=[]}else current.push(p)}
+ if(current.length>1)segments.push(current);
+ const paths=segments.map(seg=>'M'+seg.map(p=>p.map(v=>v.toFixed(1)).join(' ')).join('L')).join(' ');
+ const posts=pts.filter(p=>!isGate(p)).map(([x,y])=>'<path d="M'+x.toFixed(1)+' '+(y-17).toFixed(1)+'v34" stroke="#624a32" stroke-width="5" stroke-linecap="round"/><path d="M'+(x-1).toFixed(1)+' '+(y-15).toFixed(1)+'v30" stroke="#b18a5c" stroke-width="2" opacity=".75"/>').join('');
+ return '<g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="'+paths+'" stroke="#514c43" stroke-width="3.2" opacity=".95"/><path d="'+paths+'" stroke="#c5b69a" stroke-width="1" stroke-dasharray="2 10" opacity=".85"/></g><g>'+posts+'</g>';
+}
 function brickWalkwayMarkup(){
- const roads=[
- 'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
- 'M532 890C420 1010 120 1040 -300 1035C-700 1025 -1050 1030 -1320 1020',
- 'M532 890C510 830 500 760 500 720'];
- const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
- return `<g id="farm-road-network" pointer-events="none">${layers(94,'#77512e',.10)}${layers(82,'#9b7448',.28)}<g class="road-junctions">${[[532,890],[1390,900],[500,720]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="38" fill="url(#farmRoad)" stroke="#9b7448" stroke-width="3" opacity=".98"/>`).join('')}</g>${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>`).join('')}</g>`;
+ const road='M'+ROAD_POINTS.map(p=>p.join(' ')).join('L');
+ const layers=(w,c,o=1)=>'<path d="'+road+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round" opacity="'+o+'"/>';
+ const gate='<g transform="translate(1195 850) rotate(-5)"><path d="M-59 -24V24M59 -24V24" stroke="#52371f" stroke-width="13" stroke-linecap="round"/><path d="M-59 -22V22M59 -22V22" stroke="#b77c45" stroke-width="8"/><path d="M-55 -15H55M-55 12H55" stroke="#704a2d" stroke-width="9" stroke-linecap="round"/><path d="M-49 -15L49 12" stroke="#e2b777" stroke-width="3.5" stroke-linecap="round"/><circle cx="-59" cy="-20" r="4" fill="#e4c18b"/><circle cx="59" cy="-20" r="4" fill="#e4c18b"/></g>';
+ return '<g id="farm-road-network" pointer-events="none">'+layers(94,'#77512e',.10)+layers(82,'#9b7448',.28)+layers(72,'#9b7448')+layers(62,'url(#farmRoad)')+'<path d="'+road+'" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>'+roadFenceMarkup(-1)+roadFenceMarkup(1)+gate+'</g>';
 }
 function scheduleAnimalBlinking(){
  document.querySelectorAll('.animal-wrap').forEach(node=>{
@@ -851,8 +868,8 @@ const ground=`<defs>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
- <path d="M1268 208H1772V772H1268Z" fill="#9a754f"/>
- <path d="M1272 212H1768V768H1272Z" fill="#a7835d" opacity=".48"/>
+ <path d="M1268 200H1772V772H1268Z" fill="#9a754f"/>
+ <path d="M1272 204H1768V768H1272Z" fill="#a7835d" opacity=".48"/>
  <path d="M1280 300Q1370 270 1450 300T1610 294T1760 315L1760 390Q1660 365 1570 390T1390 385T1280 405Z" fill="#806044" opacity=".18"/>
  <path d="M1280 575Q1380 545 1470 570T1635 565T1760 580V690Q1650 665 1550 692T1370 680T1280 700Z" fill="#77563b" opacity=".16"/>
  <g fill="#6f5239" opacity=".28"><ellipse cx="1350" cy="335" rx="24" ry="7"/><ellipse cx="1585" cy="265" rx="18" ry="5"/><ellipse cx="1695" cy="470" rx="28" ry="7"/><ellipse cx="1420" cy="610" rx="22" ry="6"/><ellipse cx="1640" cy="725" rx="26" ry="7"/></g>
@@ -866,8 +883,8 @@ let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
 const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-1400,350],[-800,620],[-1400,890],[-2000,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[420,1010],[120,1040],[-300,1035],[-700,1025],[-1050,1030],[-1320,1020]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
-function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
+const roadLines=[ROAD_POINTS];
+function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<112)return true}return false}
 function blocked(x,y){
  if(x>1250&&x<1790&&y>190&&y<790)return true;
  if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
@@ -915,8 +932,8 @@ for(let i=0;i<95;i++){
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
 // Bases orgânicas de grama substituem as sombras dos prédios.
-scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
-for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
+scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
+for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
 scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,55,430,350)}</g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 15)">
@@ -940,9 +957,8 @@ let front='';
 front+=fencePath([[1260,780],[1430,780]],'front');
 front+=fencePath([[1560,780],[1780,780]],'front');
 front+=`<g transform="translate(1430 780)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
-front+=`<g transform="translate(1495 675) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
-// Abrigo de ferramentas movido para um recuo fora da estrada.
-front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
+front+=`<g data-farm-sign="true" tabindex="0" role="button" aria-label="Abrir e editar o nome da fazenda" style="cursor:pointer" transform="translate(1080 770)"><ellipse cx="105" cy="91" rx="105" ry="13" fill="#294d22" opacity=".28"/><path d="M42 20V91M168 20V91" stroke="#52371f" stroke-width="13" stroke-linecap="round"/><path d="M42 20V89M168 20V89" stroke="#b77c45" stroke-width="8" stroke-linecap="round"/><path d="M-4 -42H214V37H-4Z" fill="#704728" stroke="#49301e" stroke-width="7" stroke-linejoin="round"/><path d="M5 -34H205V29H5Z" fill="#e4bd78" stroke="#bd8c4b" stroke-width="4"/><path d="M13 -27H197V22H13Z" fill="#f3dfb5" stroke="#8b5c32" stroke-width="2"/><text id="farm-sign-label" x="105" y="4" text-anchor="middle" font-size="18" font-weight="900" textLength="176" lengthAdjust="spacingAndGlyphs" fill="#60401f">Minha fazenda</text><path d="M-4 -42L105 -60L214 -42" fill="#9b6738" stroke="#49301e" stroke-width="6" stroke-linejoin="round"/><path d="M105 -54L105 -43" stroke="#e9c987" stroke-width="3"/></g>`;;
+
 for(let i=0;i<38;i++){
  const x=i<19?-320+seedNoise(i*7)*250:1740+seedNoise(i*19)*240,y=i<19?520+seedNoise(i*27)*400:420+seedNoise(i*12)*250;
  if(blocked(x,y))continue;
@@ -1527,18 +1543,21 @@ function orchardTreeMarkup(slot,tree){
 }
 function renderHarasArea(){
  if(!state?.expansions?.haras)return '';
- const points='-940,-375 -580,-375 -515,-310 -515,-180 -580,-115 -940,-115 -1005,-180 -1005,-310';
- const posts=[[-940,-375],[-580,-375],[-515,-310],[-515,-180],[-580,-115],[-940,-115],[-1005,-180],[-1005,-310]];
- const postMarkup=posts.map(p=>'<rect x="'+(p[0]-8)+'" y="'+(p[1]-15)+'" width="16" height="32" rx="3"/>').join('');
+ const outline='M-1030 -315Q-1030 -385 -955 -385H-465Q-390 -385 -390 -315V-145Q-390 -75 -465 -75H-955Q-1030 -75 -1030 -145Z';
+ const posts=[[-1015,-315],[-955,-385],[-820,-385],[-650,-385],[-485,-385],[-405,-315],[-405,-145],[-485,-75],[-650,-75],[-820,-75],[-955,-75],[-1015,-145]];
+ const postMarkup=posts.map(([x,y])=>'<g transform="translate('+x+' '+y+')"><path d="M0 -20V23" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M0 -19V21" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M-4 -17V14" stroke="#e2b777" stroke-width="2.5" opacity=".8"/></g>').join('');
  return '<g id="haras-area" pointer-events="none" transform="translate(380 1080)">'+
-  '<polygon points="'+points+'" fill="#83ad50" stroke="#624326" stroke-width="17" stroke-linejoin="round"/>'+
-  '<polygon points="-922,-357 -598,-357 -533,-292 -533,-198 -598,-133 -922,-133 -987,-198 -987,-292" fill="#b99a6d" opacity=".42" stroke="#d8bc8b" stroke-width="5" stroke-linejoin="round"/>'+
-  '<path d="M-940 -375L-580 -375L-515 -310L-515 -180L-580 -115L-940 -115L-1005 -180L-1005 -310Z" fill="none" stroke="#a66f3d" stroke-width="13" stroke-linejoin="round"/>'+
-  '<path d="M-940 -355L-580 -355L-535 -310L-535 -180L-580 -135L-940 -135L-985 -180L-985 -310Z" fill="none" stroke="#d5a36a" stroke-width="9" stroke-linejoin="round"/>'+
-  '<path d="M-1005 -245H-985M-535 -245H-515M-760 -135V-115" stroke="#754b2a" stroke-width="9"/>'+
-  '<g fill="#87572f" stroke="#58391f" stroke-width="4">'+postMarkup+'</g>'+
-  '<g transform="translate(-760 -382)"><path d="M-90 0L0 -42L90 0V42H-90Z" fill="#9a6035" stroke="#5e3c23" stroke-width="6"/><path d="M-73 3H73V31H-73Z" fill="#f0d49a" stroke="#80502d" stroke-width="4"/><text y="24" text-anchor="middle" font-size="25" font-weight="900" fill="#70451f">HARAS</text></g>'+
-  '<g transform="translate(-760 -118)"><path d="M-55 0V-27M55 0V-27" stroke="#754b2a" stroke-width="10"/><path d="M-55 -27H55M-55 -7H55" stroke="#c28a50" stroke-width="8"/></g>'+
+  '<path d="'+outline+'" fill="#6e9e45" stroke="#426b31" stroke-width="20" stroke-linejoin="round"/>'+
+  '<path d="M-1000 -315Q-985 -355 -930 -355H-490Q-435 -355 -420 -315V-145Q-435 -105 -490 -105H-930Q-985 -105 -1000 -145Z" fill="#8bb957" stroke="#c3d98a" stroke-width="5"/>'+
+  '<path d="M-965 -270Q-700 -320 -455 -270M-965 -180Q-700 -130 -455 -180" fill="none" stroke="#a9c86b" stroke-width="5" opacity=".55"/>'+
+  '<ellipse cx="-700" cy="-230" rx="205" ry="76" fill="#c3a174" opacity=".9" stroke="#967047" stroke-width="7"/>'+
+  '<ellipse cx="-700" cy="-230" rx="184" ry="57" fill="none" stroke="#e3c79a" stroke-width="4" stroke-dasharray="10 12" opacity=".85"/>'+
+  '<path d="'+outline+'" fill="none" stroke="#6b4528" stroke-width="13" stroke-linejoin="round"/>'+
+  '<path d="M-1030 -300Q-700 -350 -390 -300M-1030 -160Q-700 -110 -390 -160" fill="none" stroke="#d5a36a" stroke-width="9" stroke-linecap="round"/>'+
+  '<path d="M-1030 -245Q-700 -295 -390 -245" fill="none" stroke="#d5a36a" stroke-width="7" stroke-linecap="round"/>'+
+  '<g>'+postMarkup+'</g>'+
+  '<g transform="translate(-710 -405)"><path d="M-115 0L-92 -45H92L115 0V45H-115Z" fill="#744a2b" stroke="#49301e" stroke-width="6"/><path d="M-99 2H99V32H-99Z" fill="#f0d49a" stroke="#956331" stroke-width="4"/><text y="26" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="2" fill="#70451f">HARAS</text></g>'+
+  '<g transform="translate(-710 -77)"><path d="M-58 0V-43M58 0V-43" stroke="#52371f" stroke-width="17"/><path d="M-58 -43V-2M58 -43V-2" stroke="#b77c45" stroke-width="10"/><path d="M-53 -34L53 -34M-53 -10H53" stroke="#704a2d" stroke-width="10" stroke-linecap="round"/><path d="M-48 -34L48 -10" stroke="#e2b777" stroke-width="3"/></g>'+
  '</g>';
 }
 function renderOrchardArea(){
@@ -1772,7 +1791,7 @@ function feedAnimal(id,mode='legacy'){if(writeLocked)return notify('Salvamento p
 function collectAnimal(id){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const a=state.animals.find(x=>x.id===id);if(!a)return;const cfg=ANIMALS[a.type];if(cfg?.role==='horse')return notify('Cavalos não produzem itens. Alimente-os para crescer ou venda-os.');if(isDualPurposeAnimal(a.type)){if(a.productionStatus!=='ready')return;const amount=cfg.yield+(ANIMAL_RATIONS[a.type]?Math.max(0,(a.level||1)-1):0);state.animalWarehouse[cfg.product]=(state.animalWarehouse[cfg.product]||0)+amount;awardXP(cfg.xp,'coleta animal');a.productionStatus='hungry';a.productionReadyAt=0;remember('Recolheu '+amount+' '+cfg.productName+' de '+(a.name||cfg.name)+'.');markDirty();refresh();notify(cfg.productIcon+' '+amount+' '+cfg.productName+' recolhidos · +'+cfg.xp+' XP.');return}if(a.status!=='ready')return;const amount=cfg.yield+(ANIMAL_RATIONS[a.type]?Math.max(0,(a.level||1)-1):0);state.animalWarehouse[cfg.product]=(state.animalWarehouse[cfg.product]||0)+amount;awardXP(cfg.xp,'coleta animal');a.status='hungry';a.readyAt=0;remember('Recolheu '+amount+' '+cfg.productName+' de '+(a.name||cfg.name)+'.');markDirty();refresh();notify(cfg.productIcon+' '+amount+' '+cfg.productName+' recolhidos · +'+cfg.xp+' XP.')}
 function sellAnimal(id){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const i=state.animals.findIndex(x=>x.id===id);if(i<0)return;const a=state.animals[i];if(a.type==='cachorro')return notify('O cão de guarda permanece na fazenda.');const cfg=ANIMALS[a.type],value=cfg.sellPrice&&a.status==='adult'?cfg.sellPrice+(ANIMAL_RATIONS[a.type]?Math.max(0,(a.level||1)-1)*250:0):Math.floor(cfg.price*.45);if(!confirm(`Vender ${a.name||cfg.name} por ${fmt(value)} moedas?`))return;state.coins+=value;state.animals.splice(i,1);remember(`Vendeu ${a.name||cfg.name} por ${value} moedas.`);markDirty();refresh();notify(`Animal vendido: +${fmt(value)} moedas.`)}
 function sellAnimalProduct(id,requested){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const cfg=ANIMAL_PRODUCTS[id],available=state.animalWarehouse[id]||0;if(!cfg||available<=0)return;const qty=requested===undefined?available:requested;if(!Number.isSafeInteger(qty)||qty<1||qty>available)return notify('Quantidade de venda inválida.');const total=saleWithPopularity(qty*cfg.unitPrice);state.coins+=total;state.animalWarehouse[id]-=qty;remember(`Vendeu ${qty} ${cfg.name} com bônus de popularidade.`);markDirty();refresh();notify(`${cfg.name}: ${qty} unidade(s) vendida(s) · +${fmt(total)} moedas.`)}
-function updateHud(){const level=farmLevel(),currentXP=state.xp-xpRequiredForLevel(level),neededXP=xpForNextLevel(level);$('level').textContent=level;$('xp-fill').style.width=(currentXP/neededXP*100)+'%';$('xp-num').textContent=`${currentXP}/${neededXP} XP`;$('coins').textContent=fmt(state.coins);$('green-coins').textContent=fmt(state.greenCoins);$('popularity').textContent=fmt(state.popularity);const bonus=$('sale-bonus');if(bonus)bonus.textContent=`+${Math.round(popularityBonusRate()*100)}%`;const mood=MOODS.find(m=>m.id===state.mood)||MOODS[0];const button=$('mood-button');if(button){button.textContent=mood.icon;button.title=`Humor: ${mood.name} · clique para alterar`}const farmName=$('farm-name-text');if(farmName)farmName.textContent=state.farmName||'Minha fazenda';const avatarImage=$('avatar-image'),avatarPlaceholder=$('avatar-placeholder');if(avatarImage&&avatarPlaceholder){if(state.profilePhoto){avatarImage.src=state.profilePhoto;avatarImage.hidden=false;avatarPlaceholder.hidden=true}else{avatarImage.removeAttribute('src');avatarImage.hidden=true;avatarPlaceholder.hidden=false}}const avatar=$('avatar-display');if(avatar)avatar.title=state.profilePhoto?'Alterar foto do perfil':'Adicionar foto do perfil';const moodLabel=$('mood-label');if(moodLabel)moodLabel.textContent=mood.name;const quickHarvest=$('quick-harvest'),quickDig=$('quick-dig');if(quickHarvest){const n=state.plots.filter(p=>p.status==='growing'&&progress(p)>=1).length;quickHarvest.disabled=!n;quickHarvest.textContent=`🌾 Colheita rápida (${n})`}if(quickDig){const n=state.plots.filter(p=>p.status==='spent').length;quickDig.disabled=!n;quickDig.textContent=`🪏 Escavada rápida (${n})`}updateNotificationBadges()}
+function updateHud(){const level=farmLevel(),currentXP=state.xp-xpRequiredForLevel(level),neededXP=xpForNextLevel(level);$('level').textContent=level;$('xp-fill').style.width=(currentXP/neededXP*100)+'%';$('xp-num').textContent=`${currentXP}/${neededXP} XP`;$('coins').textContent=fmt(state.coins);$('green-coins').textContent=fmt(state.greenCoins);$('popularity').textContent=fmt(state.popularity);const bonus=$('sale-bonus');if(bonus)bonus.textContent=`+${Math.round(popularityBonusRate()*100)}%`;const mood=MOODS.find(m=>m.id===state.mood)||MOODS[0];const button=$('mood-button');if(button){button.textContent=mood.icon;button.title=`Humor: ${mood.name} · clique para alterar`}const farmName=$('farm-name-text');if(farmName)farmName.textContent=state.farmName||'Minha fazenda';const farmSign=$('farm-sign-label');if(farmSign)farmSign.textContent=state.farmName||'Minha fazenda';const avatarImage=$('avatar-image'),avatarPlaceholder=$('avatar-placeholder');if(avatarImage&&avatarPlaceholder){if(state.profilePhoto){avatarImage.src=state.profilePhoto;avatarImage.hidden=false;avatarPlaceholder.hidden=true}else{avatarImage.removeAttribute('src');avatarImage.hidden=true;avatarPlaceholder.hidden=false}}const avatar=$('avatar-display');if(avatar)avatar.title=state.profilePhoto?'Alterar foto do perfil':'Adicionar foto do perfil';const moodLabel=$('mood-label');if(moodLabel)moodLabel.textContent=mood.name;const quickHarvest=$('quick-harvest'),quickDig=$('quick-dig');if(quickHarvest){const n=state.plots.filter(p=>p.status==='growing'&&progress(p)>=1).length;quickHarvest.disabled=!n;quickHarvest.textContent=`🌾 Colheita rápida (${n})`}if(quickDig){const n=state.plots.filter(p=>p.status==='spent').length;quickDig.disabled=!n;quickDig.textContent=`🪏 Escavada rápida (${n})`}updateNotificationBadges()}
 function updateNotificationBadges(){
  const now=Date.now(),counts={
   crops:state.plots.filter(p=>p.status==='growing'&&progress(p)>=1).length,
@@ -2429,6 +2448,42 @@ function renderThemeScenery(id){
  if(decor[id])art+=decor[id].replaceAll('translate(-760 350)','translate(-2460 350) scale(.75)').replaceAll('translate(-760 920) scale(.78)','translate(-2460 980) scale(.60)').replaceAll('M-1250 650Q-950 570-650 650','M-2520 650Q-2370 570-2220 650');
  return art+'</g>';
 }
+let weatherRainActive=false,weatherRequestInFlight=false,weatherLastCheckedAt=0,weatherLocation=null;
+function renderWeatherRain(){
+ const layer=$('weather-layer');if(!layer)return;
+ if(!weatherRainActive||!weatherLocation||!SCENE_BOUNDS[activeScene]){layer.innerHTML='';return}
+ const b=SCENE_BOUNDS[activeScene],w=b.right-b.left,h=b.bottom-b.top;
+ const drops=(offset,count)=>Array.from({length:count},(_,i)=>{
+  const x=b.left+(((i*137.508+offset*31)%1000)/1000)*w,y=b.top+(((i*83.173+offset*67)%1000)/1000)*h;
+  const lean=(i+offset)%2===0?-7:7,len=18+(i%4)*4;
+  return '<path d="M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+lean+' '+len+'" />';
+ }).join('');
+ layer.innerHTML='<g class="rain-wind-a" fill="none" stroke="#e4f4ff" stroke-width="1.25" stroke-linecap="round" opacity=".64">'+drops(0,190)+'</g><g class="rain-wind-b" fill="none" stroke="#c8e6f5" stroke-width="1.05" stroke-linecap="round" opacity=".43">'+drops(7,150)+'</g>';
+}
+async function updateWeatherFromLocation(){
+ if(weatherRequestInFlight||!navigator.geolocation||!navigator.onLine)return;
+ weatherRequestInFlight=true;
+ try{
+  const position=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:false,maximumAge:300000,timeout:12000}));
+  weatherLocation={latitude:position.coords.latitude,longitude:position.coords.longitude};
+  const url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(weatherLocation.latitude)+'&longitude='+encodeURIComponent(weatherLocation.longitude)+'&current=precipitation,rain,showers,weather_code,wind_speed_10m,wind_direction_10m&timezone=auto';
+  const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('Consulta meteorológica indisponível');
+  const data=await response.json(),current=data?.current||{},code=Number(current.weather_code),amount=Number(current.precipitation||0)+Number(current.rain||0)+Number(current.showers||0);
+  const rainyCodes=[51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99];
+  weatherRainActive=amount>.05||rainyCodes.includes(code);weatherLastCheckedAt=Date.now();
+  renderWeatherRain();
+ }catch(error){
+  if(error?.code===1){console.info('Clima local desativado: permissão de localização não concedida.')}
+  else console.warn('Não foi possível atualizar o clima local:',error?.message||error);
+  if(weatherLastCheckedAt&&Date.now()-weatherLastCheckedAt>30*60*1000){weatherRainActive=false;renderWeatherRain()}
+ }finally{weatherRequestInFlight=false}
+}
+function initWeatherSystem(){
+ if(!navigator.geolocation){console.info('Este navegador não oferece geolocalização para o clima local.');return}
+ updateWeatherFromLocation();
+ setInterval(()=>{if(document.visibilityState==='visible')updateWeatherFromLocation()},10*60*1000);
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')updateWeatherFromLocation()});
+}
 function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
@@ -2442,7 +2497,7 @@ function updateDayNight(){
  const environment=$('day-night-ground-layer');if(!environment)return;
  environment.innerHTML='';
  if(phase==='night'){
-  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g transform="translate(1370 -42)"><circle r="40" fill="#e7e7e7"/><path d="M-35 -19Q-7 -47 20 -29Q39 -14 33 7Q27 28 6 32Q-15 36-31 18Z" fill="#d2d2d2"/><g fill="#bdbdbd"><circle cx="-12" cy="-11" r="7"/><circle cx="16" cy="-19" r="4"/><circle cx="10" cy="16" r="9"/><circle cx="-21" cy="17" r="5"/></g><g fill="#fff"><path d="M-25 -37l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z"/><path d="M35 5l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z"/></g></g></g>';
+  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g transform="translate(1370 -98)"><circle r="40" fill="#e7e7e7"/><path d="M-35 -19Q-7 -47 20 -29Q39 -14 33 7Q27 28 6 32Q-15 36-31 18Z" fill="#d2d2d2"/><g fill="#bdbdbd"><circle cx="-12" cy="-11" r="7"/><circle cx="16" cy="-19" r="4"/><circle cx="10" cy="16" r="9"/><circle cx="-21" cy="17" r="5"/></g><g fill="#fff"><path d="M-25 -37l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z"/><path d="M35 5l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z"/></g></g></g>';
  }else{
   const sun=phase==='sunset'?'#ff9a18':'#ffe600';
   const glow=phase==='sunset'?'#ffb347':'#fff36a';
@@ -3055,11 +3110,11 @@ function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.far
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
-function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}cancelAnimationFrame(sceneAnimationFrame);activeScene=id;updateSceneLandscapeVisibility();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
+function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}cancelAnimationFrame(sceneAnimationFrame);activeScene=id;updateSceneLandscapeVisibility();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
 function panView(direction){const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);view.cx+=direction*visibleW*.68;updateView()}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
-$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});
+$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});
 $('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
 $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i){e.preventDefault();plotAction(Number(e.target.dataset.i))}});
@@ -3167,7 +3222,7 @@ window.addEventListener('beforeunload',event=>{if(hasPendingCloudChanges()){even
 }
 async function start(){
  initScene();setupEvents();updateView();state=newGame();writeLocked=true;
- refresh();updateConnectionLabel();
+ refresh();updateConnectionLabel();initWeatherSystem();
  $('save-status').textContent='Entre na sua conta para carregar a fazenda da nuvem';
  $('save-dot').className='savedot error';
  let sessionFound=false;
