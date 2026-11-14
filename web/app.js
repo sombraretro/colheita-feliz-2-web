@@ -955,7 +955,7 @@ ${fencePath([[4400,960],[4750,970],[5100,960],[5450,970],[5800,960],[6200,970]],
  <path d="M1290 520Q1370 510 1435 520M1510 500Q1585 490 1660 500M1330 735Q1410 725 1485 735" fill="none" stroke="#c2a17a" stroke-width="2" opacity=".22" stroke-linecap="round"/>
 </g>
 `;
-$('ground-layer').innerHTML=ground+brickWalkwayMarkup();if(activeScene==='sea')$('ground-layer').insertAdjacentHTML('beforeend',renderSeaLandscapeMarkup());
+$('ground-layer').innerHTML=ground+brickWalkwayMarkup();/* A cena do Mar é montada na troca de cena, após o SVG base existir. */
 updateSceneLandscapeVisibility();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
@@ -3299,11 +3299,11 @@ function updateSceneLandscapeVisibility(){
  // Fazenda e Rio são regiões contíguas do mesmo mundo; manter ambas as imagens
  // visíveis evita que uma área revele um vazio ou um cenário independente.
  const farmLandscape=$('farm-landscape');
- if(farmLandscape)farmLandscape.style.display='';
+ if(farmLandscape)farmLandscape.style.display=activeScene==='sea'?'none':'';
  const riverLandscape=$('river-landscape');
- if(riverLandscape)riverLandscape.style.display='';
+ if(riverLandscape)riverLandscape.style.display=activeScene==='sea'?'none':'';
  const natureLandscape=$('nature-landscape');
- if(natureLandscape)natureLandscape.style.display='';
+ if(natureLandscape)natureLandscape.style.display=activeScene==='sea'?'none':'';
  const waterMotion=$('river-water-motion');
  if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
 }
@@ -3311,7 +3311,7 @@ function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.far
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
-function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}const previous=activeScene;cancelAnimationFrame(sceneAnimationFrame);activeScene=id;if(id==='sea')setMusicContext('sea');else if(previous==='sea')setMusicContext('general');updateSceneLandscapeVisibility();if(id==='sea'||previous==='sea')renderFarmAddons();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
+function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}const previous=activeScene;cancelAnimationFrame(sceneAnimationFrame);activeScene=id;if(id==='sea')setMusicContext('sea');else if(previous==='sea')setMusicContext('general');updateSceneLandscapeVisibility();if(id==='sea'){const groundLayer=$('ground-layer');if(groundLayer){groundLayer.querySelector('#sea-landscape')?.remove();groundLayer.insertAdjacentHTML('beforeend',renderSeaLandscapeMarkup())}}else if(previous==='sea')$('ground-layer')?.querySelector('#sea-landscape')?.remove();if(id==='sea'||previous==='sea')renderFarmAddons();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
 function panView(direction){const order=['river','farm','nature'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
