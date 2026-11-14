@@ -769,12 +769,13 @@ function setMusicContext(context){
 }
 function stopMusicPlayback(){
  if(musicFadeTimer)clearInterval(musicFadeTimer);musicFadeTimer=null;
- const audio=musicAudio,transition=++musicTransitionId;if(!audio||audio.paused){musicPlaying=false;return}
- const from=musicFadeLevel,started=Date.now(),duration=350;
+ const active=musicAudio,spare=musicSpareAudio,transition=++musicTransitionId;
+ if((!active||active.paused)&&(!spare||spare.paused)){musicPlaying=false;return}
+ const activeFrom=musicFadeLevel,spareFrom=musicOutFadeLevel,started=Date.now(),duration=350;
  musicFadeTimer=setInterval(()=>{
   if(transition!==musicTransitionId){clearInterval(musicFadeTimer);musicFadeTimer=null;return}
-  const progress=Math.min(1,(Date.now()-started)/duration);musicFadeLevel=from*(1-progress);applyAudioVolumes();
-  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;if(audio.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=audio.currentTime;audio.pause();musicFadeLevel=1;musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=false}
+  const progress=Math.min(1,(Date.now()-started)/duration);musicFadeLevel=activeFrom*(1-progress);musicOutFadeLevel=spareFrom*(1-progress);applyAudioVolumes();
+  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;for(const audio of [active,spare])if(audio){if(audio.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=audio.currentTime;audio.pause()}musicFadeLevel=1;musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=false}
  },35);
 }
 function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.04)}
