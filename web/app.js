@@ -2537,8 +2537,8 @@ function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
- if(layer.dataset.phase===phase)return;
- layer.dataset.phase=phase;
+ if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene)return;
+ layer.dataset.phase=phase;layer.dataset.scene=activeScene;
  const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
  for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
@@ -3362,7 +3362,7 @@ $('modal-body').addEventListener('change',e=>{if(e.target.id==='friend-seed-sele
 $('quick-harvest').addEventListener('click',quickHarvest);$('quick-dig').addEventListener('click',quickDig);$('multi-select-plots')?.addEventListener('click',toggleMultiSelectPlots);$('multi-harvest-selected')?.addEventListener('click',harvestSelectedPlots);
 $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',fitWholeFarm);$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));document.querySelectorAll('[data-farm-scene]').forEach(button=>button.addEventListener('click',()=>switchFarmScene(button.dataset.farmScene)));
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
-window.addEventListener('resize',updateView);
+window.addEventListener('resize',()=>{if(activeScene==='sea'){const b=SCENE_BOUNDS.sea;view.zoom=sceneFitZoom('sea');view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2}updateView()});
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='ArrowLeft'){e.preventDefault();panView(-1)}if(e.key==='ArrowRight'){e.preventDefault();panView(1)}if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom;view.cy+=(e.key==='ArrowUp'?-1:1)*visibleH*.16;updateView()}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.1);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.1)});
 const pointerGeometry=e=>{
  const rect=svg.getBoundingClientRect();
