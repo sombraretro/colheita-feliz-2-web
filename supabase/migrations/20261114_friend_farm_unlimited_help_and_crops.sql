@@ -172,7 +172,7 @@ begin
   if p_area='farm' and jsonb_typeof(v_snapshot->'plots')='array' and jsonb_array_length(v_snapshot->'plots')>p_slot then v_snapshot:=jsonb_set(v_snapshot,array['plots',p_slot::text],v_public_item,true);
   elsif p_area='orchard' and jsonb_typeof(v_snapshot->'orchard')='array' and jsonb_array_length(v_snapshot->'orchard')>p_slot then v_snapshot:=jsonb_set(v_snapshot,array['orchard',p_slot::text],v_public_item,true);
   elsif p_area='forest' and jsonb_typeof(v_snapshot->'forest')='array' and jsonb_array_length(v_snapshot->'forest')>p_slot then v_snapshot:=jsonb_set(v_snapshot,array['forest',p_slot::text],v_public_item,true);end if;
-  update public.social_profiles set farm_snapshot=v_snapshot,updated_at=now() where user_id=p_owner;
+  update public.social_profiles set farm_snapshot=v_snapshot,level=v_owner_level,updated_at=now() where user_id=p_owner;
  end if;
  insert into public.social_notifications(user_id,actor_id,kind,payload) values(p_owner,v_uid,'help',jsonb_build_object('message','Ajudou na fazenda: '||v_label||'.','action',p_action,'area',p_area,'slot',p_slot));
  return query select v_helper_state,v_helper_revision,v_used,15,v_xp,v_green_award,p_area,p_slot,p_action,now();
