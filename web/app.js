@@ -2875,7 +2875,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <path d="M-13 7Q0 -5 13 7Q0 20 -13 7Z" fill="#4d8b4d" stroke="#315b35" stroke-width="2"/>
   <path d="M-36 -38L-25 -47M36 -38L25 -47" stroke="#d0b47b" stroke-width="4" stroke-linecap="round"/>
  </g>
- <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-1940 1025) rotate(-35)">
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900) rotate(-35)">
   <rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/>
   <ellipse cx="0" cy="8" rx="27" ry="7" fill="#294b24" opacity=".28"/>
   <path d="M0 0Q-2 -48 7 -96Q13 -145 20 -194" fill="none" stroke="#4d2e1b" stroke-width="12" stroke-linecap="round"/>
@@ -3484,7 +3484,7 @@ document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListe
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
 $('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('orientation-toggle-mobile')?.addEventListener('click',toggleLandscapeMode);
 const bottomNavToggle=$('bottom-nav-toggle');let bottomNavVisible=true;try{bottomNavVisible=localStorage.getItem('cf2-bottom-navigation-hidden')!=='1'}catch{}
-const applyBottomNavVisibility=visible=>{bottomNavVisible=!!visible;document.querySelector('.app')?.classList.toggle('bottom-navigation-hidden',!bottomNavVisible);if(bottomNavToggle){bottomNavToggle.textContent=bottomNavVisible?'⌄':'⌃';bottomNavToggle.setAttribute('aria-pressed',String(bottomNavVisible));bottomNavToggle.setAttribute('aria-label',bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior');bottomNavToggle.title=bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior'}};
+const applyBottomNavVisibility=visible=>{bottomNavVisible=!!visible;document.querySelector('.app')?.classList.toggle('bottom-navigation-hidden',!bottomNavVisible);if(bottomNavToggle){bottomNavToggle.innerHTML=bottomNavVisible?'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>':'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.1 3.8M6.2 6.2C3.5 8.1 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';bottomNavToggle.setAttribute('aria-pressed',String(bottomNavVisible));bottomNavToggle.setAttribute('aria-label',bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior');bottomNavToggle.title=bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior'}};
 applyBottomNavVisibility(bottomNavVisible);
 bottomNavToggle?.addEventListener('click',()=>{applyBottomNavVisibility(!bottomNavVisible);try{localStorage.setItem('cf2-bottom-navigation-hidden',bottomNavVisible?'0':'1')}catch{}});$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
@@ -3547,7 +3547,7 @@ $('playfield').addEventListener('pointerdown',e=>{
   pinchState={distance:dist,zoom:view.zoom,worldX:view.cx-visibleW/2+rx*visibleW,worldY:view.cy-visibleH/2+ry*visibleH};
   drag=null;e.preventDefault();return;
  }
- const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-sea-bag],[data-sea-net],[data-modal],button');
+ const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-river-backpack],[data-river-rod],[data-sea-bag],[data-sea-net],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
