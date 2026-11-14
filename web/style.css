@@ -858,11 +858,14 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 @media(prefers-reduced-motion:reduce){#weather-layer .rain-wind-a,#weather-layer .rain-wind-b,#weather-layer .rain-fall{animation:none!important}}
 
 
-/* Movimento sutil da correnteza na arte panorâmica do Rio. */
-#river-water-motion{opacity:0;transition:opacity .7s ease}
+/* Correnteza visível: animação aplicada diretamente a cada traço SVG. */
+#river-water-motion{opacity:0;transition:opacity .5s ease}
 #river-water-motion.is-active{opacity:1}
-#river-water-motion .river-current-flow-a{animation:cf2-river-current-a 24s linear infinite}
-#river-water-motion .river-current-flow-b{animation:cf2-river-current-b 31s linear infinite}
-@keyframes cf2-river-current-a{from{stroke-dashoffset:0}to{stroke-dashoffset:-120}}
-@keyframes cf2-river-current-b{from{stroke-dashoffset:-90}to{stroke-dashoffset:30}}
-@media(prefers-reduced-motion:reduce){#river-water-motion .river-current-flow{animation:none!important}}
+#river-water-motion .river-current-flow-a path{animation:cf2-river-flow-a 6.5s linear infinite}
+#river-water-motion .river-current-flow-b path{animation:cf2-river-flow-b 8s linear infinite}
+#river-water-motion .river-current-flow-a path:nth-child(3n){animation-delay:-2.1s}
+#river-water-motion .river-current-flow-a path:nth-child(3n + 1){animation-delay:-4.2s}
+#river-water-motion .river-current-flow-b path:nth-child(2n){animation-delay:-3.5s}
+@keyframes cf2-river-flow-a{from{stroke-dashoffset:0}to{stroke-dashoffset:-92}}
+@keyframes cf2-river-flow-b{from{stroke-dashoffset:-70}to{stroke-dashoffset:35}}
+@media(prefers-reduced-motion:reduce){#river-water-motion .river-current-flow path{animation:none!important}}
