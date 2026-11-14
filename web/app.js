@@ -2930,12 +2930,14 @@ function buildFriendVisualState(snap){
  return visual;
 }
 function renderFriendFarmScene(snap){
- const originalState=state,originalLastSelected=lastSelected,originalSelected=selectedPlotIndices,originalMulti=multiSelectMode;
+ const originalState=state,originalLastSelected=lastSelected,originalSelected=selectedPlotIndices,originalMulti=multiSelectMode,originalScene=activeScene;
  let markup='';
  try{
   state=buildFriendVisualState(snap);
+  activeScene=friendVisitedScene;
   lastSelected=Number.isInteger(selectedFriendPlot)?selectedFriendPlot:-1;
   selectedPlotIndices=new Set();multiSelectMode=false;
+  updateSceneLandscapeVisibility();renderWeatherRain();
   renderPlots();renderAnimals(false);renderFarmAddons(true);
   const source=$('world');
   if(!source)return '<p>Não foi possível montar a visualização da propriedade.</p>';
@@ -2948,7 +2950,7 @@ function renderFriendFarmScene(snap){
   clone.querySelectorAll('[id]').forEach(node=>{const old=node.getAttribute('id'),next='friend-'+old;idMap.set(old,next);node.setAttribute('id',next)});
   clone.querySelectorAll('*').forEach(node=>Array.from(node.attributes).forEach(attr=>{
    let value=attr.value;
-   value=value.replace(/url\\(#([^)]+)\\)/g,(match,id)=>'url(#'+(idMap.get(id)||('friend-'+id))+')');
+   value=value.replace(/url\(#([^)]+)\)/g,(match,id)=>'url(#'+(idMap.get(id)||('friend-'+id))+')');
    if((attr.name==='href'||attr.name==='xlink:href')&&value.startsWith('#'))value='#'+(idMap.get(value.slice(1))||('friend-'+value.slice(1)));
    if(value!==attr.value)node.setAttribute(attr.name,value);
   }));
@@ -2956,7 +2958,8 @@ function renderFriendFarmScene(snap){
   const viewBox=[bounds.left,bounds.top,bounds.right-bounds.left,bounds.bottom-bounds.top].join(' ');
   markup='<svg id="friend-farm-world" class="friend-farm-scene" data-farm-theme="'+safe(snap.farmTheme||'classic')+'" viewBox="'+viewBox+'" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Propriedade de '+safe(visitedFarm?.farm_name||'amigo')+' · '+safe(bounds.label)+'" xmlns="http://www.w3.org/2000/svg">'+clone.innerHTML+'</svg>';
  }finally{
-  state=originalState;lastSelected=originalLastSelected;selectedPlotIndices=originalSelected;multiSelectMode=originalMulti;
+  state=originalState;lastSelected=originalLastSelected;selectedPlotIndices=originalSelected;multiSelectMode=originalMulti;activeScene=originalScene;
+  updateSceneLandscapeVisibility();renderWeatherRain();
   if(originalState){renderPlots();renderAnimals();renderFarmAddons()}
  }
  return markup;
