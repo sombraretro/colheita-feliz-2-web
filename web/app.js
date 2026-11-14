@@ -699,72 +699,87 @@ function playSfx(kind){
  };
  (patterns[kind]||(()=>{}))();
 }
-// Trilha original em clima de fazenda: valsa folk em Sol maior, com timbre macio e pausas.
-const FARM_MELODY=[
- 67,69,71,74,71,69,67,null, 64,67,69,71,69,67,64,null,
- 62,64,67,69,67,64,62,null, 64,67,69,74,71,69,67,null,
- 67,71,74,79,74,71,69,null, 72,74,76,79,76,74,72,null,
-
-];
-const FARM_BASS=[43,40,36,38,43,36,38,43];
-const FARM_CHORDS=[
- [55,59,62],[52,55,59],[48,52,55],[50,54,57],
- [55,59,62],[48,52,55],[50,54,57],[43,47,50]
-];
-// Seis arranjos instrumentais originais: três suaves e três alegres, com balanço campestre.
-const FARM_TRACKS=[
- [...FARM_MELODY,...FARM_MELODY.slice(8),...FARM_MELODY.slice(0,8)],
- [...FARM_MELODY.slice(16),...FARM_MELODY.slice(0,16),...FARM_MELODY.slice(16),...FARM_MELODY.slice(0,16)],
- FARM_MELODY.map((note,index)=>note===null?null:note+(index%8<4?2:-2)).concat(FARM_MELODY.map((note,index)=>note===null?null:note+(index%8<4?-2:2))),
- FARM_MELODY.map((note,index)=>note===null?null:note+5+(index%4===0?2:0)).concat(FARM_MELODY.map((note,index)=>note===null?null:note+5+(index%4===2?2:0))),
- FARM_MELODY.map((note,index)=>note===null?null:note+(index%6===0?7:index%3===0?2:0)).concat(FARM_MELODY.slice().reverse().map((note,index)=>note===null?null:note+(index%4===0?4:0))),
- FARM_MELODY.map((note,index)=>note===null?null:note+(index%8<4?7:3)).concat(FARM_MELODY.map((note,index)=>note===null?null:note+(index%8<4?3:7)))
-];
-const farmHz=midi=>440*Math.pow(2,(midi-69)/12);
-function playFarmNote(midi,duration=.48,volume=.012,wave='triangle'){
- const ctx=ensureAudio();if(!ctx)return;
- const osc=ctx.createOscillator(),filter=ctx.createBiquadFilter(),gain=ctx.createGain(),now=ctx.currentTime;
- osc.type=wave;osc.frequency.setValueAtTime(farmHz(midi),now);
- filter.type='lowpass';filter.frequency.setValueAtTime(wave==='triangle'?1900:1250,now);filter.Q.value=.55;
- gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(volume,now+.055);
- gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
- osc.connect(filter);filter.connect(gain);gain.connect(musicBus||ctx.destination);osc.start(now);osc.stop(now+duration+.025);
+// Trilhas MP3: nove músicas gerais e temas próprios para as pescarias.
+const GENERAL_MUSIC_FILES=Array.from({length:9},(_,i)=>'/song/general/NewFarmSong'+(i?i+1:'')+'.mp3');
+const SPECIAL_MUSIC_FILES={river:'/song/river/PescaRio.mp3',sea:'/song/sea/PescaMar.mp3'};
+let musicAudio=null,musicSpareAudio=null,musicContext='general',musicFadeLevel=1,musicOutFadeLevel=0,musicFadeTimer=null,musicTransitionId=0,musicGeneralPath='',musicGeneralTime=0;
+function createMusicAudio(){
+ const audio=new Audio();audio.preload='auto';audio.volume=0;
+ audio.addEventListener('timeupdate',()=>{if(audio===musicAudio&&audio.dataset.musicContext==='general'&&!audio.paused)musicGeneralTime=audio.currentTime});
+ audio.addEventListener('ended',()=>{if(audio!==musicAudio||!musicEnabled)return;musicPlaying=false;if(audio.dataset.musicContext==='general'){musicGeneralPath='';musicGeneralTime=0;playNextGeneralMusic()}});
+ return audio;
 }
-function playFarmPad(chord){
- const ctx=ensureAudio();if(!ctx)return;
- chord.forEach((midi,index)=>{
-  const osc=ctx.createOscillator(),gain=ctx.createGain(),now=ctx.currentTime;
-  osc.type='sine';osc.frequency.setValueAtTime(farmHz(midi),now);
-  gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(.0028,now+.22);
-  gain.gain.setValueAtTime(.0028,now+.82);gain.gain.exponentialRampToValueAtTime(.0001,now+1.42);
-  osc.connect(gain);gain.connect(musicBus||ctx.destination);osc.start(now+index*.035);osc.stop(now+1.46);
- });
+function ensureMusicAudio(){if(!musicAudio&&!musicSpareAudio)musicSpareAudio=createMusicAudio();return musicAudio||musicSpareAudio}
+function applyAudioVolumes(){
+ if(musicBus)musicBus.gain.setTargetAtTime((musicVolume/100)*2.15,audioCtx.currentTime,.04);
+ if(sfxBus)sfxBus.gain.setTargetAtTime((sfxVolume/100)*1.8,audioCtx.currentTime,.025);
+ const base=musicVolume/100;if(musicAudio)musicAudio.volume=Math.max(0,Math.min(1,base*musicFadeLevel));if(musicSpareAudio)musicSpareAudio.volume=Math.max(0,Math.min(1,base*musicOutFadeLevel));
 }
-function startFarmMusic(){
- if(!musicEnabled||musicPlaying)return;
- const ctx=ensureAudio();if(!ctx)return;
+function fadeMusicTransition(outgoing,fromLevel){
+ if(musicFadeTimer)clearInterval(musicFadeTimer);
+ const started=Date.now(),duration=700;
+ musicFadeTimer=setInterval(()=>{
+  const progress=Math.min(1,(Date.now()-started)/duration);musicFadeLevel=progress;musicOutFadeLevel=fromLevel*(1-progress);applyAudioVolumes();
+  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;if(outgoing)outgoing.pause();musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=true}
+ },35);
+}
+function nextGeneralMusicPath(){
  if(musicTrackPosition>=musicTrackOrder.length){
-  musicTrackOrder=musicMode==='sequential'?[0,1,2,3,4,5]:[0,1,2,3,4,5].sort(()=>Math.random()-.5);
+  musicTrackOrder=musicMode==='sequential'?GENERAL_MUSIC_FILES.map((_,i)=>i):GENERAL_MUSIC_FILES.map((_,i)=>i).sort(()=>Math.random()-.5);
   if(musicTrackOrder.length>1&&musicTrackOrder[0]===lastMusicTrack)[musicTrackOrder[0],musicTrackOrder[1]]=[musicTrackOrder[1],musicTrackOrder[0]];
   musicTrackPosition=0;
  }
- const trackId=musicTrackOrder[musicTrackPosition++],melody=FARM_TRACKS[trackId]||FARM_MELODY;lastMusicTrack=trackId;
- musicPlaying=true;musicIndex=0;
- const step=()=>{
-  if(!musicEnabled){musicPlaying=false;musicTimer=null;return;}
-  const beat=musicIndex%melody.length,bar=Math.floor(beat/3)%FARM_CHORDS.length;
-  const note=melody[beat];
-  if(note!==null)playFarmNote(note,.52,.023,'triangle');
-  if(beat%3===0){playFarmNote(FARM_BASS[bar],1.35,.015,'sine');playFarmPad(FARM_CHORDS[bar]);}
-  musicIndex++;
-  if(musicIndex>=melody.length){musicTimer=setTimeout(()=>{musicPlaying=false;startFarmMusic()},1500)}
-  else musicTimer=setTimeout(step,560);
- };
- step();
+ const id=musicTrackOrder[musicTrackPosition++];lastMusicTrack=id;return GENERAL_MUSIC_FILES[id];
 }
-function stopFarmMusic(){if(musicTimer)clearTimeout(musicTimer);musicTimer=null;musicPlaying=false}
+function playMusicFile(path,context,resumeAt=0){
+ if(!musicEnabled)return;
+ if(musicFadeTimer){clearInterval(musicFadeTimer);musicFadeTimer=null}
+ const outgoing=musicAudio;
+ if(musicSpareAudio&&musicSpareAudio!==outgoing){musicSpareAudio.pause();musicOutFadeLevel=0}
+ const incoming=musicSpareAudio||createMusicAudio(),transition=++musicTransitionId;
+ incoming.pause();incoming.src=path;incoming.dataset.musicContext=context;incoming.loop=context!=='general';incoming.volume=0;
+ try{incoming.currentTime=Math.max(0,resumeAt||0)}catch{}
+ const activate=()=>{
+  if(transition!==musicTransitionId){incoming.pause();return}
+  if(outgoing&&outgoing.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=outgoing.currentTime;
+  const oldLevel=outgoing&&!outgoing.paused?musicFadeLevel:0;
+  musicAudio=incoming;musicSpareAudio=outgoing;musicFadeLevel=0;musicOutFadeLevel=oldLevel;applyAudioVolumes();
+  fadeMusicTransition(outgoing,oldLevel);
+ };
+ const playing=incoming.play();
+ if(playing&&typeof playing.then==='function')playing.then(activate).catch(()=>{if(transition===musicTransitionId)musicPlaying=!!(outgoing&&!outgoing.paused)});
+ else activate();
+}
+function playNextGeneralMusic(){
+ if(!musicEnabled||musicContext!=='general')return;
+ const path=nextGeneralMusicPath();musicGeneralPath=path;musicGeneralTime=0;playMusicFile(path,'general',0);
+}
+function startCurrentMusic(){
+ if(!musicEnabled)return;
+ if(musicContext==='general'){if(musicGeneralPath)playMusicFile(musicGeneralPath,'general',musicGeneralTime);else playNextGeneralMusic()}
+ else playMusicFile(SPECIAL_MUSIC_FILES[musicContext],musicContext,0);
+}
+function setMusicContext(context){
+ const next=context==='river'||context==='sea'?context:'general';
+ if(musicContext===next&&musicAudio&&musicAudio.dataset.musicContext===next&&!musicAudio.paused)return;
+ musicContext=next;if(!musicEnabled)return;
+ if(next==='general'&&musicGeneralPath)playMusicFile(musicGeneralPath,'general',musicGeneralTime);
+ else if(next==='general')playNextGeneralMusic();
+ else playMusicFile(SPECIAL_MUSIC_FILES[next],next,0);
+}
+function stopMusicPlayback(){
+ if(musicFadeTimer)clearInterval(musicFadeTimer);musicFadeTimer=null;
+ const active=musicAudio,spare=musicSpareAudio,transition=++musicTransitionId;
+ if((!active||active.paused)&&(!spare||spare.paused)){musicPlaying=false;return}
+ const activeFrom=musicFadeLevel,spareFrom=musicOutFadeLevel,started=Date.now(),duration=350;
+ musicFadeTimer=setInterval(()=>{
+  if(transition!==musicTransitionId){clearInterval(musicFadeTimer);musicFadeTimer=null;return}
+  const progress=Math.min(1,(Date.now()-started)/duration);musicFadeLevel=activeFrom*(1-progress);musicOutFadeLevel=spareFrom*(1-progress);applyAudioVolumes();
+  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;for(const audio of [active,spare])if(audio){if(audio.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=audio.currentTime;audio.pause()}musicFadeLevel=1;musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=false}
+ },35);
+}
 function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.04)}
-function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startFarmMusic();else stopFarmMusic()}
+function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startCurrentMusic();else stopMusicPlayback()}
 function setMusicVolume(value){musicVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.musicVolume',String(musicVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('music-volume-value');if(out)out.textContent=musicVolume+'%'}
 function setSfxVolume(value){sfxVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.sfxVolume',String(sfxVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('sfx-volume-value');if(out)out.textContent=sfxVolume+'%'}
 function setMusicMode(value){musicMode=value==='sequential'?'sequential':'random';try{localStorage.setItem('cf2.musicMode',musicMode)}catch{}musicTrackOrder=[];musicTrackPosition=0}
@@ -794,7 +809,7 @@ async function toggleLandscapeMode(){
 }
 window.addEventListener('orientationchange',()=>requestAnimationFrame(updateView));
 window.addEventListener('resize',()=>{if(landscapeModeActive)requestAnimationFrame(updateView)});
-document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startFarmMusic()},{once:true});
+document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startCurrentMusic()},{once:true});
 
 const seedNoise=n=>{const x=Math.sin(n*91.13+17.37)*29341.715;return x-Math.floor(x)};
 function svgImage(name,x,y,w,h,extra=''){return `<image data-asset="${name}" href="/assets/${name}.png" x="${x}" y="${y}" width="${w}" height="${h}" pointer-events="none" ${extra}/>`}
@@ -1961,8 +1976,8 @@ const MOBILE_SHORTCUTS={shop:['🛒','Loja'],kitchen:['🍲','Produção'],anima
 function renderMobileNavigation(){const nav=$('mobile-navigation');if(!nav||!state)return;const ids=(Array.isArray(state.mobileShortcuts)?state.mobileShortcuts:[]).filter(id=>MOBILE_SHORTCUTS[id]).slice(0,4);while(ids.length<4){const next=Object.keys(MOBILE_SHORTCUTS).find(id=>!ids.includes(id));if(!next)break;ids.push(next)}const more=nav.querySelector('[data-more-toggle]');if(!more)return;nav.querySelectorAll('button:not([data-more-toggle])').forEach(button=>button.remove());ids.forEach(id=>more.insertAdjacentHTML('beforebegin','<button type="button" data-modal="'+id+'" aria-label="Abrir '+MOBILE_SHORTCUTS[id][1]+'"><span>'+MOBILE_SHORTCUTS[id][0]+'</span><small>'+MOBILE_SHORTCUTS[id][1]+'</small></button>'))}
 function refresh(){syncLakeFish();expireDecorations();expireFarmTheme();syncAnimalCycles();syncOrchardTrees();syncLevelPlotUnlocks();updateHud();renderMobileNavigation();renderPlots();renderAnimals();renderFarmAddons();if(currentModal&&!modalHasFocusedEditor())renderModal()}
 function infest(){if(!farmWriteAllowed(false))return;let changed=false;for(let i=0;i<state.plots.length;i++){const p=state.plots[i];if(p.status!=='growing'||p.initialGift||progress(p)>=1)continue;const h=(Date.now()-p.plantedAt)/HOUR;if(h>=3*CROP_TIME_FACTOR&&!p.weed&&!p.weedCleared&&(Math.floor(p.plantedAt/HOUR)+i*11)%5===0){p.weed=true;changed=true}if(h>=6*CROP_TIME_FACTOR&&!p.pest&&!p.pestCleared&&(Math.floor(p.plantedAt/HOUR)+i*13)%7===0){p.pest=true;changed=true}}if(changed){markDirty(true);refresh()}}
-function openModal(kind){if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
-function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}currentModal='';document.querySelector('.app')?.classList.remove('modal-open');$('overlay').classList.add('hidden');renderPlots();}
+function openModal(kind){setMusicContext(kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'&&farmLevel()>=22?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
+function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}setMusicContext('general');currentModal='';document.querySelector('.app')?.classList.remove('modal-open');$('overlay').classList.add('hidden');renderPlots();}
 function dailyRewardAvailable(){return state.dailyRewardDate!==todayKey()}
 function claimDailyReward(){if(!farmWriteAllowed())return;
  if(!dailyRewardAvailable())return notify('A recompensa diária de hoje já foi resgatada.');
@@ -3053,7 +3068,7 @@ case 'inbox':title='Caixa de entrada';if(!cloudUser){html='<div class="gift-summ
 case 'daily':title='Recompensa diária';html=dailyRewardAvailable()?`<div class="daily-reward"><span>🎁</span><b>Seu presente de hoje está esperando!</b><p>Receba sementes, fertilizantes ou flores. A quantidade cresce com sua sequência de visitas (até 5 itens nesta adaptação offline).</p><p><b>Sequência atual: ${fmt((state.dailyRewardDate===yesterdayKey()?(state.dailyStreak||0)+1:1))} dia(s)</b></p><button class="modal-action" data-claim-daily="true">Resgatar recompensa</button></div>`:`<div class="daily-reward claimed"><span>🌟</span><b>Recompensa de hoje já recebida!</b><p>Sequência atual: ${fmt(state.dailyStreak||1)} dia(s). Volte amanhã para receber outra recompensa.</p></div>`;break;
 case 'help':title='Ajuda por seções';html=renderDynamicHelp();break;
 case 'account':title='Conta e salvamento na nuvem';if(!initSupabase()){html='<p>O serviço de autenticação não carregou. Verifique sua conexão e recarregue a página. O jogo permanece bloqueado até que seja possível conectar à nuvem.</p>';break;}if(cloudUser){html=`<div class="account-card"><b>☁️ Conta conectada</b><p>${safe(cloudUser.email||'Jogador')}</p><small>${cloudConflict?'Conflito detectado: outra sessão possui uma versão mais recente. As alterações desta sessão estão preservadas apenas enquanto esta página permanecer aberta.':writeLocked?'Aguardando carregamento ou recuperação da fazenda na nuvem.':'Sua fazenda está salva exclusivamente na nuvem.'}</small></div><div class="gift-summary"><span class="symbol">🔎</span><div><b>Diagnóstico de integridade</b><small>Compara os dados desta sessão com o registro da nuvem sem modificar ou recuperar informações automaticamente.</small></div></div><div class="actions"><button class="modal-action alt" id="cloud-integrity-check" ${cloudIntegrityChecking||cloudSessionReadyUserId!==cloudUser.id?'disabled':''}>${cloudIntegrityChecking?'Verificando dados...':'Verificar consistência dos dados'}</button></div>${cloudIntegrityReport?.error?'<p class="historical-note">Falha no diagnóstico: '+safe(cloudIntegrityReport.error)+'</p>':renderFarmIntegrityReport()}${cloudConflict?`<div class="gift-summary"><span class="symbol">⚠️</span><div><b>Conflito de sincronização</b><small>Para evitar perda de dados, nenhuma gravação será feita automaticamente. Carregar a nuvem substituirá as alterações ainda não sincronizadas desta página.</small></div></div><div class="actions"><button class="modal-action" id="cloud-resolve-load">Carregar versão mais recente da nuvem</button></div>`:''}<div class="actions"><button class="modal-action" id="cloud-sync" ${cloudConflict?'disabled':''}>Carregar / sincronizar nuvem</button><button class="modal-action alt" id="cloud-signout">Sair da conta</button></div><div class="gift-summary"><span class="symbol">🕘</span><div><b>Histórico de sincronização</b><small>Eventos recentes desta sessão, com data e horário. Este diagnóstico não altera nem substitui o salvamento da fazenda.</small></div></div><div id="cloud-sync-history">${renderCloudSyncHistory()}</div><p><small>O progresso do jogo é salvo somente na nuvem e fica privado na sua conta. Sem conexão, alterações não podem ser persistidas.</small></p>`;}else{html=`<div class="gift-summary"><span class="symbol">☁️</span><div><b>Entre para jogar</b><small>O jogo utiliza salvamento exclusivamente na nuvem. É necessário entrar ou criar uma conta antes de acessar sua fazenda.</small></div></div><label class="auth-field">E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="seu@email.com"></label><label class="auth-field">Senha<input id="auth-password" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label><div class="actions"><button class="modal-action" id="auth-signin">Entrar</button><button class="modal-action alt" id="auth-signup">Criar conta</button></div><p><small>O cadastro pode exigir confirmação do endereço de e-mail, conforme as configurações de autenticação do projeto Supabase.</small></p>`;}break;
-case 'settings':title='Configurações e backup';html=`<p>O progresso é salvo automaticamente e exclusivamente na nuvem. O arquivo JSON abaixo é um backup manual opcional, exportado somente quando você solicitar.</p><div class="audio-settings"><h3>🔊 Mixer de áudio</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros e notificações</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música ambiente da fazenda</label><div class="audio-mixer-control"><label for="music-volume">🎵 Volume da música <output id="music-volume-value">${musicVolume}%</output></label><input id="music-volume" type="range" min="0" max="100" step="1" value="${musicVolume}"></div><div class="audio-mixer-control"><label for="sfx-volume">🔔 Volume dos efeitos e notificações <output id="sfx-volume-value">${sfxVolume}%</output></label><input id="sfx-volume" type="range" min="0" max="100" step="1" value="${sfxVolume}"></div><label for="music-mode">🎼 Reprodução das músicas</label><select id="music-mode"><option value="random" ${musicMode==='random'?'selected':''}>Aleatória, sem repetir a faixa anterior</option><option value="sequential" ${musicMode==='sequential'?'selected':''}>Em sequência</option></select><small>Seis arranjos instrumentais originais, com aproximadamente 50 segundos cada, alternados com transições suaves.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json">`;break;
+case 'settings':title='Configurações e backup';html=`<p>O progresso é salvo automaticamente e exclusivamente na nuvem. O arquivo JSON abaixo é um backup manual opcional, exportado somente quando você solicitar.</p><div class="audio-settings"><h3>🔊 Mixer de áudio</h3><label><input id="sound-toggle" type="checkbox" ${soundEnabled?'checked':''}> Efeitos sonoros e notificações</label><label><input id="music-toggle" type="checkbox" ${musicEnabled?'checked':''}> Música do jogo</label><div class="audio-mixer-control"><label for="music-volume">🎵 Volume da música <output id="music-volume-value">${musicVolume}%</output></label><input id="music-volume" type="range" min="0" max="100" step="1" value="${musicVolume}"></div><div class="audio-mixer-control"><label for="sfx-volume">🔔 Volume dos efeitos e notificações <output id="sfx-volume-value">${sfxVolume}%</output></label><input id="sfx-volume" type="range" min="0" max="100" step="1" value="${sfxVolume}"></div><label for="music-mode">🎼 Reprodução das músicas</label><select id="music-mode"><option value="random" ${musicMode==='random'?'selected':''}>Aleatória, sem repetir até tocar as nove músicas</option><option value="sequential" ${musicMode==='sequential'?'selected':''}>Em sequência</option></select><small>Nove músicas gerais e trilhas próprias para a pesca no rio e no mar. As faixas mudam com transições suaves.</small></div><div class="actions"><button class="modal-action" data-export="true">Exportar backup JSON</button><button class="modal-action alt" data-import="true">Importar backup JSON</button></div><div class="actions"><button class="modal-action danger" data-reset="true">Reiniciar fazenda (com confirmação)</button></div><input type="file" id="import-file" accept="application/json,.json">`;break;
 }
 $('modal-title').textContent=title;body.innerHTML=html;body.scrollTop=modalScrollTop;
 if(currentModal==='inventory'){
