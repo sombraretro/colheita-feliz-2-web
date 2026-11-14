@@ -851,6 +851,8 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 #weather-layer{pointer-events:none;overflow:visible}
 #weather-layer .rain-wind-a{transform-box:fill-box;transform-origin:center;animation:cf2-rain-wind-a 3.8s ease-in-out infinite alternate}
 #weather-layer .rain-wind-b{transform-box:fill-box;transform-origin:center;animation:cf2-rain-wind-b 4.4s ease-in-out infinite alternate}
+#weather-layer .rain-fall{animation:cf2-rain-fall 1.15s linear infinite}
+@keyframes cf2-rain-fall{from{transform:translateY(-55px)}to{transform:translateY(55px)}}
 @keyframes cf2-rain-wind-a{from{transform:skewX(-9deg) translateX(-5px)}to{transform:skewX(9deg) translateX(5px)}}
 @keyframes cf2-rain-wind-b{from{transform:skewX(8deg) translateX(4px)}to{transform:skewX(-8deg) translateX(-4px)}}
-@media(prefers-reduced-motion:reduce){#weather-layer .rain-wind-a,#weather-layer .rain-wind-b{animation:none!important}}
+@media(prefers-reduced-motion:reduce){#weather-layer .rain-wind-a,#weather-layer .rain-wind-b,#weather-layer .rain-fall{animation:none!important}}
