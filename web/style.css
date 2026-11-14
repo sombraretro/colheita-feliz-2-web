@@ -1051,7 +1051,13 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 /* Área de Caça: cenário fotográfico separado das áreas agrícolas e navegação própria. */
 .hunt-scene-background{position:absolute;inset:0;z-index:2;overflow:hidden;background:#1e3825}
 .hunt-scene-background[hidden]{display:none!important}
-.hunt-scene-background>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center;user-select:none;pointer-events:none}
+.hunt-scene-background>img{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center center;user-select:none;pointer-events:none;transition:filter 2.5s ease}
+.hunt-day-night{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background 2.5s ease}
+.hunt-scene-background[data-phase="day"] .hunt-day-night{background:linear-gradient(180deg,rgba(255,247,211,.035),rgba(235,244,201,.025))}
+.hunt-scene-background[data-phase="sunset"]>img{filter:sepia(.42) saturate(1.18) brightness(.88) hue-rotate(-7deg)}
+.hunt-scene-background[data-phase="sunset"] .hunt-day-night{background:linear-gradient(180deg,rgba(255,150,66,.20),rgba(165,75,31,.24))}
+.hunt-scene-background[data-phase="night"]>img{filter:brightness(.48) saturate(.68) contrast(1.08) hue-rotate(8deg)}
+.hunt-scene-background[data-phase="night"] .hunt-day-night{background:linear-gradient(180deg,rgba(9,21,54,.34),rgba(8,27,43,.48)),radial-gradient(ellipse at 76% 13%,rgba(205,219,255,.14),transparent 35%)}
 .hunt-atmosphere{position:absolute;inset:-8%;pointer-events:none}
 .hunt-light{background:radial-gradient(ellipse at 72% 18%,rgba(255,239,176,.18),transparent 42%),linear-gradient(115deg,transparent 28%,rgba(220,245,192,.08) 48%,transparent 66%);animation:hunt-light-drift 26s ease-in-out infinite alternate}
 .hunt-mist{background:linear-gradient(180deg,transparent 45%,rgba(218,231,195,.13) 73%,rgba(17,43,28,.18));animation:hunt-mist-drift 34s ease-in-out infinite alternate}
