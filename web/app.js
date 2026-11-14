@@ -2725,7 +2725,7 @@ function updateDayNight(){
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
  const huntBackdrop=$('hunt-scene-background');
  if(huntBackdrop)huntBackdrop.dataset.phase=phase;
- if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene)return;
+ if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene&&!(activeScene==='sea'&&phase==='sunset'))return;
  layer.dataset.phase=phase;layer.dataset.scene=activeScene;
  const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
@@ -2742,7 +2742,11 @@ function updateDayNight(){
  }
  if(activeScene==='sea'){
   if(phase==='night')environment.innerHTML+='<g id="sea-night-sky" pointer-events="none"><g fill="#fff7d6"><circle cx="6650" cy="40" r="4"/><circle cx="7100" cy="155" r="3"/><circle cx="7550" cy="-20" r="4"/><circle cx="7900" cy="110" r="3"/><circle cx="8650" cy="-35" r="4"/><circle cx="9050" cy="125" r="3"/><circle cx="9650" cy="10" r="4"/><circle cx="10100" cy="145" r="3"/></g><g id="sea-moon" transform="translate(6900 105)"><circle r="270" fill="#dcecff" opacity=".13"/><circle r="205" fill="#e9edf0" stroke="#fff" stroke-width="12"/><path d="M-130 -72Q-18 -205 110 -105Q210 -26 135 112Q24 225 -112 126Q-208 28 -130 -72Z" fill="#d0d8df"/><g fill="#b9c4cf"><circle cx="-64" cy="-54" r="34"/><circle cx="74" cy="-92" r="22"/><circle cx="45" cy="70" r="42"/><circle cx="-92" cy="86" r="23"/></g><path d="M-80 -150Q-10 -195 60 -164" fill="none" stroke="#fff" stroke-width="13" opacity=".55"/></g></g>';
-  else environment.innerHTML+='<g id="sea-day-sun" pointer-events="none" transform="translate(8500 '+(phase==='sunset'?'415':'75')+')"><circle r="300" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".2"/><circle r="205" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'" stroke="'+(phase==='sunset'?'#ffd19a':'#fff3a0')+'" stroke-width="14"/><circle cx="-58" cy="-58" r="52" fill="#fff8c0" opacity=".48"/><path d="M-112 78Q-20 35 105 100" fill="none" stroke="#fff5c2" stroke-width="15" opacity=".32"/></g>';
+  else{
+   const sunsetProgress=phase==='sunset'?Math.max(0,Math.min(1,(minutes-1020)/120)):0;
+   const sunY=phase==='sunset'?75+sunsetProgress*600:75;
+   environment.innerHTML+='<defs><clipPath id="sea-sky-horizon-clip"><rect x="3000" y="-700" width="11000" height="1170"/></clipPath></defs><g id="sea-day-sun" clip-path="url(#sea-sky-horizon-clip)" pointer-events="none" transform="translate(8500 '+sunY+')"><circle r="300" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".2"/><circle r="205" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'" stroke="'+(phase==='sunset'?'#ffd19a':'#fff3a0')+'" stroke-width="14"/><circle cx="-58" cy="-58" r="52" fill="#fff8c0" opacity=".48"/><path d="M-112 78Q-20 35 105 100" fill="none" stroke="#fff5c2" stroke-width="15" opacity=".32"/></g>';
+  }
  }
 }
 function applyMenuThemeColors(){
@@ -2852,15 +2856,6 @@ function renderSeaLandscapeMarkup(){
    <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
   </defs>
   <rect x="3000" y="-700" width="11000" height="2500" fill="url(#sea-sky-gradient)"/>
-  <g id="sea-sun" transform="translate(5200 125)" pointer-events="none">
-   <circle r="205" fill="#fff2b6" opacity=".13"/>
-   <circle r="158" fill="#ffe9a0" opacity=".22"/>
-   <g stroke="#ffe7a0" stroke-width="15" stroke-linecap="round" opacity=".82">
-    <path d="M0 -218V-252M0 218V252M-218 0H-252M218 0H252M-154 -154L-180 -180M154 154L180 180M154 -154L180 -180M-154 154L-180 180"/>
-   </g>
-   <circle r="128" fill="#ffd76f" stroke="#fff0b2" stroke-width="12"/>
-   <path d="M-82 -34Q-20 -66 42 -35Q78 -15 105 -31Q85 42 12 72Q-48 95 -95 43Z" fill="#fff0b0" opacity=".28"/>
-  </g>
 
   <path d="M3000 270Q3500 215 4000 255T5000 245T6000 250T7000 245T8000 250T9000 240T10000 250T11000 230T12000 250T13000 235T14000 260V500H3000Z" fill="url(#sea-horizon-glow)"/>
   <g fill="#fff" opacity=".56">
