@@ -1161,16 +1161,16 @@ function renderPlots(){
  const base=(offset)=>`<g transform="translate(${offset} 0)"><polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/><polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/><polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/></g>`;
  // A primeira plantação permanece na posição original da Fazenda.
  // Somente a segunda área (expansão, no Rio) recebe o deslocamento.
- let html=base(0)+`<g transform="translate(300 -340)">${base(EXPANSION_PLOT_OFFSET_X)}</g>`;
+ let html=base(0)+`<g transform="translate(180 -240)">${base(EXPANSION_PLOT_OFFSET_X)}</g>`;
  let farmCrops='',riverCrops='';
  for(let group=0;group<2;group++)for(let r=0;r<6;r++)for(let c=PLOT_COLS-1;c>=0;c--){
   const i=group*36+r*PLOT_COLS+c,p=state.plots[i];if(!p)continue;
   const part=plotGeometry(p,r,c,i);
   if(group===0){html+=part.tile;farmCrops+=part.crop}
-  else{html+=`<g transform="translate(300 -340)">${part.tile}</g>`;riverCrops+=part.crop}
+  else{html+=`<g transform="translate(180 -240)">${part.tile}</g>`;riverCrops+=part.crop}
  }
  $('garden-layer').innerHTML=html;
- $('crop-layer').innerHTML=farmCrops+`<g transform="translate(300 -340)">${riverCrops}</g>`
+ $('crop-layer').innerHTML=farmCrops+`<g transform="translate(180 -240)">${riverCrops}</g>`
 }
 const TUTORIAL_TASKS=[
  {id:'harvest',title:'Faça sua primeira colheita',detail:'Use a mão para colher um dos nabos que recebeu de presente.',event:'harvest',goal:1,reward:350,xp:10,icon:'🌱'},
@@ -1650,16 +1650,7 @@ function renderRiverLandmarks(){
   <path d="M29 159H207" stroke="#563820" stroke-width="9"/>
   <path d="M30 155H206" stroke="#e0a86a" stroke-width="3"/>
  </g>
- <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer" pointer-events="all" transform="translate(-1950 930)">
-  <rect x="-82" y="-76" width="164" height="142" fill="transparent" pointer-events="all"/>
-  <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
-  <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
-  <path d="M-3 33V-6" stroke="#bd8b54" stroke-width="4" stroke-linecap="round"/>
-  <path d="M-63 -53Q-63 -62 -53 -62H53Q63 -62 63 -53V-8Q63 1 53 1H-53Q-63 1 -63 -8Z" fill="#a66a37" stroke="#593a27" stroke-width="6"/>
-  <path d="M-54 -51H54V-10H-54Z" fill="#f2d49a" stroke="#d4a76b" stroke-width="3"/>
-  <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
-  <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
- </g>`;
+`;
 }
 
 function professionXPReward(key,baseXP){const level=specialistLevelFromXP(state.specialistProgress?.[key]?.xp||0);return Math.max(1,Math.round(Math.max(0,Number(baseXP)||0)*(1+Math.max(0,level-1)*.2)))}
@@ -2559,7 +2550,16 @@ function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)
  const grillSmoke=(state.grill?.queue||[]).some(job=>job.readyAt>Date.now());
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 98)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(650 205)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html}
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const foreground=$('foreground-layer');if(foreground){foreground.querySelector('#river-fishing-sign')?.remove();foreground.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer" pointer-events="all" transform="translate(-1950 930)">
+  <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="all"/>
+  <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
+  <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
+  <path d="M-3 33V-6" stroke="#bd8b54" stroke-width="4" stroke-linecap="round"/>
+  <path d="M-63 -53Q-63 -62 -53 -62H53Q63 -62 63 -53V-8Q63 1 53 1H-53Q-63 1 -63 -8Z" fill="#a66a37" stroke="#593a27" stroke-width="6"/>
+  <path d="M-54 -51H54V-10H-54Z" fill="#f2d49a" stroke="#d4a76b" stroke-width="3"/>
+  <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
+  <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
+ </g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
 function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
@@ -3061,7 +3061,7 @@ function panView(direction){const rect=svg.getBoundingClientRect(),visibleH=WORL
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
 svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
-$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
+$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const fishing=e.target.closest('[data-river-fishing]');if(fishing){e.preventDefault();e.stopPropagation();openModal('pond');return}const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
 $('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-river-fishing]')&&!drag&&Date.now()>suppressWorldClickUntil){openModal('pond');return}if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
 $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i){e.preventDefault();plotAction(Number(e.target.dataset.i))}});
