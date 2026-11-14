@@ -920,38 +920,38 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 @media(prefers-reduced-motion:reduce){.friend-farm-scene #friend-river-water-motion .river-current-flow path{animation:none!important}}
 
 /* Cena Mar: janela de pesca responsiva sem alterar os elementos do cenário. */
-.app.sea-fishing-open .dialog{width:min(900px,96vw);max-height:min(90dvh,860px)}
-.app.sea-fishing-open .modal-body{max-height:calc(min(90dvh,860px) - 72px);overscroll-behavior:contain}
-.app.sea-fishing-open .fishing-rods{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
-.app.sea-fishing-open .fishing-rod-card{min-width:0;min-height:0;padding:10px}
-.app.sea-fishing-open .fishing-rod-card button{min-height:42px}
+body.sea-fishing-open .dialog{width:min(900px,96vw);max-height:min(90dvh,860px)}
+body.sea-fishing-open .modal-body{max-height:calc(min(90dvh,860px) - 72px);overscroll-behavior:contain}
+body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
+body.sea-fishing-open .fishing-rod-card{min-width:0;min-height:0;padding:10px}
+body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 @media(max-width:900px) and (orientation:portrait){
- .app.sea-fishing-open .dialog{width:min(94vw,720px);max-height:92dvh}
- .app.sea-fishing-open .modal-body{max-height:calc(92dvh - 72px)}
- .app.sea-fishing-open .fishing-rods{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.sea-fishing-open .dialog{width:min(94vw,720px);max-height:92dvh}
+ body.sea-fishing-open .modal-body{max-height:calc(92dvh - 72px)}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:700px) and (orientation:portrait){
- .app.sea-fishing-open .dialog{width:96vw;max-height:94dvh;border-width:3px;border-radius:13px}
- .app.sea-fishing-open .dialog-head{padding:8px 11px}
- .app.sea-fishing-open .dialog-head h2{font-size:18px}
- .app.sea-fishing-open .modal-body{max-height:calc(94dvh - 58px);padding:9px}
- .app.sea-fishing-open .fishing-rods{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
- .app.sea-fishing-open .fishing-rod-card{padding:8px;gap:5px}
- .app.sea-fishing-open .fishing-rod-card .symbol{font-size:25px}
- .app.sea-fishing-open .fishing-rod-card small{font-size:10px}
- .app.sea-fishing-open .fishing-rod-card button,.app.sea-fishing-open .modal-action{min-height:44px;padding:8px 9px}
+ body.sea-fishing-open .dialog{width:96vw;max-height:94dvh;border-width:3px;border-radius:13px}
+ body.sea-fishing-open .dialog-head{padding:8px 11px}
+ body.sea-fishing-open .dialog-head h2{font-size:18px}
+ body.sea-fishing-open .modal-body{max-height:calc(94dvh - 58px);padding:9px}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ body.sea-fishing-open .fishing-rod-card{padding:8px;gap:5px}
+ body.sea-fishing-open .fishing-rod-card .symbol{font-size:25px}
+ body.sea-fishing-open .fishing-rod-card small{font-size:10px}
+ body.sea-fishing-open .fishing-rod-card button,body.sea-fishing-open .modal-action{min-height:44px;padding:8px 9px}
 }
 @media(max-width:700px) and (orientation:landscape){
- .app.sea-fishing-open .dialog{width:96vw;max-height:calc(100dvh - 8px);border-width:3px}
- .app.sea-fishing-open .dialog-head{padding:6px 11px}
- .app.sea-fishing-open .dialog-head h2{font-size:17px}
- .app.sea-fishing-open .modal-body{max-height:calc(100dvh - 58px);padding:8px}
- .app.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
- .app.sea-fishing-open .fishing-rod-card{padding:7px;gap:4px}
- .app.sea-fishing-open .fishing-rod-card .symbol{font-size:23px}
- .app.sea-fishing-open .fishing-rod-card small{font-size:9px}
- .app.sea-fishing-open .fishing-rod-card button,.app.sea-fishing-open .modal-action{min-height:40px;padding:6px 8px}
+ body.sea-fishing-open .dialog{width:96vw;max-height:calc(100dvh - 8px);border-width:3px}
+ body.sea-fishing-open .dialog-head{padding:6px 11px}
+ body.sea-fishing-open .dialog-head h2{font-size:17px}
+ body.sea-fishing-open .modal-body{max-height:calc(100dvh - 58px);padding:8px}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ body.sea-fishing-open .fishing-rod-card{padding:7px;gap:4px}
+ body.sea-fishing-open .fishing-rod-card .symbol{font-size:23px}
+ body.sea-fishing-open .fishing-rod-card small{font-size:9px}
+ body.sea-fishing-open .fishing-rod-card button,body.sea-fishing-open .modal-action{min-height:40px;padding:6px 8px}
 }
 @media(min-width:701px) and (orientation:landscape){
- .app.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
