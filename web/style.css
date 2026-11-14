@@ -914,3 +914,7 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .friend-farm-scene[data-farm-theme="van_gogh"] #friend-ground-layer{filter:saturate(1.18) contrast(1.035)}
 .friend-farm-scene[data-farm-theme="greek"] #friend-ground-layer{filter:saturate(.9) brightness(1.025)}
 .friend-farm-scene[data-farm-theme="science"] #friend-ground-layer{filter:saturate(.85) hue-rotate(5deg)}
+
+.friend-snapshot-outdated{margin:12px 0;padding:18px;border:2px dashed #bd995c;border-radius:12px;background:#fff8e8;color:#684a25;text-align:center}
+.friend-snapshot-outdated p{margin:8px 0 0;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.friend-farm-scene #friend-river-water-motion .river-current-flow path{animation:none!important}}
