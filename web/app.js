@@ -1907,7 +1907,8 @@ function showFishingCelebration(catchInfo){
    clearTimeout(toastTimer);
    launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
    const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
-   status.dataset.scene=catchInfo.scene;status.classList.add('is-result');status.hidden=false;status.replaceChildren();
+   const style=FISHING_RARITY_STYLE[rarity]||'common';
+   status.className='sea-fishing-status is-result toast fishing-toast rarity-'+style+' show';status.dataset.scene=catchInfo.scene;status.hidden=false;status.replaceChildren();
    const content=document.createElement('div');content.className='fishing-toast-content';
    const heading=document.createElement('strong');heading.className='fishing-toast-heading';heading.textContent=catchInfo.isExtraordinary?'✨ PESCA EXTRAORDINÁRIA! ✨':'🎣 PEIXE PESCADO!';
    const fish=document.createElement('div');fish.className='fishing-toast-fish';
@@ -1916,7 +1917,7 @@ function showFishingCelebration(catchInfo){
    const detail=document.createElement('small');detail.className='fishing-toast-detail';detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+(catchInfo.reward?' · '+catchInfo.reward:'')+' · +'+catchInfo.xp+' XP';
    content.append(heading,fish,detail);status.append(content);
    playFishingSfx(rarity,catchInfo.isExtraordinary);
-   toastTimer=setTimeout(()=>{status.hidden=true;status.classList.remove('is-result');status.replaceChildren()},3600);
+   toastTimer=setTimeout(()=>{status.hidden=true;status.className='sea-fishing-status';status.replaceChildren()},3600);
    return;
   }
  }
@@ -2855,7 +2856,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 98)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(650 205)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
  for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
-  <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="all"/>
+  <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
   <path d="M-3 33V-6" stroke="#bd8b54" stroke-width="4" stroke-linecap="round"/>
