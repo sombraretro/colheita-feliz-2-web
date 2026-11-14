@@ -869,3 +869,16 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 @keyframes cf2-river-flow-a{from{stroke-dashoffset:0}to{stroke-dashoffset:-92}}
 @keyframes cf2-river-flow-b{from{stroke-dashoffset:-70}to{stroke-dashoffset:35}}
 @media(prefers-reduced-motion:reduce){#river-water-motion .river-current-flow path{animation:none!important}}
+
+/* Ferramentas de visita: mesma linguagem visual dos controles da fazenda. */
+.friend-farm-toolbar{display:grid;gap:9px;margin:12px 0;padding:12px;border:1px solid rgba(125,93,48,.25);border-radius:14px;background:rgba(250,244,224,.72)}
+.friend-farm-tools{display:flex;flex-wrap:wrap;gap:7px}
+.friend-farm-toolbar label{font-weight:800;font-size:.9rem}
+.friend-farm-toolbar .modal-select{width:100%;max-width:none}
+.friend-farm-toolbar button:disabled{opacity:.42;cursor:not-allowed}
+.friend-area-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0 18px}
+.friend-area-card{display:grid;gap:7px;align-content:start;padding:11px;border:1px solid rgba(125,93,48,.24);border-radius:12px;background:rgba(255,250,235,.78);min-width:0}
+.friend-area-card .symbol{font-size:1.7rem}
+.friend-area-card strong{font-size:.95rem}
+.friend-area-card small{line-height:1.4;color:#66533a}
+.friend-area-card button{width:100%}
