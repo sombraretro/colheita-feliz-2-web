@@ -3713,7 +3713,8 @@ const pointerGeometry=e=>{
  return {x:e.clientX,y:e.clientY,rect};
 };
 $('playfield').addEventListener('pointerdown',e=>{
- if(!e.target.closest('#world'))return;
+ const huntDrag=activeScene==='hunt'&&!!e.target.closest('#hunt-scene-background');
+ if(!huntDrag&&!e.target.closest('#world'))return;
  const point=pointerGeometry(e);
  activePointers.set(e.pointerId,{x:point.x,y:point.y});
  if(activePointers.size>=2){
@@ -3729,7 +3730,7 @@ $('playfield').addEventListener('pointerdown',e=>{
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
- e.preventDefault();drag={x:point.x,y:point.y,cx:view.cx,cy:view.cy,moved:false};
+ e.preventDefault();drag=huntDrag?{mode:'hunt',x:point.x,y:point.y,panX:50,panY:50,moved:false}:{x:point.x,y:point.y,cx:view.cx,cy:view.cy,moved:false};
 });
 $('playfield').addEventListener('pointermove',e=>{
  if(!activePointers.has(e.pointerId))return;
@@ -3749,6 +3750,11 @@ $('playfield').addEventListener('pointermove',e=>{
  if(!drag)return;
  const dx=point.x-drag.x,dy=point.y-drag.y;
  if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;
+ if(drag.mode==='hunt'){
+  const rect=point.rect,panX=Math.max(18,Math.min(82,drag.panX-dx/Math.max(1,rect.width)*64)),panY=Math.max(18,Math.min(82,drag.panY-dy/Math.max(1,rect.height)*64));
+  const image=$('hunt-scene-background')?.querySelector('img');if(image)image.style.objectPosition=panX+'% '+panY+'%';
+  suppressWorldClickUntil=Date.now()+350;e.preventDefault();return;
+ }
  const rect=point.rect,visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height),ratioX=visibleW/rect.width,ratioY=visibleH/rect.height;
  view.cx=drag.cx-dx*ratioX;view.cy=drag.cy-dy*ratioY;updateView();
 });
