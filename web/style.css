@@ -1051,7 +1051,7 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 /* Área de Caça: cenário fotográfico separado das áreas agrícolas e navegação própria. */
 .hunt-scene-background{position:absolute;inset:0;z-index:2;overflow:hidden;background:#1e3825}
 .hunt-scene-background[hidden]{display:none!important}
-.hunt-scene-background>img{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center center;user-select:none;pointer-events:none;transition:filter 2.5s ease}
+.hunt-scene-background>img{position:absolute;inset:-2%;z-index:0;display:block;width:104%;height:104%;object-fit:cover;object-position:center center;user-select:none;pointer-events:none;transition:filter 2.5s ease;animation:hunt-forest-camera 38s ease-in-out infinite alternate;transform-origin:52% 48%}
 .hunt-day-night{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background 2.5s ease}
 .hunt-scene-background[data-phase="day"] .hunt-day-night{background:linear-gradient(180deg,rgba(255,247,211,.035),rgba(235,244,201,.025))}
 .hunt-scene-background[data-phase="sunset"]>img{filter:sepia(.42) saturate(1.18) brightness(.88) hue-rotate(-7deg)}
@@ -1063,6 +1063,12 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 .hunt-mist{background:linear-gradient(180deg,transparent 45%,rgba(218,231,195,.13) 73%,rgba(17,43,28,.18));animation:hunt-mist-drift 34s ease-in-out infinite alternate}
 @keyframes hunt-light-drift{0%{transform:translate3d(-1.5%,0,0);opacity:.55}100%{transform:translate3d(1.5%,1%,0);opacity:1}}
 @keyframes hunt-mist-drift{0%{transform:translateX(-2%);opacity:.3}100%{transform:translateX(2%);opacity:.62}}
+@keyframes hunt-forest-camera{0%{transform:scale(1) translate3d(-.35%,0,0)}100%{transform:scale(1.055) translate3d(.65%,-.35%,0)}}
+.hunt-foliage-motion{position:absolute;inset:-12%;z-index:3;pointer-events:none;opacity:.28;mix-blend-mode:multiply;background:radial-gradient(ellipse 19% 8% at 12% 18%,rgba(12,35,18,.5),transparent 75%),radial-gradient(ellipse 24% 10% at 42% 9%,rgba(12,35,18,.42),transparent 75%),radial-gradient(ellipse 20% 9% at 82% 16%,rgba(12,35,18,.48),transparent 75%),linear-gradient(112deg,transparent 22%,rgba(230,242,195,.13) 43%,transparent 58%);animation:hunt-canopy-sway 17s ease-in-out infinite alternate}
+.hunt-ground-breeze{position:absolute;left:-35%;right:-35%;bottom:5%;height:34%;z-index:3;pointer-events:none;opacity:.48;filter:blur(13px);background:radial-gradient(ellipse at 28% 52%,rgba(222,235,202,.24),transparent 48%),radial-gradient(ellipse at 74% 42%,rgba(214,230,197,.2),transparent 48%);animation:hunt-breeze-pass 21s ease-in-out infinite alternate}
+@keyframes hunt-canopy-sway{0%{transform:translate3d(-2.8%,0,0) rotate(-.45deg);opacity:.19}100%{transform:translate3d(2.8%,.8%,0) rotate(.45deg);opacity:.38}}
+@keyframes hunt-breeze-pass{0%{transform:translate3d(-7%,0,0) scaleY(.82);opacity:.2}100%{transform:translate3d(7%,-3%,0) scaleY(1.12);opacity:.58}}
+
 .hunt-backpack{position:absolute;left:73%;top:75%;z-index:5;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 9px;border:1px solid rgba(242,218,159,.8);border-radius:12px;background:rgba(30,48,30,.66);color:#fff4d2;text-shadow:0 1px 3px #1c2818;cursor:pointer;backdrop-filter:blur(3px);transform:translate(-50%,-50%);transition:transform .18s ease,filter .18s ease}
 .hunt-backpack>span{font-size:clamp(30px,4vw,48px);line-height:1.05;filter:drop-shadow(0 3px 3px #142116aa)}
 .hunt-backpack small{font-size:clamp(9px,1vw,12px);font-weight:800;white-space:nowrap}
@@ -1135,4 +1141,4 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
  .hunt-material-grid{grid-template-columns:1fr}
  .playfield.hunt-scene-active .farm-scene-navigation{width:calc(100% - 12px);max-width:560px;flex-wrap:wrap}
 }
-@media(prefers-reduced-motion:reduce){.hunt-light,.hunt-mist,.hunt-backpack{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.hunt-light,.hunt-mist,.hunt-foliage-motion,.hunt-ground-breeze,.hunt-scene-background>img,.hunt-backpack{animation:none!important;transition:none!important}}
