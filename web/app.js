@@ -315,7 +315,7 @@ const FOREST_TREES={
  cambuca:{name:'Cambucá',icon:'🌳',wood:null,woodName:'Frutos de Cambucá',level:35,price:9800,hours:70,yield:20,xp:68,color:'#a96a38',fruitCrop:'cambuca'}
 };
 const FOREST_TREE_IDS=Object.keys(FOREST_TREES).filter(id=>!FOREST_TREES[id].retired),FOREST_TIME_FACTOR=.2,FOREST_PLOTS=36;
-const FOREST_SLOT_POS=Array.from({length:36},(_,i)=>[3500+(i%12)*104,210+Math.floor(i/12)*155]);
+const FOREST_SLOT_POS=Array.from({length:36},(_,i)=>[3750+(i%12)*104,210+Math.floor(i/12)*155]);
 const SEA_TYPES={
  robalo:{name:'Robalo',icon:'🐟',rarity:'Comum',xp:5,minNet:0,weight:26},sardinha:{name:'Sardinha',icon:'🐟',rarity:'Comum',xp:4,minNet:0,weight:30},tainha:{name:'Tainha',icon:'🐟',rarity:'Comum',xp:5,minNet:0,weight:24},corvina:{name:'Corvina',icon:'🐟',rarity:'Comum',xp:5,minNet:0,weight:22},camarao:{name:'Camarão',icon:'🦐',rarity:'Comum',xp:6,minNet:0,weight:20},
  pescada:{name:'Pescada-amarela',icon:'🐟',rarity:'Incomum',xp:8,minNet:1,weight:19},anchova:{name:'Anchova',icon:'🐟',rarity:'Incomum',xp:8,minNet:1,weight:18},lula:{name:'Lula',icon:'🦑',rarity:'Incomum',xp:9,minNet:1,weight:16},mexilhao:{name:'Mexilhão',icon:'🦪',rarity:'Incomum',xp:8,minNet:1,weight:15},cavala:{name:'Cavala',icon:'🐟',rarity:'Incomum',xp:9,minNet:1,weight:15},
