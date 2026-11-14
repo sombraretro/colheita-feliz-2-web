@@ -467,7 +467,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:11000,top:-300,bottom:1400,w:14400,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400},sea:{label:'Mar',left:6100,right:10500,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:11000,top:-300,bottom:1400,w:14400,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400},sea:{label:'Mar',left:6000,right:11000,top:-700,bottom:1800}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -2553,8 +2553,8 @@ function updateDayNight(){
   environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(1370 -42)"><circle r="58" fill="'+glow+'" opacity=".18"/><circle r="40" fill="'+sun+'"/><circle cx="-11" cy="-12" r="11" fill="#fff6a6" opacity=".45"/></g>';
  }
  if(activeScene==='sea'){
-  if(phase==='night')environment.innerHTML+='<g id="sea-night-sky" pointer-events="none"><g fill="#fff7d6"><circle cx="6650" cy="40" r="4"/><circle cx="7100" cy="155" r="3"/><circle cx="7550" cy="-20" r="4"/><circle cx="7900" cy="110" r="3"/><circle cx="8650" cy="-35" r="4"/><circle cx="9050" cy="125" r="3"/><circle cx="9650" cy="10" r="4"/><circle cx="10100" cy="145" r="3"/></g><g transform="translate(8300 80)"><circle r="48" fill="#e9edf0"/><path d="M-39 -18Q-5 -55 25 -28Q48 -7 29 24Q4 50 -25 28Q-47 8 -39 -18Z" fill="#d0d8df"/><g fill="#b9c4cf"><circle cx="-13" cy="-12" r="8"/><circle cx="17" cy="-19" r="5"/><circle cx="10" cy="17" r="10"/></g></g></g>';
-  else environment.innerHTML+='<g id="sea-day-sun" pointer-events="none" transform="translate(8300 '+(phase==='sunset'?'415':'75')+')"><circle r="86" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".22"/><circle r="56" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'"/><circle cx="-15" cy="-14" r="15" fill="#fff8c0" opacity=".48"/></g>';
+  if(phase==='night')environment.innerHTML+='<g id="sea-night-sky" pointer-events="none"><g fill="#fff7d6"><circle cx="6650" cy="40" r="4"/><circle cx="7100" cy="155" r="3"/><circle cx="7550" cy="-20" r="4"/><circle cx="7900" cy="110" r="3"/><circle cx="8650" cy="-35" r="4"/><circle cx="9050" cy="125" r="3"/><circle cx="9650" cy="10" r="4"/><circle cx="10100" cy="145" r="3"/></g><g transform="translate(8500 80)"><circle r="48" fill="#e9edf0"/><path d="M-39 -18Q-5 -55 25 -28Q48 -7 29 24Q4 50 -25 28Q-47 8 -39 -18Z" fill="#d0d8df"/><g fill="#b9c4cf"><circle cx="-13" cy="-12" r="8"/><circle cx="17" cy="-19" r="5"/><circle cx="10" cy="17" r="10"/></g></g></g>';
+  else environment.innerHTML+='<g id="sea-day-sun" pointer-events="none" transform="translate(8500 '+(phase==='sunset'?'415':'75')+')"><circle r="86" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".22"/><circle r="56" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'"/><circle cx="-15" cy="-14" r="15" fill="#fff8c0" opacity=".48"/></g>';
  }
 }
 function applyMenuThemeColors(){
@@ -2662,18 +2662,18 @@ function renderSeaLandscapeMarkup(){
    <linearGradient id="sea-deck-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bd8952"/><stop offset=".45" stop-color="#8f5d35"/><stop offset="1" stop-color="#55351f"/></linearGradient>
    <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
   </defs>
-  <rect x="6100" y="-250" width="4400" height="1650" fill="url(#sea-sky-gradient)"/>
-  <path d="M6100 270Q6500 210 6900 255T7700 245T8500 250T9300 230T10500 260V500H6100Z" fill="url(#sea-horizon-glow)"/>
+  <rect x="6000" y="-700" width="5000" height="2500" fill="url(#sea-sky-gradient)"/>
+  <path d="M6000 270Q6500 210 6900 255T7700 245T8500 250T9300 230T11000 260V500H6000Z" fill="url(#sea-horizon-glow)"/>
   <g fill="#fff" opacity=".56">
    <path d="M6600 105Q6640 65 6690 91Q6730 42 6790 78Q6845 66 6865 112Q6900 145 6850 155H6650Q6590 150 6600 105Z"/>
    <path d="M9100 145Q9140 104 9190 126Q9230 79 9290 111Q9340 99 9365 144Q9395 174 9350 185H9150Q9090 180 9100 145Z"/>
   </g>
   <g fill="#668b83" opacity=".78">
    <path d="M6200 470Q6350 410 6500 450Q6640 390 6780 454Q6910 420 7040 470L7040 505H6200Z"/>
-   <path d="M9300 470Q9460 415 9590 455Q9740 385 9890 450Q10020 410 10500 470V510H9300Z"/>
+   <path d="M9300 470Q9460 415 9590 455Q9740 385 9890 450Q10020 410 11000 470V510H9300Z"/>
   </g>
-  <path d="M6100 475Q6500 465 6900 477T7700 474T8500 478T9300 470T10500 476V1400H6100Z" fill="url(#sea-water-gradient)"/>
-  <path d="M6100 484Q6600 472 7100 486T8100 482T9100 481T10500 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
+  <path d="M6000 475Q6500 465 6900 477T7700 474T8500 478T9300 470T11000 476V1800H6000Z" fill="url(#sea-water-gradient)"/>
+  <path d="M6000 484Q6600 472 7100 486T8100 482T9100 481T11000 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
   <g fill="none" stroke-linecap="round">
    <g stroke="#bcecf0" opacity=".42" stroke-width="7">
     <path d="M6350 570Q6510 552 6660 565M6900 625Q7070 604 7230 619M7620 555Q7780 540 7940 555M8450 655Q8650 631 8830 649M9400 570Q9560 550 9720 565M9900 735Q10070 716 10230 731"/>
@@ -2689,7 +2689,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7245 465V390L7290 464Z" fill="#f6e6c5" stroke="#7b8c83" stroke-width="3"/>
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
-  <g id="sea-boat" transform="translate(8300 0)">
+  <g id="sea-boat" transform="translate(8500 0)">
    <path d="M-900 1080Q-610 1035 -300 1058Q0 1075 300 1058Q610 1035 900 1080L690 1335Q0 1435 -690 1335Z" fill="url(#sea-boat-side)" stroke="#3e2b20" stroke-width="18"/>
    <path d="M-830 1080Q0 1135 830 1080L660 1280Q0 1360 -660 1280Z" fill="url(#sea-deck-gradient)" stroke="#d1a06a" stroke-width="12"/>
    <g stroke="#e4bb82" stroke-width="10" opacity=".72">
@@ -3307,12 +3307,12 @@ function updateSceneLandscapeVisibility(){
  const waterMotion=$('river-water-motion');
  if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
 }
-function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=id==='sea'?(aspect<.82?height:Math.max(height,width/aspect)):mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(id==='sea'?.985:mobileViewport?1.005:.985)))}
+function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=id==='sea'?height:mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(id==='sea'?.985:mobileViewport?1.005:.985)))}
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
 function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}const previous=activeScene;cancelAnimationFrame(sceneAnimationFrame);activeScene=id;if(id==='sea')setMusicContext('sea');else if(previous==='sea')setMusicContext('general');updateSceneLandscapeVisibility();if(id==='sea'||previous==='sea')renderFarmAddons();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
-function panView(direction){const order=['river','farm','nature','sea'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
+function panView(direction){const order=['river','farm','nature'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
 svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
