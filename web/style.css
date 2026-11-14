@@ -891,3 +891,26 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .friend-farm-scene [data-help-plot]{cursor:pointer}
 .friend-farm-scene .animal-wrap{pointer-events:none}
 @media(max-width:700px){.friend-farm-scene{height:clamp(260px,43vh,430px);max-height:none}.friend-scene-nav{gap:5px}.friend-scene-nav .modal-action{flex:1 1 auto}}
+
+
+/* O SVG da visita usa IDs isolados para não colidir com o mundo do visitante. */
+.friend-farm-scene #friend-garden-layer .plot-item{pointer-events:none}
+.friend-farm-scene #friend-garden-layer .plot-hit{fill:transparent;fill-opacity:0;stroke:transparent;stroke-width:1;pointer-events:all;cursor:pointer}
+.friend-farm-scene #friend-garden-layer .plot-hit:hover{fill:#fff1a1;fill-opacity:.2;stroke:#fff0a1;stroke-width:3}
+.friend-farm-scene #friend-garden-layer .plot-selection{fill:#ffe07a;fill-opacity:.22;stroke:#ffdf64;stroke-width:5;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(94,55,10,.5))}
+.friend-farm-scene #friend-crop-layer{pointer-events:none!important}
+.friend-farm-scene #friend-animal-layer,.friend-farm-scene #friend-decoration-layer{pointer-events:none!important}
+.friend-farm-scene #friend-animal-layer *,.friend-farm-scene #friend-decoration-layer *,.friend-farm-scene .animal-wrap{pointer-events:none!important}
+.friend-farm-scene [data-river-fishing],.friend-farm-scene [data-lake-open],.friend-farm-scene [data-orchard-slot],.friend-farm-scene [data-forest-slot]{pointer-events:none!important;cursor:default!important}
+.friend-farm-scene #friend-river-water-motion{opacity:0;transition:opacity .5s ease;pointer-events:none}
+.friend-farm-scene #friend-river-water-motion.is-active{opacity:1}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-a path{animation:cf2-river-flow-a 6.5s linear infinite}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-b path{animation:cf2-river-flow-b 8s linear infinite}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-a path:nth-child(3n){animation-delay:-2.1s}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-a path:nth-child(3n + 1){animation-delay:-4.2s}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-b path:nth-child(2n){animation-delay:-3.5s}
+.friend-farm-scene[data-farm-theme="christmas"] #friend-ground-layer{filter:saturate(.88) brightness(1.035)}
+.friend-farm-scene[data-farm-theme="autumn"] #friend-ground-layer{filter:saturate(.93) sepia(.12)}
+.friend-farm-scene[data-farm-theme="van_gogh"] #friend-ground-layer{filter:saturate(1.18) contrast(1.035)}
+.friend-farm-scene[data-farm-theme="greek"] #friend-ground-layer{filter:saturate(.9) brightness(1.025)}
+.friend-farm-scene[data-farm-theme="science"] #friend-ground-layer{filter:saturate(.85) hue-rotate(5deg)}
