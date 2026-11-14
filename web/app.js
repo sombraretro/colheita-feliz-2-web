@@ -1161,16 +1161,16 @@ function renderPlots(){
  const base=(offset)=>`<g transform="translate(${offset} 0)"><polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/><polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/><polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/></g>`;
  // A primeira plantação permanece na posição original da Fazenda.
  // Somente a segunda área (expansão, no Rio) recebe o deslocamento.
- let html=base(0)+`<g transform="translate(-150 -340)">${base(EXPANSION_PLOT_OFFSET_X)}</g>`;
+ let html=base(0)+`<g transform="translate(300 -340)">${base(EXPANSION_PLOT_OFFSET_X)}</g>`;
  let farmCrops='',riverCrops='';
  for(let group=0;group<2;group++)for(let r=0;r<6;r++)for(let c=PLOT_COLS-1;c>=0;c--){
   const i=group*36+r*PLOT_COLS+c,p=state.plots[i];if(!p)continue;
   const part=plotGeometry(p,r,c,i);
   if(group===0){html+=part.tile;farmCrops+=part.crop}
-  else{html+=`<g transform="translate(-150 -340)">${part.tile}</g>`;riverCrops+=part.crop}
+  else{html+=`<g transform="translate(300 -340)">${part.tile}</g>`;riverCrops+=part.crop}
  }
  $('garden-layer').innerHTML=html;
- $('crop-layer').innerHTML=farmCrops+`<g transform="translate(-150 -340)">${riverCrops}</g>`
+ $('crop-layer').innerHTML=farmCrops+`<g transform="translate(300 -340)">${riverCrops}</g>`
 }
 const TUTORIAL_TASKS=[
  {id:'harvest',title:'Faça sua primeira colheita',detail:'Use a mão para colher um dos nabos que recebeu de presente.',event:'harvest',goal:1,reward:350,xp:10,icon:'🌱'},
@@ -1526,7 +1526,7 @@ function useFertilizerOnPlot(plot){if(!farmWriteAllowed())return;
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=800;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-380;view.cy=330;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3250;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
+function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=760;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-380;view.cy=330;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3250;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
 function buyExpansion(id,currency='coins'){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(cfg.name+' já está liberado.');
@@ -1627,29 +1627,31 @@ function renderPondArea(){
 }
 function renderRiverLandmarks(){
  return `
- <g id="planting-perimeter" pointer-events="none" transform="translate(-2082 -340)">
-  <path d="M-300 440L382 80L1064 440" fill="none" stroke="#60432b" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M770 596L382 800L-300 440L382 80" fill="none" stroke="#60432b" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M-300 440L382 80L1064 440" fill="none" stroke="#b9824d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M770 596L382 800L-300 440" fill="none" stroke="#b9824d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <g stroke="#68452d" stroke-width="8" stroke-linecap="round"><path d="M-300 440v-24M382 80V56M1064 440v-24M382 800v-24M770 596l-13 -22"/></g>
-  <g transform="translate(820 568) rotate(-28)"><path d="M-4 -34V34M44 -34V34" stroke="#68452d" stroke-width="10"/><path d="M-4 -30H44M-4 0H44M-4 30H44" stroke="#bd8953" stroke-width="7"/><path d="M0 -28L40 28" stroke="#e7c28a" stroke-width="3"/></g>
- </g>
  <g id="river-hut" pointer-events="none" transform="translate(-1770 610) scale(1.95 2.2)">
   <ellipse cx="118" cy="166" rx="142" ry="20" fill="#254b22" opacity=".28"/>
-  <path d="M12 68Q18 42 42 35H196Q220 43 224 68V158H12Z" fill="#b87945" stroke="#70452c" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M25 77H211V151H25Z" fill="#d9a66a" stroke="#86512e" stroke-width="4"/>
-  <path d="M12 70L116 -6L224 70L210 82L116 18L26 82Z" fill="#a86a35" stroke="#684329" stroke-width="7" stroke-linejoin="round"/>
-  <path d="M4 67Q116 -30 232 67Q225 83 213 82Q116 3 24 82Q10 82 4 67Z" fill="#c69a50" stroke="#76502d" stroke-width="6"/>
-  <path d="M14 59Q116 -29 222 59M22 49Q116 -31 214 49M34 39Q116 -27 202 39" fill="none" stroke="#e0bd73" stroke-width="5" stroke-linecap="round"/>
-  <path d="M88 157V105Q88 82 116 82Q144 82 144 105V157Z" fill="#68412b" stroke="#4d3022" stroke-width="6"/>
-  <path d="M96 157V108Q96 91 116 91Q136 91 136 108V157Z" fill="#9c633b" stroke="#d8a56b" stroke-width="3"/>
-  <circle cx="130" cy="127" r="3.5" fill="#f4d17c"/>
-  <rect x="39" y="88" width="38" height="34" rx="3" fill="#8dd0df" stroke="#68432c" stroke-width="6"/>
-  <path d="M58 89V121M40 105H76" stroke="#f1d4a2" stroke-width="4"/>
-  <path d="M26 157H211" stroke="#6a432b" stroke-width="8"/>
+  <path d="M12 68Q18 42 42 35H196Q220 43 224 68V158H12Z" fill="#8c542f" stroke="#563821" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M18 72Q20 52 43 47H194Q216 53 218 72V151H18Z" fill="#bd8048" stroke="#6d4328" stroke-width="4"/>
+  <path d="M22 81H214M20 101H216M19 122H217M18 143H218" stroke="#77472c" stroke-width="5" opacity=".8"/>
+  <path d="M22 77H213M22 97H213M22 118H213M22 139H213" stroke="#e0aa69" stroke-width="2.5" opacity=".75"/>
+  <path d="M30 49V153M204 49V153" stroke="#704329" stroke-width="8"/>
+  <path d="M34 51V151M200 51V151" stroke="#e0a363" stroke-width="2.5" opacity=".75"/>
+  <path d="M5 69L116 -17L235 69L218 88L116 18L22 88Z" fill="#70452b" stroke="#4d3425" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M0 65Q116 -42 238 65Q232 87 215 87Q116 5 22 87Q5 86 0 65Z" fill="#b8873e" stroke="#68452b" stroke-width="7"/>
+  <path d="M8 61Q116 -35 230 61M13 53Q116 -39 225 53M22 45Q116 -36 216 45M33 37Q116 -31 205 37" fill="none" stroke="#e5c276" stroke-width="5" stroke-linecap="round"/>
+  <path d="M15 67l-7 13m22-28l-9 18m34-42l-8 18m39-35l-7 18m34-23l-2 19m38-15l4 18m35-4l8 18m18 8l10 14" stroke="#f0d28a" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+  <path d="M16 72Q116 10 222 72" fill="none" stroke="#6a452b" stroke-width="5"/>
+  <path d="M83 158V105Q83 77 116 77Q149 77 149 105V158Z" fill="#543522" stroke="#4a2e20" stroke-width="7"/>
+  <path d="M91 158V106Q91 86 116 86Q141 86 141 106V158Z" fill="#a66a3c" stroke="#e0b477" stroke-width="3"/>
+  <path d="M105 91V157M127 91V157M94 112H138M94 137H138" stroke="#704329" stroke-width="3" opacity=".9"/>
+  <circle cx="132" cy="127" r="4" fill="#f8d77d" stroke="#70452a" stroke-width="1.5"/>
+  <rect x="35" y="86" width="39" height="39" rx="2" fill="#583a28" stroke="#5b3924" stroke-width="6"/>
+  <rect x="40" y="91" width="29" height="29" fill="#8fd0df" stroke="#f0cf91" stroke-width="3"/>
+  <path d="M54.5 92V119M41 105.5H68" stroke="#fff0c7" stroke-width="3.5"/>
+  <path d="M29 159H207" stroke="#563820" stroke-width="9"/>
+  <path d="M30 155H206" stroke="#e0a86a" stroke-width="3"/>
  </g>
- <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer" transform="translate(-1950 930)">
+ <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer" pointer-events="all" transform="translate(-1950 930)">
+  <rect x="-82" y="-76" width="164" height="142" fill="transparent" pointer-events="all"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
   <path d="M-3 33V-6" stroke="#bd8b54" stroke-width="4" stroke-linecap="round"/>
@@ -2468,8 +2470,8 @@ function applyMenuThemeColors(){
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
 function renderLakeArea(){
- const x=-980,y=800,waterY=y-8;
- let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-980 800) scale(1.08) translate(980 -800)">
+ const x=-980,y=760,waterY=y-8;
+ let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-980 760) scale(1.08) translate(980 -760)">
  <ellipse cx="${x}" cy="${y+25}" rx="238" ry="166" fill="#315b2a" opacity=".25"/>
  <ellipse cx="${x}" cy="${y}" rx="236" ry="158" fill="#b79a69" stroke="#755b3a" stroke-width="12"/>
  <ellipse cx="${x}" cy="${y-5}" rx="214" ry="137" fill="#e4d2a4" stroke="#f0e0b6" stroke-width="7"/>
@@ -2528,7 +2530,7 @@ function renderLakeArea(){
  });
  return s+"</g>";
 }
-function focusLakeArea(close=true){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=800;updateView();if(close)closeModal()}
+function focusLakeArea(close=true){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=760;updateView();if(close)closeModal()}
 function lakeFishProgress(f){if(!f||f.status!=='growing'||!f.readyAt)return 0;return Math.max(0,Math.min(1,1-(f.readyAt-Date.now())/(LAKE_TIME_FACTOR*LAKE_FISH[f.type].hours*HOUR)))}
 function syncLakeFish(){if(!farmWriteAllowed(false))return false;if(!state?.lake?.fish)return false;let changed=false;for(const f of state.lake.fish){if(f.status==='growing'&&f.readyAt<=Date.now()){f.stage=Math.min(5,f.stage+1);f.readyAt=0;f.status=f.stage>=5?'adult':'hungry';changed=true;remember(f.status==='adult'?`${LAKE_FISH[f.type].name} chegou à fase adulta.`:`${LAKE_FISH[f.type].name} cresceu para a fase ${f.stage}/5.`);if(f.status==='adult')awardXP(18,'crescimento de peixe')}}if(changed)markDirty(true);return changed}
 function renderLakeModal(){const fish=state.lake.fish||[],adult=fish.filter(f=>f.status==='adult').length;let s=`<div class="gift-summary"><span class="symbol">🐟</span><div><b>Lago artificial · Piscicultura</b><small>${fish.length} peixe(s) · ${adult} adulto(s). Criação comercial independente das capturas do Rio e do Mar.</small></div></div><button class="modal-action alt" data-focus-area="lake">Centralizar Lago</button><h3>🥚 Loja de ovos de peixes</h3><p>Compre ovos e alimente os peixes a cada etapa até a fase adulta.</p><div class="grid-cards">${Object.entries(LAKE_FISH).map(([id,f])=>`<div class="store-card"><span class="symbol">${f.icon}</span><strong>${f.name}</strong><small>Ovo · ${f.hours} h por etapa · Venda adulta: 🟡 ${fmt(f.price)}</small><b>🟡 ${fmt(f.egg)}</b><button data-buy-lake-egg="${id}" ${state.coins<f.egg?'disabled':''}>Comprar ovo</button></div>`).join('')}</div><h3>🪣 Ração para peixes</h3><p>Estoque: ${fmt(state.inventory.lake_fish_feed||0)} · 🟡 ${fmt(LAKE_FEED_PRICE)} cada</p><button class="modal-action" data-buy-lake-feed="true" ${state.coins<LAKE_FEED_PRICE?'disabled':''}>Comprar ração</button><h3>🐠 Seus peixes</h3>${fish.length?`<div class="grid-cards">${fish.map(f=>{const c=LAKE_FISH[f.type],p=lakeFishProgress(f);return `<div class="store-card"><span class="symbol">${c.icon}</span><strong>${c.name}</strong><small>Fase ${f.stage}/5 · ${f.status==='adult'?'Adulto':f.status==='growing'?'Crescendo · '+Math.ceil((f.readyAt-Date.now())/60000)+' min':'Precisa de alimento'}</small><div class="lake-growth"><i style="width:${Math.round(p*100)}%"></i></div>${f.status==='adult'?`<b>Venda: 🟡 ${fmt(c.price)}</b><button data-sell-lake-fish="${f.id}">Vender adulto</button>`:f.status==='hungry'?`<button data-feed-lake-fish="${f.id}" ${!(state.inventory.lake_fish_feed>0)?'disabled':''}>Alimentar</button>`:'<button disabled>Crescimento em andamento</button>'}</div>`}).join('')}</div>`:'<p>Compre ovos para começar sua criação.</p>'}<h3>🌿 Decoração das margens</h3><p>Instale itens que já possui no menu Decorações.</p><div class="grid-cards">${Object.entries(DECORATIONS).filter(([id])=>(state.decorInventory[id]||0)>0).map(([id,d])=>`<div class="store-card"><span class="symbol">${d.icon}</span><strong>${d.name}</strong><small>Disponível: ${state.decorInventory[id]}</small><button data-place-lake-decor="${id}">Colocar na margem</button></div>`).join('')||'<p>Nenhuma decoração disponível no inventário.</p>'}</div>${state.lake.decorations.length?'<h4>Decorações instaladas</h4>'+state.lake.decorations.map(d=>'<div class="list-line"><span>'+DECORATIONS[d.id].icon+' '+DECORATIONS[d.id].name+'</span><button class="modal-action alt" data-remove-lake-decor="'+d.slot+'">Retirar</button></div>').join(''):''}<h3>🌉 Pontes instaladas</h3>${state.lake.bridges.length?state.lake.bridges.map(b=>'<div class="list-line"><span>🌉 '+WOODWORK_RECIPES[b.id].name+'</span><button class="modal-action alt" data-remove-lake-bridge="'+b.slot+'">Remover</button></div>').join(''):'<p>Nenhuma ponte instalada.</p>'}<h3>Fabricar na Marcenaria</h3>${['ponte_carvalho','ponte_azul','ponte_verde','ponte_rubra'].map(id=>{const r=WOODWORK_RECIPES[id],n=state.furnitureWarehouse[id]||0;return `<div class="list-line"><span>${r.icon} <b>${r.name}</b><br><small>Fabricadas: ${n}</small></span><button data-place-lake-bridge="${id}" ${!n||state.lake.bridges.includes(id)?'disabled':''}>${state.lake.bridges.includes(id)?'Instalada':'Instalar ponte'}</button></div>`}).join('')}`;return s}
@@ -3058,6 +3060,7 @@ function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fi
 function panView(direction){const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);view.cx+=direction*visibleW*.68;updateView()}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
+svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
 $('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
 $('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-river-fishing]')&&!drag&&Date.now()>suppressWorldClickUntil){openModal('pond');return}if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
