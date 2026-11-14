@@ -1904,7 +1904,6 @@ function showFishingCelebration(catchInfo){
  if((catchInfo.scene==='sea'||catchInfo.scene==='river')&&activeScene===catchInfo.scene){
   const status=$('sea-fishing-status');
   if(status){
-   clearTimeout(toastTimer);
    launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
    const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
    const style=FISHING_RARITY_STYLE[rarity]||'common';
@@ -1917,7 +1916,7 @@ function showFishingCelebration(catchInfo){
    const detail=document.createElement('small');detail.className='fishing-toast-detail';detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+(catchInfo.reward?' · '+catchInfo.reward:'')+' · +'+catchInfo.xp+' XP';
    content.append(heading,fish,detail);status.append(content);
    playFishingSfx(rarity,catchInfo.isExtraordinary);
-   toastTimer=setTimeout(()=>{status.hidden=true;status.className='sea-fishing-status';status.replaceChildren()},3600);
+   setTimeout(()=>{status.hidden=true;status.className='sea-fishing-status';status.replaceChildren()},3600);
    return;
   }
  }
