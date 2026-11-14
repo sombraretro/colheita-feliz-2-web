@@ -1012,7 +1012,7 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 @media(max-width:700px){.sea-fishing-status{top:36%;width:min(340px,calc(100% - 24px))}.sea-fishing-status.is-result{top:36%}.sea-fishing-status[data-scene="river"]{top:61%}.sea-fishing-status[data-scene="river"].is-result{top:61%}}
 
 /* Controle da barra inferior: oculta sem alterar o desenho dos atalhos e permite reexibir pelo topo. */
-.bottom-nav-toggle{display:none}
+.bottom-nav-toggle{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 34px;width:34px;height:34px;padding:0;font-size:20px;line-height:1}
 @media(max-width:700px){
  .bottom-nav-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:30px;height:30px;min-width:30px;padding:0;font-size:19px;line-height:1}
  .app.bottom-navigation-hidden #mobile-navigation{display:none!important}
@@ -1020,3 +1020,9 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
  .app.bottom-navigation-hidden .zoom-ui{bottom:calc(66px + env(safe-area-inset-bottom))}
  .app.bottom-navigation-hidden .side-menu{bottom:calc(12px + env(safe-area-inset-bottom))}
 }
+
+
+/* Correção de acessibilidade das interações de pesca no Rio e controle universal da barra inferior. */
+#world #river-fishing-backpack,#world #river-fishing-rod{pointer-events:all;cursor:pointer;touch-action:manipulation;filter:drop-shadow(0 3px 3px #172b1766);transition:filter .16s ease}
+#world #river-fishing-backpack:hover,#world #river-fishing-rod:hover,#world #river-fishing-backpack:focus,#world #river-fishing-rod:focus{filter:drop-shadow(0 0 12px #fff0a4) brightness(1.12);outline:none}
+.app.bottom-navigation-hidden #mobile-navigation,.app.bottom-navigation-hidden .tool-bar{display:none!important}
