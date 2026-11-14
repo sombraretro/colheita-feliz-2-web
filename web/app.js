@@ -2424,7 +2424,7 @@ function updateDayNight(){
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
  if(layer.dataset.phase===phase)return;
  layer.dataset.phase=phase;
- const environmentLayers=['farm-landscape','ground-layer','day-night-ground-layer','theme-ground-layer'];
+ const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
  for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
  layer.innerHTML='';
