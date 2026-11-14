@@ -999,9 +999,10 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 .farm-scene-navigation button[data-farm-scene="nature"].active{background:linear-gradient(#8fbd56,#548b32);border-color:#456f29;color:#fff}
 
 /* Contagem e resultado da pesca ocupam a mesma posição, fora da barra inferior. */
-.sea-fishing-status{top:38%;bottom:auto;z-index:18}
+.sea-fishing-status{position:fixed;top:38%;bottom:auto;z-index:1000}
 .sea-fishing-status[data-scene="river"]{top:60%}
-.sea-fishing-status.is-result{min-height:112px;padding:17px 22px;overflow:visible;animation:fish-toast-common .45s cubic-bezier(.2,.8,.2,1) both}
+.sea-fishing-status.is-result{position:fixed;top:38%;min-height:112px;padding:17px 22px;overflow:visible;animation:fish-toast-common .45s cubic-bezier(.2,.8,.2,1) both}
+.sea-fishing-status[data-scene="river"].is-result{top:60%}
 .sea-fishing-status .fishing-toast-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px}
 .sea-fishing-status .fishing-toast-heading{font-size:13px;letter-spacing:.08em}
 .sea-fishing-status .fishing-toast-fish{display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px}
