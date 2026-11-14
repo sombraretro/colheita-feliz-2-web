@@ -3127,7 +3127,7 @@ $('playfield').addEventListener('pointerdown',e=>{
   pinchState={distance:dist,zoom:view.zoom,worldX:view.cx-visibleW/2+rx*visibleW,worldY:view.cy-visibleH/2+ry*visibleH};
   drag=null;e.preventDefault();return;
  }
- const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');
+ const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
