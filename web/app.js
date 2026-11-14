@@ -444,8 +444,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:-625,y:785,w:88,h:66},{x:-525,y:785,w:88,h:66},{x:-425,y:785,w:88,h:66},{x:-325,y:785,w:88,h:66},{x:-225,y:785,w:88,h:66},
-  {x:-625,y:875,w:88,h:66},{x:-525,y:875,w:88,h:66},{x:-425,y:875,w:88,h:66},{x:-325,y:875,w:88,h:66},{x:-225,y:875,w:88,h:66}
+  {x:-625,y:710,w:88,h:66},{x:-525,y:710,w:88,h:66},{x:-425,y:710,w:88,h:66},{x:-325,y:710,w:88,h:66},{x:-225,y:710,w:88,h:66},
+  {x:-625,y:925,w:88,h:66},{x:-525,y:925,w:88,h:66},{x:-425,y:925,w:88,h:66},{x:-325,y:925,w:88,h:66},{x:-225,y:925,w:88,h:66}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -957,7 +957,7 @@ let front='';
 front+=fencePath([[1260,780],[1430,780]],'front');
 front+=fencePath([[1560,780],[1780,780]],'front');
 front+=`<g transform="translate(1430 780)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
-front+=`<g data-farm-sign="true" tabindex="0" role="button" aria-label="Abrir e editar o nome da fazenda" style="cursor:pointer" transform="translate(1080 770)"><ellipse cx="105" cy="91" rx="105" ry="13" fill="#294d22" opacity=".28"/><path d="M42 20V91M168 20V91" stroke="#52371f" stroke-width="13" stroke-linecap="round"/><path d="M42 20V89M168 20V89" stroke="#b77c45" stroke-width="8" stroke-linecap="round"/><path d="M-4 -42H214V37H-4Z" fill="#704728" stroke="#49301e" stroke-width="7" stroke-linejoin="round"/><path d="M5 -34H205V29H5Z" fill="#e4bd78" stroke="#bd8c4b" stroke-width="4"/><path d="M13 -27H197V22H13Z" fill="#f3dfb5" stroke="#8b5c32" stroke-width="2"/><text id="farm-sign-label" x="105" y="4" text-anchor="middle" font-size="18" font-weight="900" textLength="176" lengthAdjust="spacingAndGlyphs" fill="#60401f">Minha fazenda</text><path d="M-4 -42L105 -60L214 -42" fill="#9b6738" stroke="#49301e" stroke-width="6" stroke-linejoin="round"/><path d="M105 -54L105 -43" stroke="#e9c987" stroke-width="3"/></g>`;;
+front+=`<g data-farm-sign="true" tabindex="0" role="button" aria-label="Abrir e editar o nome da fazenda" style="cursor:pointer" transform="translate(900 770)"><ellipse cx="105" cy="91" rx="105" ry="13" fill="#294d22" opacity=".28"/><path d="M42 20V91M168 20V91" stroke="#52371f" stroke-width="13" stroke-linecap="round"/><path d="M42 20V89M168 20V89" stroke="#b77c45" stroke-width="8" stroke-linecap="round"/><path d="M-4 -42H214V37H-4Z" fill="#704728" stroke="#49301e" stroke-width="7" stroke-linejoin="round"/><path d="M5 -34H205V29H5Z" fill="#e4bd78" stroke="#bd8c4b" stroke-width="4"/><path d="M13 -27H197V22H13Z" fill="#f3dfb5" stroke="#8b5c32" stroke-width="2"/><text id="farm-sign-label" x="105" y="4" text-anchor="middle" font-size="18" font-weight="900" textLength="176" lengthAdjust="spacingAndGlyphs" fill="#60401f">Minha fazenda</text><path d="M-4 -42L105 -60L214 -42" fill="#9b6738" stroke="#49301e" stroke-width="6" stroke-linejoin="round"/><path d="M105 -54L105 -43" stroke="#e9c987" stroke-width="3"/></g>`;;
 
 for(let i=0;i<38;i++){
  const x=i<19?-320+seedNoise(i*7)*250:1740+seedNoise(i*19)*240,y=i<19?520+seedNoise(i*27)*400:420+seedNoise(i*12)*250;
@@ -2458,7 +2458,7 @@ function renderWeatherRain(){
   const lean=(i+offset)%2===0?-7:7,len=18+(i%4)*4;
   return '<path d="M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+lean+' '+len+'" />';
  }).join('');
- layer.innerHTML='<g class="rain-wind-a" fill="none" stroke="#e4f4ff" stroke-width="1.25" stroke-linecap="round" opacity=".64">'+drops(0,190)+'</g><g class="rain-wind-b" fill="none" stroke="#c8e6f5" stroke-width="1.05" stroke-linecap="round" opacity=".43">'+drops(7,150)+'</g>';
+ layer.innerHTML='<g class="rain-wind-a" opacity=".64"><g class="rain-fall" fill="none" stroke="#e4f4ff" stroke-width="1.25" stroke-linecap="round">'+drops(0,190)+'</g></g><g class="rain-wind-b" opacity=".43"><g class="rain-fall" fill="none" stroke="#c8e6f5" stroke-width="1.05" stroke-linecap="round">'+drops(7,150)+'</g></g>';
 }
 async function updateWeatherFromLocation(){
  if(weatherRequestInFlight||!navigator.geolocation||!navigator.onLine)return;
