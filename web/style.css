@@ -955,3 +955,19 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 @media(min-width:701px) and (orientation:landscape){
  body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+/* Mar: fundo integral, cenário costeiro mais rico e pontos de interação no barco. */
+.playfield.sea-scene-active{background:#0b6486;background-image:linear-gradient(180deg,#83cce7 0%,#c5e6e8 34%,#287f9c 49%,#07506f 100%)}
+.playfield.sea-scene-active #world{background:transparent}
+.farm-scene-navigation button[data-farm-scene="sea"]{background:linear-gradient(#e4f8fa,#a8dce4);border-color:#6caab4;color:#235b69}
+.farm-scene-navigation button[data-farm-scene="sea"].active{background:linear-gradient(#5bb8ca,#19788e);border-color:#125b70;color:#fff}
+#sea-landscape [data-sea-bag],#sea-landscape [data-sea-net]{cursor:pointer;filter:drop-shadow(0 3px 3px #25190f66);transition:filter .18s ease,transform .18s ease}
+#sea-landscape [data-sea-bag]:hover,#sea-landscape [data-sea-net]:hover{filter:drop-shadow(0 0 12px #fff0a4) brightness(1.12)}
+#sea-landscape [data-sea-bag]:focus,#sea-landscape [data-sea-net]:focus{outline:none;filter:drop-shadow(0 0 15px #fff0a4) brightness(1.15)}
+.sea-fishing-status{position:absolute;z-index:8;left:50%;bottom:clamp(22px,8vh,76px);transform:translateX(-50%);width:min(360px,calc(100% - 28px));padding:13px 18px;display:grid;gap:7px;text-align:center;border:2px solid #d8b77a;border-radius:16px;background:linear-gradient(145deg,#fff9e7ed,#d8eff0ed);box-shadow:0 8px 26px #063d5577;color:#285366;pointer-events:none;backdrop-filter:blur(5px)}
+.sea-fishing-status[hidden]{display:none}
+.sea-fishing-status strong{font-size:15px;color:#1c6278}
+.sea-fishing-status span{font-size:12px;font-weight:700}
+.sea-fishing-status>i{display:block;height:9px;border:1px solid #8ab6b7;border-radius:99px;overflow:hidden;background:#d0e3df}
+.sea-fishing-status>i b{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#55b7c6,#e5c66d);transition:width .2s linear}
+@media(max-width:700px){.sea-fishing-status{bottom:16px;padding:10px 13px}.farm-scene-navigation button[data-farm-scene="sea"]{padding-inline:7px}}
