@@ -1847,7 +1847,7 @@ function updateNotificationBadges(){
   layer.innerHTML=marker(532,320,'🌾',counts.crops,'Plantação pronta para colher')+
    marker(1060,55,'🍳',counts.kitchen,'Receita pronta na cozinha')+
    marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
-   marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
+   marker(1810,430,'🐄',readyLivestock,'Produção pronta no curral')+
    marker(45,-10,'🐦',readyBirds,'Produção pronta no viveiro')+
    marker(2670,155,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
