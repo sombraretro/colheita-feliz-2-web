@@ -452,7 +452,7 @@ const isBirdType=type=>BIRD_TYPES.includes(type);
 const AVIARY_COLUMNS=6;
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,coelho:.55,porco:.82,cabra:.78,ovelha:.88,burro:.94,vaca:1.00,bufala:1.02,boi:1.02,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','manga','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
-const ORCHARD_SLOTS=[[2185,365],[2470,385],[2760,365],[3050,390],[2330,525],[2615,545],[2905,525],[3190,545]];
+const ORCHARD_SLOTS=[[2535,365],[2820,385],[3110,365],[3400,390],[2680,525],[2965,545],[3255,525],[3540,545]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Rio da fazenda',icon:'🌊',price:9000,level:12},haras:{name:'Haras',icon:'🐎',price:16000,greenPrice:25,level:20}};
 function starterAnimals(){return [
  {id:'dog-1',type:'cachorro',name:'Cachorro',breed:'classico',slot:-1,status:'hungry',stage:1,readyAt:0,guardUntil:0},
@@ -912,15 +912,19 @@ const ground=`<defs>
 <!-- Cenário panorâmico do Pomar e Mata: continuação texturizada da Fazenda. -->
 <g id="nature-landscape" pointer-events="none">
  <defs>
-  <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0">
-   <stop offset="0" stop-color="white" stop-opacity="0"/>
-   <stop offset=".22" stop-color="white" stop-opacity=".12"/>
-   <stop offset=".52" stop-color="white" stop-opacity=".55"/>
-   <stop offset=".82" stop-color="white" stop-opacity=".88"/>
-   <stop offset="1" stop-color="white" stop-opacity="1"/>
-  </linearGradient>
-  <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4400" height="2475">
-   <rect x="1300" y="-250" width="4400" height="2475" fill="url(#nature-farm-seam-gradient)"/>
+  <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="5700" y2="0">
+    <stop offset="0" stop-color="white" stop-opacity="0"/>
+    <stop offset=".10" stop-color="white" stop-opacity=".12"/>
+    <stop offset=".22" stop-color="white" stop-opacity=".55"/>
+    <stop offset=".34" stop-color="white" stop-opacity=".88"/>
+    <stop offset=".42" stop-color="white" stop-opacity="1"/>
+    <stop offset=".86" stop-color="white" stop-opacity="1"/>
+    <stop offset=".93" stop-color="white" stop-opacity=".82"/>
+    <stop offset=".97" stop-color="white" stop-opacity=".38"/>
+    <stop offset="1" stop-color="white" stop-opacity="0"/>
+   </linearGradient>
+   <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4400" height="2475">
+    <rect x="1300" y="-250" width="4400" height="2475" fill="url(#nature-farm-seam-gradient)"/>
    <rect x="1245" y="175" width="550" height="630" fill="black"/>
   </mask>
  </defs>
@@ -958,14 +962,14 @@ function blocked(x,y){
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
- if(x>2000&&x<3315&&y>-110&&y<590)return true;
+ if(x>2350&&x<3665&&y>-110&&y<590)return true;
  if(x>=-6300&&x<=-2100)return true;
  if(x>-660&&x<-100&&y>165&&y<500)return true;
  for(const [tx,ty,tw,th] of treePlacements)if(x>tx-35&&x<tx+tw+35&&y>ty-35&&y<ty+th+30)return true;
  return false;
 }
 const treePlacements=[
- [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)']
+ [3770,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[4170,45,225,270,'hue-rotate(18deg)']
 ];
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
 for(let i=0;i<330;i++){
@@ -1570,7 +1574,7 @@ function useFertilizerOnPlot(plot){if(!farmWriteAllowed())return;
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=760;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-380;view.cy=330;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3250;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
+function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=760;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-380;view.cy=330;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3600;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
 function buyExpansion(id,currency='coins'){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(cfg.name+' já está liberado.');
@@ -1629,7 +1633,7 @@ function renderHarasArea(){
 }
 function renderOrchardArea(){
   if(!state?.expansions?.orchard)return '';
-  let html=`<g id="orchard-ground" pointer-events="none">
+  let html=`<g id="orchard-area-position" transform="translate(350 0)"><g id="orchard-ground" pointer-events="none">
    <!-- Pomar reposicionado para cima, com afastamento claro da estrada e de sua cerca. -->
    <path d="M2075 335Q2075 245 2185 230L3125 230Q3240 245 3250 345L3240 535Q3230 615 3130 630L2185 630Q2075 615 2065 535Z" fill="#75452f" stroke="#51301f" stroke-width="17" stroke-linejoin="round"/>
    <path d="M2095 338Q2095 265 2195 250L3115 250Q3220 265 3230 350L3220 525Q3210 595 3120 610L2195 610Q2095 595 2085 525Z" fill="#9a6240" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
@@ -1662,7 +1666,7 @@ function renderOrchardArea(){
    <g fill="#d5a16a" opacity=".9"><path d="M2060 312l20-2 2 10-20 2Z"/><path d="M2178 177l21-2 1 10-21 2Z"/><path d="M2403 177l21-2 1 10-21 2Z"/><path d="M2633 177l21-2 1 10-21 2Z"/><path d="M2863 177l21-2 1 10-21 2Z"/><path d="M3108 177l21-2 1 10-21 2Z"/></g>
   </g>`;
   html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
-  return html;
+   return html+'</g>';
 }
 function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
  const posts=Array.from({length:9},(_,i)=>{const px=-half+(i*2*half/8);return `<path d="M${px.toFixed(1)} -20v-29 M${px.toFixed(1)} 20v29" stroke="#493326" stroke-width="${i===0||i===8?8:6}" stroke-linecap="round"/>`}).join("");
@@ -2627,8 +2631,8 @@ function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?
  const p=forestProgress(tree),ready=tree.status==='ready'||p>=1;return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="48" ry="12" fill="#315d29" opacity=".25"/><path d="M-8 0L-6 -62L6 -62L8 0Z" fill="#805334" stroke="#604027" stroke-width="3"/><circle cy="-76" r="36" fill="'+cfg.color+'" stroke="#396d39" stroke-width="4"/><circle cx="-24" cy="-58" r="22" fill="'+cfg.color+'" opacity=".9"/><circle cx="23" cy="-58" r="23" fill="'+cfg.color+'" opacity=".9"/><circle cy="-96" r="21" fill="'+cfg.color+'" opacity=".9"/><text y="30" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff5d4" stroke="#563d20" stroke-width="3" paint-order="stroke">'+(ready?'PRONTA':Math.round(p*100)+'%')+'</text><title>'+cfg.name+' · '+(ready?'Clique para colher':formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+' restantes')+'</title></g>'}
 function unlockedForestPlotCount(){const level=farmLevel(),byLevel=level<20?0:Math.min(FOREST_PLOTS,1+Math.floor((level-20)/2));let occupied=0;for(let i=0;i<state.forestPlots.length;i++)if(state.forestPlots[i]?.type)occupied=i+1;return Math.max(byLevel,occupied)}
 function forestLockedSlotMarkup(slot){const [x,y]=FOREST_SLOT_POS[slot],required=20+slot*2;return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#294b26" opacity=".28"/><ellipse cy="0" rx="38" ry="15" fill="#806747" stroke="#59462f" stroke-width="4"/><path d="M-10 -17v-8a10 10 0 0 1 20 0v8" fill="none" stroke="#f4d78a" stroke-width="4"/><rect x="-14" y="-19" width="28" height="23" rx="4" fill="#e1c078" stroke="#76552d" stroke-width="3"/><text y="-28" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff5d4" stroke="#563d20" stroke-width="3" paint-order="stroke">NV. '+required+'</text><title>Canteiro bloqueado · alcance o nível '+required+'</title></g>'}
-function renderForestArea(){const background='<g id="forest-area" pointer-events="none"><path d="M3430 -20Q3500 -120 3660 -120H4240Q4360 -80 4380 70V790Q4330 900 4200 900H3500Q3400 840 3400 700V100Q3400 10 3430 -20Z" fill="#467b3b" stroke="#2f5f30" stroke-width="18"/><path d="M3470 20H4310V820H3470Z" fill="#78a94e" stroke="#b5d37a" stroke-width="10"/><path d="M3485 40H4290V800H3485Z" fill="none" stroke="#d6e6a0" stroke-width="5" stroke-dasharray="8 16"/></g>';const unlocked=unlockedForestPlotCount();return '<g transform="translate(0 -150)">'+background+state.forestPlots.map((t,i)=>i<unlocked?forestTreeMarkup(i,t):forestLockedSlotMarkup(i)).join('')+'</g>'}
-function focusForestArea(close=true){switchFarmScene('nature');view.zoom=.82;view.cx=3890;view.cy=240;updateView();if(close)closeModal()}
+function renderForestArea(){const background='<g id="forest-area" pointer-events="none"><path d="M3430 -20Q3500 -120 3660 -120H4240Q4360 -80 4380 70V790Q4330 900 4200 900H3500Q3400 840 3400 700V100Q3400 10 3430 -20Z" fill="#467b3b" stroke="#2f5f30" stroke-width="18"/><path d="M3470 20H4310V820H3470Z" fill="#78a94e" stroke="#b5d37a" stroke-width="10"/><path d="M3485 40H4290V800H3485Z" fill="none" stroke="#d6e6a0" stroke-width="5" stroke-dasharray="8 16"/></g>';const unlocked=unlockedForestPlotCount();return '<g transform="translate(350 -150)">'+background+state.forestPlots.map((t,i)=>i<unlocked?forestTreeMarkup(i,t):forestLockedSlotMarkup(i)).join('')+'</g>'}
+function focusForestArea(close=true){switchFarmScene('nature');view.zoom=.82;view.cx=4240;view.cy=240;updateView();if(close)closeModal()}
 function plantForestTree(slot,id){if(writeLocked)return notify('Salvamento protegido.');const tree=state.forestPlots[slot],cfg=FOREST_TREES[id],unlocked=unlockedForestPlotCount();if(!Number.isInteger(slot)||slot<0||slot>=unlocked)return notify('Este canteiro será liberado no nível '+(20+slot*2)+'.');if(!tree||tree.type||!cfg||cfg.retired)return notify('Escolha um canteiro vazio e uma espécie disponível.');if(farmLevel()<cfg.level)return notify(cfg.name+' exige nível '+cfg.level+'.');if((state.inventory['tree_'+id]||0)<1)return notify('Você não possui a muda de '+cfg.name+'. Compre-a na loja.');state.inventory['tree_'+id]--;discoverItem('mata',id,cfg.name,cfg.icon||'🌳');state.progressCounters.explore=(state.progressCounters.explore||0)+1;bumpMissionProgress('explore',1);state.forestPlots[slot]={type:id,status:'growing',plantedAt:Date.now()};awardProfessionXP('lumberjack',10,'plantio na Mata');remember('Plantou '+cfg.name+' na Mata.');markDirty();refresh();notify(cfg.name+' plantada na Mata.')}
 function harvestForestTree(slot){if(writeLocked)return notify('Salvamento protegido.');const t=state.forestPlots[slot];if(!t?.type)return openModal('forest');const cfg=FOREST_TREES[t.type],p=forestProgress(t);if(p<1&&t.status!=='ready')return notify(cfg.name+': faltam '+formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+'.');state.progressCounters.explore=(state.progressCounters.explore||0)+1;bumpMissionProgress('explore',1);if(cfg.fruitCrop){const fruit=CROPS[cfg.fruitCrop];state.warehouse[cfg.fruitCrop]=(state.warehouse[cfg.fruitCrop]||0)+cfg.yield;awardProfessionXP('lumberjack',cfg.xp,'colheita de frutos da Mata');remember('Colheu '+cfg.yield+' frutos de '+cfg.name+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();return notify(cfg.yield+' '+fruit.name+' adicionados ao depósito para suas receitas.')}if(cfg.herbYield){const key='herb_'+cfg.herbYield;state.inventory[key]=(state.inventory[key]||0)+cfg.yield;awardProfessionXP('lumberjack',cfg.xp,'colheita de ervas na Mata');remember('Colheu '+cfg.yield+' folhas de '+cfg.name+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();return notify(cfg.yield+' folhas de '+cfg.name+' adicionadas aos ingredientes do Mix de Ervas.')}if(cfg.wood)state.woodWarehouse[cfg.wood]=(state.woodWarehouse[cfg.wood]||0)+cfg.yield;if(cfg.leafId){const key='herb_'+cfg.leafId;state.inventory[key]=(state.inventory[key]||0)+Math.max(1,Math.floor(cfg.yield/3));}awardProfessionXP('lumberjack',cfg.xp,'colheita de madeira');remember('Obteve '+cfg.yield+' unidades de '+cfg.woodName+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();notify(cfg.yield+' unidades de '+cfg.woodName+' adicionadas ao estoque.'+(cfg.leafId?' Folhas também recolhidas para o Mix de Ervas.':''))}
 function buySeaNet(id,currency){if(writeLocked)return notify('Salvamento protegido.');if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');const cfg=SEA_NETS[id];if(!cfg||id==='normal')return;if(state.seaFishing.nets.includes(id))return selectSeaNet(id);if(farmLevel()<cfg.level)return notify('A rede '+cfg.name+' exige nível '+cfg.level+'.');const wallet=currency==='greenCoins'?'greenCoins':'coins',price=currency==='greenCoins'?cfg.greenCoins:cfg.coins;if(state[wallet]<price)return notify(currency==='greenCoins'?'Moedas verdes insuficientes.':'Moedas amarelas insuficientes.');state[wallet]-=price;state.seaFishing.nets.push(id);discoverItem('equipamentos','rede_'+id,'Rede '+cfg.name,'🪢');state.seaFishing.net=id;remember('Comprou a rede '+cfg.name+'.');markDirty();refresh();notify('Rede '+cfg.name+' adquirida e equipada.')}
