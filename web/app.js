@@ -868,7 +868,7 @@ const ground=`<defs>
 </g>
 <!-- Cenário panorâmico do Rio: inclui a vegetação, o curso d'água, a ponte e o píer. -->
 <g id="river-landscape" pointer-events="none">
- <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-6300" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
