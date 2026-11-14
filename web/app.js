@@ -452,7 +452,7 @@ const isBirdType=type=>BIRD_TYPES.includes(type);
 const AVIARY_COLUMNS=6;
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,coelho:.55,porco:.82,cabra:.78,ovelha:.88,burro:.94,vaca:1.00,bufala:1.02,boi:1.02,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','manga','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
-const ORCHARD_SLOTS=[[2260,810],[2530,810],[2800,810],[3070,810],[2395,1140],[2665,1140],[2935,1140],[3205,1140]];
+const ORCHARD_SLOTS=[[2260,805],[2535,825],[2820,810],[3090,835],[2395,1155],[2670,1175],[2940,1160],[3210,1180]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Rio da fazenda',icon:'🌊',price:9000,level:12},haras:{name:'Haras',icon:'🐎',price:16000,greenPrice:25,level:20}};
 function starterAnimals(){return [
  {id:'dog-1',type:'cachorro',name:'Cachorro',breed:'classico',slot:-1,status:'hungry',stage:1,readyAt:0,guardUntil:0},
