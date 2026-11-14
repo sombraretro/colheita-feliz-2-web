@@ -439,13 +439,11 @@ const FERTILIZERS={
  surfConcentrate:{name:'Surf Líquido Concentrado · 20h',icon:'🧼',hours:20,price:0,currency:'gift',flowerOnly:true,balance:'historical',note:'Presente diário ou de amigos; reduz 20h e só pode ser usado em flores.'}
 };
 const ANIMAL_SLOTS=[
- {x:1280,y:425,w:140,h:105},{x:1440,y:425,w:140,h:105},{x:1600,y:425,w:140,h:105},
- {x:1280,y:565,w:140,h:105},{x:1440,y:565,w:140,h:105},{x:1600,y:565,w:140,h:105},
- {x:1280,y:705,w:140,h:105},{x:1440,y:705,w:140,h:105},{x:1600,y:705,w:140,h:105}
+ {x:1280,y:385,w:140,h:105},{x:1440,y:385,w:140,h:105},{x:1600,y:385,w:140,h:105},
+ {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105},
+ {x:1280,y:665,w:140,h:105},{x:1440,y:665,w:140,h:105},{x:1600,y:665,w:140,h:105}
  ];
-// As vagas mantêm exatamente a disposição anterior dos cavalos, deslocada
- // junto com o Haras (+580, +370) para dentro da nova área.
- const HORSE_SLOTS=[
+const HORSE_SLOTS=[
   {x:-550,y:820,w:80,h:60},{x:-470,y:820,w:80,h:60},{x:-390,y:820,w:80,h:60},{x:-310,y:820,w:80,h:60},{x:-230,y:820,w:80,h:60},
   {x:-550,y:900,w:80,h:60},{x:-470,y:900,w:80,h:60},{x:-390,y:900,w:80,h:60},{x:-310,y:900,w:80,h:60},{x:-230,y:900,w:80,h:60}
  ];
@@ -820,7 +818,7 @@ function brickWalkwayMarkup(){
  'M532 890C420 1010 120 1040 -300 1035C-700 1025 -1050 1030 -1320 1020',
  'M532 890C510 830 500 760 500 720',
  'M1120 455C1185 455 1210 470 1240 505C1285 560 1330 650 1370 740C1400 820 1410 865 1390 900'];
- const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
+ const layers=(w,c,o=1)=>roads.slice(0,3).map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
  const narrow=(w,c,o=1)=>`<path d="${roads[3]}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`;
  return `<g id="farm-road-network" pointer-events="none">${layers(94,'#77512e',.10)}${layers(82,'#9b7448',.28)}${narrow(64,'#77512e',.10)}${narrow(54,'#9b7448',.28)}<g class="road-junctions">${[[532,890],[1390,900],[500,720]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="38" fill="url(#farmRoad)" stroke="#9b7448" stroke-width="3" opacity=".98"/>`).join('')}</g>${layers(72,'#9b7448')}${narrow(44,'#9b7448')}${layers(62,'url(#farmRoad)')}${narrow(38,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>`).join('')}</g>`;
 }
@@ -947,7 +945,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
 scenery+=svgImage('casinha-cachorro',370,145,145,140);
-scenery+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,380],[1780,380]],'rear')+fencePath([[1260,380],[1260,960]],'side')+fencePath([[1780,380],[1780,960]],'side')+'</g>';
+scenery+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,340],[1780,340]],'rear')+fencePath([[1260,340],[1260,920]],'side')+fencePath([[1780,340],[1780,920]],'side')+'</g>';
 
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
