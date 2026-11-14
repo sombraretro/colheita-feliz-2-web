@@ -1459,8 +1459,8 @@ function completeHuntIfReady(){
  const family=HUNT_FAMILIES[expedition.familyId],animal=huntAnimal(expedition.familyId,expedition.animalId),material=huntMaterial(expedition.resourceId);
  if(!family||!animal||!material){hunter.activeHunt=null;markDirty();return false}
  const baseQuantity=huntRandomInt(10,15),quantity=baseQuantity*(expedition.multiplier===3?3:1);
- const levelBefore=hunterLevel(),xp=huntRandomInt(family.xpMin,family.xpMax)+Math.floor(Math.max(0,levelBefore-1)*.8);
- hunter.materials[material.id]=(hunter.materials[material.id]||0)+quantity;hunter.xp+=xp;
+ const levelBefore=hunterLevel(),baseXp=huntRandomInt(family.xpMin,family.xpMax)+Math.floor(Math.max(0,levelBefore-1)*.8),xp=baseXp*(expedition.multiplier===3?3:1);
+ hunter.materials[material.id]=(hunter.materials[material.id]||0)+quantity;hunter.xp+=xp;awardXP(xp,'expedição de caça');
  const levelAfter=hunterLevel(),newTitles=[],titleRewards=[];
  for(const title of HUNT_TITLES){
   if(title.level>levelBefore&&title.level<=levelAfter&&!hunter.titleRewardsClaimed.includes(title.level)){
@@ -1471,7 +1471,7 @@ function completeHuntIfReady(){
  }
  const result={animalName:animal.name,familyName:family.label,resourceName:material.name,resourceIcon:material.icon,quantity,xp,levelBefore,levelAfter,newTitles,titleRewards,completedAt:Date.now(),mode:expedition.mode};
  hunter.history.unshift(result);hunter.history=hunter.history.slice(0,20);hunter.activeHunt=null;hunter.pendingResult=result;
- remember('Concluiu uma expedição de caça: '+animal.name+'. Recebeu '+quantity+' '+material.name+' e '+xp+' XP de caçador.');
+ remember('Concluiu uma expedição de caça: '+animal.name+'. Recebeu '+quantity+' '+material.name+' e '+xp+' XP para Caçador e Fazenda.');
  markDirty();refresh();openModal('hunt-result');notify('Expedição concluída! Seus recursos estão na mochila de caçador.');return true;
 }
 function updateHuntTimer(){
@@ -1485,7 +1485,7 @@ function updateHuntTimer(){
 }
 function renderHuntMenu(){
  const h=state.hunter,progress=hunterXpProgress(),title=hunterTitle(),active=h.activeHunt;
- let out='<div class="hunt-progress-card"><div><b>🎯 '+title.name+' · Nível '+progress.level+'</b><small>'+fmt(h.xp)+' XP de caçador · '+fmt(progress.current)+' / '+fmt(progress.needed)+' para o próximo nível</small></div><div class="hunt-xp-track"><i style="width:'+progress.percent+'%"></i></div></div>';
+ let out='<div class="hunt-progress-card"><div><b>🎯 '+title.name+' · Nível '+progress.level+'</b><small>'+fmt(h.xp)+' XP · também conta para o nível da Fazenda · '+fmt(progress.current)+' / '+fmt(progress.needed)+' para o próximo nível</small></div><div class="hunt-xp-track"><i style="width:'+progress.percent+'%"></i></div></div>';
  if(active){
   const family=HUNT_FAMILIES[active.familyId],animal=huntAnimal(active.familyId,active.animalId);
   out+='<div class="hunt-active-card"><span>⏳</span><b>Expedição em andamento</b><p>'+safe(family.label)+' · '+safe(animal.name)+'</p><strong id="hunt-modal-clock">'+formatHuntDuration(active.endsAt-Date.now())+'</strong><div class="hunt-timer-track"><i id="hunt-modal-fill"></i></div><small>Você pode sair desta tela. A expedição continuará contando.</small></div>';return out;
@@ -1499,11 +1499,11 @@ function renderHuntMenu(){
 }
 function renderHunterInventory(){
  const h=state.hunter,progress=hunterXpProgress(),title=hunterTitle();
- return '<div class="gift-summary"><span class="symbol">🎒</span><div><b>Mochila de Caçador</b><small>'+title.name+' · Nível '+progress.level+' · '+fmt(h.xp)+' XP de caçador</small></div></div>'+(h.pendingResult?'<div class="offline-feature"><span>🏆</span><b>Resultado disponível</b><p>Uma expedição foi concluída e aguarda sua confirmação.</p><button class="modal-action" data-show-hunt-result>Ver resultado</button></div>':'')+'<div class="hunt-material-grid">'+HUNT_MATERIALS.map(item=>'<div class="hunt-material-card"><span>'+item.icon+'</span><div><b>'+safe(item.name)+'</b><small>'+safe(HUNT_FAMILIES[item.family].label)+'</small></div><strong>'+fmt(h.materials[item.id]||0)+'</strong></div>').join('')+'</div><h3>Últimas expedições</h3>'+((h.history||[]).length?h.history.slice(0,10).map(entry=>'<div class="list-line"><span><b>'+safe(entry.animalName)+'</b><br/><small>'+safe(entry.familyName)+' · '+new Date(entry.completedAt).toLocaleString('pt-BR')+'</small></span><b>+'+fmt(entry.quantity)+' '+safe(entry.resourceName)+'</b></div>').join(''):'<p>Nenhuma expedição concluída ainda.</p>');
+ return '<div class="gift-summary"><span class="symbol">🎒</span><div><b>Mochila de Caçador</b><small>'+title.name+' · Nível '+progress.level+' · '+fmt(h.xp)+' XP · também conta para a Fazenda</small></div></div>'+(h.pendingResult?'<div class="offline-feature"><span>🏆</span><b>Resultado disponível</b><p>Uma expedição foi concluída e aguarda sua confirmação.</p><button class="modal-action" data-show-hunt-result>Ver resultado</button></div>':'')+'<div class="hunt-material-grid">'+HUNT_MATERIALS.map(item=>'<div class="hunt-material-card"><span>'+item.icon+'</span><div><b>'+safe(item.name)+'</b><small>'+safe(HUNT_FAMILIES[item.family].label)+'</small></div><strong>'+fmt(h.materials[item.id]||0)+'</strong></div>').join('')+'</div><h3>Últimas expedições</h3>'+((h.history||[]).length?h.history.slice(0,10).map(entry=>'<div class="list-line"><span><b>'+safe(entry.animalName)+'</b><br/><small>'+safe(entry.familyName)+' · '+new Date(entry.completedAt).toLocaleString('pt-BR')+'</small></span><b>+'+fmt(entry.quantity)+' '+safe(entry.resourceName)+'</b></div>').join(''):'<p>Nenhuma expedição concluída ainda.</p>');
 }
 function renderHuntResult(){
  const result=state.hunter.pendingResult;if(!result)return '<div class="offline-feature"><span>🎒</span><b>Nenhum resultado pendente</b><p>Quando uma expedição terminar, o resultado aparecerá aqui.</p></div>';
- let out='<div class="hunt-result-hero"><span>🏆</span><div><b>Expedição concluída</b><small>'+safe(result.familyName)+' · '+safe(result.animalName)+'</small></div></div><div class="hunt-result-item"><span>'+safe(result.resourceIcon||'🎁')+'</span><div><b>'+safe(result.resourceName)+'</b><small>Adicionado à Mochila de Caçador</small></div><strong>+'+fmt(result.quantity)+'</strong></div><div class="hunt-result-xp">✨ +'+fmt(result.xp)+' XP de caçador</div>';
+ let out='<div class="hunt-result-hero"><span>🏆</span><div><b>Expedição concluída</b><small>'+safe(result.familyName)+' · '+safe(result.animalName)+'</small></div></div><div class="hunt-result-item"><span>'+safe(result.resourceIcon||'🎁')+'</span><div><b>'+safe(result.resourceName)+'</b><small>Adicionado à Mochila de Caçador</small></div><strong>+'+fmt(result.quantity)+'</strong></div><div class="hunt-result-xp">✨ +'+fmt(result.xp)+' XP para Caçador e Fazenda</div>';
  if(Array.isArray(result.newTitles)&&result.newTitles.length)out+='<h3>🏅 Novo título conquistado</h3>'+result.newTitles.map(name=>'<div class="gift-summary"><span class="symbol">🏅</span><div><b>'+safe(name)+'</b><small>Pacote de título: '+((result.titleRewards||[]).find(item=>item.title===name)?.quantityEach||0)+' unidade(s) de cada material da caça.</small></div></div>').join('');
  return out+'<button class="modal-action hunt-start-btn" data-hunt-ack>Continuar</button>';
 }
