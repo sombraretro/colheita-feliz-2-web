@@ -990,3 +990,32 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 #sea-boat-motion{transform-box:fill-box;transform-origin:50% 55%;animation:sea-boat-float 5.8s ease-in-out infinite}
 @keyframes sea-boat-float{0%,100%{transform:translateY(0) rotate(-.25deg)}50%{transform:translateY(7px) rotate(.35deg)}}
 @media(prefers-reduced-motion:reduce){#sea-water-ripples,#sea-birds,.sea-bird,#sea-boat-motion{animation:none!important}}
+
+
+/* Navegação de cena: Rio em azul e Pomar/Mata em verde, ambos distintos da Fazenda/Mar. */
+.farm-scene-navigation button[data-farm-scene="river"]{background:linear-gradient(#e5f4ff,#acd0f0);border-color:#78a9d2;color:#28577e}
+.farm-scene-navigation button[data-farm-scene="river"].active{background:linear-gradient(#6ab0e6,#286fae);border-color:#205b91;color:#fff}
+.farm-scene-navigation button[data-farm-scene="nature"]{background:linear-gradient(#e4f1c9,#b3d18a);border-color:#8eaf62;color:#46652b}
+.farm-scene-navigation button[data-farm-scene="nature"].active{background:linear-gradient(#8fbd56,#548b32);border-color:#456f29;color:#fff}
+
+/* Contagem e resultado da pesca ocupam a mesma posição, fora da barra inferior. */
+.sea-fishing-status{top:38%;bottom:auto;z-index:18}
+.sea-fishing-status[data-scene="river"]{top:60%}
+.sea-fishing-status.is-result{min-height:112px;padding:17px 22px;overflow:visible;animation:fish-toast-common .45s cubic-bezier(.2,.8,.2,1) both}
+.sea-fishing-status .fishing-toast-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px}
+.sea-fishing-status .fishing-toast-heading{font-size:13px;letter-spacing:.08em}
+.sea-fishing-status .fishing-toast-fish{display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px}
+.sea-fishing-status .fishing-toast-icon{font-size:34px;filter:drop-shadow(0 2px 2px #0003)}
+.sea-fishing-status .fishing-toast-name{font-size:20px;font-weight:800}
+.sea-fishing-status .fishing-toast-detail{font-size:12px;opacity:.82}
+@media(max-width:700px){.sea-fishing-status{top:36%;width:min(340px,calc(100% - 24px))}.sea-fishing-status[data-scene="river"]{top:61%}}
+
+/* Controle da barra inferior: oculta sem alterar o desenho dos atalhos e permite reexibir pelo topo. */
+.bottom-nav-toggle{display:none}
+@media(max-width:700px){
+ .bottom-nav-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:30px;height:30px;min-width:30px;padding:0;font-size:19px;line-height:1}
+ .app.bottom-navigation-hidden #mobile-navigation{display:none!important}
+ .app.bottom-navigation-hidden .tool-bar{bottom:calc(10px + env(safe-area-inset-bottom))}
+ .app.bottom-navigation-hidden .zoom-ui{bottom:calc(66px + env(safe-area-inset-bottom))}
+ .app.bottom-navigation-hidden .side-menu{bottom:calc(12px + env(safe-area-inset-bottom))}
+}
