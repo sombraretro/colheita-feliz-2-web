@@ -1,8 +1,8 @@
 'use strict';
-/* Build refresh: redeploy XP progression fix (2026-11-10). */
+/* Build refresh: Mata alinhada, transição do cenário e navegação lateral (2026-11-14). */
 /* Colheita Feliz 2 1.9.0: cloud save and visual revision, inbox, friend cards and gift packages. */
 let inventorySortMode='default';
-const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1300;
+const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1932;
 const CROPS={
  pimentao_verde:{name:'Pimentão Verde',icon:'🫑',price:1650,hours:34,regrowHours:14,yield:42,unitPrice:68,xp:105,minLevel:12,seasons:3,flower:'#d9e9a5',fruit:'#4f9b45'},
  pimentao_vermelho:{name:'Pimentão Vermelho',icon:'🫑',iconAccent:'#d8433b',price:1850,hours:36,regrowHours:15,yield:40,unitPrice:78,xp:118,minLevel:15,seasons:3,flower:'#f1c1a8',fruit:'#d8433b'},
@@ -315,7 +315,7 @@ const FOREST_TREES={
  cambuca:{name:'Cambucá',icon:'🌳',wood:null,woodName:'Frutos de Cambucá',level:35,price:9800,hours:70,yield:20,xp:68,color:'#a96a38',fruitCrop:'cambuca'}
 };
 const FOREST_TREE_IDS=Object.keys(FOREST_TREES).filter(id=>!FOREST_TREES[id].retired),FOREST_TIME_FACTOR=.2,FOREST_PLOTS=36;
-const FOREST_SLOT_POS=Array.from({length:36},(_,i)=>[3510+(i%6)*132,70+Math.floor(i/6)*142]);
+const FOREST_SLOT_POS=Array.from({length:36},(_,i)=>[3906+(i%12)*104,305+Math.floor(i/12)*120]);
 const SEA_TYPES={
  robalo:{name:'Robalo',icon:'🐟',rarity:'Comum',xp:5,minNet:0,weight:26},sardinha:{name:'Sardinha',icon:'🐟',rarity:'Comum',xp:4,minNet:0,weight:30},tainha:{name:'Tainha',icon:'🐟',rarity:'Comum',xp:5,minNet:0,weight:24},corvina:{name:'Corvina',icon:'🐟',rarity:'Comum',xp:5,minNet:0,weight:22},camarao:{name:'Camarão',icon:'🦐',rarity:'Comum',xp:6,minNet:0,weight:20},
  pescada:{name:'Pescada-amarela',icon:'🐟',rarity:'Incomum',xp:8,minNet:1,weight:19},anchova:{name:'Anchova',icon:'🐟',rarity:'Incomum',xp:8,minNet:1,weight:18},lula:{name:'Lula',icon:'🦑',rarity:'Incomum',xp:9,minNet:1,weight:16},mexilhao:{name:'Mexilhão',icon:'🦪',rarity:'Incomum',xp:8,minNet:1,weight:15},cavala:{name:'Cavala',icon:'🐟',rarity:'Incomum',xp:9,minNet:1,weight:15},
@@ -439,22 +439,20 @@ const FERTILIZERS={
  surfConcentrate:{name:'Surf Líquido Concentrado · 20h',icon:'🧼',hours:20,price:0,currency:'gift',flowerOnly:true,balance:'historical',note:'Presente diário ou de amigos; reduz 20h e só pode ser usado em flores.'}
 };
 const ANIMAL_SLOTS=[
- {x:1280,y:-105,w:140,h:105},{x:1440,y:-105,w:140,h:105},{x:1600,y:-105,w:140,h:105},
- {x:1280,y:35,w:140,h:105},{x:1440,y:35,w:140,h:105},{x:1600,y:35,w:140,h:105},
- {x:1280,y:175,w:140,h:105},{x:1440,y:175,w:140,h:105},{x:1600,y:175,w:140,h:105}
+ {x:1280,y:245,w:140,h:105},{x:1440,y:245,w:140,h:105},{x:1600,y:245,w:140,h:105},
+ {x:1280,y:385,w:140,h:105},{x:1440,y:385,w:140,h:105},{x:1600,y:385,w:140,h:105},
+ {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
-// As vagas mantêm exatamente a disposição anterior dos cavalos, deslocada
- // junto com o Haras (+580, +370) para dentro da nova área.
- const HORSE_SLOTS=[
- {x:-350,y:70,w:80,h:60},{x:-270,y:70,w:80,h:60},{x:-190,y:70,w:80,h:60},{x:-110,y:70,w:80,h:60},{x:-30,y:70,w:80,h:60},
- {x:-350,y:150,w:80,h:60},{x:-270,y:150,w:80,h:60},{x:-190,y:150,w:80,h:60},{x:-110,y:150,w:80,h:60},{x:-30,y:150,w:80,h:60}
+const HORSE_SLOTS=[
+  {x:-625,y:710,w:88,h:66},{x:-525,y:710,w:88,h:66},{x:-425,y:710,w:88,h:66},{x:-325,y:710,w:88,h:66},{x:-225,y:710,w:88,h:66},
+  {x:-625,y:925,w:88,h:66},{x:-525,y:925,w:88,h:66},{x:-425,y:925,w:88,h:66},{x:-325,y:925,w:88,h:66},{x:-225,y:925,w:88,h:66}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
 const AVIARY_COLUMNS=6;
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,coelho:.55,porco:.82,cabra:.78,ovelha:.88,burro:.94,vaca:1.00,bufala:1.02,boi:1.02,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','manga','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
-const ORCHARD_SLOTS=[[2350,185],[2580,185],[2810,185],[3040,185],[2350,410],[2580,410],[2810,410],[3040,410]];
+const ORCHARD_SLOTS=[[2185,365],[2470,385],[2760,365],[3050,390],[2330,525],[2615,545],[2905,525],[3190,545]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Rio da fazenda',icon:'🌊',price:9000,level:12},haras:{name:'Haras',icon:'🐎',price:16000,greenPrice:25,level:20}};
 function starterAnimals(){return [
  {id:'dog-1',type:'cachorro',name:'Cachorro',breed:'classico',slot:-1,status:'hungry',stage:1,readyAt:0,guardUntil:0},
@@ -466,7 +464,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-2600,right:4400,top:-300,bottom:1140,w:7000,h:980}, view={zoom:.8,cx:950,cy:490},svg=$('world');let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -814,16 +812,30 @@ function flower(x,y,s=1,color='#ffe8c3'){let a='';for(let i=0;i<5;i++){const ang
 function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#68452c" stroke-width="15" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-30}L${b[0]} ${b[1]-30}M${a[0]} ${a[1]-10}L${b[0]} ${b[1]-10}" fill="none" stroke="#b77a43" stroke-width="9" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-34}L${b[0]} ${b[1]-34}M${a[0]} ${a[1]-14}L${b[0]} ${b[1]-14}" fill="none" stroke="#e8bd79" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="14" ry="7" fill="#31551e" opacity=".28"/><path d="M${x-12} ${y-55}L${x-10} ${y-65}L${x+1} ${y-72}L${x+12} ${y-65}L${x+13} ${y+8}L${x-11} ${y+8}Z" fill="#85512f" stroke="#57391f" stroke-width="3.5"/><path d="M${x-10} ${y-55}L${x-8} ${y-64}L${x+1} ${y-69}L${x+10} ${y-63}L${x+10} ${y+3}L${x-8} ${y+3}Z" fill="#b87943"/><path d="M${x-8} ${y-55}L${x+1} ${y-63}L${x+9} ${y-55}" fill="none" stroke="#e8bd79" stroke-width="3.5" stroke-linecap="round"/><path d="M${x-4} ${y-43}V${y-2}" stroke="#d59a5b" stroke-width="3" opacity=".8"/><ellipse cx="${x+1}" cy="${y-29}" rx="3" ry="5" fill="#71452a" opacity=".7"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none"><path d="${points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y+4}`).join(' ')}" fill="none" stroke="#6f5836" stroke-width="20" stroke-linecap="round" opacity=".14"/>${rails}${posts}</g>`}
+const ROAD_POINTS=[[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[360,1020],[445,990],[490,950],[532,890],[700,920],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
+function roadOffsetPoints(side,spacing=118){
+ const out=[];
+ for(let i=1;i<ROAD_POINTS.length;i++){
+  const a=ROAD_POINTS[i-1],b=ROAD_POINTS[i],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*side*70,ny=dx/len*side*70,steps=Math.max(1,Math.ceil(len/spacing));
+  for(let j=0;j<steps;j++){const t=j/steps;out.push([a[0]+dx*t+nx,a[1]+dy*t+ny])}
+ }
+ const a=ROAD_POINTS[ROAD_POINTS.length-2],b=ROAD_POINTS[ROAD_POINTS.length-1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1;
+ out.push([b[0]-dy/len*side*70,b[1]+dx/len*side*70]);return out;
+}
+function roadFenceMarkup(side){
+ const pts=roadOffsetPoints(side),isGate=p=>side<0&&p[0]>1135&&p[0]<1260;
+ const segments=[];let current=[];
+ for(const p of pts){if(isGate(p)){if(current.length>1)segments.push(current);current=[]}else current.push(p)}
+ if(current.length>1)segments.push(current);
+ const paths=segments.map(seg=>'M'+seg.map(p=>p.map(v=>v.toFixed(1)).join(' ')).join('L')).join(' ');
+ const posts=pts.filter(p=>!isGate(p)).map(([x,y])=>'<path d="M'+x.toFixed(1)+' '+(y-17).toFixed(1)+'v34" stroke="#624a32" stroke-width="5" stroke-linecap="round"/><path d="M'+(x-1).toFixed(1)+' '+(y-15).toFixed(1)+'v30" stroke="#b18a5c" stroke-width="2" opacity=".75"/>').join('');
+ return '<g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="'+paths+'" stroke="#514c43" stroke-width="3.2" opacity=".95"/><path d="'+paths+'" stroke="#c5b69a" stroke-width="1" stroke-dasharray="2 10" opacity=".85"/></g><g>'+posts+'</g>';
+}
 function brickWalkwayMarkup(){
- const roads=[
- 'M1000 8V32',
- 'M535 -75H1000',
- 'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
- 'M532 890C420 1010 120 1040 -300 1035C-700 1025 -1050 1030 -1320 1020',
- 'M532 890C510 830 500 760 500 720',
- 'M1120 455C1185 455 1210 470 1240 505C1285 560 1330 650 1370 740C1400 820 1410 865 1390 900'];
- const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
- return `<g id="farm-road-network" pointer-events="none">${layers(94,'#77512e',.10)}${layers(82,'#9b7448',.28)}<g class="road-junctions">${[[532,890],[1390,900],[1000,20],[535,-75],[500,720]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="38" fill="url(#farmRoad)" stroke="#9b7448" stroke-width="3" opacity=".98"/>`).join('')}</g>${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>`).join('')}</g>`;
+ const road='M'+ROAD_POINTS.map(p=>p.join(' ')).join('L');
+ const layers=(w,c,o=1)=>'<path d="'+road+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round" opacity="'+o+'"/>';
+ const gate='<g transform="translate(1195 850) rotate(-5)"><path d="M-59 -24V24M59 -24V24" stroke="#52371f" stroke-width="13" stroke-linecap="round"/><path d="M-59 -22V22M59 -22V22" stroke="#b77c45" stroke-width="8"/><path d="M-55 -15H55M-55 12H55" stroke="#704a2d" stroke-width="9" stroke-linecap="round"/><path d="M-49 -15L49 12" stroke="#e2b777" stroke-width="3.5" stroke-linecap="round"/><circle cx="-59" cy="-20" r="4" fill="#e4c18b"/><circle cx="59" cy="-20" r="4" fill="#e4c18b"/></g>';
+ return '<g id="farm-road-network" pointer-events="none">'+layers(94,'#77512e',.10)+layers(82,'#9b7448',.28)+layers(72,'#9b7448')+layers(62,'url(#farmRoad)')+'<path d="'+road+'" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>'+roadFenceMarkup(-1)+roadFenceMarkup(1)+gate+'</g>';
 }
 function scheduleAnimalBlinking(){
  document.querySelectorAll('.animal-wrap').forEach(node=>{
@@ -850,97 +862,164 @@ const ground=`<defs>
 <radialGradient id="animalShadow"><stop stop-color="#18390e" stop-opacity=".32"/><stop offset="1" stop-color="#18390e" stop-opacity="0"/></radialGradient>
 <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
 </defs>
-<image href="${HORSE_ASSETS.day}" x="-2600" y="-400" width="7000" height="1700" preserveAspectRatio="none"/>
-<!-- Estradas secundárias são integradas à rede viária única. -->
+<!-- Cenário-base da Fazenda: arte panorâmica externa, sem interação. -->
+<g id="farm-landscape" pointer-events="none">
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
+</g>
+<!-- Cenário panorâmico do Rio: a borda direita recebe uma mesclagem gradual com a Fazenda. -->
+<g id="river-landscape" pointer-events="none">
+ <defs>
+  <linearGradient id="river-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="-1450" y1="0" x2="250" y2="0">
+   <stop offset="0" stop-color="white" stop-opacity="1"/>
+   <stop offset=".28" stop-color="white" stop-opacity=".96"/>
+   <stop offset=".62" stop-color="white" stop-opacity=".62"/>
+   <stop offset="1" stop-color="white" stop-opacity="0"/>
+  </linearGradient>
+  <mask id="river-farm-seam-mask" maskUnits="userSpaceOnUse" x="-3950" y="-250" width="4200" height="2362">
+   <rect x="-3950" y="-250" width="4200" height="2362" fill="url(#river-farm-seam-gradient)"/>
+  </mask>
+ </defs>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#river-farm-seam-mask)"/>
+ <!-- Reflexos animados da correnteza: traços mais visíveis, restritos à superfície do rio. -->
+ <g id="river-water-motion" class="river-water-motion" pointer-events="none" transform="translate(-3950 -250) scale(2.5485 2.502)">
+  <g fill="none" stroke-linecap="round">
+   <g class="river-current-flow river-current-flow-a" stroke="#d7f5ff" stroke-width="2.5" opacity=".52">
+    <path d="M584 292Q611 286 638 296" stroke-dasharray="24 22"/>
+    <path d="M555 337Q580 328 610 338" stroke-dasharray="28 25"/>
+    <path d="M508 382Q540 370 570 378" stroke-dasharray="30 25"/>
+    <path d="M455 435Q492 420 530 427" stroke-dasharray="29 24"/>
+    <path d="M424 483Q470 466 520 474" stroke-dasharray="34 28"/>
+    <path d="M452 528Q500 512 552 519" stroke-dasharray="30 25"/>
+    <path d="M500 574Q548 557 600 565" stroke-dasharray="33 27"/>
+    <path d="M560 620Q610 604 662 612" stroke-dasharray="32 26"/>
+    <path d="M625 667Q678 650 728 659" stroke-dasharray="31 25"/>
+    <path d="M694 712Q746 695 798 704" stroke-dasharray="30 24"/>
+    <path d="M765 757Q817 740 870 748" stroke-dasharray="27 23"/>
+    <path d="M835 797Q882 782 930 789" stroke-dasharray="25 21"/>
+   </g>
+   <g class="river-current-flow river-current-flow-b" stroke="#075fae" stroke-width="2.8" opacity=".34">
+    <path d="M596 314Q619 307 642 315" stroke-dasharray="18 31"/>
+    <path d="M530 397Q559 386 586 394" stroke-dasharray="21 32"/>
+    <path d="M440 458Q477 444 510 451" stroke-dasharray="20 33"/>
+    <path d="M474 548Q514 535 555 541" stroke-dasharray="22 34"/>
+    <path d="M580 638Q620 625 662 632" stroke-dasharray="20 32"/>
+    <path d="M704 730Q746 716 785 723" stroke-dasharray="20 32"/>
+    <path d="M810 780Q850 767 890 774" stroke-dasharray="18 30"/>
+   </g>
+  </g>
+ </g>
+</g>
+<!-- Cenário panorâmico do Pomar e Mata: continuação texturizada da Fazenda. -->
+<g id="nature-landscape" pointer-events="none">
+ <defs>
+  <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0"><stop offset="0" stop-color="white" stop-opacity="0"/><stop offset=".22" stop-color="white" stop-opacity=".12"/><stop offset=".48" stop-color="white" stop-opacity=".42"/><stop offset=".76" stop-color="white" stop-opacity=".82"/><stop offset="1" stop-color="white" stop-opacity="1"/></linearGradient><mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1245" y="-250" width="4955" height="2475"><rect x="1300" y="-250" width="4900" height="2475" fill="url(#nature-farm-seam-gradient)"/><rect x="1245" y="175" width="550" height="630" fill="black"/></mask>
+ </defs>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4900" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
+<!-- Estrada própria do Pomar e Mata, prolongada até a extremidade direita do cenário. -->
+<g id="nature-road-network" pointer-events="none">
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#77512e" stroke-width="94" stroke-linecap="round" stroke-linejoin="round" opacity=".10"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#9b7448" stroke-width="82" stroke-linecap="round" stroke-linejoin="round" opacity=".28"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#9b7448" stroke-width="72" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="url(#farmRoad)" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>
+${fencePath([[4400,820],[4750,830],[5100,820],[5450,830],[5800,820],[6200,830]],"nature-road-north")}
+${fencePath([[4400,960],[4750,970],[5100,960],[5450,970],[5800,960],[6200,970]],"nature-road-south")}
+</g>
+</g>
+<!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
+<g id="curral-dirt-floor" pointer-events="none">
+ <path d="M1268 200H1772V772H1268Z" fill="#9a754f"/>
+ <path d="M1272 204H1768V768H1272Z" fill="#a7835d" opacity=".48"/>
+ <path d="M1280 300Q1370 270 1450 300T1610 294T1760 315L1760 390Q1660 365 1570 390T1390 385T1280 405Z" fill="#806044" opacity=".18"/>
+ <path d="M1280 575Q1380 545 1470 570T1635 565T1760 580V690Q1650 665 1550 692T1370 680T1280 700Z" fill="#77563b" opacity=".16"/>
+ <g fill="#6f5239" opacity=".28"><ellipse cx="1350" cy="335" rx="24" ry="7"/><ellipse cx="1585" cy="265" rx="18" ry="5"/><ellipse cx="1695" cy="470" rx="28" ry="7"/><ellipse cx="1420" cy="610" rx="22" ry="6"/><ellipse cx="1640" cy="725" rx="26" ry="7"/></g>
+ <g fill="#d1b18a" opacity=".34"><circle cx="1310" cy="470" r="3"/><circle cx="1480" cy="430" r="2.5"/><circle cx="1540" cy="650" r="3"/><circle cx="1725" cy="625" r="2.5"/><circle cx="1660" cy="355" r="2"/></g>
+ <path d="M1290 520Q1370 510 1435 520M1510 500Q1585 490 1660 500M1330 735Q1410 725 1485 735" fill="none" stroke="#c2a17a" stroke-width="2" opacity=".22" stroke-linecap="round"/>
+</g>
 `;
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
+updateSceneLandscapeVisibility();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
-const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-768,350],[-168,620],[-768,890],[-1368,620]];
+const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-1400,350],[-800,620],[-1400,890],[-2000,620]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
-const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[420,1010],[120,1040],[-300,1035],[-700,1025],[-1050,1030],[-1320,1020]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
-function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
+const roadLines=[ROAD_POINTS];
+function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<112)return true}return false}
 function blocked(x,y){
+ if(x>1250&&x<1790&&y>190&&y<790)return true;
  if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
- if(x>250&&x<720&&y>285&&y<700)return true;
- if(x>755&&x<1240&&y>-365&&y<25)return true;
- if(x>305&&x<755&&y>-330&&y<-25)return true;
+ if(x>680&&x<1150&&y>880&&y<1200)return true;
+ if(x>-700&&x<-200&&y>665&&y<1080)return true;
+ if(x>680&&x<1150&&y>880&&y<1200)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>510&&x<730&&y>125&&y<300)return true;
- if(x>1240&&x<1800&&y>-180&&y<455)return true;
+ if(x>1240&&x<1800&&y>150&&y<785)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
- if(x>2000&&x<3315&&y>-110&&y<590)return true;
- if(x>-2070&&x<-1440)return true;
- if(x>-1020&&x<-500&&y>-410&&y<-80)return true;
+ if(x>2350&&x<3665&&y>-110&&y<590)return true;
+  if(x>3700&&x<5350&&y>180&&y<680)return true;
+ if(x>=-6300&&x<=-2100)return true;
+ if(x>-660&&x<-100&&y>165&&y<500)return true;
+ for(const [tx,ty,tw,th] of treePlacements)if(x>tx-35&&x<tx+tw+35&&y>ty-35&&y<ty+th+30)return true;
  return false;
 }
 const treePlacements=[
- [-430,20,250,300,'sepia(.18) saturate(1.12)'],[-2300,620,210,265,'hue-rotate(24deg) saturate(1.25)'],[-160,265,230,270,'hue-rotate(-18deg)'],
- [120,-190,205,250,'saturate(.82)'],
- [1810,-190,235,285,'hue-rotate(32deg)'],
- [3420,20,255,300,'hue-rotate(-22deg) saturate(1.15)'],[3820,45,225,270,'hue-rotate(18deg)'],[4300,30,265,315,'saturate(.78)']
+ [3870,165,255,270,'hue-rotate(-22deg) saturate(1.15)'],[4270,185,225,250,'hue-rotate(18deg)']
 ];
-for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:${filter}"`);
+for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
 for(let i=0;i<330;i++){
  const x=seedNoise(i*17+3)*6800-2600,y=seedNoise(i*31+8)*1160-140;
- if(blocked(x,y))continue;
- scenery+=i%6===0?flower(x,y,.4+seedNoise(i*13)*.5,['#fff5df','#f79cc4','#e4a3ef','#fff7ae'][i%4]):grassClump(x,y,.5+seedNoise(i)*.8);
+ // Vegetação decorativa somente no terreno; não desenhar tufos ou flores no céu.
+ if(y<235||blocked(x,y))continue;
+ if(x>=-1450&&x<=1800){if(i<230)scenery+=grassClump(x,y,.5+seedNoise(i)*.8)}
+ else scenery+=i%6===0?flower(x,y,.4+seedNoise(i*13)*.5,['#fff5df','#f79cc4','#e4a3ef','#fff7ae'][i%4]):grassClump(x,y,.5+seedNoise(i)*.8);
 }
+const groundFlowerSpots=[
+ [-1400,400,.75,'#fff2d2'],[-1380,470,.58,'#e9a9d1'],[-1370,540,.68,'#fff3bd'],
+
+ [1660,570,.65,'#fff1cf'],[1740,610,.78,'#efa4ca'],[1690,690,.58,'#fff1cf']
+];
+for(const [x,y,s,color] of groundFlowerSpots)if(!blocked(x,y))scenery+=flower(x,y,s,color);
+const groundStoneSpots=[
+ [-1410,580,1],[-1390,650,.78],[-1045,250,.7],
+ [-205,250,.72],[1580,650,.8],[1765,540,.7]
+];
+for(const [x,y,s] of groundStoneSpots)if(!blocked(x,y))scenery+=`<g pointer-events="none" opacity=".9" transform="translate(${x} ${y}) scale(${s})"><ellipse cx="2" cy="5" rx="15" ry="5" fill="#315a2a" opacity=".22"/><path d="M-13 1Q-12-8-3-10Q5-15 13-7Q18 0 10 5Q-2 10-13 1Z" fill="#b8b4a2" stroke="#8c897b" stroke-width="1.7"/><path d="M-6-5Q0-11 7-6" fill="none" stroke="#e2dfd0" stroke-width="2" stroke-linecap="round" opacity=".8"/></g>`;
 for(let i=0;i<95;i++){
  const x=seedNoise(i*5+17)*6800-2600,y=seedNoise(i*9+71)*1160-140;
- if(blocked(x,y))continue;
+ if(y<235||blocked(x,y))continue;
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
 // Bases orgânicas de grama substituem as sombras dos prédios.
-scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 285Q1870 276 1945 286L1935 310Q1870 315 1820 306Z" fill="#4d982d" opacity=".72"/></g>`;
-for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,300,.55],[1935,302,.6]])scenery+=grassClump(gx,gy,gs);
+scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
+for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
-scenery+=`<g pointer-events="none">${svgImage('celeiro',785,-345,430,350)}</g>`;
-scenery+=`<g pointer-events="none">
- <path d="M790 -13Q845 -22 900 -13T1015 -14T1110 -13T1210 -15" fill="none" stroke="#477d2d" stroke-width="10" stroke-linecap="round"/>
- <g fill="#a99b80" stroke="#82745c" stroke-width="2"><ellipse cx="815" cy="-10" rx="12" ry="6"/><ellipse cx="866" cy="-9" rx="9" ry="5"/><ellipse cx="930" cy="-12" rx="14" ry="6"/><ellipse cx="1080" cy="-11" rx="11" ry="5"/><ellipse cx="1150" cy="-13" rx="13" ry="6"/><ellipse cx="1198" cy="-9" rx="9" ry="5"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="3.5" stroke-linecap="round"><path d="M840 -12q-3-13-9-16m9 16q8-12 15-13M970 -13q-3-14-10-17m10 17q8-12 15-13M1120 -13q-3-13-9-16m9 16q8-12 15-13"/></g>
- <g fill="#c4b08d" stroke="#8e7a5a" stroke-width="2"><path d="M890 -7l12-9 17 7-7 8Z"/><path d="M1035 -8l11-8 15 7-8 8Z"/></g>
- </g>`;
-scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(330 -310)">
- <ellipse cx="205" cy="258" rx="210" ry="22" fill="#36551e" opacity=".22"/>
- <path d="M20 105L205 8L390 105V242H20Z" fill="#d9c49a" stroke="#765333" stroke-width="9"/>
- <path d="M4 108L205 -4L406 108L385 125L205 29L25 125Z" fill="#a95f3d" stroke="#70432c" stroke-width="8"/>
- <path d="M38 112H372V236H38Z" fill="#9bdcf0" fill-opacity=".19" stroke="#795a3c" stroke-width="7"/>
- <path d="M43 117H367V231H43Z" fill="#c8f2fb" fill-opacity=".12" stroke="#e9f8f5" stroke-opacity=".78" stroke-width="2"/>
- <path d="M52 116V231M116 116V231M180 116V231M244 116V231M308 116V231M353 116V231" stroke="#80684a" stroke-width="4" stroke-opacity=".72"/>
- <path d="M38 151H372M38 194H372" stroke="#80684a" stroke-width="3" stroke-opacity=".62"/>
- <path d="M54 121L112 121L78 226H54Z M255 121H290L326 226H300Z" fill="#ffffff" fill-opacity=".13"/>
- <path d="M168 236V150Q205 119 242 150V236Z" fill="#6d4930" stroke="#563720" stroke-width="6"/>
- <path d="M177 168H233M177 184H233M177 200H233" stroke="#c79b63" stroke-width="3"/>
- <g font-size="31"><text x="75" y="158">🕊️</text><text x="285" y="160">🐦</text><text x="105" y="210">🦜</text><text x="310" y="210">🐤</text></g>
- <path d="M10 248Q75 238 130 249T245 248T400 250" fill="none" stroke="#4b842d" stroke-width="10" stroke-linecap="round"/>
- <g fill="#b9aa8e" stroke="#89795d" stroke-width="2"><ellipse cx="50" cy="252" rx="14" ry="7"/><ellipse cx="102" cy="255" rx="11" ry="6"/><ellipse cx="310" cy="254" rx="16" ry="7"/><ellipse cx="365" cy="250" rx="12" ry="6"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M70 251q-5-20-14-24m14 24q8-17 17-19M340 251q-4-18-12-22m12 22q9-16 17-18"/></g>
- 
- </g>`;
-scenery+=`<g pointer-events="none">
- <path d="M770 8Q835 -5 900 7T1030 8T1225 10" fill="none" stroke="#438c2e" stroke-width="12" stroke-linecap="round"/>
- <g fill="#b7a58a" stroke="#88775c" stroke-width="2"><ellipse cx="810" cy="11" rx="17" ry="8"/><ellipse cx="875" cy="9" rx="13" ry="6"/><ellipse cx="1125" cy="12" rx="18" ry="8"/><ellipse cx="1190" cy="9" rx="14" ry="7"/></g>
- <g fill="none" stroke="#368b2b" stroke-width="4" stroke-linecap="round"><path d="M845 10q-3-18-12-21m12 21q9-16 18-17M1060 10q-4-17-13-21m13 21q9-15 18-16"/></g>
+scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,55,430,350)}</g>`;
+scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 15)">
+ <ellipse cx="205" cy="405" rx="220" ry="22" fill="#244d1b" opacity=".22"/>
+ <path d="M12 55L205 0L398 55V390H12Z" fill="#9bdcf0" fill-opacity=".12" stroke="#76563a" stroke-width="10"/>
+ <path d="M0 58L205 -12L410 58" fill="none" stroke="#9b603e" stroke-width="15" stroke-linejoin="round"/>
+ <path d="M25 68V382M385 68V382M12 145H398M12 270H398M12 390H398" fill="none" stroke="#76563a" stroke-width="8"/>
+ <path d="M45 72V382M105 72V382M165 72V382M225 72V382M285 72V382M345 72V382" stroke="#d8c49f" stroke-width="3.5" opacity=".95"/>
+ <path d="M12 205H398M12 330H398" stroke="#d8c49f" stroke-width="3" stroke-dasharray="6 5"/>
+ <path d="M68 208H342M68 333H342" stroke="#704a2b" stroke-width="13" stroke-linecap="round"/>
+ <path d="M68 201H342M68 326H342" stroke="#c28a50" stroke-width="6" stroke-linecap="round"/>
+ <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
+ <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
 scenery+=svgImage('casinha-cachorro',370,145,145,140);
-scenery+=fencePath([[1260,-150],[1780,-150]],'rear');
-scenery+=fencePath([[1260,-150],[1260,430]],'side');
-scenery+=fencePath([[1780,-150],[1780,430]],'side');
+scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
-front+=fencePath([[1260,430],[1430,430]],'front');
-front+=fencePath([[1560,430],[1780,430]],'front');
-front+=`<g transform="translate(1430 430)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
-front+=`<g transform="translate(1495 325) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
-// Abrigo de ferramentas movido para um recuo fora da estrada.
-front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
+front+=fencePath([[1260,780],[1430,780]],'front');
+front+=fencePath([[1560,780],[1780,780]],'front');
+front+=`<g transform="translate(1430 780)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
+front+=`<g data-farm-sign="true" tabindex="0" role="button" aria-label="Abrir e editar o nome da fazenda" style="cursor:pointer" transform="translate(900 770)"><ellipse cx="105" cy="91" rx="105" ry="13" fill="#294d22" opacity=".28"/><path d="M42 20V91M168 20V91" stroke="#52371f" stroke-width="13" stroke-linecap="round"/><path d="M42 20V89M168 20V89" stroke="#b77c45" stroke-width="8" stroke-linecap="round"/><path d="M-4 -42H214V37H-4Z" fill="#704728" stroke="#49301e" stroke-width="7" stroke-linejoin="round"/><path d="M5 -34H205V29H5Z" fill="#e4bd78" stroke="#bd8c4b" stroke-width="4"/><path d="M13 -27H197V22H13Z" fill="#f3dfb5" stroke="#8b5c32" stroke-width="2"/><text id="farm-sign-label" x="105" y="4" text-anchor="middle" font-size="18" font-weight="900" textLength="176" lengthAdjust="spacingAndGlyphs" fill="#60401f">Minha fazenda</text><path d="M-4 -42L105 -60L214 -42" fill="#9b6738" stroke="#49301e" stroke-width="6" stroke-linejoin="round"/><path d="M105 -54L105 -43" stroke="#e9c987" stroke-width="3"/></g>`;;
+
 for(let i=0;i<38;i++){
  const x=i<19?-320+seedNoise(i*7)*250:1740+seedNoise(i*19)*240,y=i<19?520+seedNoise(i*27)*400:420+seedNoise(i*12)*250;
  if(blocked(x,y))continue;
@@ -978,7 +1057,7 @@ function renderAnimals(){
    x=pos.x;y=pos.y;w=pos.w;h=pos.h;
   }else if(isBirdType(a.type)){
    const birdSlot=Math.max(0,Number.isInteger(a.aviarySlot)?a.aviarySlot:0),col=birdSlot%AVIARY_COLUMNS,row=Math.floor(birdSlot/AVIARY_COLUMNS);
-   w=46;h=34;x=368+col*54;y=-185+row*40;
+   w=42;h=32;x=-125+col*57;y=(row%2===0?120:250);
   }else{
    const pos=ANIMAL_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const factor=ANIMAL_SCALE[a.type]||.9,baseW=pos.w,baseH=pos.h;
@@ -1126,10 +1205,18 @@ function cropPhaseImageMarkup(id,phase){const slug=CLASSIC_CROP_ASSET_SLUGS[id];
 function renderPlots(){
  const perimeter='532,350 1132,620 532,890 -68,620';
  const base=(offset)=>`<g transform="translate(${offset} 0)"><polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/><polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/><polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/></g>`;
- let html=base(0)+base(EXPANSION_PLOT_OFFSET_X);
- let crops='';
- for(let group=0;group<2;group++)for(let r=0;r<6;r++)for(let c=PLOT_COLS-1;c>=0;c--){const i=group*36+r*PLOT_COLS+c,p=state.plots[i];if(!p)continue;const part=plotGeometry(p,r,c,i);html+=part.tile;crops+=part.crop}
- $('garden-layer').innerHTML=html;$('crop-layer').innerHTML=crops
+ // A primeira plantação permanece na posição original da Fazenda.
+ // Somente a segunda área (expansão, no Rio) recebe o deslocamento.
+ let html=base(0)+`<g transform="translate(180 -240)">${base(EXPANSION_PLOT_OFFSET_X)}</g>`;
+ let farmCrops='',riverCrops='';
+ for(let group=0;group<2;group++)for(let r=0;r<6;r++)for(let c=PLOT_COLS-1;c>=0;c--){
+  const i=group*36+r*PLOT_COLS+c,p=state.plots[i];if(!p)continue;
+  const part=plotGeometry(p,r,c,i);
+  if(group===0){html+=part.tile;farmCrops+=part.crop}
+  else{html+=`<g transform="translate(180 -240)">${part.tile}</g>`;riverCrops+=part.crop}
+ }
+ $('garden-layer').innerHTML=html;
+ $('crop-layer').innerHTML=farmCrops+`<g transform="translate(180 -240)">${riverCrops}</g>`
 }
 const TUTORIAL_TASKS=[
  {id:'harvest',title:'Faça sua primeira colheita',detail:'Use a mão para colher um dos nabos que recebeu de presente.',event:'harvest',goal:1,reward:350,xp:10,icon:'🌱'},
@@ -1485,7 +1572,7 @@ function useFertilizerOnPlot(plot){if(!farmWriteAllowed())return;
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='lake'){focusLakeArea(close);return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');view.zoom=1.25;view.cx=-180;view.cy=125;updateView();if(close)closeModal();return}if(id==='new-fields'){view.zoom=1.05;view.cx=-768;view.cy=620;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}view.zoom=id==='orchard'?.95:1.45;view.cx=id==='orchard'?2670:-1760;view.cy=id==='orchard'?245:420;updateView();if(close)closeModal();}
+function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=760;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('farm');view.zoom=1.25;view.cx=-380;view.cy=330;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3600;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
 function buyExpansion(id,currency='coins'){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(cfg.name+' já está liberado.');
@@ -1525,40 +1612,60 @@ function orchardTreeMarkup(slot,tree){
 }
 function renderHarasArea(){
  if(!state?.expansions?.haras)return '';
- const points='-940,-375 -580,-375 -515,-310 -515,-180 -580,-115 -940,-115 -1005,-180 -1005,-310';
- const posts=[[-940,-375],[-580,-375],[-515,-310],[-515,-180],[-580,-115],[-940,-115],[-1005,-180],[-1005,-310]];
- const postMarkup=posts.map(p=>'<rect x="'+(p[0]-8)+'" y="'+(p[1]-15)+'" width="16" height="32" rx="3"/>').join('');
- return '<g id="haras-area" pointer-events="none" transform="translate(580 370)">'+
-  '<polygon points="'+points+'" fill="#83ad50" stroke="#624326" stroke-width="17" stroke-linejoin="round"/>'+
-  '<polygon points="-922,-357 -598,-357 -533,-292 -533,-198 -598,-133 -922,-133 -987,-198 -987,-292" fill="#b99a6d" opacity=".42" stroke="#d8bc8b" stroke-width="5" stroke-linejoin="round"/>'+
-  '<path d="M-940 -375L-580 -375L-515 -310L-515 -180L-580 -115L-940 -115L-1005 -180L-1005 -310Z" fill="none" stroke="#a66f3d" stroke-width="13" stroke-linejoin="round"/>'+
-  '<path d="M-940 -355L-580 -355L-535 -310L-535 -180L-580 -135L-940 -135L-985 -180L-985 -310Z" fill="none" stroke="#d5a36a" stroke-width="9" stroke-linejoin="round"/>'+
-  '<path d="M-1005 -245H-985M-535 -245H-515M-760 -135V-115" stroke="#754b2a" stroke-width="9"/>'+
-  '<g fill="#87572f" stroke="#58391f" stroke-width="4">'+postMarkup+'</g>'+
-  '<g transform="translate(-760 -382)"><path d="M-90 0L0 -42L90 0V42H-90Z" fill="#9a6035" stroke="#5e3c23" stroke-width="6"/><path d="M-73 3H73V31H-73Z" fill="#f0d49a" stroke="#80502d" stroke-width="4"/><text y="24" text-anchor="middle" font-size="25" font-weight="900" fill="#70451f">HARAS</text></g>'+
-  '<g transform="translate(-760 -118)"><path d="M-55 0V-27M55 0V-27" stroke="#754b2a" stroke-width="10"/><path d="M-55 -27H55M-55 -7H55" stroke="#c28a50" stroke-width="8"/></g>'+
+ const outline='M-1030 -315Q-1030 -385 -955 -385H-465Q-390 -385 -390 -315V-145Q-390 -75 -465 -75H-955Q-1030 -75 -1030 -145Z';
+ const posts=[[-1015,-315],[-955,-385],[-820,-385],[-650,-385],[-485,-385],[-405,-315],[-405,-145],[-485,-75],[-650,-75],[-820,-75],[-955,-75],[-1015,-145]];
+ const postMarkup=posts.map(([x,y])=>'<g transform="translate('+x+' '+y+')"><path d="M0 -20V23" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M0 -19V21" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M-4 -17V14" stroke="#e2b777" stroke-width="2.5" opacity=".8"/></g>').join('');
+ return '<g id="haras-area" pointer-events="none" transform="translate(380 1080)">'+
+  '<path d="'+outline+'" fill="#6e9e45" stroke="#426b31" stroke-width="20" stroke-linejoin="round"/>'+
+  '<path d="M-1000 -315Q-985 -355 -930 -355H-490Q-435 -355 -420 -315V-145Q-435 -105 -490 -105H-930Q-985 -105 -1000 -145Z" fill="#8bb957" stroke="#c3d98a" stroke-width="5"/>'+
+  '<path d="M-965 -270Q-700 -320 -455 -270M-965 -180Q-700 -130 -455 -180" fill="none" stroke="#a9c86b" stroke-width="5" opacity=".55"/>'+
+  '<ellipse cx="-700" cy="-230" rx="205" ry="76" fill="#c3a174" opacity=".9" stroke="#967047" stroke-width="7"/>'+
+  '<ellipse cx="-700" cy="-230" rx="184" ry="57" fill="none" stroke="#e3c79a" stroke-width="4" stroke-dasharray="10 12" opacity=".85"/>'+
+  '<path d="'+outline+'" fill="none" stroke="#6b4528" stroke-width="13" stroke-linejoin="round"/>'+
+  '<path d="M-1030 -300Q-700 -350 -390 -300M-1030 -160Q-700 -110 -390 -160" fill="none" stroke="#d5a36a" stroke-width="9" stroke-linecap="round"/>'+
+  '<path d="M-1030 -245Q-700 -295 -390 -245" fill="none" stroke="#d5a36a" stroke-width="7" stroke-linecap="round"/>'+
+  '<g>'+postMarkup+'</g>'+
+  '<g transform="translate(-710 -405)"><path d="M-115 0L-92 -45H92L115 0V45H-115Z" fill="#744a2b" stroke="#49301e" stroke-width="6"/><path d="M-99 2H99V32H-99Z" fill="#f0d49a" stroke="#956331" stroke-width="4"/><text y="26" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="2" fill="#70451f">HARAS</text></g>'+
+  '<g transform="translate(-710 -77)"><path d="M-58 0V-43M58 0V-43" stroke="#52371f" stroke-width="17"/><path d="M-58 -43V-2M58 -43V-2" stroke="#b77c45" stroke-width="10"/><path d="M-53 -34L53 -34M-53 -10H53" stroke="#704a2d" stroke-width="10" stroke-linecap="round"/><path d="M-48 -34L48 -10" stroke="#e2b777" stroke-width="3"/></g>'+
  '</g>';
 }
 function renderOrchardArea(){
- if(!state?.expansions?.orchard)return '';
- let html=`<g id="orchard-ground" pointer-events="none">
-  <path d="M2195 5Q2325 -90 2550 -85L3125 -70Q3290 -35 3310 150L3285 455Q3240 560 3040 555L2330 545Q2165 510 2155 335L2160 130Q2165 45 2195 5Z" fill="#6aa93e" stroke="#3e7d2d" stroke-width="18"/>
-  <path d="M2225 40Q2370 -25 2540 -25L3115 -15Q3235 15 3250 155L3235 425Q3190 505 3030 505L2350 500Q2220 470 2210 325L2215 130Z" fill="#8fc65a" stroke="#b8d982" stroke-width="8"/>
-  <path d="M2220 300Q2500 270 2750 300T3245 295" fill="none" stroke="#c49a5e" stroke-width="46" stroke-linecap="round"/>
-  <path d="M2220 300Q2500 270 2750 300T3245 295" fill="none" stroke="#e6c58c" stroke-width="7" stroke-dasharray="2 24" stroke-linecap="round" opacity=".8"/>
-  <path d="M2280 90Q2500 65 2730 90T3190 90M2280 455Q2500 430 2730 455T3190 455" fill="none" stroke="#d8e6a3" stroke-width="8" opacity=".5"/>
-  <g fill="#a67b43" stroke="#805b32" stroke-width="5">
-   <ellipse cx="2350" cy="185" rx="82" ry="17"/><ellipse cx="2580" cy="185" rx="82" ry="17"/><ellipse cx="2810" cy="185" rx="82" ry="17"/><ellipse cx="3040" cy="185" rx="82" ry="17"/>
-   <ellipse cx="2350" cy="410" rx="82" ry="17"/><ellipse cx="2580" cy="410" rx="82" ry="17"/><ellipse cx="2810" cy="410" rx="82" ry="17"/><ellipse cx="3040" cy="410" rx="82" ry="17"/>
-  </g>
-  <g fill="#f3d68b" stroke="#986c39" stroke-width="5"><path d="M2185 45v85m0-55l35-15m-35 38l-28-16M3270 75v85m0-55l30-15m-30 38l-28-16"/></g>
-  <g transform="translate(2750 15)"><path d="M-95 20V-28L0-90L95-28V20Z" fill="#b94b37" stroke="#713c2b" stroke-width="8"/><path d="M-62 -28H62V20H-62Z" fill="#f5dfb0" stroke="#713c2b" stroke-width="6"/><path d="M-20 -28V20M20 -28V20" stroke="#9d5733" stroke-width="6"/><text y="8" text-anchor="middle" font-size="18" font-weight="bold" fill="#74472c">POMAR</text></g>
-  
- </g>`;
- html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
- return html;
+  if(!state?.expansions?.orchard)return '';
+  let html=`<g id="orchard-area-position" transform="translate(350 0)"><g id="orchard-ground" pointer-events="none">
+   <!-- Pomar reposicionado para cima, com afastamento claro da estrada e de sua cerca. -->
+   <path d="M2075 335Q2075 245 2185 230L3125 230Q3240 245 3250 345L3240 535Q3230 615 3130 630L2185 630Q2075 615 2065 535Z" fill="#75452f" stroke="#51301f" stroke-width="17" stroke-linejoin="round"/>
+   <path d="M2095 338Q2095 265 2195 250L3115 250Q3220 265 3230 350L3220 525Q3210 595 3120 610L2195 610Q2095 595 2085 525Z" fill="#9a6240" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
+   <path d="M2120 405Q2360 370 2540 400T2900 395T3200 405M2110 525Q2350 495 2550 525T2910 520T3210 530" fill="none" stroke="#68412d" stroke-width="12" stroke-linecap="round" opacity=".28"/>
+   <path d="M2150 350Q2370 330 2560 355T2920 350T3180 360M2140 570Q2370 550 2570 575T2930 570T3170 580" fill="none" stroke="#d2a078" stroke-width="5" stroke-linecap="round" opacity=".32"/>
+   <g fill="#6f4933" opacity=".34"><ellipse cx="2220" cy="480" rx="18" ry="6"/><ellipse cx="2510" cy="430" rx="14" ry="5"/><ellipse cx="2810" cy="480" rx="20" ry="6"/><ellipse cx="3110" cy="450" rx="17" ry="5"/><ellipse cx="2350" cy="585" rx="19" ry="5"/><ellipse cx="2940" cy="590" rx="16" ry="5"/></g>
+   <!-- Cerca regular: lateral esquerda com abertura para porteira. -->
+   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2070 335Q2075 220 2190 205H3120Q3260 225 3270 345" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 335Q2075 220 2190 205H3120Q3260 225 3270 345" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 490V535Q2080 645 2190 655H3130Q3250 640 3260 535V345" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 490V535Q2080 645 2190 655H3130Q3250 640 3260 535V345" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 335V390M2070 470V490" stroke="#523725" stroke-width="16"/>
+   </g>
+   <g fill="#70482d" stroke="#4b3324" stroke-width="4">
+    <path d="M2058 310l25-3 7 78-25 3Z"/><path d="M2058 455l25-3 7 78-25 3Z"/>
+    <path d="M2175 175l27-2 4 76-27 2Z"/><path d="M2400 175l27-2 2 76-27 2Z"/>
+    <path d="M2630 175l27-2 2 76-27 2Z"/><path d="M2860 175l27-2 2 76-27 2Z"/>
+    <path d="M3105 175l27-2 5 76-27 2Z"/><path d="M3255 315l27-2 6 78-27 2Z"/>
+    <path d="M3245 515l27 2-6 78-27-2Z"/><path d="M3110 615l27 2-4 72-27-2Z"/>
+    <path d="M2870 620l27 1-2 72-27-1Z"/><path d="M2630 620l27 1-1 72-27-1Z"/>
+    <path d="M2390 618l27 2-3 72-27-2Z"/><path d="M2175 610l27 2-5 72-27-2Z"/>
+   </g>
+   <g transform="translate(2070 415)">
+    <path d="M0 -16L90 -10V45L0 38Z" fill="#70472d" stroke="#4b3324" stroke-width="6"/>
+    <path d="M8 -8L82 -3M8 8L82 13M8 24L82 29" stroke="#c18a5c" stroke-width="7" stroke-linecap="round"/>
+    <path d="M8 -10L82 35" stroke="#e0b77d" stroke-width="6"/>
+    <circle cx="72" cy="10" r="4" fill="#f1d18e"/>
+   </g>
+   <g fill="#d5a16a" opacity=".9"><path d="M2060 312l20-2 2 10-20 2Z"/><path d="M2178 177l21-2 1 10-21 2Z"/><path d="M2403 177l21-2 1 10-21 2Z"/><path d="M2633 177l21-2 1 10-21 2Z"/><path d="M2863 177l21-2 1 10-21 2Z"/><path d="M3108 177l21-2 1 10-21 2Z"/></g>
+  </g>`;
+  html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
+   return html+'</g>';
 }
-
 function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
  const posts=Array.from({length:9},(_,i)=>{const px=-half+(i*2*half/8);return `<path d="M${px.toFixed(1)} -20v-29 M${px.toFixed(1)} 20v29" stroke="#493326" stroke-width="${i===0||i===8?8:6}" stroke-linecap="round"/>`}).join("");
  const planks=Array.from({length:13},(_,i)=>{const px=-half+((i+1)*2*half/14);return `<path d="M${px.toFixed(1)} -17v39" stroke="#69452e" stroke-width="3.2" opacity=".85"/>`}).join("");
@@ -1577,126 +1684,36 @@ function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
  </g>`;
 }
 function renderPondArea(){
- if(!state?.expansions?.pond)return '';
- return `<g id="pond-area" pointer-events="none" transform="translate(-650 0)">
-  <defs>
-   <linearGradient id="riverBank" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#d7c18e"/><stop offset=".5" stop-color="#ad9160"/><stop offset="1" stop-color="#806342"/></linearGradient>
-   <linearGradient id="riverWater" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2e8296"/><stop offset=".38" stop-color="#55b7c0"/><stop offset=".7" stop-color="#287d98"/><stop offset="1" stop-color="#1c617b"/></linearGradient>
-   <clipPath id="riverClip"><path d="M-1390 -300 C-1285 -190 -1350 -45 -1250 105 C-1160 245 -1260 380 -1140 535 C-1030 675 -1160 825 -1040 1140 L-900 1140 C-1035 875 -900 735 -1000 575 C-1095 425 -970 270 -1080 115 C-1190 -35 -1100 -180 -1190 -300Z"/></clipPath>
-  </defs>
-  <path d="M-1400 -300 C-1300 -185 -1370 -35 -1270 115 C-1175 260 -1280 390 -1160 550 C-1050 690 -1180 850 -1060 1140 L-820 1140 C-945 860 -820 730 -925 585 C-1020 430 -890 265 -1000 105 C-1110 -50 -1020 -185 -1110 -300Z" fill="#3c6a32" opacity=".28"/>
-  <path d="M-1400 -300 C-1300 -185 -1370 -35 -1270 115 C-1175 260 -1280 390 -1160 550 C-1050 690 -1180 850 -1060 1140 L-820 1140 C-945 860 -820 730 -925 585 C-1020 430 -890 265 -1000 105 C-1110 -50 -1020 -185 -1110 -300Z" fill="url(#riverBank)" stroke="#7e6845" stroke-width="9"/>
-  <path d="M-1390 -300 C-1285 -190 -1350 -45 -1250 105 C-1160 245 -1260 380 -1140 535 C-1030 675 -1160 825 -1040 1140 L-900 1140 C-1035 875 -900 735 -1000 575 C-1095 425 -970 270 -1080 115 C-1190 -35 -1100 -180 -1190 -300Z" fill="url(#riverWater)" stroke="#d9c79a" stroke-width="7"/>
-  <g class="river-flow" clip-path="url(#riverClip)">
-   <path d="M-1420 -260 C-1320 -100 -1390 10 -1285 160 S-1295 420 -1170 570 S-1190 870 -1060 1160" fill="none" stroke="#b9e9df" stroke-width="13" opacity=".23"/>
-   <path d="M-1260 -280 C-1160 -100 -1230 0 -1125 150 S-1140 405 -1015 560 S-1030 850 -920 1160" fill="none" stroke="#e5ffff" stroke-width="5" opacity=".34"/>
-   <path d="M-1370 45q65-28 115 5m-100 18q60-20 105 8M-1245 330q65-22 115 10m-115 18q58-18 110 8M-1125 690q60-25 112 5m-102 20q56-18 105 8" fill="none" stroke="#d5f2e9" stroke-width="6" stroke-linecap="round" opacity=".24"/>
-   <ellipse cx="-1190" cy="230" rx="72" ry="150" fill="#b8e7d8" opacity=".1"/><ellipse cx="-1080" cy="740" rx="55" ry="125" fill="#c2f0e4" opacity=".1"/>
-  </g>
-  <g class="river-reeds" fill="none" stroke="#438b32" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-   <path d="M-1350 5v-24M-1245 300v-27M-1160 520v-25M-1110 930v-27M-930 110v-22M-850 480v-24M-900 1030v-25" stroke-width="5"/>
-   <path class="river-leaf" d="M-1350 -19q-12-20-25-24q-3 18 25 24Z" fill="#65a943" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1350 -19q12-22 26-26q5 18-26 26Z" fill="#83bd50" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1245 273q-14-20-27-24q-3 18 27 24Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1245 273q13-22 28-25q5 18-28 25Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1160 495q-11-18-23-22q-3 16 23 22Z" fill="#6da947" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1160 495q13-20 25-23q5 17-25 23Z" fill="#8fc45a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1110 903q-13-21-27-25q-3 18 27 25Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1110 903q13-22 27-25q5 18-27 25Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-930 88q-11-17-23-20q-3 15 23 20Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-930 88q12-18 24-21q5 16-24 21Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-850 456q-12-18-24-22q-3 16 24 22Z" fill="#6da947" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-850 456q12-19 25-22q5 16-25 22Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-900 1005q-12-18-25-22q-3 16 25 22Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-900 1005q13-19 25-22q5 16-25 22Z" fill="#91c95a" stroke="#397b2e"/>
-  </g>
-  <g class="river-bank-plants" opacity=".96" stroke="#397b2e" stroke-width="3" stroke-linecap="round">
-   <g fill="#72b84b">
-    <path d="M-1370 -75v-24M-1270 265v-26M-1190 610v-23M-1125 1010v-26"/>
-    <path class="river-leaf" d="M-1370 -99q-20-12-24 4q7 15 24 20Z"/><path class="river-leaf" d="M-1370 -99q17-22 20-26q8 18-20 26Z"/>
-    <path class="river-leaf" d="M-1270 239q-18-12-24 4q7 15 24 22Z"/><path class="river-leaf" d="M-1270 239q18-23 22-27q8 17-22 27Z"/>
-    <path class="river-leaf" d="M-1190 587q-19-11-23 4q7 14 23 19Z"/><path class="river-leaf" d="M-1190 587q17-22 21-25q8 17-21 25Z"/>
-    <path class="river-leaf" d="M-1125 984q-20-12-25 4q8 16 25 22Z"/><path class="river-leaf" d="M-1125 984q19-24 23-27q8 18-23 27Z"/>
-   </g>
-   <g fill="#91c95a">
-    <path d="M-900 55v-23M-830 540v-24"/>
-    <path class="river-leaf" d="M-900 32q-18-10-22 4q6 13 22 19Z"/><path class="river-leaf" d="M-900 32q16-21 20-24q7 16-20 24Z"/>
-    <path class="river-leaf" d="M-830 516q-18-11-23 4q7 15 23 20Z"/><path class="river-leaf" d="M-830 516q17-21 21-25q8 17-21 25Z"/>
-   </g>
-  </g>
-  <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
-  ${[
-   [-1235,-120,-6,128,'#b7834d',0],
-   [-1115,180,-32,126,'#477da8',1],
-   [-1107,500,-30,92,'#568b58',2],
-   [-1048,830,-21,128,'#a34f43',3]
-  ].map(b=>renderRiverBridgeMarkup(...b)).join('')}
-  <g class="river-left-grove" pointer-events="none">
-   ${[
-    [-1715,-245,.64,'hue-rotate(-8deg) saturate(1.12)'],
-    [-1585,-270,.78,'hue-rotate(12deg) saturate(1.18)'],
-    [-1460,-235,.58,'hue-rotate(-18deg) saturate(1.2)'],
-    [-1650,-80,.82,'hue-rotate(28deg) saturate(1.1)'],
-    [-1510,-65,.68,'hue-rotate(-4deg) saturate(1.25)'],
-    [-1740,105,.58,'hue-rotate(42deg) saturate(1.15)'],
-    [-1615,130,.76,'hue-rotate(-12deg) saturate(1.2)'],
-    [-1480,115,.62,'hue-rotate(18deg) saturate(1.16)'],
-    [-1690,300,.72,'hue-rotate(6deg) saturate(1.2)'],
-    [-1550,285,.86,'hue-rotate(34deg) saturate(1.12)'],
-    [-1435,325,.56,'hue-rotate(-20deg) saturate(1.22)'],
-    [-1650,485,.62,'hue-rotate(22deg) saturate(1.18)'],
-    [-1510,475,.8,'hue-rotate(-8deg) saturate(1.15)'],
-    [-1730,635,.72,'hue-rotate(38deg) saturate(1.1)'],
-    [-1590,650,.88,'hue-rotate(-15deg) saturate(1.2)'],
-    [-1460,625,.62,'hue-rotate(12deg) saturate(1.18)'],
-    [-1680,805,.62,'hue-rotate(-5deg) saturate(1.16)'],
-    [-1540,820,.82,'hue-rotate(30deg) saturate(1.15)'],
-    [-1425,790,.56,'hue-rotate(-18deg) saturate(1.2)'],
-    [-1645,970,.78,'hue-rotate(16deg) saturate(1.14)'],
-    [-1500,985,.7,'hue-rotate(-10deg) saturate(1.2)'],
-    [-1730,1110,.6,'hue-rotate(35deg) saturate(1.12)'],
-    [-1590,1135,.76,'hue-rotate(-20deg) saturate(1.18)'],
-    [-1460,1090,.62,'hue-rotate(8deg) saturate(1.2)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%5===0?.94:1}"/></g>`).join('')} 
-   ${[
-    [-1845,-300,.72,'hue-rotate(68deg) saturate(1.35)'],
-    [-1980,-270,.86,'sepia(.42) saturate(1.45) hue-rotate(350deg)'],
-    [-2125,-235,.66,'hue-rotate(145deg) saturate(1.25)'],
-    [-2260,-190,.78,'hue-rotate(205deg) saturate(1.3)'],
-    [-1875,-105,.9,'hue-rotate(82deg) saturate(1.4)'],
-    [-2025,-70,.62,'hue-rotate(235deg) saturate(1.25)'],
-    [-2170,-35,.82,'sepia(.55) saturate(1.55) hue-rotate(5deg)'],
-    [-2300,35,.68,'hue-rotate(165deg) saturate(1.35)'],
-    [-1850,125,.65,'hue-rotate(205deg) saturate(1.4)'],
-    [-1995,155,.84,'hue-rotate(58deg) saturate(1.4)'],
-    [-2140,190,.72,'hue-rotate(285deg) saturate(1.35)'],
-    [-2280,245,.9,'sepia(.35) saturate(1.6) hue-rotate(330deg)'],
-    [-1885,325,.82,'hue-rotate(125deg) saturate(1.35)'],
-    [-2030,355,.64,'hue-rotate(220deg) saturate(1.45)'],
-    [-2180,390,.88,'hue-rotate(42deg) saturate(1.5)'],
-    [-2320,455,.7,'hue-rotate(175deg) saturate(1.35)'],
-    [-1855,525,.76,'sepia(.48) saturate(1.5) hue-rotate(345deg)'],
-    [-2005,555,.9,'hue-rotate(95deg) saturate(1.35)'],
-    [-2150,590,.62,'hue-rotate(245deg) saturate(1.4)'],
-    [-2295,645,.84,'hue-rotate(155deg) saturate(1.3)'],
-    [-1880,715,.68,'hue-rotate(35deg) saturate(1.5)'],
-    [-2025,745,.86,'hue-rotate(195deg) saturate(1.35)'],
-    [-2175,780,.72,'sepia(.5) saturate(1.55) hue-rotate(8deg)'],
-    [-2315,845,.9,'hue-rotate(115deg) saturate(1.4)'],
-    [-1850,915,.82,'hue-rotate(225deg) saturate(1.35)'],
-    [-1995,945,.65,'hue-rotate(72deg) saturate(1.45)'],
-    [-2140,980,.88,'hue-rotate(165deg) saturate(1.35)'],
-    [-2285,1050,.7,'sepia(.4) saturate(1.55) hue-rotate(340deg)'],
-    [-1900,1110,.76,'hue-rotate(255deg) saturate(1.3)'],
-    [-2050,1140,.86,'hue-rotate(105deg) saturate(1.4)'],
-    [-2200,1170,.68,'hue-rotate(25deg) saturate(1.5)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".22"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:${filter}" opacity="${i%6===0?.96:1}"/></g>`).join('')}
-   <g class="grove-flowers" stroke="#557b35" stroke-width="2">
-    ${[[-1660,-12,'#f0c94f'],[-1510,48,'#e879a5'],[-1735,245,'#f5e7d2'],[-1465,225,'#9d83d2'],[-1600,405,'#efc84f'],[-1740,555,'#e879a5'],[-1485,535,'#f4e4c7'],[-1650,755,'#9d83d2'],[-1510,905,'#f0c94f'],[-1730,1030,'#e879a5'],[-1450,1015,'#f4e4c7']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><path d="M0 7v-12" stroke-width="2.5"/><circle cy="-16" r="4.5" fill="${c}"/><circle cx="-5.5" cy="-13" r="4" fill="${c}"/><circle cx="5.5" cy="-13" r="4" fill="${c}"/><circle cy="-10" r="3.8" fill="${c}"/><circle cy="-13" r="2" fill="#f8e6a7"/></g>`).join('')}
-   </g>
-  </g>
-
- </g>`;
+ // A paisagem do Rio, incluindo árvores, água, ponte e píer, agora é a imagem
+ // panorâmica em #river-landscape. Não renderizar a antiga vegetação/água por cima.
+ return '';
+}
+function renderRiverLandmarks(){
+ return `
+ <g id="river-hut" pointer-events="none" transform="translate(-1770 610) scale(1.95 2.2)">
+  <ellipse cx="118" cy="166" rx="142" ry="20" fill="#254b22" opacity=".28"/>
+  <path d="M12 68Q18 42 42 35H196Q220 43 224 68V158H12Z" fill="#8c542f" stroke="#563821" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M18 72Q20 52 43 47H194Q216 53 218 72V151H18Z" fill="#bd8048" stroke="#6d4328" stroke-width="4"/>
+  <path d="M22 81H214M20 101H216M19 122H217M18 143H218" stroke="#77472c" stroke-width="5" opacity=".8"/>
+  <path d="M22 77H213M22 97H213M22 118H213M22 139H213" stroke="#e0aa69" stroke-width="2.5" opacity=".75"/>
+  <path d="M30 49V153M204 49V153" stroke="#704329" stroke-width="8"/>
+  <path d="M34 51V151M200 51V151" stroke="#e0a363" stroke-width="2.5" opacity=".75"/>
+  <path d="M5 69L116 -17L235 69L218 88L116 18L22 88Z" fill="#70452b" stroke="#4d3425" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M0 65Q116 -42 238 65Q232 87 215 87Q116 5 22 87Q5 86 0 65Z" fill="#b8873e" stroke="#68452b" stroke-width="7"/>
+  <path d="M8 61Q116 -35 230 61M13 53Q116 -39 225 53M22 45Q116 -36 216 45M33 37Q116 -31 205 37" fill="none" stroke="#e5c276" stroke-width="5" stroke-linecap="round"/>
+  <path d="M15 67l-7 13m22-28l-9 18m34-42l-8 18m39-35l-7 18m34-23l-2 19m38-15l4 18m35-4l8 18m18 8l10 14" stroke="#f0d28a" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+  <path d="M16 72Q116 10 222 72" fill="none" stroke="#6a452b" stroke-width="5"/>
+  <path d="M83 158V105Q83 77 116 77Q149 77 149 105V158Z" fill="#543522" stroke="#4a2e20" stroke-width="7"/>
+  <path d="M91 158V106Q91 86 116 86Q141 86 141 106V158Z" fill="#a66a3c" stroke="#e0b477" stroke-width="3"/>
+  <path d="M105 91V157M127 91V157M94 112H138M94 137H138" stroke="#704329" stroke-width="3" opacity=".9"/>
+  <circle cx="132" cy="127" r="4" fill="#f8d77d" stroke="#70452a" stroke-width="1.5"/>
+  <rect x="35" y="86" width="39" height="39" rx="2" fill="#583a28" stroke="#5b3924" stroke-width="6"/>
+  <rect x="40" y="91" width="29" height="29" fill="#8fd0df" stroke="#f0cf91" stroke-width="3"/>
+  <path d="M54.5 92V119M41 105.5H68" stroke="#fff0c7" stroke-width="3.5"/>
+  <path d="M29 159H207" stroke="#563820" stroke-width="9"/>
+  <path d="M30 155H206" stroke="#e0a86a" stroke-width="3"/>
+ </g>
+`;
 }
 
 function professionXPReward(key,baseXP){const level=specialistLevelFromXP(state.specialistProgress?.[key]?.xp||0);return Math.max(1,Math.round(Math.max(0,Number(baseXP)||0)*(1+Math.max(0,level-1)*.2)))}
@@ -1770,7 +1787,7 @@ function feedAnimal(id,mode='legacy'){if(writeLocked)return notify('Salvamento p
 function collectAnimal(id){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const a=state.animals.find(x=>x.id===id);if(!a)return;const cfg=ANIMALS[a.type];if(cfg?.role==='horse')return notify('Cavalos não produzem itens. Alimente-os para crescer ou venda-os.');if(isDualPurposeAnimal(a.type)){if(a.productionStatus!=='ready')return;const amount=cfg.yield+(ANIMAL_RATIONS[a.type]?Math.max(0,(a.level||1)-1):0);state.animalWarehouse[cfg.product]=(state.animalWarehouse[cfg.product]||0)+amount;awardXP(cfg.xp,'coleta animal');a.productionStatus='hungry';a.productionReadyAt=0;remember('Recolheu '+amount+' '+cfg.productName+' de '+(a.name||cfg.name)+'.');markDirty();refresh();notify(cfg.productIcon+' '+amount+' '+cfg.productName+' recolhidos · +'+cfg.xp+' XP.');return}if(a.status!=='ready')return;const amount=cfg.yield+(ANIMAL_RATIONS[a.type]?Math.max(0,(a.level||1)-1):0);state.animalWarehouse[cfg.product]=(state.animalWarehouse[cfg.product]||0)+amount;awardXP(cfg.xp,'coleta animal');a.status='hungry';a.readyAt=0;remember('Recolheu '+amount+' '+cfg.productName+' de '+(a.name||cfg.name)+'.');markDirty();refresh();notify(cfg.productIcon+' '+amount+' '+cfg.productName+' recolhidos · +'+cfg.xp+' XP.')}
 function sellAnimal(id){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const i=state.animals.findIndex(x=>x.id===id);if(i<0)return;const a=state.animals[i];if(a.type==='cachorro')return notify('O cão de guarda permanece na fazenda.');const cfg=ANIMALS[a.type],value=cfg.sellPrice&&a.status==='adult'?cfg.sellPrice+(ANIMAL_RATIONS[a.type]?Math.max(0,(a.level||1)-1)*250:0):Math.floor(cfg.price*.45);if(!confirm(`Vender ${a.name||cfg.name} por ${fmt(value)} moedas?`))return;state.coins+=value;state.animals.splice(i,1);remember(`Vendeu ${a.name||cfg.name} por ${value} moedas.`);markDirty();refresh();notify(`Animal vendido: +${fmt(value)} moedas.`)}
 function sellAnimalProduct(id,requested){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const cfg=ANIMAL_PRODUCTS[id],available=state.animalWarehouse[id]||0;if(!cfg||available<=0)return;const qty=requested===undefined?available:requested;if(!Number.isSafeInteger(qty)||qty<1||qty>available)return notify('Quantidade de venda inválida.');const total=saleWithPopularity(qty*cfg.unitPrice);state.coins+=total;state.animalWarehouse[id]-=qty;remember(`Vendeu ${qty} ${cfg.name} com bônus de popularidade.`);markDirty();refresh();notify(`${cfg.name}: ${qty} unidade(s) vendida(s) · +${fmt(total)} moedas.`)}
-function updateHud(){const level=farmLevel(),currentXP=state.xp-xpRequiredForLevel(level),neededXP=xpForNextLevel(level);$('level').textContent=level;$('xp-fill').style.width=(currentXP/neededXP*100)+'%';$('xp-num').textContent=`${currentXP}/${neededXP} XP`;$('coins').textContent=fmt(state.coins);$('green-coins').textContent=fmt(state.greenCoins);$('popularity').textContent=fmt(state.popularity);const bonus=$('sale-bonus');if(bonus)bonus.textContent=`+${Math.round(popularityBonusRate()*100)}%`;const mood=MOODS.find(m=>m.id===state.mood)||MOODS[0];const button=$('mood-button');if(button){button.textContent=mood.icon;button.title=`Humor: ${mood.name} · clique para alterar`}const farmName=$('farm-name-text');if(farmName)farmName.textContent=state.farmName||'Minha fazenda';const avatarImage=$('avatar-image'),avatarPlaceholder=$('avatar-placeholder');if(avatarImage&&avatarPlaceholder){if(state.profilePhoto){avatarImage.src=state.profilePhoto;avatarImage.hidden=false;avatarPlaceholder.hidden=true}else{avatarImage.removeAttribute('src');avatarImage.hidden=true;avatarPlaceholder.hidden=false}}const avatar=$('avatar-display');if(avatar)avatar.title=state.profilePhoto?'Alterar foto do perfil':'Adicionar foto do perfil';const moodLabel=$('mood-label');if(moodLabel)moodLabel.textContent=mood.name;const quickHarvest=$('quick-harvest'),quickDig=$('quick-dig');if(quickHarvest){const n=state.plots.filter(p=>p.status==='growing'&&progress(p)>=1).length;quickHarvest.disabled=!n;quickHarvest.textContent=`🌾 Colheita rápida (${n})`}if(quickDig){const n=state.plots.filter(p=>p.status==='spent').length;quickDig.disabled=!n;quickDig.textContent=`🪏 Escavada rápida (${n})`}updateNotificationBadges()}
+function updateHud(){const level=farmLevel(),currentXP=state.xp-xpRequiredForLevel(level),neededXP=xpForNextLevel(level);$('level').textContent=level;$('xp-fill').style.width=(currentXP/neededXP*100)+'%';$('xp-num').textContent=`${currentXP}/${neededXP} XP`;$('coins').textContent=fmt(state.coins);$('green-coins').textContent=fmt(state.greenCoins);$('popularity').textContent=fmt(state.popularity);const bonus=$('sale-bonus');if(bonus)bonus.textContent=`+${Math.round(popularityBonusRate()*100)}%`;const mood=MOODS.find(m=>m.id===state.mood)||MOODS[0];const button=$('mood-button');if(button){button.textContent=mood.icon;button.title=`Humor: ${mood.name} · clique para alterar`}const farmName=$('farm-name-text');if(farmName)farmName.textContent=state.farmName||'Minha fazenda';const farmSign=$('farm-sign-label');if(farmSign)farmSign.textContent=state.farmName||'Minha fazenda';const avatarImage=$('avatar-image'),avatarPlaceholder=$('avatar-placeholder');if(avatarImage&&avatarPlaceholder){if(state.profilePhoto){avatarImage.src=state.profilePhoto;avatarImage.hidden=false;avatarPlaceholder.hidden=true}else{avatarImage.removeAttribute('src');avatarImage.hidden=true;avatarPlaceholder.hidden=false}}const avatar=$('avatar-display');if(avatar)avatar.title=state.profilePhoto?'Alterar foto do perfil':'Adicionar foto do perfil';const moodLabel=$('mood-label');if(moodLabel)moodLabel.textContent=mood.name;const quickHarvest=$('quick-harvest'),quickDig=$('quick-dig');if(quickHarvest){const n=state.plots.filter(p=>p.status==='growing'&&progress(p)>=1).length;quickHarvest.disabled=!n;quickHarvest.textContent=`🌾 Colheita rápida (${n})`}if(quickDig){const n=state.plots.filter(p=>p.status==='spent').length;quickDig.disabled=!n;quickDig.textContent=`🪏 Escavada rápida (${n})`}updateNotificationBadges()}
 function updateNotificationBadges(){
  const now=Date.now(),counts={
   crops:state.plots.filter(p=>p.status==='growing'&&progress(p)>=1).length,
@@ -1797,10 +1814,10 @@ function updateNotificationBadges(){
   const readyBirds=state.animals.filter(a=>a.status==='ready'&&isBirdType(a.type)).length,readyLivestock=counts.animals-readyBirds;
   layer.innerHTML=marker(532,320,'🌾',counts.crops,'Plantação pronta para colher')+
    marker(1060,55,'🍳',counts.kitchen,'Receita pronta na cozinha')+
-   marker(650,165,'🔥',counts.grill,'Receita pronta na churrasqueira')+
+   marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
    marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
-   marker(535,-55,'🐦',readyBirds,'Produção pronta no viveiro')+
-   marker(2750,-18,'🍎',counts.orchard,'Frutas prontas no pomar')+
+   marker(45,-10,'🐦',readyBirds,'Produção pronta no viveiro')+
+   marker(2670,155,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
  }
 }
@@ -2427,14 +2444,61 @@ function renderThemeScenery(id){
  if(decor[id])art+=decor[id].replaceAll('translate(-760 350)','translate(-2460 350) scale(.75)').replaceAll('translate(-760 920) scale(.78)','translate(-2460 980) scale(.60)').replaceAll('M-1250 650Q-950 570-650 650','M-2520 650Q-2370 570-2220 650');
  return art+'</g>';
 }
+let weatherRainActive=false,weatherRequestInFlight=false,weatherLastCheckedAt=0,weatherLocation=null;
+function renderWeatherRain(){
+ const layer=$('weather-layer');if(!layer)return;
+ if(!weatherRainActive||!weatherLocation||!SCENE_BOUNDS[activeScene]){layer.innerHTML='';return}
+ const b=SCENE_BOUNDS[activeScene],w=b.right-b.left,h=b.bottom-b.top;
+ const drops=(offset,count)=>Array.from({length:count},(_,i)=>{
+  const x=b.left+(((i*137.508+offset*31)%1000)/1000)*w,y=b.top+(((i*83.173+offset*67)%1000)/1000)*h;
+  const lean=(i+offset)%2===0?-7:7,len=18+(i%4)*4;
+  return '<path d="M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+lean+' '+len+'" />';
+ }).join('');
+ layer.innerHTML='<g class="rain-wind-a" opacity=".64"><g class="rain-fall" fill="none" stroke="#e4f4ff" stroke-width="1.25" stroke-linecap="round">'+drops(0,190)+'</g></g><g class="rain-wind-b" opacity=".43"><g class="rain-fall" fill="none" stroke="#c8e6f5" stroke-width="1.05" stroke-linecap="round">'+drops(7,150)+'</g></g>';
+}
+async function updateWeatherFromLocation(){
+ if(weatherRequestInFlight||!navigator.geolocation||!navigator.onLine)return;
+ weatherRequestInFlight=true;
+ try{
+  const position=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:false,maximumAge:300000,timeout:12000}));
+  weatherLocation={latitude:position.coords.latitude,longitude:position.coords.longitude};
+  const url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(weatherLocation.latitude)+'&longitude='+encodeURIComponent(weatherLocation.longitude)+'&current=precipitation,rain,showers,weather_code,wind_speed_10m,wind_direction_10m&timezone=auto';
+  const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('Consulta meteorológica indisponível');
+  const data=await response.json(),current=data?.current||{},code=Number(current.weather_code),amount=Number(current.precipitation||0)+Number(current.rain||0)+Number(current.showers||0);
+  const rainyCodes=[51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99];
+  weatherRainActive=amount>.05||rainyCodes.includes(code);weatherLastCheckedAt=Date.now();
+  renderWeatherRain();
+ }catch(error){
+  if(error?.code===1){console.info('Clima local desativado: permissão de localização não concedida.')}
+  else console.warn('Não foi possível atualizar o clima local:',error?.message||error);
+  if(weatherLastCheckedAt&&Date.now()-weatherLastCheckedAt>30*60*1000){weatherRainActive=false;renderWeatherRain()}
+ }finally{weatherRequestInFlight=false}
+}
+function initWeatherSystem(){
+ if(!navigator.geolocation){console.info('Este navegador não oferece geolocalização para o clima local.');return}
+ updateWeatherFromLocation();
+ setInterval(()=>{if(document.visibilityState==='visible')updateWeatherFromLocation()},10*60*1000);
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')updateWeatherFromLocation()});
+}
 function updateDayNight(){
- const layer=$('day-night-layer'),ground=$('day-night-ground-layer');if(!layer)return;
- const now=new Date(),hour=now.getHours()+now.getMinutes()/60;
- const night=hour>=19||hour<6,twilight=(hour>=5&&hour<7)||(hour>=17&&hour<20);
- const blend=night?1:twilight?.45:0,opacity=night?.08:twilight?.04:0;
- if(ground)ground.innerHTML=blend>0?'<image id="day-night-ground" href="'+HORSE_ASSETS.night+'" x="-2600" y="-400" width="7000" height="1700" preserveAspectRatio="none" opacity="'+blend+'"/>':'';
- layer.querySelector('#day-night-sky')?.remove();
- if(opacity>0)layer.insertAdjacentHTML('afterbegin','<g id="day-night-sky" pointer-events="none"><rect x="-2600" y="-400" width="7000" height="1700" fill="#071b3c" opacity="'+opacity+'"/><g opacity="'+(night?.78:.28)+'" fill="#fff4c7"><circle cx="180" cy="-160" r="5"/><circle cx="410" cy="-85" r="3"/><circle cx="720" cy="-180" r="4"/><circle cx="1020" cy="-120" r="3"/><circle cx="1460" cy="-180" r="4"/><circle cx="1840" cy="-90" r="3"/><circle cx="2240" cy="-160" r="4"/><circle cx="2760" cy="-105" r="3"/><circle cx="3320" cy="-175" r="4"/><circle cx="3910" cy="-90" r="3"/></g></g>');
+ const layer=$('day-night-layer');if(!layer)return;
+ const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
+ const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
+ if(layer.dataset.phase===phase)return;
+ layer.dataset.phase=phase;
+ const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
+ const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
+ for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
+ layer.innerHTML='';
+ const environment=$('day-night-ground-layer');if(!environment)return;
+ environment.innerHTML='';
+ if(phase==='night'){
+  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="10000" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g transform="translate(1370 -98)"><circle r="40" fill="#e7e7e7"/><path d="M-35 -19Q-7 -47 20 -29Q39 -14 33 7Q27 28 6 32Q-15 36-31 18Z" fill="#d2d2d2"/><g fill="#bdbdbd"><circle cx="-12" cy="-11" r="7"/><circle cx="16" cy="-19" r="4"/><circle cx="10" cy="16" r="9"/><circle cx="-21" cy="17" r="5"/></g><g fill="#fff"><path d="M-25 -37l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z"/><path d="M35 5l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z"/></g></g></g>';
+ }else{
+  const sun=phase==='sunset'?'#ff9a18':'#ffe600';
+  const glow=phase==='sunset'?'#ffb347':'#fff36a';
+  environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(1370 -42)"><circle r="58" fill="'+glow+'" opacity=".18"/><circle r="40" fill="'+sun+'"/><circle cx="-11" cy="-12" r="11" fill="#fff6a6" opacity=".45"/></g>';
+ }
 }
 function applyMenuThemeColors(){
  const root=document.querySelector('.app');if(!root)return;
@@ -2460,8 +2524,8 @@ function applyMenuThemeColors(){
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
 function renderLakeArea(){
- const x=-760,y=125,waterY=y-8;
- let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer">
+ const x=-960,y=760,waterY=y-8;
+ let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-960 760) scale(1.08) translate(980 -760)">
  <ellipse cx="${x}" cy="${y+25}" rx="238" ry="166" fill="#315b2a" opacity=".25"/>
  <ellipse cx="${x}" cy="${y}" rx="236" ry="158" fill="#b79a69" stroke="#755b3a" stroke-width="12"/>
  <ellipse cx="${x}" cy="${y-5}" rx="214" ry="137" fill="#e4d2a4" stroke="#f0e0b6" stroke-width="7"/>
@@ -2520,7 +2584,7 @@ function renderLakeArea(){
  });
  return s+"</g>";
 }
-function focusLakeArea(close=true){view.zoom=1.15;view.cx=-760;view.cy=125;updateView();if(close)closeModal()}
+function focusLakeArea(close=true){switchFarmScene('river');view.zoom=1.15;view.cx=-960;view.cy=760;updateView();if(close)closeModal()}
 function lakeFishProgress(f){if(!f||f.status!=='growing'||!f.readyAt)return 0;return Math.max(0,Math.min(1,1-(f.readyAt-Date.now())/(LAKE_TIME_FACTOR*LAKE_FISH[f.type].hours*HOUR)))}
 function syncLakeFish(){if(!farmWriteAllowed(false))return false;if(!state?.lake?.fish)return false;let changed=false;for(const f of state.lake.fish){if(f.status==='growing'&&f.readyAt<=Date.now()){f.stage=Math.min(5,f.stage+1);f.readyAt=0;f.status=f.stage>=5?'adult':'hungry';changed=true;remember(f.status==='adult'?`${LAKE_FISH[f.type].name} chegou à fase adulta.`:`${LAKE_FISH[f.type].name} cresceu para a fase ${f.stage}/5.`);if(f.status==='adult')awardXP(18,'crescimento de peixe')}}if(changed)markDirty(true);return changed}
 function renderLakeModal(){const fish=state.lake.fish||[],adult=fish.filter(f=>f.status==='adult').length;let s=`<div class="gift-summary"><span class="symbol">🐟</span><div><b>Lago artificial · Piscicultura</b><small>${fish.length} peixe(s) · ${adult} adulto(s). Criação comercial independente das capturas do Rio e do Mar.</small></div></div><button class="modal-action alt" data-focus-area="lake">Centralizar Lago</button><h3>🥚 Loja de ovos de peixes</h3><p>Compre ovos e alimente os peixes a cada etapa até a fase adulta.</p><div class="grid-cards">${Object.entries(LAKE_FISH).map(([id,f])=>`<div class="store-card"><span class="symbol">${f.icon}</span><strong>${f.name}</strong><small>Ovo · ${f.hours} h por etapa · Venda adulta: 🟡 ${fmt(f.price)}</small><b>🟡 ${fmt(f.egg)}</b><button data-buy-lake-egg="${id}" ${state.coins<f.egg?'disabled':''}>Comprar ovo</button></div>`).join('')}</div><h3>🪣 Ração para peixes</h3><p>Estoque: ${fmt(state.inventory.lake_fish_feed||0)} · 🟡 ${fmt(LAKE_FEED_PRICE)} cada</p><button class="modal-action" data-buy-lake-feed="true" ${state.coins<LAKE_FEED_PRICE?'disabled':''}>Comprar ração</button><h3>🐠 Seus peixes</h3>${fish.length?`<div class="grid-cards">${fish.map(f=>{const c=LAKE_FISH[f.type],p=lakeFishProgress(f);return `<div class="store-card"><span class="symbol">${c.icon}</span><strong>${c.name}</strong><small>Fase ${f.stage}/5 · ${f.status==='adult'?'Adulto':f.status==='growing'?'Crescendo · '+Math.ceil((f.readyAt-Date.now())/60000)+' min':'Precisa de alimento'}</small><div class="lake-growth"><i style="width:${Math.round(p*100)}%"></i></div>${f.status==='adult'?`<b>Venda: 🟡 ${fmt(c.price)}</b><button data-sell-lake-fish="${f.id}">Vender adulto</button>`:f.status==='hungry'?`<button data-feed-lake-fish="${f.id}" ${!(state.inventory.lake_fish_feed>0)?'disabled':''}>Alimentar</button>`:'<button disabled>Crescimento em andamento</button>'}</div>`}).join('')}</div>`:'<p>Compre ovos para começar sua criação.</p>'}<h3>🌿 Decoração das margens</h3><p>Instale itens que já possui no menu Decorações.</p><div class="grid-cards">${Object.entries(DECORATIONS).filter(([id])=>(state.decorInventory[id]||0)>0).map(([id,d])=>`<div class="store-card"><span class="symbol">${d.icon}</span><strong>${d.name}</strong><small>Disponível: ${state.decorInventory[id]}</small><button data-place-lake-decor="${id}">Colocar na margem</button></div>`).join('')||'<p>Nenhuma decoração disponível no inventário.</p>'}</div>${state.lake.decorations.length?'<h4>Decorações instaladas</h4>'+state.lake.decorations.map(d=>'<div class="list-line"><span>'+DECORATIONS[d.id].icon+' '+DECORATIONS[d.id].name+'</span><button class="modal-action alt" data-remove-lake-decor="'+d.slot+'">Retirar</button></div>').join(''):''}<h3>🌉 Pontes instaladas</h3>${state.lake.bridges.length?state.lake.bridges.map(b=>'<div class="list-line"><span>🌉 '+WOODWORK_RECIPES[b.id].name+'</span><button class="modal-action alt" data-remove-lake-bridge="'+b.slot+'">Remover</button></div>').join(''):'<p>Nenhuma ponte instalada.</p>'}<h3>Fabricar na Marcenaria</h3>${['ponte_carvalho','ponte_azul','ponte_verde','ponte_rubra'].map(id=>{const r=WOODWORK_RECIPES[id],n=state.furnitureWarehouse[id]||0;return `<div class="list-line"><span>${r.icon} <b>${r.name}</b><br><small>Fabricadas: ${n}</small></span><button data-place-lake-bridge="${id}" ${!n||state.lake.bridges.includes(id)?'disabled':''}>${state.lake.bridges.includes(id)?'Instalada':'Instalar ponte'}</button></div>`}).join('')}`;return s}
@@ -2532,7 +2596,7 @@ function placeLakeDecoration(id){if(writeLocked)return notify('Salvamento proteg
 function removeLakeDecoration(slot){if(!farmWriteAllowed())return;const i=state.lake.decorations.findIndex(d=>d.slot===slot);if(i<0)return;const d=state.lake.decorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;markDirty();refresh();notify('Decoração devolvida ao inventário.')}
 function placeLakeBridge(id){if(writeLocked)return notify('Salvamento protegido.');if(!WOODWORK_RECIPES[id]?.lakeBridge||(state.furnitureWarehouse[id]||0)<1)return;if(state.lake.bridges.some(b=>b.id===id))return notify('Esta ponte já está instalada.');const slot=[0,1,2,3].find(i=>!state.lake.bridges.some(b=>b.slot===i));if(slot===undefined)return notify('O Lago já possui quatro posições de ponte ocupadas.');state.furnitureWarehouse[id]--;state.lake.bridges.push({id,slot});markDirty();refresh();notify(WOODWORK_RECIPES[id].name+' instalada de uma margem a outra.')}
 function removeLakeBridge(slot){if(!farmWriteAllowed())return;const i=state.lake.bridges.findIndex(b=>b.slot===slot);if(i<0)return;const b=state.lake.bridges.splice(i,1)[0];state.furnitureWarehouse[b.id]=(state.furnitureWarehouse[b.id]||0)+1;markDirty();refresh();notify('Ponte devolvida à marcenaria.')}
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-1368 620L-768 350L-168 620L-768 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1345 620L-768 370L-191 620L-768 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
@@ -2549,15 +2613,24 @@ function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)
  const grillSmoke=(state.grill?.queue||[]).some(job=>job.readyAt>Date.now());
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 98)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(650 205)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html}
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer;pointer-events:all;touch-action:manipulation" pointer-events="all" transform="translate(-1950 930)">
+  <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="all"/>
+  <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
+  <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
+  <path d="M-3 33V-6" stroke="#bd8b54" stroke-width="4" stroke-linecap="round"/>
+  <path d="M-63 -53Q-63 -62 -53 -62H53Q63 -62 63 -53V-8Q63 1 53 1H-53Q-63 1 -63 -8Z" fill="#a66a37" stroke="#593a27" stroke-width="6"/>
+  <path d="M-54 -51H54V-10H-54Z" fill="#f2d49a" stroke="#d4a76b" stroke-width="3"/>
+  <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
+  <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
+ </g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
 function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
  const p=forestProgress(tree),ready=tree.status==='ready'||p>=1;return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="48" ry="12" fill="#315d29" opacity=".25"/><path d="M-8 0L-6 -62L6 -62L8 0Z" fill="#805334" stroke="#604027" stroke-width="3"/><circle cy="-76" r="36" fill="'+cfg.color+'" stroke="#396d39" stroke-width="4"/><circle cx="-24" cy="-58" r="22" fill="'+cfg.color+'" opacity=".9"/><circle cx="23" cy="-58" r="23" fill="'+cfg.color+'" opacity=".9"/><circle cy="-96" r="21" fill="'+cfg.color+'" opacity=".9"/><text y="30" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff5d4" stroke="#563d20" stroke-width="3" paint-order="stroke">'+(ready?'PRONTA':Math.round(p*100)+'%')+'</text><title>'+cfg.name+' · '+(ready?'Clique para colher':formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+' restantes')+'</title></g>'}
 function unlockedForestPlotCount(){const level=farmLevel(),byLevel=level<20?0:Math.min(FOREST_PLOTS,1+Math.floor((level-20)/2));let occupied=0;for(let i=0;i<state.forestPlots.length;i++)if(state.forestPlots[i]?.type)occupied=i+1;return Math.max(byLevel,occupied)}
 function forestLockedSlotMarkup(slot){const [x,y]=FOREST_SLOT_POS[slot],required=20+slot*2;return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#294b26" opacity=".28"/><ellipse cy="0" rx="38" ry="15" fill="#806747" stroke="#59462f" stroke-width="4"/><path d="M-10 -17v-8a10 10 0 0 1 20 0v8" fill="none" stroke="#f4d78a" stroke-width="4"/><rect x="-14" y="-19" width="28" height="23" rx="4" fill="#e1c078" stroke="#76552d" stroke-width="3"/><text y="-28" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff5d4" stroke="#563d20" stroke-width="3" paint-order="stroke">NV. '+required+'</text><title>Canteiro bloqueado · alcance o nível '+required+'</title></g>'}
-function renderForestArea(){const background='<g id="forest-area" pointer-events="none"><path d="M3430 -20Q3500 -120 3660 -120H4240Q4360 -80 4380 70V790Q4330 900 4200 900H3500Q3400 840 3400 700V100Q3400 10 3430 -20Z" fill="#467b3b" stroke="#2f5f30" stroke-width="18"/><path d="M3470 20H4310V820H3470Z" fill="#78a94e" stroke="#b5d37a" stroke-width="10"/><path d="M3485 40H4290V800H3485Z" fill="none" stroke="#d6e6a0" stroke-width="5" stroke-dasharray="8 16"/></g>';const unlocked=unlockedForestPlotCount();return '<g transform="translate(0 -150)">'+background+state.forestPlots.map((t,i)=>i<unlocked?forestTreeMarkup(i,t):forestLockedSlotMarkup(i)).join('')+'</g>'}
-function focusForestArea(close=true){view.zoom=.82;view.cx=3890;view.cy=240;updateView();if(close)closeModal()}
+function renderForestArea(){const background='<g id="forest-area" pointer-events="none"><path d="M3735 225Q3760 190 3835 190H5125Q5200 200 5235 255V590Q5210 650 5125 660H3835Q3750 650 3720 590V275Q3720 240 3735 225Z" fill="#754b32" stroke="#563a28" stroke-width="12" stroke-linejoin="round"/><path d="M3760 270Q3790 230 3845 230H5110Q5170 240 5195 280V575Q5170 615 5110 620H3845Q3785 610 3755 575V285Z" fill="#a8754c" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/><path d="M3800 350Q3990 330 4170 350T4550 345T4950 350M3800 500Q4000 480 4180 505T4570 500T4980 505" fill="none" stroke="#805638" stroke-width="10" stroke-linecap="round" opacity=".28"/><g fill="#6f4933" opacity=".28"><ellipse cx="3910" cy="420" rx="18" ry="6"/><ellipse cx="4300" cy="300" rx="17" ry="5"/><ellipse cx="4700" cy="555" rx="20" ry="6"/><ellipse cx="5050" cy="420" rx="18" ry="5"/></g></g>';const unlocked=unlockedForestPlotCount();return '<g id="forest-area-position" transform="translate(100 0)">'+background+state.forestPlots.map((t,i)=>i<unlocked?forestTreeMarkup(i,t):forestLockedSlotMarkup(i)).join('')+'</g>'}
+function focusForestArea(close=true){switchFarmScene('nature');view.zoom=.82;view.cx=4500;view.cy=425;updateView();if(close)closeModal()}
 function plantForestTree(slot,id){if(writeLocked)return notify('Salvamento protegido.');const tree=state.forestPlots[slot],cfg=FOREST_TREES[id],unlocked=unlockedForestPlotCount();if(!Number.isInteger(slot)||slot<0||slot>=unlocked)return notify('Este canteiro será liberado no nível '+(20+slot*2)+'.');if(!tree||tree.type||!cfg||cfg.retired)return notify('Escolha um canteiro vazio e uma espécie disponível.');if(farmLevel()<cfg.level)return notify(cfg.name+' exige nível '+cfg.level+'.');if((state.inventory['tree_'+id]||0)<1)return notify('Você não possui a muda de '+cfg.name+'. Compre-a na loja.');state.inventory['tree_'+id]--;discoverItem('mata',id,cfg.name,cfg.icon||'🌳');state.progressCounters.explore=(state.progressCounters.explore||0)+1;bumpMissionProgress('explore',1);state.forestPlots[slot]={type:id,status:'growing',plantedAt:Date.now()};awardProfessionXP('lumberjack',10,'plantio na Mata');remember('Plantou '+cfg.name+' na Mata.');markDirty();refresh();notify(cfg.name+' plantada na Mata.')}
 function harvestForestTree(slot){if(writeLocked)return notify('Salvamento protegido.');const t=state.forestPlots[slot];if(!t?.type)return openModal('forest');const cfg=FOREST_TREES[t.type],p=forestProgress(t);if(p<1&&t.status!=='ready')return notify(cfg.name+': faltam '+formatHours((1-p)*cfg.hours*FOREST_TIME_FACTOR)+'.');state.progressCounters.explore=(state.progressCounters.explore||0)+1;bumpMissionProgress('explore',1);if(cfg.fruitCrop){const fruit=CROPS[cfg.fruitCrop];state.warehouse[cfg.fruitCrop]=(state.warehouse[cfg.fruitCrop]||0)+cfg.yield;awardProfessionXP('lumberjack',cfg.xp,'colheita de frutos da Mata');remember('Colheu '+cfg.yield+' frutos de '+cfg.name+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();return notify(cfg.yield+' '+fruit.name+' adicionados ao depósito para suas receitas.')}if(cfg.herbYield){const key='herb_'+cfg.herbYield;state.inventory[key]=(state.inventory[key]||0)+cfg.yield;awardProfessionXP('lumberjack',cfg.xp,'colheita de ervas na Mata');remember('Colheu '+cfg.yield+' folhas de '+cfg.name+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();return notify(cfg.yield+' folhas de '+cfg.name+' adicionadas aos ingredientes do Mix de Ervas.')}if(cfg.wood)state.woodWarehouse[cfg.wood]=(state.woodWarehouse[cfg.wood]||0)+cfg.yield;if(cfg.leafId){const key='herb_'+cfg.leafId;state.inventory[key]=(state.inventory[key]||0)+Math.max(1,Math.floor(cfg.yield/3));}awardProfessionXP('lumberjack',cfg.xp,'colheita de madeira');remember('Obteve '+cfg.yield+' unidades de '+cfg.woodName+'.');state.forestPlots[slot]={type:null,status:'empty',plantedAt:0};markDirty();refresh();notify(cfg.yield+' unidades de '+cfg.woodName+' adicionadas ao estoque.'+(cfg.leafId?' Folhas também recolhidas para o Mix de Ervas.':''))}
 function buySeaNet(id,currency){if(writeLocked)return notify('Salvamento protegido.');if(farmLevel()<22)return notify('A pesca no mar é desbloqueada no nível 22.');const cfg=SEA_NETS[id];if(!cfg||id==='normal')return;if(state.seaFishing.nets.includes(id))return selectSeaNet(id);if(farmLevel()<cfg.level)return notify('A rede '+cfg.name+' exige nível '+cfg.level+'.');const wallet=currency==='greenCoins'?'greenCoins':'coins',price=currency==='greenCoins'?cfg.greenCoins:cfg.coins;if(state[wallet]<price)return notify(currency==='greenCoins'?'Moedas verdes insuficientes.':'Moedas amarelas insuficientes.');state[wallet]-=price;state.seaFishing.nets.push(id);discoverItem('equipamentos','rede_'+id,'Rede '+cfg.name,'🪢');state.seaFishing.net=id;remember('Comprou a rede '+cfg.name+'.');markDirty();refresh();notify('Rede '+cfg.name+' adquirida e equipada.')}
@@ -3034,14 +3107,29 @@ function sellFlower(id,requested){if(!farmWriteAllowed())return;const cfg=CROPS[
 function makeBouquet(id){if(writeLocked)return notify('Salvamento protegido. Abra Configurações.');const recipe=BOUQUETS[id];if(!recipe)return;const missing=Object.entries(recipe.recipe).filter(([flower,amount])=>(state.flowerWarehouse[flower]||0)<amount);if(missing.length)return notify('Ainda faltam flores para este buquê.');for(const [flower,amount] of Object.entries(recipe.recipe))state.flowerWarehouse[flower]-=amount;state.bouquets[id]=(state.bouquets[id]||0)+1;discoverItem('buques',id,recipe.name,recipe.icon);state.popularity+=recipe.popularity;awardXP(recipe.xp,'fábrica de buquês');remember(`Fabricou ${recipe.name}: +${recipe.popularity} de popularidade.`);markDirty();refresh();notify(`${recipe.name} produzido! +${recipe.popularity} popularidade · +${recipe.xp} XP.`)}
 function downloadBackup(){const snapshot=normalizeFarmSnapshot(state);if(!snapshot)return notify('O estado atual não passou pela verificação de integridade. O backup não foi exportado.');const data=JSON.stringify({version:2,exportedAt:new Date().toISOString(),state:snapshot},null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='ColheitaFeliz2-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
 async function importBackup(file){if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id)return notify('Entre na sua conta e carregue a fazenda da nuvem antes de importar um backup.');if(!file||file.size>8*1024*1024)return notify('Arquivo inválido ou maior que 8 MB.');try{const parsed=JSON.parse(await file.text()),data=[1,2].includes(parsed?.version)?normalizeFarmSnapshot(parsed.state):null;if(!data)throw Error('integridade');if(!confirm('Substituir a fazenda atual pelo conteúdo deste backup validado?'))return;state=data;writeLocked=false;markDirty();refresh();closeModal();notify('Backup validado e importado!')}catch(e){console.warn('Backup rejeitado:',e);notify('O backup está corrompido, incompleto ou não é compatível. A fazenda atual foi mantida.')}}
-function updateView(){const v=Math.min(2.5,Math.max(.22,view.zoom));view.zoom=v;const rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),h=WORLD.h/v,w=h*aspect;const minX=WORLD.left+w/2,maxX=WORLD.right-w/2,minY=WORLD.top+h/2,maxY=WORLD.bottom-h/2;view.cx=minX>maxX?(WORLD.left+WORLD.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(WORLD.top+WORLD.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`}
-function setZoom(next){view.zoom=Math.round(Math.max(.22,Math.min(2.5,next))*100)/100;updateView()}
-function fitWholeFarm(){const rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),fit=Math.min(WORLD.h/(WORLD.bottom-WORLD.top),WORLD.h*aspect/(WORLD.right-WORLD.left));view.cx=(WORLD.left+WORLD.right)/2;view.cy=(WORLD.top+WORLD.bottom)/2;setZoom(fit*.97)}
-function panView(direction){const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);view.cx+=direction*visibleW*.68;updateView()}
+function updateSceneLandscapeVisibility(){
+ // Fazenda e Rio são regiões contíguas do mesmo mundo; manter ambas as imagens
+ // visíveis evita que uma área revele um vazio ou um cenário independente.
+ const farmLandscape=$('farm-landscape');
+ if(farmLandscape)farmLandscape.style.display='';
+ const riverLandscape=$('river-landscape');
+ if(riverLandscape)riverLandscape.style.display='';
+ const natureLandscape=$('nature-landscape');
+ if(natureLandscape)natureLandscape.style.display='';
+ const waterMotion=$('river-water-motion');
+ if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
+}
+function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(mobileViewport?1.005:.985)))}
+function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
+function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
+function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
+function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}cancelAnimationFrame(sceneAnimationFrame);activeScene=id;updateSceneLandscapeVisibility();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
+function panView(direction){const order=['river','farm','nature'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
-$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});
-$('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
+svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
+$('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const fishing=e.target.closest('[data-river-fishing]');if(fishing){e.preventDefault();e.stopPropagation();openModal('pond');return}const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
+$('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-river-fishing]')&&!drag&&Date.now()>suppressWorldClickUntil){openModal('pond');return}if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
 $('garden-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i){e.preventDefault();plotAction(Number(e.target.dataset.i))}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');if(!b||b.closest('#modal-body'))return;e.preventDefault();e.stopPropagation();openModal(b.dataset.modal)},true);
@@ -3081,7 +3169,7 @@ $('modal-body').addEventListener('keydown',e=>{
 });
 $('modal-body').addEventListener('change',e=>{if(e.target.id==='social-import-file')importSocialPackage(e.target.files[0]);if(e.target.id==='import-file')importBackup(e.target.files[0]);if(e.target.id==='profile-photo-file')processProfilePhoto(e.target.files?.[0])});$('modal-body').addEventListener('keydown',e=>{if(e.target.id==='farm-name-input'&&e.key==='Enter'){e.preventDefault();saveFarmName()}});
 $('quick-harvest').addEventListener('click',quickHarvest);$('quick-dig').addEventListener('click',quickDig);$('multi-select-plots')?.addEventListener('click',toggleMultiSelectPlots);$('multi-harvest-selected')?.addEventListener('click',harvestSelectedPlots);
-$('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',()=>{view.cx=950;view.cy=490;setZoom(1)});$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));
+$('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',fitWholeFarm);$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));document.querySelectorAll('[data-farm-scene]').forEach(button=>button.addEventListener('click',()=>switchFarmScene(button.dataset.farmScene)));
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
 window.addEventListener('resize',updateView);
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='ArrowLeft'){e.preventDefault();panView(-1)}if(e.key==='ArrowRight'){e.preventDefault();panView(1)}if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom;view.cy+=(e.key==='ArrowUp'?-1:1)*visibleH*.16;updateView()}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.1);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.1)});
@@ -3106,7 +3194,7 @@ $('playfield').addEventListener('pointerdown',e=>{
   pinchState={distance:dist,zoom:view.zoom,worldX:view.cx-visibleW/2+rx*visibleW,worldY:view.cy-visibleH/2+ry*visibleH};
   drag=null;e.preventDefault();return;
  }
- const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-modal],button');
+ const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
@@ -3119,7 +3207,7 @@ $('playfield').addEventListener('pointermove',e=>{
  if(activePointers.size>=2&&pinchState){
   const pts=[...activePointers.values()],a=pts[0],b=pts[1],rect=point.rect;
   const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2,dist=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
-  const next=Math.max(.22,Math.min(2.5,pinchState.zoom*dist/pinchState.distance));
+  const next=Math.max(sceneFitZoom(activeScene),Math.min(2.5,pinchState.zoom*dist/pinchState.distance));
   view.zoom=Math.round(next*100)/100;
   const visibleH=WORLD.h/view.zoom,visibleW=visibleH*rect.width/Math.max(1,rect.height);
   const rx=(midX-rect.left)/Math.max(1,rect.width),ry=(midY-rect.top)/Math.max(1,rect.height);
@@ -3141,14 +3229,14 @@ $('playfield').addEventListener('pointerup',finishPointer);
 $('playfield').addEventListener('pointercancel',finishPointer);
 window.addEventListener('offline',()=>{clearCloudRetry();if(hasPendingCloudChanges()){$('save-status').textContent='Sem conexão · alterações pendentes na nuvem';$('save-dot').className='savedot error'}});
 window.addEventListener('online',()=>{if(dirty&&farmWriteAllowed(false)){clearCloudRetry();cloudPermanentSaveError=null;save()}});
-window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save();else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
+window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){updateDayNight();if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()}else if(document.visibilityState==='hidden'&&dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pageshow',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('pagehide',()=>{if(dirty&&navigator.onLine&&farmWriteAllowed(false))save()});
 window.addEventListener('beforeunload',event=>{if(hasPendingCloudChanges()){event.preventDefault();event.returnValue='';return ''}});
 }
 async function start(){
  initScene();setupEvents();updateView();state=newGame();writeLocked=true;
- refresh();updateConnectionLabel();
+ refresh();updateConnectionLabel();initWeatherSystem();
  $('save-status').textContent='Entre na sua conta para carregar a fazenda da nuvem';
  $('save-dot').className='savedot error';
  let sessionFound=false;

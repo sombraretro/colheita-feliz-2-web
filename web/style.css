@@ -844,3 +844,28 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 
 
 .crop-object image{pointer-events:none;opacity:1}
+
+/* Navegação em três telas do cenário: controles adaptáveis para desktop e celular. */
+.farm-scene-navigation{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:5px;padding:5px;border:2px solid #b98545;border-radius:13px;background:linear-gradient(#fff7dfed,#f0d39eed);box-shadow:0 3px 8px #3c4c1466;max-width:calc(100% - 620px)}.farm-scene-navigation button{border:1px solid #c69b60;border-radius:8px;padding:8px 12px;background:linear-gradient(#fff9e8,#f1d9aa);color:#70491e;font-weight:800;font-size:12px;white-space:nowrap;cursor:pointer}.farm-scene-navigation button.active{background:linear-gradient(#9fca54,#3a931a);border-color:#49852f;color:#fff;text-shadow:0 1px 1px #35701b}@media(max-width:760px){.farm-scene-navigation{top:7px;left:50%;max-width:calc(100% - 12px);gap:3px;padding:3px}.farm-scene-navigation button{padding:6px 8px;font-size:10px;min-height:30px}.farm-stats{top:45px!important}.side-menu{top:48px!important}}@media(max-width:430px){.farm-scene-navigation button{padding:5px 6px;font-size:9px}.farm-scene-navigation{gap:2px}.farm-stats{top:42px!important}}
+
+#weather-layer{pointer-events:none;overflow:visible}
+#weather-layer .rain-wind-a{transform-box:fill-box;transform-origin:center;animation:cf2-rain-wind-a 3.8s ease-in-out infinite alternate}
+#weather-layer .rain-wind-b{transform-box:fill-box;transform-origin:center;animation:cf2-rain-wind-b 4.4s ease-in-out infinite alternate}
+#weather-layer .rain-fall{animation:cf2-rain-fall 1.15s linear infinite}
+@keyframes cf2-rain-fall{from{transform:translateY(-55px)}to{transform:translateY(55px)}}
+@keyframes cf2-rain-wind-a{from{transform:skewX(-9deg) translateX(-5px)}to{transform:skewX(9deg) translateX(5px)}}
+@keyframes cf2-rain-wind-b{from{transform:skewX(8deg) translateX(4px)}to{transform:skewX(-8deg) translateX(-4px)}}
+@media(prefers-reduced-motion:reduce){#weather-layer .rain-wind-a,#weather-layer .rain-wind-b,#weather-layer .rain-fall{animation:none!important}}
+
+
+/* Correnteza visível: animação aplicada diretamente a cada traço SVG. */
+#river-water-motion{opacity:0;transition:opacity .5s ease}
+#river-water-motion.is-active{opacity:1}
+#river-water-motion .river-current-flow-a path{animation:cf2-river-flow-a 6.5s linear infinite}
+#river-water-motion .river-current-flow-b path{animation:cf2-river-flow-b 8s linear infinite}
+#river-water-motion .river-current-flow-a path:nth-child(3n){animation-delay:-2.1s}
+#river-water-motion .river-current-flow-a path:nth-child(3n + 1){animation-delay:-4.2s}
+#river-water-motion .river-current-flow-b path:nth-child(2n){animation-delay:-3.5s}
+@keyframes cf2-river-flow-a{from{stroke-dashoffset:0}to{stroke-dashoffset:-92}}
+@keyframes cf2-river-flow-b{from{stroke-dashoffset:-70}to{stroke-dashoffset:35}}
+@media(prefers-reduced-motion:reduce){#river-water-motion .river-current-flow path{animation:none!important}}
