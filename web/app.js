@@ -909,6 +909,22 @@ const ground=`<defs>
   </g>
  </g>
 </g>
+<!-- Cenário panorâmico do Pomar e Mata: sobreposição gradual à direita da Fazenda. -->
+<g id="nature-landscape" pointer-events="none">
+ <defs>
+  <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0">
+   <stop offset="0" stop-color="white" stop-opacity="0"/>
+   <stop offset=".22" stop-color="white" stop-opacity=".12"/>
+   <stop offset=".52" stop-color="white" stop-opacity=".55"/>
+   <stop offset=".82" stop-color="white" stop-opacity=".88"/>
+   <stop offset="1" stop-color="white" stop-opacity="1"/>
+  </linearGradient>
+  <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4200" height="2362">
+   <rect x="1300" y="-250" width="4200" height="2362" fill="url(#nature-farm-seam-gradient)"/>
+  </mask>
+ </defs>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
+</g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
  <path d="M1268 200H1772V772H1268Z" fill="#9a754f"/>
@@ -3079,6 +3095,8 @@ function updateSceneLandscapeVisibility(){
  if(farmLandscape)farmLandscape.style.display='';
  const riverLandscape=$('river-landscape');
  if(riverLandscape)riverLandscape.style.display='';
+ const natureLandscape=$('nature-landscape');
+ if(natureLandscape)natureLandscape.style.display='';
  const waterMotion=$('river-water-motion');
  if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
 }
