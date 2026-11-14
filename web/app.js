@@ -2674,6 +2674,16 @@ function renderSeaLandscapeMarkup(){
    <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
   </defs>
   <rect x="3000" y="-700" width="11000" height="2500" fill="url(#sea-sky-gradient)"/>
+  <g id="sea-sun" transform="translate(5200 125)" pointer-events="none">
+   <circle r="205" fill="#fff2b6" opacity=".13"/>
+   <circle r="158" fill="#ffe9a0" opacity=".22"/>
+   <g stroke="#ffe7a0" stroke-width="15" stroke-linecap="round" opacity=".82">
+    <path d="M0 -218V-252M0 218V252M-218 0H-252M218 0H252M-154 -154L-180 -180M154 154L180 180M154 -154L180 -180M-154 154L-180 180"/>
+   </g>
+   <circle r="128" fill="#ffd76f" stroke="#fff0b2" stroke-width="12"/>
+   <path d="M-82 -34Q-20 -66 42 -35Q78 -15 105 -31Q85 42 12 72Q-48 95 -95 43Z" fill="#fff0b0" opacity=".28"/>
+  </g>
+
   <path d="M3000 270Q3500 215 4000 255T5000 245T6000 250T7000 245T8000 250T9000 240T10000 250T11000 230T12000 250T13000 235T14000 260V500H3000Z" fill="url(#sea-horizon-glow)"/>
   <g fill="#fff" opacity=".56">
    <path d="M6600 105Q6640 65 6690 91Q6730 42 6790 78Q6845 66 6865 112Q6900 145 6850 155H6650Q6590 150 6600 105Z"/>
@@ -2686,17 +2696,23 @@ function renderSeaLandscapeMarkup(){
    <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
   </g>
   <g id="sea-lighthouse" transform="translate(10400 0)">
-   <path d="M-150 490L-105 420H125L175 490Z" fill="#6f7770"/><path d="M-76 420L-55 270H70L96 420Z" fill="#f4ead3" stroke="#8d806b" stroke-width="9"/>
-   <path d="M-65 330H83M-80 390H105" stroke="#d36a48" stroke-width="24"/><path d="M-68 270L-42 220H58L82 270Z" fill="#b64d3c" stroke="#713b34" stroke-width="7"/>
-   <rect x="-20" y="285" width="48" height="42" rx="8" fill="#ffe9a4" stroke="#9c7442" stroke-width="6"/><path d="M-30 215Q8 178 47 215" fill="none" stroke="#f4ead3" stroke-width="12"/>
-   <path d="M-105 490Q5 460 150 490" fill="none" stroke="#f0e0b8" stroke-width="10"/>
+   <g transform="translate(0 490) scale(1.42) translate(0 -490)">
+    <path d="M-175 490Q-150 455 -125 420H145Q170 458 195 490Z" fill="#68736e" stroke="#485a53" stroke-width="8"/>
+    <path d="M-83 420L-58 260H76L105 420Z" fill="#f4ead3" stroke="#8d806b" stroke-width="10"/>
+    <path d="M-72 326H91M-82 385H101" stroke="#d36a48" stroke-width="25"/>
+    <path d="M-72 260L-48 205H67L91 260Z" fill="#b64d3c" stroke="#713b34" stroke-width="8"/>
+    <rect x="-28" y="276" width="58" height="52" rx="8" fill="#ffe9a4" stroke="#9c7442" stroke-width="7"/>
+    <path d="M-39 199Q9 153 57 199" fill="none" stroke="#f4ead3" stroke-width="14"/>
+    <path d="M-128 490Q5 456 168 490" fill="none" stroke="#f0e0b8" stroke-width="12"/>
+    <path d="M-30 280L-210 220M35 280L210 220" stroke="#fff1b5" stroke-width="20" opacity=".14"/>
+   </g>
   </g>
-  <g id="sea-birds" fill="none" stroke="#385c64" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".78">
-   <g class="sea-bird bird-a" transform="translate(7040 165) scale(1.05)"><path d="M-34 7Q-18 -15 0 4Q18 -15 34 7"/></g>
-   <g class="sea-bird bird-b" transform="translate(7540 218) scale(.72)"><path d="M-34 7Q-18 -15 0 4Q18 -15 34 7"/></g>
-   <g class="sea-bird bird-c" transform="translate(7920 140) scale(.88)"><path d="M-34 7Q-18 -15 0 4Q18 -15 34 7"/></g>
-   <g class="sea-bird bird-d" transform="translate(10300 190) scale(.66)"><path d="M-34 7Q-18 -15 0 4Q18 -15 34 7"/></g>
-   <g class="sea-bird bird-e" transform="translate(10700 125) scale(.92)"><path d="M-34 7Q-18 -15 0 4Q18 -15 34 7"/></g>
+  <g id="sea-birds" fill="none" stroke="#385c64" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+   <g class="bird-position bird-a" transform="translate(7040 165) scale(1.05)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-b" transform="translate(7540 218) scale(.82)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-c" transform="translate(7920 140) scale(.96)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-d" transform="translate(10300 190) scale(.76)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-e" transform="translate(10700 125) scale(1.0)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
   </g>
   <path d="M3000 480Q3500 465 4000 478T5000 474T6000 478T7000 470T8000 476T9000 472T10000 478T11000 470T12000 476T13000 474T14000 480V1800H3000Z" fill="url(#sea-water-gradient)"/>
   <path d="M3000 484Q3600 472 4200 486T5400 482T6600 481T7800 484T9000 481T10200 482T11400 480T12600 484T14000 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
@@ -2736,10 +2752,19 @@ function renderSeaLandscapeMarkup(){
     <g fill="none" stroke="#60432d" stroke-width="18" stroke-linecap="round">
      <path d="M-770 1035L-770 930M-560 1050L-560 950M770 1025L770 925"/>
     </g>
+    <!-- reflexos, friso de proa e vigias do casco -->
+    <path d="M-760 1290Q-400 1380 30 1370Q520 1360 760 1260" fill="none" stroke="#8eb6b3" stroke-width="13" opacity=".7"/>
+    <path d="M-850 1178Q-420 1240 30 1220Q520 1200 900 1135" fill="none" stroke="#d9e7d8" stroke-width="8" opacity=".46"/>
+    <g fill="#d6e4d8" stroke="#35545a" stroke-width="8"><circle cx="-500" cy="1302" r="18"/><circle cx="-250" cy="1340" r="18"/><circle cx="20" cy="1350" r="18"/><circle cx="300" cy="1332" r="18"/></g>
+    <path d="M-890 1100Q-500 1145 -80 1125T900 1100" fill="none" stroke="#f7e4bb" stroke-width="10" opacity=".72"/>
     <!-- pequena cabine de comando na popa -->
     <g id="sea-boat-cabin" transform="translate(-650 0)">
      <path d="M-175 1035V875Q-170 820 -115 810H105Q160 820 165 875V1035Z" fill="#e7dfc9" stroke="#60452e" stroke-width="13"/>
      <path d="M-185 870Q-160 785 -95 770H95Q160 785 180 870Z" fill="#2e6671" stroke="#253f45" stroke-width="13"/>
+     <path d="M-195 862Q-150 770 -85 748H100Q168 770 192 862L165 880H-170Z" fill="#d8c49d" stroke="#5b4934" stroke-width="11"/>
+     <path d="M-165 858Q-120 790 -72 782H85Q137 790 163 858" fill="none" stroke="#f4e6c5" stroke-width="9"/>
+     <path d="M-135 885H-35V940H-135ZM15 885H115V940H15Z" fill="#b6d9d6" stroke="#4e6a6a" stroke-width="8"/>
+     <path d="M-125 894L-45 932M25 894L105 932" stroke="#eef4df" stroke-width="6" opacity=".8"/>
      <path d="M-145 875H130V950H-145Z" fill="#8fc4c7" stroke="#5a4835" stroke-width="10"/>
      <path d="M-12 875V950M-145 912H130" stroke="#f5e8c9" stroke-width="9"/>
      <path d="M-160 1028H150" stroke="#b47b45" stroke-width="17"/>
