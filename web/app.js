@@ -816,14 +816,13 @@ function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="14" ry="7" fill="#31551e" opacity=".28"/><path d="M${x-12} ${y-55}L${x-10} ${y-65}L${x+1} ${y-72}L${x+12} ${y-65}L${x+13} ${y+8}L${x-11} ${y+8}Z" fill="#85512f" stroke="#57391f" stroke-width="3.5"/><path d="M${x-10} ${y-55}L${x-8} ${y-64}L${x+1} ${y-69}L${x+10} ${y-63}L${x+10} ${y+3}L${x-8} ${y+3}Z" fill="#b87943"/><path d="M${x-8} ${y-55}L${x+1} ${y-63}L${x+9} ${y-55}" fill="none" stroke="#e8bd79" stroke-width="3.5" stroke-linecap="round"/><path d="M${x-4} ${y-43}V${y-2}" stroke="#d59a5b" stroke-width="3" opacity=".8"/><ellipse cx="${x+1}" cy="${y-29}" rx="3" ry="5" fill="#71452a" opacity=".7"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none"><path d="${points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y+4}`).join(' ')}" fill="none" stroke="#6f5836" stroke-width="20" stroke-linecap="round" opacity=".14"/>${rails}${posts}</g>`}
 function brickWalkwayMarkup(){
  const roads=[
- 'M1000 8V32',
- 'M535 -75H1000',
  'M532 890C620 945 755 970 910 940C1080 910 1215 885 1390 900C1600 920 1800 922 2010 890C2240 855 2450 865 2680 890S3220 905 3600 875S4100 865 4400 890',
  'M532 890C420 1010 120 1040 -300 1035C-700 1025 -1050 1030 -1320 1020',
  'M532 890C510 830 500 760 500 720',
  'M1120 455C1185 455 1210 470 1240 505C1285 560 1330 650 1370 740C1400 820 1410 865 1390 900'];
  const layers=(w,c,o=1)=>roads.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`).join('');
- return `<g id="farm-road-network" pointer-events="none">${layers(94,'#77512e',.10)}${layers(82,'#9b7448',.28)}<g class="road-junctions">${[[532,890],[1390,900],[1000,20],[535,-75],[500,720]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="38" fill="url(#farmRoad)" stroke="#9b7448" stroke-width="3" opacity=".98"/>`).join('')}</g>${layers(72,'#9b7448')}${layers(62,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>`).join('')}</g>`;
+ const narrow=(w,c,o=1)=>`<path d="${roads[3]}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`;
+ return `<g id="farm-road-network" pointer-events="none">${layers(94,'#77512e',.10)}${layers(82,'#9b7448',.28)}${narrow(64,'#77512e',.10)}${narrow(54,'#9b7448',.28)}<g class="road-junctions">${[[532,890],[1390,900],[500,720]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="38" fill="url(#farmRoad)" stroke="#9b7448" stroke-width="3" opacity=".98"/>`).join('')}</g>${layers(72,'#9b7448')}${narrow(44,'#9b7448')}${layers(62,'url(#farmRoad)')}${narrow(38,'url(#farmRoad)')}${roads.map(d=>`<path d="${d}" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>`).join('')}</g>`;
 }
 function scheduleAnimalBlinking(){
  document.querySelectorAll('.animal-wrap').forEach(node=>{
@@ -850,7 +849,7 @@ const ground=`<defs>
 <radialGradient id="animalShadow"><stop stop-color="#18390e" stop-opacity=".32"/><stop offset="1" stop-color="#18390e" stop-opacity="0"/></radialGradient>
 <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
 </defs>
-<image href="${HORSE_ASSETS.day}" x="-2600" y="-400" width="7000" height="1700" preserveAspectRatio="none"/>
+<!-- Fundo antigo removido: o céu e o horizonte agora são desenhados pela paisagem da Fazenda. -->
 <g id="farm-landscape" pointer-events="none">
  <defs>
   <linearGradient id="farmSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#65b9eb"/><stop offset=".62" stop-color="#b8e4f3"/><stop offset="1" stop-color="#e2f0df"/></linearGradient>
@@ -934,17 +933,29 @@ for(let i=0;i<95;i++){
 scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M260 650Q350 640 430 650T590 650T710 660L695 685Q590 690 500 680T270 682Z" fill="#4d982d" opacity=".78"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
 for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[270,670,.9],[330,678,.7],[430,680,.8],[600,678,.75],[680,672,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
-scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,130,430,350)}</g>`;
+scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,55,430,350)}</g>`;
+scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 70)">
+ <ellipse cx="205" cy="405" rx="220" ry="22" fill="#244d1b" opacity=".22"/>
+ <path d="M12 55L205 0L398 55V390H12Z" fill="#9bdcf0" fill-opacity=".12" stroke="#76563a" stroke-width="10"/>
+ <path d="M0 58L205 -12L410 58" fill="none" stroke="#9b603e" stroke-width="15" stroke-linejoin="round"/>
+ <path d="M25 68V382M385 68V382M12 145H398M12 270H398M12 390H398" fill="none" stroke="#76563a" stroke-width="8"/>
+ <path d="M45 72V382M105 72V382M165 72V382M225 72V382M285 72V382M345 72V382" stroke="#d8c49f" stroke-width="3.5" opacity=".95"/>
+ <path d="M12 205H398M12 330H398" stroke="#d8c49f" stroke-width="3" stroke-dasharray="6 5"/>
+ <path d="M68 208H342M68 333H342" stroke="#704a2b" stroke-width="13" stroke-linecap="round"/>
+ <path d="M68 201H342M68 326H342" stroke="#c28a50" stroke-width="6" stroke-linecap="round"/>
+ <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
+ <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
+ </g>`;
 scenery+=svgImage('casinha-cachorro',370,145,145,140);
 scenery+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,380],[1780,380]],'rear')+fencePath([[1260,380],[1260,960]],'side')+fencePath([[1780,380],[1780,960]],'side')+'</g>';
 
 $('scenery-layer').innerHTML=scenery;
 $('animal-layer').innerHTML='';
 let front='';
-front+=`<g transform="rotate(4 1510 760)">`+fencePath([[1260,960],[1430,960]],'front');
-front+=fencePath([[1560,960],[1780,960]],'front')+'</g>';
-front+=`<g transform="rotate(4 1510 760) translate(1430 960)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
-front+=`<g transform="rotate(4 1510 760) translate(1495 855) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
+front+=fencePath([[1260,920],[1430,920]],'front');
+front+=fencePath([[1560,920],[1780,920]],'front');
+front+=`<g transform="translate(1430 920)"><path d="M0 -58V10M130 -58V10" stroke="#57391f" stroke-width="17" stroke-linecap="round"/><path d="M0 -58V8M130 -58V8" stroke="#a66b3b" stroke-width="11" stroke-linecap="round"/><path d="M0 -49L130 -49M0 -17L130 -17" stroke="#68452c" stroke-width="13" stroke-linecap="round"/><path d="M4 -51L126 -51M4 -19L126 -19" stroke="#d49a5c" stroke-width="7" stroke-linecap="round"/><path d="M9 -53L121 -21" stroke="#f0c47d" stroke-width="3.5" stroke-linecap="round"/><path d="M-18 -2H148" stroke="#8a6039" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M-18 -5H148" stroke="#d9b27a" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="-35" r="4" fill="#5c3a21"/><circle cx="116" cy="-35" r="4" fill="#5c3a21"/></g>`;
+front+=`<g transform="translate(1495 815) scale(.52)"><path d="M39 35V100" stroke="#704824" stroke-width="8"/><path d="M0 0H84V42H0Z" fill="#d9a353" stroke="#805027" stroke-width="5"/><path d="M10 13H74M14 28H68" stroke="#86572d" stroke-width="3"/><text x="42" y="27" text-anchor="middle" font-size="13" fill="#654321">CURRAL</text></g>`;
 // Abrigo de ferramentas movido para um recuo fora da estrada.
 front+=`<g transform="translate(1900 600) scale(.78)"><ellipse cx="80" cy="96" rx="83" ry="18" fill="#1b590f" opacity=".3"/><path d="M15 70L15 33L85 1L152 45V97L81 113L16 98Z" fill="#b9833e" stroke="#774a26" stroke-width="5"/><path d="M-4 51L83 -9L177 52L151 65L83 19L17 81Z" fill="#e8b747" stroke="#93622d" stroke-width="5"/><path d="M86 46q30-2 35 30v33l-57 4V76q2-28 22-30" fill="#422e20"/><path d="M16 68l52-41m-35 52l53-43m-34 56l54-45" stroke="#f8d778" stroke-width="4"/></g>`;
 for(let i=0;i<38;i++){
@@ -998,7 +1009,7 @@ function renderAnimals(){
   const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','iaque'].includes(a.type)?'svg':'png');
   const assetUrl=cfg.role==='horse'?HORSE_ASSETS.horse:(a.type==='cachorro'&&breed?.image?breed.image:a.type==='pavao'?HORSE_ASSETS.peacock:a.type==='cabra'?HORSE_ASSETS.goat:null);
   const animalGraphic=['peru','boi','bufala','coelho'].includes(a.type)?'<text x="724" y="850" text-anchor="middle" font-size="760">'+cfg.icon+'</text>':'<image class="animal-sprite" href="'+(assetUrl||('/assets/'+assetName+'.'+assetExt))+'" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>';
-  markup+='<g class="animal-wrap animal-'+a.type+'"'+(!isBirdType(a.type)&&a.type!=='cachorro'&&ANIMALS[a.type]?.role!=='horse'?' transform="rotate(4 1510 760)"':'')+' data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
+  markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
  }
  $('animal-layer').innerHTML=markup;
  scheduleAnimalBlinking();
@@ -1534,7 +1545,7 @@ function renderHarasArea(){
  const points='-940,-375 -580,-375 -515,-310 -515,-180 -580,-115 -940,-115 -1005,-180 -1005,-310';
  const posts=[[-940,-375],[-580,-375],[-515,-310],[-515,-180],[-580,-115],[-940,-115],[-1005,-180],[-1005,-310]];
  const postMarkup=posts.map(p=>'<rect x="'+(p[0]-8)+'" y="'+(p[1]-15)+'" width="16" height="32" rx="3"/>').join('');
- return '<g id="haras-area" pointer-events="none" transform="translate(380 1120)">'+
+ return '<g id="haras-area" pointer-events="none" transform="translate(380 1080)">'+
   '<polygon points="'+points+'" fill="#83ad50" stroke="#624326" stroke-width="17" stroke-linejoin="round"/>'+
   '<polygon points="-922,-357 -598,-357 -533,-292 -533,-198 -598,-133 -922,-133 -987,-198 -987,-292" fill="#b99a6d" opacity=".42" stroke="#d8bc8b" stroke-width="5" stroke-linejoin="round"/>'+
   '<path d="M-940 -375L-580 -375L-515 -310L-515 -180L-580 -115L-940 -115L-1005 -180L-1005 -310Z" fill="none" stroke="#a66f3d" stroke-width="13" stroke-linejoin="round"/>'+
@@ -2446,7 +2457,11 @@ function updateDayNight(){
  const environment=$('day-night-ground-layer');if(!environment)return;
  environment.innerHTML='';
  if(phase==='night'){
-  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g><circle cx="990" cy="-175" r="43" fill="#f5e9bf"/><circle cx="1007" cy="-190" r="39" fill="#07152f" opacity=".22"/></g></g>';
+  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g transform="translate(990 -175)"><circle r="49" fill="#e7e7e7"/><path d="M-43 -23Q-8 -58 24 -35Q48 -17 41 8Q34 34 7 39Q-18 45-38 22Z" fill="#d2d2d2"/><g fill="#bdbdbd"><circle cx="-15" cy="-14" r="8"/><circle cx="20" cy="-23" r="5"/><circle cx="12" cy="19" r="11"/><circle cx="-25" cy="20" r="6"/></g><g fill="#fff"><path d="M-25 -37l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z"/><path d="M35 5l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z"/></g></g></g>';
+ }else{
+  const sun=phase==='sunset'?'#ff9a18':'#ffe600';
+  const glow=phase==='sunset'?'#ffb347':'#fff36a';
+  environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(990 -175)"><circle r="68" fill="'+glow+'" opacity=".18"/><circle r="48" fill="'+sun+'"/><circle cx="-13" cy="-15" r="13" fill="#fff6a6" opacity=".45"/></g>';
  }
 }
 function applyMenuThemeColors(){
