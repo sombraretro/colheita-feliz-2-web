@@ -880,6 +880,34 @@ const ground=`<defs>
   </mask>
  </defs>
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#river-farm-seam-mask)"/>
+ <!-- Reflexos animados da correnteza: limitados à superfície azul, sem cobrir ponte, píer ou margens. -->
+ <g id="river-water-motion" class="river-water-motion" pointer-events="none" transform="translate(-3950 -250) scale(2.5485 2.502)">
+  <g fill="none" stroke-linecap="round">
+   <g class="river-current-flow river-current-flow-a" stroke="#d7f5ff" stroke-width="1.65" opacity=".2">
+    <path d="M584 292Q611 286 638 296" stroke-dasharray="19 27"/>
+    <path d="M555 337Q580 328 610 338" stroke-dasharray="23 31"/>
+    <path d="M508 382Q540 370 570 378" stroke-dasharray="25 34"/>
+    <path d="M455 435Q492 420 530 427" stroke-dasharray="24 32"/>
+    <path d="M424 483Q470 466 520 474" stroke-dasharray="28 38"/>
+    <path d="M452 528Q500 512 552 519" stroke-dasharray="25 35"/>
+    <path d="M500 574Q548 557 600 565" stroke-dasharray="27 36"/>
+    <path d="M560 620Q610 604 662 612" stroke-dasharray="26 37"/>
+    <path d="M625 667Q678 650 728 659" stroke-dasharray="25 34"/>
+    <path d="M694 712Q746 695 798 704" stroke-dasharray="24 34"/>
+    <path d="M765 757Q817 740 870 748" stroke-dasharray="22 32"/>
+    <path d="M835 797Q882 782 930 789" stroke-dasharray="20 29"/>
+   </g>
+   <g class="river-current-flow river-current-flow-b" stroke="#075fae" stroke-width="2.1" opacity=".13">
+    <path d="M596 314Q619 307 642 315" stroke-dasharray="12 38"/>
+    <path d="M530 397Q559 386 586 394" stroke-dasharray="16 40"/>
+    <path d="M440 458Q477 444 510 451" stroke-dasharray="15 42"/>
+    <path d="M474 548Q514 535 555 541" stroke-dasharray="17 43"/>
+    <path d="M580 638Q620 625 662 632" stroke-dasharray="15 42"/>
+    <path d="M704 730Q746 716 785 723" stroke-dasharray="15 42"/>
+    <path d="M810 780Q850 767 890 774" stroke-dasharray="14 39"/>
+   </g>
+  </g>
+ </g>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
@@ -3051,6 +3079,8 @@ function updateSceneLandscapeVisibility(){
  if(farmLandscape)farmLandscape.style.display='';
  const riverLandscape=$('river-landscape');
  if(riverLandscape)riverLandscape.style.display='';
+ const waterMotion=$('river-water-motion');
+ if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
 }
 function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,fitHeight=Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*.985))}
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
