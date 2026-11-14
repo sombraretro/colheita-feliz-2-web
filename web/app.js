@@ -866,9 +866,20 @@ const ground=`<defs>
 <g id="farm-landscape" pointer-events="none">
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
-<!-- Cenário panorâmico do Rio: inclui a vegetação, o curso d'água, a ponte e o píer. -->
+<!-- Cenário panorâmico do Rio: a borda direita recebe uma mesclagem gradual com a Fazenda. -->
 <g id="river-landscape" pointer-events="none">
- <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
+ <defs>
+  <linearGradient id="river-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="-1450" y1="0" x2="250" y2="0">
+   <stop offset="0" stop-color="white" stop-opacity="1"/>
+   <stop offset=".28" stop-color="white" stop-opacity=".96"/>
+   <stop offset=".62" stop-color="white" stop-opacity=".62"/>
+   <stop offset="1" stop-color="white" stop-opacity="0"/>
+  </linearGradient>
+  <mask id="river-farm-seam-mask" maskUnits="userSpaceOnUse" x="-3950" y="-250" width="4200" height="2362">
+   <rect x="-3950" y="-250" width="4200" height="2362" fill="url(#river-farm-seam-gradient)"/>
+  </mask>
+ </defs>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#river-farm-seam-mask)"/>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
