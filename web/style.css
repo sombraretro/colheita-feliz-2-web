@@ -1133,7 +1133,10 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 .hunt-result-xp{text-align:center;margin:12px 0;padding:12px;border-radius:10px;background:#eaf1d8;color:#496b2d;font-weight:800}
 @media(max-width:700px){
  .hunt-backpack{left:72%;top:77%;padding:4px 7px}
- .hunt-timer-widget{top:58px;right:8px;width:min(260px,calc(100% - 16px));padding:8px 10px}
+ .hunt-timer-widget{top:8px;left:8px;right:auto;width:min(184px,calc(100% - 16px));padding:7px 9px}
+ .hunt-timer-widget>div{gap:6px}
+ .hunt-timer-widget b{font-size:10px;max-width:105px}
+ .hunt-timer-widget strong{font-size:16px}
  .hunt-family-row{gap:4px}
  .hunt-family-btn{flex-direction:column;gap:2px;padding:6px 3px;font-size:10px}
  .hunt-family-btn>span{font-size:16px}
