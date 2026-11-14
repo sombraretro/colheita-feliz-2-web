@@ -1009,7 +1009,7 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 .sea-fishing-status .fishing-toast-icon{font-size:34px;filter:drop-shadow(0 2px 2px #0003)}
 .sea-fishing-status .fishing-toast-name{font-size:20px;font-weight:800}
 .sea-fishing-status .fishing-toast-detail{font-size:12px;opacity:.82}
-@media(max-width:700px){.sea-fishing-status{top:36%;width:min(340px,calc(100% - 24px))}.sea-fishing-status[data-scene="river"]{top:61%}}
+@media(max-width:700px){.sea-fishing-status{top:36%;width:min(340px,calc(100% - 24px))}.sea-fishing-status.is-result{top:36%}.sea-fishing-status[data-scene="river"]{top:61%}.sea-fishing-status[data-scene="river"].is-result{top:61%}}
 
 /* Controle da barra inferior: oculta sem alterar o desenho dos atalhos e permite reexibir pelo topo. */
 .bottom-nav-toggle{display:none}
