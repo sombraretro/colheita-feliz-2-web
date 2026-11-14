@@ -2864,7 +2864,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
  </g>
- <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 1010)">
+ <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)">
   <rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/>
   <ellipse cx="0" cy="58" rx="54" ry="11" fill="#294b24" opacity=".3"/>
   <path d="M-30 -35Q-35 -58 -13 -60H13Q35 -58 30 -35" fill="none" stroke="#284b2d" stroke-width="10"/>
