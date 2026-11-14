@@ -452,7 +452,7 @@ const isBirdType=type=>BIRD_TYPES.includes(type);
 const AVIARY_COLUMNS=6;
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,coelho:.55,porco:.82,cabra:.78,ovelha:.88,burro:.94,vaca:1.00,bufala:1.02,boi:1.02,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','manga','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
-const ORCHARD_SLOTS=[[2350,185],[2580,185],[2810,185],[3040,185],[2350,410],[2580,410],[2810,410],[3040,410]];
+const ORCHARD_SLOTS=[[2260,810],[2530,810],[2800,810],[3070,810],[2395,1140],[2665,1140],[2935,1140],[3205,1140]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Rio da fazenda',icon:'🌊',price:9000,level:12},haras:{name:'Haras',icon:'🐎',price:16000,greenPrice:25,level:20}};
 function starterAnimals(){return [
  {id:'dog-1',type:'cachorro',name:'Cachorro',breed:'classico',slot:-1,status:'hungry',stage:1,readyAt:0,guardUntil:0},
@@ -464,7 +464,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-300,bottom:950}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -1628,25 +1628,36 @@ function renderHarasArea(){
  '</g>';
 }
 function renderOrchardArea(){
- if(!state?.expansions?.orchard)return '';
- let html=`<g id="orchard-ground" pointer-events="none">
-  <path d="M2195 5Q2325 -90 2550 -85L3125 -70Q3290 -35 3310 150L3285 455Q3240 560 3040 555L2330 545Q2165 510 2155 335L2160 130Q2165 45 2195 5Z" fill="#6aa93e" stroke="#3e7d2d" stroke-width="18"/>
-  <path d="M2225 40Q2370 -25 2540 -25L3115 -15Q3235 15 3250 155L3235 425Q3190 505 3030 505L2350 500Q2220 470 2210 325L2215 130Z" fill="#8fc65a" stroke="#b8d982" stroke-width="8"/>
-  <path d="M2220 300Q2500 270 2750 300T3245 295" fill="none" stroke="#c49a5e" stroke-width="46" stroke-linecap="round"/>
-  <path d="M2220 300Q2500 270 2750 300T3245 295" fill="none" stroke="#e6c58c" stroke-width="7" stroke-dasharray="2 24" stroke-linecap="round" opacity=".8"/>
-  <path d="M2280 90Q2500 65 2730 90T3190 90M2280 455Q2500 430 2730 455T3190 455" fill="none" stroke="#d8e6a3" stroke-width="8" opacity=".5"/>
-  <g fill="#a67b43" stroke="#805b32" stroke-width="5">
-   <ellipse cx="2350" cy="185" rx="82" ry="17"/><ellipse cx="2580" cy="185" rx="82" ry="17"/><ellipse cx="2810" cy="185" rx="82" ry="17"/><ellipse cx="3040" cy="185" rx="82" ry="17"/>
-   <ellipse cx="2350" cy="410" rx="82" ry="17"/><ellipse cx="2580" cy="410" rx="82" ry="17"/><ellipse cx="2810" cy="410" rx="82" ry="17"/><ellipse cx="3040" cy="410" rx="82" ry="17"/>
-  </g>
-  <g fill="#f3d68b" stroke="#986c39" stroke-width="5"><path d="M2185 45v85m0-55l35-15m-35 38l-28-16M3270 75v85m0-55l30-15m-30 38l-28-16"/></g>
-  <g transform="translate(2750 15)"><path d="M-95 20V-28L0-90L95-28V20Z" fill="#b94b37" stroke="#713c2b" stroke-width="8"/><path d="M-62 -28H62V20H-62Z" fill="#f5dfb0" stroke="#713c2b" stroke-width="6"/><path d="M-20 -28V20M20 -28V20" stroke="#9d5733" stroke-width="6"/><text y="8" text-anchor="middle" font-size="18" font-weight="bold" fill="#74472c">POMAR</text></g>
-  
- </g>`;
- html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
- return html;
+  if(!state?.expansions?.orchard)return '';
+  let html=`<g id="orchard-ground" pointer-events="none">
+   <!-- Solo de terra fértil, rebaixado para respeitar o horizonte e o céu. -->
+   <path d="M2125 690Q2135 575 2260 550L3210 550Q3335 575 3350 700L3335 1085Q3320 1195 3190 1210L2270 1200Q2130 1175 2105 1060Z" fill="#89563a" stroke="#68432f" stroke-width="18" stroke-linejoin="round"/>
+   <path d="M2145 692Q2155 590 2270 568L3200 568Q3315 590 3328 705L3315 1070Q3300 1175 3180 1188L2280 1180Q2150 1155 2128 1050Z" fill="#a66c47" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
+   <path d="M2170 735Q2390 690 2560 730T2910 725T3300 740M2145 925Q2350 895 2540 930T2910 920T3320 935M2170 1090Q2390 1050 2580 1090T2960 1080T3290 1095" fill="none" stroke="#70472f" stroke-width="15" stroke-linecap="round" opacity=".22"/>
+   <path d="M2180 780Q2370 750 2540 780T2890 775T3290 790M2160 1010Q2380 980 2570 1015T2940 1000T3300 1020" fill="none" stroke="#d3a078" stroke-width="5" stroke-linecap="round" opacity=".34"/>
+   <g fill="#6f4933" opacity=".3"><ellipse cx="2200" cy="860" rx="18" ry="6"/><ellipse cx="2460" cy="680" rx="14" ry="5"/><ellipse cx="2780" cy="735" rx="22" ry="6"/><ellipse cx="3150" cy="865" rx="19" ry="6"/><ellipse cx="2310" cy="1125" rx="22" ry="6"/><ellipse cx="2860" cy="1170" rx="18" ry="5"/><ellipse cx="3220" cy="1090" rx="16" ry="5"/></g>
+   <g fill="#d7b08a" opacity=".38"><circle cx="2250" cy="965" r="3"/><circle cx="2505" cy="875" r="2.5"/><circle cx="2740" cy="1060" r="3"/><circle cx="3020" cy="950" r="2.5"/><circle cx="3180" cy="1145" r="3"/></g>
+   <!-- Cercado de madeira ao redor do pomar, fora das áreas de interação das árvores. -->
+   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2100 690Q2115 555 2260 520L3210 520Q3370 555 3390 690" stroke="#573a27" stroke-width="16"/>
+    <path d="M2100 690Q2115 555 2260 520L3210 520Q3370 555 3390 690" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2100 690L2080 1060Q2095 1195 2270 1240Q2720 1260 3190 1240Q3360 1210 3370 1085L3390 690" stroke="#573a27" stroke-width="16"/>
+    <path d="M2100 690L2080 1060Q2095 1195 2270 1240Q2720 1260 3190 1240Q3360 1210 3370 1085L3390 690" stroke="#bd8954" stroke-width="8"/>
+   </g>
+   <g fill="#6a452c" stroke="#4b3324" stroke-width="4">
+    <path d="M2088 665l24-3 9 83-24 3Z"/><path d="M2070 1038l24-2 11 83-24 2Z"/>
+    <path d="M2245 490l27-3 8 76-27 3Z"/><path d="M2460 486l27-2 3 72-27 2Z"/>
+    <path d="M2680 486l27-2 2 72-27 2Z"/><path d="M2900 486l27-2 2 72-27 2Z"/>
+    <path d="M3120 486l27-2 8 76-27 3Z"/><path d="M3355 650l27-3 8 82-27 3Z"/>
+    <path d="M3340 1050l27 2-5 82-27-2Z"/><path d="M3165 1200l27 2-4 78-27-2Z"/>
+    <path d="M2940 1205l27 1-2 76-27-1Z"/><path d="M2710 1205l27 1-1 76-27-1Z"/>
+    <path d="M2480 1200l27 2-3 77-27-2Z"/><path d="M2250 1190l27 2-5 78-27-2Z"/>
+   </g>
+   <g fill="#d4a16a" opacity=".9"><path d="M2090 666l20-3 2 10-20 3Z"/><path d="M2248 492l21-2 2 10-21 2Z"/><path d="M2463 488l21-2 1 10-21 2Z"/><path d="M2683 488l21-2 1 10-21 2Z"/><path d="M2903 488l21-2 1 10-21 2Z"/><path d="M3123 488l21-2 2 10-21 2Z"/><path d="M3358 652l21-2 2 10-21 2Z"/></g>
+  </g>`;
+  html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
+  return html;
 }
-
 function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
  const posts=Array.from({length:9},(_,i)=>{const px=-half+(i*2*half/8);return `<path d="M${px.toFixed(1)} -20v-29 M${px.toFixed(1)} 20v29" stroke="#493326" stroke-width="${i===0||i===8?8:6}" stroke-linecap="round"/>`}).join("");
  const planks=Array.from({length:13},(_,i)=>{const px=-half+((i+1)*2*half/14);return `<path d="M${px.toFixed(1)} -17v39" stroke="#69452e" stroke-width="3.2" opacity=".85"/>`}).join("");
@@ -1798,7 +1809,7 @@ function updateNotificationBadges(){
    marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
    marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
    marker(45,-10,'🐦',readyBirds,'Produção pronta no viveiro')+
-   marker(2750,-18,'🍎',counts.orchard,'Frutas prontas no pomar')+
+   marker(2735,480,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
  }
 }
