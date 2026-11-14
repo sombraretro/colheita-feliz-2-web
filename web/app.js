@@ -2684,7 +2684,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M10500 470Q10720 405 10930 448Q11180 370 11430 445Q11680 405 11900 472L11900 520H10500Z"/>
    <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
   </g>
-  <g id="sea-lighthouse" transform="translate(12450 0)">
+  <g id="sea-lighthouse" transform="translate(10400 0)">
    <path d="M-150 490L-105 420H125L175 490Z" fill="#6f7770"/><path d="M-76 420L-55 270H70L96 420Z" fill="#f4ead3" stroke="#8d806b" stroke-width="9"/>
    <path d="M-65 330H83M-80 390H105" stroke="#d36a48" stroke-width="24"/><path d="M-68 270L-42 220H58L82 270Z" fill="#b64d3c" stroke="#713b34" stroke-width="7"/>
    <rect x="-20" y="285" width="48" height="42" rx="8" fill="#ffe9a4" stroke="#9c7442" stroke-width="6"/><path d="M-30 215Q8 178 47 215" fill="none" stroke="#f4ead3" stroke-width="12"/>
