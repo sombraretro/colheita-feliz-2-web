@@ -452,7 +452,7 @@ const isBirdType=type=>BIRD_TYPES.includes(type);
 const AVIARY_COLUMNS=6;
 const ANIMAL_SCALE={pombo:.52,galinha:.68,pato:.68,pavao:.76,peru:.82,coelho:.55,porco:.82,cabra:.78,ovelha:.88,burro:.94,vaca:1.00,bufala:1.02,boi:1.02,iaque:.94};
 const ORCHARD_CROP_IDS=['maca','manga','laranja','goiaba','limao','coco','arvore_jujuba','arvore_pirulito','arvore_romantica_chinesa','pinheiro_natal','arvore_namorados','carambola','acerola','jaca','caju','pera','jabuticaba','guarana','mamao'];
-const ORCHARD_SLOTS=[[2260,805],[2535,825],[2820,810],[3090,835],[2395,1155],[2670,1175],[2940,1160],[3210,1180]];
+const ORCHARD_SLOTS=[[2185,585],[2470,605],[2760,585],[3050,610],[2330,745],[2615,765],[2905,745],[3190,765]];
 const AREA_CONFIG={orchard:{name:'Pomar produtivo',icon:'🌳',price:18000,level:15},pond:{name:'Rio da fazenda',icon:'🌊',price:9000,level:12},haras:{name:'Haras',icon:'🐎',price:16000,greenPrice:25,level:20}};
 function starterAnimals(){return [
  {id:'dog-1',type:'cachorro',name:'Cachorro',breed:'classico',slot:-1,status:'hungry',stage:1,readyAt:0,guardUntil:0},
@@ -464,7 +464,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -919,11 +919,11 @@ const ground=`<defs>
    <stop offset=".82" stop-color="white" stop-opacity=".88"/>
    <stop offset="1" stop-color="white" stop-opacity="1"/>
   </linearGradient>
-  <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4200" height="2362">
+  <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4400" height="2475">
    <rect x="1300" y="-250" width="4200" height="2362" fill="url(#nature-farm-seam-gradient)"/>
   </mask>
  </defs>
- <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/d73c12a45a2d047832826d8f935d13ba80ec4eb4/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4400" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
@@ -1630,30 +1630,36 @@ function renderHarasArea(){
 function renderOrchardArea(){
   if(!state?.expansions?.orchard)return '';
   let html=`<g id="orchard-ground" pointer-events="none">
-   <!-- Solo de terra fértil, rebaixado para respeitar o horizonte e o céu. -->
-   <path d="M2125 690Q2135 575 2260 550L3210 550Q3335 575 3350 700L3335 1085Q3320 1195 3190 1210L2270 1200Q2130 1175 2105 1060Z" fill="#89563a" stroke="#68432f" stroke-width="18" stroke-linejoin="round"/>
-   <path d="M2145 692Q2155 590 2270 568L3200 568Q3315 590 3328 705L3315 1070Q3300 1175 3180 1188L2280 1180Q2150 1155 2128 1050Z" fill="#a66c47" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
-   <path d="M2170 735Q2390 690 2560 730T2910 725T3300 740M2145 925Q2350 895 2540 930T2910 920T3320 935M2170 1090Q2390 1050 2580 1090T2960 1080T3290 1095" fill="none" stroke="#70472f" stroke-width="15" stroke-linecap="round" opacity=".22"/>
-   <path d="M2180 780Q2370 750 2540 780T2890 775T3290 790M2160 1010Q2380 980 2570 1015T2940 1000T3300 1020" fill="none" stroke="#d3a078" stroke-width="5" stroke-linecap="round" opacity=".34"/>
-   <g fill="#6f4933" opacity=".3"><ellipse cx="2200" cy="860" rx="18" ry="6"/><ellipse cx="2460" cy="680" rx="14" ry="5"/><ellipse cx="2780" cy="735" rx="22" ry="6"/><ellipse cx="3150" cy="865" rx="19" ry="6"/><ellipse cx="2310" cy="1125" rx="22" ry="6"/><ellipse cx="2860" cy="1170" rx="18" ry="5"/><ellipse cx="3220" cy="1090" rx="16" ry="5"/></g>
-   <g fill="#d7b08a" opacity=".38"><circle cx="2250" cy="965" r="3"/><circle cx="2505" cy="875" r="2.5"/><circle cx="2740" cy="1060" r="3"/><circle cx="3020" cy="950" r="2.5"/><circle cx="3180" cy="1145" r="3"/></g>
-   <!-- Cercado de madeira ao redor do pomar, fora das áreas de interação das árvores. -->
+   <!-- Canteiro de pomar compacto, com contorno regular e livre da estrada. -->
+   <path d="M2075 555Q2075 465 2185 450L3125 450Q3240 465 3250 565L3240 755Q3230 835 3130 850L2185 850Q2075 835 2065 755Z" fill="#75452f" stroke="#51301f" stroke-width="17" stroke-linejoin="round"/>
+   <path d="M2095 558Q2095 485 2195 470L3115 470Q3220 485 3230 570L3220 745Q3210 815 3120 830L2195 830Q2095 815 2085 745Z" fill="#9a6240" stroke="#c18a5c" stroke-width="7" stroke-linejoin="round"/>
+   <path d="M2120 625Q2360 590 2540 620T2900 615T3200 625M2110 745Q2350 715 2550 745T2910 740T3210 750" fill="none" stroke="#68412d" stroke-width="12" stroke-linecap="round" opacity=".28"/>
+   <path d="M2150 570Q2370 550 2560 575T2920 570T3180 580M2140 790Q2370 770 2570 795T2930 790T3170 800" fill="none" stroke="#d2a078" stroke-width="5" stroke-linecap="round" opacity=".32"/>
+   <g fill="#6f4933" opacity=".34"><ellipse cx="2220" cy="700" rx="18" ry="6"/><ellipse cx="2510" cy="650" rx="14" ry="5"/><ellipse cx="2810" cy="700" rx="20" ry="6"/><ellipse cx="3110" cy="670" rx="17" ry="5"/><ellipse cx="2350" cy="805" rx="19" ry="5"/><ellipse cx="2940" cy="810" rx="16" ry="5"/></g>
+   <!-- Cerca regular: lateral esquerda com abertura para porteira. -->
    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M2100 690Q2115 555 2260 520L3210 520Q3370 555 3390 690" stroke="#573a27" stroke-width="16"/>
-    <path d="M2100 690Q2115 555 2260 520L3210 520Q3370 555 3390 690" stroke="#bd8954" stroke-width="8"/>
-    <path d="M2100 690L2080 1060Q2095 1195 2270 1240Q2720 1260 3190 1240Q3360 1210 3370 1085L3390 690" stroke="#573a27" stroke-width="16"/>
-    <path d="M2100 690L2080 1060Q2095 1195 2270 1240Q2720 1260 3190 1240Q3360 1210 3370 1085L3390 690" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 555Q2075 440 2190 425H3120Q3260 445 3270 565" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 555Q2075 440 2190 425H3120Q3260 445 3270 565" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 710V755Q2080 865 2190 875H3130Q3250 860 3260 755V565" stroke="#523725" stroke-width="16"/>
+    <path d="M2070 710V755Q2080 865 2190 875H3130Q3250 860 3260 755V565" stroke="#bd8954" stroke-width="8"/>
+    <path d="M2070 555V610M2070 690V710" stroke="#523725" stroke-width="16"/>
    </g>
-   <g fill="#6a452c" stroke="#4b3324" stroke-width="4">
-    <path d="M2088 665l24-3 9 83-24 3Z"/><path d="M2070 1038l24-2 11 83-24 2Z"/>
-    <path d="M2245 490l27-3 8 76-27 3Z"/><path d="M2460 486l27-2 3 72-27 2Z"/>
-    <path d="M2680 486l27-2 2 72-27 2Z"/><path d="M2900 486l27-2 2 72-27 2Z"/>
-    <path d="M3120 486l27-2 8 76-27 3Z"/><path d="M3355 650l27-3 8 82-27 3Z"/>
-    <path d="M3340 1050l27 2-5 82-27-2Z"/><path d="M3165 1200l27 2-4 78-27-2Z"/>
-    <path d="M2940 1205l27 1-2 76-27-1Z"/><path d="M2710 1205l27 1-1 76-27-1Z"/>
-    <path d="M2480 1200l27 2-3 77-27-2Z"/><path d="M2250 1190l27 2-5 78-27-2Z"/>
+   <g fill="#70482d" stroke="#4b3324" stroke-width="4">
+    <path d="M2058 530l25-3 7 78-25 3Z"/><path d="M2058 675l25-3 7 78-25 3Z"/>
+    <path d="M2175 395l27-2 4 76-27 2Z"/><path d="M2400 395l27-2 2 76-27 2Z"/>
+    <path d="M2630 395l27-2 2 76-27 2Z"/><path d="M2860 395l27-2 2 76-27 2Z"/>
+    <path d="M3105 395l27-2 5 76-27 2Z"/><path d="M3255 535l27-2 6 78-27 2Z"/>
+    <path d="M3245 735l27 2-6 78-27-2Z"/><path d="M3110 835l27 2-4 72-27-2Z"/>
+    <path d="M2870 840l27 1-2 72-27-1Z"/><path d="M2630 840l27 1-1 72-27-1Z"/>
+    <path d="M2390 838l27 2-3 72-27-2Z"/><path d="M2175 830l27 2-5 72-27-2Z"/>
    </g>
-   <g fill="#d4a16a" opacity=".9"><path d="M2090 666l20-3 2 10-20 3Z"/><path d="M2248 492l21-2 2 10-21 2Z"/><path d="M2463 488l21-2 1 10-21 2Z"/><path d="M2683 488l21-2 1 10-21 2Z"/><path d="M2903 488l21-2 1 10-21 2Z"/><path d="M3123 488l21-2 2 10-21 2Z"/><path d="M3358 652l21-2 2 10-21 2Z"/></g>
+   <g transform="translate(2070 635)">
+    <path d="M0 -16L90 -10V45L0 38Z" fill="#70472d" stroke="#4b3324" stroke-width="6"/>
+    <path d="M8 -8L82 -3M8 8L82 13M8 24L82 29" stroke="#c18a5c" stroke-width="7" stroke-linecap="round"/>
+    <path d="M8 -10L82 35" stroke="#e0b77d" stroke-width="6"/>
+    <circle cx="72" cy="10" r="4" fill="#f1d18e"/>
+   </g>
+   <g fill="#d5a16a" opacity=".9"><path d="M2060 532l20-2 2 10-20 2Z"/><path d="M2178 397l21-2 1 10-21 2Z"/><path d="M2403 397l21-2 1 10-21 2Z"/><path d="M2633 397l21-2 1 10-21 2Z"/><path d="M2863 397l21-2 1 10-21 2Z"/><path d="M3108 397l21-2 1 10-21 2Z"/></g>
   </g>`;
   html+=(state.orchardTrees||[]).map((tree,index)=>orchardTreeMarkup(index,tree)).join('');
   return html;
@@ -1809,7 +1815,7 @@ function updateNotificationBadges(){
    marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
    marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
    marker(45,-10,'🐦',readyBirds,'Produção pronta no viveiro')+
-   marker(2735,480,'🍎',counts.orchard,'Frutas prontas no pomar')+
+   marker(2670,375,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
  }
 }
