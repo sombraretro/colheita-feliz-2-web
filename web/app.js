@@ -845,32 +845,11 @@ const ground=`<defs>
 <radialGradient id="animalShadow"><stop stop-color="#18390e" stop-opacity=".32"/><stop offset="1" stop-color="#18390e" stop-opacity="0"/></radialGradient>
 <filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter>
 </defs>
-<!-- Fundo antigo removido: o céu e o horizonte agora são desenhados pela paisagem da Fazenda. -->
+<!-- Cenário-base da Fazenda: arte panorâmica externa, sem interação. -->
 <g id="farm-landscape" pointer-events="none">
- <defs>
-  <linearGradient id="farmSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#65b9eb"/><stop offset=".62" stop-color="#b8e4f3"/><stop offset="1" stop-color="#e2f0df"/></linearGradient>
-  <linearGradient id="farmGrassBase" x1="0" y1="0" x2=".2" y2="1"><stop stop-color="#83c95b"/><stop offset=".42" stop-color="#73b94b"/><stop offset="1" stop-color="#57983c"/></linearGradient>
-  <linearGradient id="farmMountainFar" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8daeb1"/><stop offset="1" stop-color="#6e9290"/></linearGradient>
-  <linearGradient id="farmMountainNear" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#729a80"/><stop offset="1" stop-color="#4f7b5b"/></linearGradient>
- </defs>
- <rect x="-2100" y="-400" width="4200" height="720" fill="url(#farmSky)"/>
- <g fill="#fff" opacity=".78">
-  <path d="M-1760 -145q25-42 72-20q23-54 82-26q49-3 55 46q-9 29-49 29h-125q-48-1-35-29Z"/>
-  <path d="M-780 -245q20-34 60-18q23-44 68-20q42-2 49 39q-8 25-42 25h-106q-39-1-29-26Z"/>
-  <path d="M260 -165q24-41 68-19q25-51 77-24q46-2 54 43q-8 28-47 28H300q-48-1-40-28Z"/>
-  <path d="M1240 -275q18-31 54-16q20-40 62-19q37-1 44 35q-7 23-38 23h-95q-35-1-27-23Z"/>
- </g>
- <path d="M-2100 155L-1860 40L-1650 115L-1430 -12L-1190 112L-950 -45L-710 110L-475 4L-235 126L20 -36L260 112L500 -5L740 115L970 -38L1210 104L1460 -12L1690 112L1900 10L2100 120V340H-2100Z" fill="url(#farmMountainFar)"/>
- <path d="M-2100 205L-1840 130L-1620 184L-1390 75L-1160 190L-930 70L-690 196L-450 92L-205 205L35 83L280 198L520 86L760 198L1000 75L1230 192L1480 80L1720 190L1920 95L2100 185V365H-2100Z" fill="url(#farmMountainNear)"/>
- <g fill="#315f43">
-  <path d="M-2100 285l55-118 55 118 38-92 43 92 55-137 60 137 43-102 48 102 56-125 55 125 43-94 48 94 58-145 62 145 43-106 51 106 48-122 55 122 52-95 48 95 55-135 62 135 48-105 50 105 55-126 56 126 45-92 54 92 58-143 62 143 44-104 55 104 48-123 55 123 53-95 48 95 55-134 60 134 47-105 53 105 48-122 58 122 52-93 49 93 54-139 62 139 45-102 52 102 52-120 55 120 49-92 54 92 56-133 62 133 46-100 54 100 50-118 58 118 49-94 55 94 58-137 65 137V370H-2100Z"/>
- </g>
- <rect x="-2100" y="235" width="4200" height="905" fill="url(#farmGrassBase)"/>
- <rect x="-2100" y="235" width="4200" height="905" fill="url(#grass)" opacity=".42"/>
- <path d="M-2100 262Q-1750 235-1420 266T-760 255T-90 263T570 251T1210 263T2100 248" fill="none" stroke="#b7df7c" stroke-width="18" opacity=".22"/>
- <path d="M-2100 292Q-1700 275-1350 294T-650 285T50 296T750 282T1450 294T2100 280" fill="none" stroke="#3e8a38" stroke-width="9" opacity=".15"/>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
-<!-- Estradas secundárias são integradas à rede viária única. -->
+ -->
 `;
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 updateSceneLandscapeVisibility();
@@ -2446,18 +2425,18 @@ function updateDayNight(){
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
  if(layer.dataset.phase===phase)return;
  layer.dataset.phase=phase;
- const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
+ const environmentLayers=['farm-landscape','ground-layer','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
  for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
  layer.innerHTML='';
  const environment=$('day-night-ground-layer');if(!environment)return;
  environment.innerHTML='';
  if(phase==='night'){
-  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g transform="translate(990 -175)"><circle r="49" fill="#e7e7e7"/><path d="M-43 -23Q-8 -58 24 -35Q48 -17 41 8Q34 34 7 39Q-18 45-38 22Z" fill="#d2d2d2"/><g fill="#bdbdbd"><circle cx="-15" cy="-14" r="8"/><circle cx="20" cy="-23" r="5"/><circle cx="12" cy="19" r="11"/><circle cx="-25" cy="20" r="6"/></g><g fill="#fff"><path d="M-25 -37l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z"/><path d="M35 5l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z"/></g></g></g>';
+  environment.innerHTML='<g id="environment-night-overlay" pointer-events="none"><rect x="-3400" y="-400" width="7800" height="1800" fill="#07152f" opacity=".16"/><g fill="#fff4ce"><circle cx="-2880" cy="-165" r="4"/><circle cx="-2460" cy="-95" r="3"/><circle cx="-2050" cy="-205" r="3"/><circle cx="-1720" cy="-125" r="4"/><circle cx="-1380" cy="-185" r="3"/><circle cx="-1020" cy="-95" r="4"/><circle cx="-720" cy="-205" r="3"/><circle cx="-380" cy="-160" r="4"/><circle cx="10" cy="-85" r="3"/><circle cx="420" cy="-180" r="4"/><circle cx="820" cy="-120" r="3"/><circle cx="1260" cy="-180" r="4"/><circle cx="1640" cy="-90" r="3"/><circle cx="2040" cy="-160" r="4"/><circle cx="2560" cy="-105" r="3"/><circle cx="3120" cy="-175" r="4"/><circle cx="3710" cy="-90" r="3"/></g><g transform="translate(1370 -42)"><circle r="40" fill="#e7e7e7"/><path d="M-35 -19Q-7 -47 20 -29Q39 -14 33 7Q27 28 6 32Q-15 36-31 18Z" fill="#d2d2d2"/><g fill="#bdbdbd"><circle cx="-12" cy="-11" r="7"/><circle cx="16" cy="-19" r="4"/><circle cx="10" cy="16" r="9"/><circle cx="-21" cy="17" r="5"/></g><g fill="#fff"><path d="M-25 -37l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z"/><path d="M35 5l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z"/></g></g></g>';
  }else{
   const sun=phase==='sunset'?'#ff9a18':'#ffe600';
   const glow=phase==='sunset'?'#ffb347':'#fff36a';
-  environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(990 -175)"><circle r="68" fill="'+glow+'" opacity=".18"/><circle r="48" fill="'+sun+'"/><circle cx="-13" cy="-15" r="13" fill="#fff6a6" opacity=".45"/></g>';
+  environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(1370 -42)"><circle r="58" fill="'+glow+'" opacity=".18"/><circle r="40" fill="'+sun+'"/><circle cx="-11" cy="-12" r="11" fill="#fff6a6" opacity=".45"/></g>';
  }
 }
 function applyMenuThemeColors(){
