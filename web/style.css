@@ -869,3 +869,23 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 @keyframes cf2-river-flow-a{from{stroke-dashoffset:0}to{stroke-dashoffset:-92}}
 @keyframes cf2-river-flow-b{from{stroke-dashoffset:-70}to{stroke-dashoffset:35}}
 @media(prefers-reduced-motion:reduce){#river-water-motion .river-current-flow path{animation:none!important}}
+
+
+/* Tela de boas-vindas para novos fazendeiros */
+.welcome-help-button{width:100%;margin:0 0 16px}
+.welcome-intro{display:flex;align-items:center;gap:16px;padding:18px;border:1px solid var(--accent,#d6a64c);border-radius:16px;background:linear-gradient(135deg,rgba(255,223,145,.22),rgba(255,255,255,.06));margin-bottom:16px}
+.welcome-hero-icon{font-size:42px;flex:0 0 auto}
+.welcome-intro h3{margin:0 0 6px;font-size:1.2rem}
+.welcome-intro p{margin:0;line-height:1.5}
+.welcome-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.welcome-card{min-width:0;padding:15px;border:1px solid var(--border,#c9ad78);border-radius:14px;background:var(--panel,#fffaf0);color:var(--ink,#493b2b)}
+.welcome-card>span{display:block;font-size:27px;margin-bottom:7px}
+.welcome-card>b{display:block;font-size:1rem;margin-bottom:7px}
+.welcome-card p{font-size:.91rem;line-height:1.5;margin:0 0 10px}
+.welcome-card .modal-action{margin-top:5px}
+.welcome-weather-result{padding:11px;border-radius:10px;margin:9px 0;background:rgba(60,145,90,.12)}
+.welcome-weather-result.rainy{background:rgba(58,139,201,.16)}
+.welcome-weather-result b,.welcome-weather-result small{display:block}
+.welcome-weather-result small{margin-top:5px;line-height:1.4}
+.welcome-footer{text-align:center;font-weight:600;margin:16px 0 4px}
+@media(max-width:620px){.welcome-grid{grid-template-columns:1fr}.welcome-intro{align-items:flex-start;padding:14px}.welcome-hero-icon{font-size:34px}}
