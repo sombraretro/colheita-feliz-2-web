@@ -1,5 +1,5 @@
 'use strict';
-/* Build refresh: Mata alinhada, transição do cenário e navegação lateral (2026-11-14). */
+/* Build refresh: ajuda ilimitada em visitas, sementes ornamentais e colheita de Pomar/Mata (2026-11-14). */
 /* Colheita Feliz 2 1.9.0: cloud save and visual revision, inbox, friend cards and gift packages. */
 let inventorySortMode='default';
 const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1932;
@@ -78,6 +78,9 @@ const CROPS={
  fenix:{name:'Fênix',icon:'🔥',price:9500,hours:42,regrowHours:18,yield:72,unitPrice:160,xp:208,minLevel:40,seasons:8,advanced:true,balance:'estimated',estimateNote:'Todos os parâmetros de plantio são fictícios e foram estimados a partir de sementes avançadas de 8 temporadas.'},
  camu_camu:{name:'Camu-camu',icon:'🫐',price:9200,hours:54,regrowHours:22,yield:52,unitPrice:310,xp:230,minLevel:38,seasons:8,advanced:true,flower:'#f6e5c7',fruit:'#a72d42',balance:'estimated',estimateNote:'Cultura avançada brasileira; parâmetros balanceados para esta edição.'},
  jabuticaba:{name:'Jabuticaba',icon:'🫐',price:10800,hours:58,regrowHours:24,yield:48,unitPrice:360,xp:255,minLevel:42,seasons:8,advanced:true,flower:'#f5e7d5',fruit:'#39213f',balance:'estimated',estimateNote:'Cultura avançada brasileira; parâmetros balanceados para esta edição.'},
+ pilea_involucrata:{name:'Pilea Involucrata',icon:'🪴',kind:'flower',price:550,hours:22,yield:3,unitPrice:220,xp:70,minLevel:5,seasons:1,flower:'#b8a3d0',fruit:'#9a78b5'},
+ rosa_amarela:{name:'Rosa Amarela',icon:'🌹',kind:'flower',price:1250,hours:32,yield:4,unitPrice:370,xp:120,minLevel:10,seasons:1,flower:'#f3d23d',fruit:'#e6bd25'},
+ girassol:{name:'Girassol',icon:'🌻',kind:'flower',price:2800,hours:44,yield:5,unitPrice:650,xp:190,minLevel:20,seasons:1,flower:'#f5c52e',fruit:'#8b5a2b'},
  crisantemo:{name:'Crisântemo',icon:'🌼',kind:'flower',price:280,hours:8,yield:2,unitPrice:25,xp:35,flower:'#f4c542',fruit:'#f4c542'},
  peonia:{name:'Peônia',icon:'🌸',kind:'flower',price:650,hours:12,yield:4,unitPrice:42,xp:60,flower:'#e78cae',fruit:'#e78cae'},
  cravo:{name:'Cravo',icon:'🌺',kind:'flower',price:950,hours:16,yield:5,unitPrice:55,xp:80,flower:'#d84d63',fruit:'#d84d63'},
@@ -464,7 +467,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:14000,top:-300,bottom:1400,w:17400,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400},sea:{label:'Mar',left:3000,right:14000,top:-700,bottom:1800}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let welcomeShownThisSession=false;
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
@@ -953,7 +956,7 @@ ${fencePath([[4400,960],[4750,970],[5100,960],[5450,970],[5800,960],[6200,970]],
  <path d="M1290 520Q1370 510 1435 520M1510 500Q1585 490 1660 500M1330 735Q1410 725 1485 735" fill="none" stroke="#c2a17a" stroke-width="2" opacity=".22" stroke-linecap="round"/>
 </g>
 `;
-$('ground-layer').innerHTML=ground+brickWalkwayMarkup();
+$('ground-layer').innerHTML=ground+brickWalkwayMarkup();/* A cena do Mar é montada na troca de cena, após o SVG base existir. */
 updateSceneLandscapeVisibility();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
@@ -1008,9 +1011,30 @@ for(let i=0;i<95;i++){
  if(y<235||blocked(x,y))continue;
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
-// Bases orgânicas de grama substituem as sombras dos prédios.
-scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
-for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
+// Bases orgânicas alinhadas ao ponto real de contato de cada construção.
+// As manchas ficam no cenário, atrás dos prédios, e não alteram suas dimensões ou hitboxes.
+scenery+=`<g pointer-events="none">
+ <!-- Celeiro: base acompanha a parede frontal e a lateral com feno. -->
+ <ellipse cx="-438" cy="354" rx="222" ry="18" fill="#294d20" opacity=".24"/>
+ <path d="M-675 354Q-632 341-575 347T-470 344T-360 348T-215 356L-230 373Q-330 380-430 372T-575 375T-665 369Z" fill="#4d922d" opacity=".66"/>
+ <path d="M-628 351Q-590 343-552 349T-475 346T-398 350T-320 352" fill="none" stroke="#76ad42" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+ <!-- Casa: acompanha a projeção da fachada, sem avançar sobre as paredes. -->
+ <ellipse cx="1000" cy="390" rx="226" ry="17" fill="#294d20" opacity=".25"/>
+ <path d="M770 391Q818 380 873 385T979 382T1085 386T1225 392L1212 410Q1120 416 1030 409T900 410T780 407Z" fill="#4f982e" opacity=".7"/>
+ <path d="M806 390Q856 382 901 389T997 386T1096 390T1184 394" fill="none" stroke="#7db64a" stroke-width="7" stroke-linecap="round" opacity=".52"/>
+ <!-- Viveiro: base ampla e baixa, alinhada aos quatro apoios da estrutura. -->
+ <ellipse cx="25" cy="419" rx="220" ry="17" fill="#294d20" opacity=".25"/>
+ <path d="M-205 420Q-157 408-105 414T-5 411T95 415T255 422L242 439Q145 445 57 438T-80 440T-195 435Z" fill="#4d942d" opacity=".68"/>
+ <path d="M-166 418Q-120 411-77 417T12 414T103 418T207 423" fill="none" stroke="#79b348" stroke-width="7" stroke-linecap="round" opacity=".52"/>
+ <!-- Base já existente do elemento decorativo à direita. -->
+ <path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/>
+</g>`;
+for(const [gx,gy,gs] of [
+ [-650,363,.72],[-600,370,.55],[-520,373,.68],[-430,374,.62],[-330,370,.72],[-245,365,.55],
+ [785,402,.58],[830,407,.72],[900,409,.62],[1090,409,.68],[1170,404,.58],[1210,399,.5],
+ [-180,431,.55],[-120,437,.65],[-45,440,.58],[65,439,.62],[145,434,.58],[220,430,.5],
+ [1760,630,.55],[1935,632,.6]
+])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
 scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,55,430,350)}</g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 15)">
@@ -1060,7 +1084,7 @@ function blinkMarkup(animal){
  };
  return lids[animal]||'';
 }
-function renderAnimals(){
+function renderAnimals(scheduleBlink=true){
  if(!state||!Array.isArray(state.animals))return;
  let markup='';
  const animals=[...state.animals].sort((a,b)=>isBirdType(a.type)&&isBirdType(b.type)?(a.aviarySlot??99)-(b.aviarySlot??99):(a.slot??99)-(b.slot??99));
@@ -1090,7 +1114,7 @@ function renderAnimals(){
   markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
  }
  $('animal-layer').innerHTML=markup;
- scheduleAnimalBlinking();
+ if(scheduleBlink)scheduleAnimalBlinking();
 }
 
 const FIELD_OFFSET_X=-100;
@@ -1176,11 +1200,22 @@ function advancedFruitArt(type,color){
 function cropArt(type,progress){const v=CROPS[type],hasFruit=progress>.68,bloom=progress>.45&&progress<.78,leaves=progress>.55?7:progress>.22?5:3,leaf=['#1b8d39','#38ab3f','#58bd43','#2b9d35','#74c84a','#90d362','#4ea83e'];
 let a='';
 if(v.kind==='flower'){
+ if(type==='pilea_involucrata'){
+  const count=progress>.72?8:progress>.4?6:progress>.16?4:2;
+  for(let j=0;j<count;j++){const angle=j*2.399,rad=progress>.5?31:22,cx=Math.cos(angle)*rad,cy=-20+Math.sin(angle)*rad*.58;a+=`<path d="M0 0Q${cx*.35-9} ${cy-16} ${cx} ${cy}Q${cx*.5+9} ${cy+14} 0 0Z" fill="${['#638b62','#789c70','#547d59','#8ba87b'][j%4]}" stroke="#365f43" stroke-width="2"/><path d="M0 0L${cx} ${cy}" stroke="#d8d7b7" stroke-width="1.7"/><path d="M${cx*.4} ${cy*.4}l${cx*.16} -5m${-cx*.13} 10l${-cx*.15} -4" stroke="#b8c7a3" stroke-width="1.1" fill="none"/>`}
+  a+=`<path d="M0 0Q-7-35 4-69M0-10Q22-39 29-50" stroke="#477b45" stroke-width="5" fill="none"/>`;return a;
+ }
  const leafPairs=progress>.35?4:2;
  for(let j=0;j<leafPairs;j++){const side=j%2?-1:1,yy=-18-j*12,xx=side*(17+j*2);a+=`<path d="M0 ${yy}Q${xx*.45} ${yy-22} ${xx} ${yy-13}Q${xx*.55} ${yy+2} 0 ${yy+4}Z" fill="${leaf[j%leaf.length]}" stroke="#17682a" stroke-width="2"/><path d="M0 ${yy+2}L${xx} ${yy-13}" stroke="#a8d778" stroke-width="1.5"/>`}
  a+=`<path d="M0 0Q-7-36 4-73M0-12Q24-44 31-57" stroke="#37762c" stroke-width="5" fill="none"/>`;
  if(progress>.25)a+=`<path d="M-2-48q-13-20-24-15M3-54q15-20 25-13" stroke="#438d31" stroke-width="3" fill="none"/>`;
- if(progress>.43){const size=progress>.72?22:15;const centers=type==='crisantemo'?[[-14,-70],[18,-55],[0,-36]]:type==='peonia'?[[0,-62],[21,-43]]:type==='cravo'?[[-12,-67],[18,-48]]:[[-4,-65],[19,-43]];for(const [bx,by] of centers)a+=flowerBloomMarkup(type,bx,by,size,v.flower)}
+ if(progress>.35&&type==='girassol'){
+  const cx=2,cy=-67,rr=progress>.72?20:14;
+  for(let k=0;k<12;k++){const angle=k*Math.PI*2/12,px=cx+Math.cos(angle)*rr,py=cy+Math.sin(angle)*rr;a+=`<ellipse cx="${px}" cy="${py}" rx="6.5" ry="12" fill="#f5c52e" stroke="#c28b20" stroke-width="1.5" transform="rotate(${k*30} ${px} ${py})"/>`}
+  a+=`<circle cx="${cx}" cy="${cy}" r="${progress>.72?12:9}" fill="#70441e" stroke="#4b2d17" stroke-width="3"/><g fill="#b98a35"><circle cx="${cx-4}" cy="${cy-2}" r="1.4"/><circle cx="${cx+3}" cy="${cy-5}" r="1.4"/><circle cx="${cx+5}" cy="${cy+3}" r="1.4"/></g>`;
+ }else if(progress>.35&&type==='rosa_amarela'){
+  const cx=2,cy=-66;a+=`<g fill="#f3cf36" stroke="#bd9223" stroke-width="2"><path d="M${cx} ${cy}c-17-23-29-5-15 7-14 16 3 25 15 9 12 16 29-2 15-12 14-12-4-29-15-4-12Z"/><path d="M${cx-7} ${cy+2}q-8-14 4-19q12 6 3 17q9 13-6 17q-13-6-1-15Z"/></g><path d="M-3-69q6-8 11-1" stroke="#fff0a2" stroke-width="2" fill="none"/>`;
+ }
  return a;
 }
 // Many different leaf sizes and positions create an actual growing crop.
@@ -1329,6 +1364,9 @@ function newGame(){
  return {farmName:'Minha fazenda',catalog:[],profilePhoto:'',coins:3500,greenCoins:5,vipUntil:0,dogBreedsOwned:['classico'],temporaryDogBreeds:{},redSoilApplications:0,xp:0,xpProgressionVersion:2,lastLevelRewarded:1,specialistProgress:{chef:{xp:0},grill:{xp:0},lumberjack:{xp:0},carpenter:{xp:0},alchemist:{xp:0},fisher:{xp:0},haras:{xp:0}},popularity:0,flowers:0,mood:'happy',moodDate:'',grill:{owned:false,assembled:false,parts:{iron:0,screws:0,paint:0},queue:[]},kitchen:{queue:[]},herbMix:{queue:[]},fishing:{rod:'normal',rods:['normal'],lastCastAt:0,pendingCatch:null},fishWarehouse:Object.fromEntries(Object.keys(FISH_TYPES).map(id=>[id,0])),seaFishing:{net:'normal',nets:['normal'],lastCastAt:0,pendingCatch:null},seaWarehouse:Object.fromEntries(Object.keys(SEA_TYPES).map(id=>[id,0])),forestPlots:Array.from({length:FOREST_PLOTS},()=>({type:null,status:'empty',plantedAt:0})),woodWarehouse:Object.fromEntries([...new Set(Object.values(FOREST_TREES).map(t=>t.wood))].map(id=>[id,0])),furnitureWarehouse:Object.fromEntries(Object.keys(WOODWORK_RECIPES).map(id=>[id,0])),carpentry:{queue:[]},meatWarehouse:{chicken:0,beef:0,pork:0,lamb:0,turkey:0,goat:0},meatLocks:{chicken:true,beef:true,pork:true,lamb:true,turkey:true,goat:true},processedWarehouse:{},processedLocks:{},warehouseLocks,decorInventory,placedDecorations:[],farmTheme:'classic',farmThemeExpiries:{},ownedFarmThemes:[],giftInventory,expansions:{orchard:false,pond:false,haras:false},lake:{fish:[],decorations:[],bridges:[]},orchardTrees:Array.from({length:8},()=>({type:null,status:'empty',plantedAt:0,harvestsRemaining:0})),butterflyTreeClaimed:false,flowerWarehouse,flowerLocks,bouquets,dailyRewardDate:'',dailyStreak:0,inventory,warehouse:{},animalWarehouse:{},animals:starterAnimals(),plots,history:[],tutorial:{acceptedId:null,completed:[],finished:false},taskProgress:{},mobileShortcuts:['shop','kitchen','animals','friends'],progressCounters:{harvest:0,plant:0,water:0,sell:0,animal:0,feed:0,produce:0,fish:0,cook:0,explore:0,discover:0},missionDay:todayKey(),missionWeek:missionWeekKey(),missionDailyProgress:{},missionWeeklyProgress:{},missionDailyClaims:[],missionWeeklyClaims:[],unlockedTitles:[],activeTitle:'',claimedAchievements:[],social:{friends:[],inbox:[],sent:[]},createdAt:Date.now(),updatedAt:Date.now()};
 }
 function cropIconMarkupOriginal(id){const crop=CROPS[id];if(!crop)return '';if(id==='pimentao_verde'||id==='pimentao_vermelho'||id==='pimentao_amarelo')return '<span class="crop-icon-mark crop-icon-art pepper-icon"><img alt="" src="assets/pimentao-'+id.replace('pimentao_','')+'.png"></span>';const art={
+ pilea_involucrata:'<svg viewBox="0 0 48 48"><path d="M23 42Q21 23 25 7" stroke="#3f793c" stroke-width="3" fill="none"/><path d="M23 34Q5 34 6 21q15-6 17 13Zm2-8Q25 10 39 11q6 14-14 15Zm-2-7Q8 20 12 8q14-4 11 11Z" fill="#718e68" stroke="#3d6747" stroke-width="2"/><path d="M9 23l12 10m5-9 12-10M14 10l9 8" stroke="#d8d6bd" stroke-width="1.5" fill="none"/></svg>',
+ rosa_amarela:'<svg viewBox="0 0 48 48"><path d="M24 44V19m0 13Q8 25 8 19q12-3 16 13m0-7q12-16 19-8-3 12-19 14" fill="#4d913e" stroke="#286d31" stroke-width="2"/><g fill="#f4cf37" stroke="#b58c22" stroke-width="1.5"><circle cx="24" cy="15" r="11"/><circle cx="18" cy="14" r="6"/><circle cx="29" cy="12" r="6"/><circle cx="24" cy="8" r="5"/></g><circle cx="24" cy="15" r="3" fill="#bd8b22"/></svg>',
+ girassol:'<svg viewBox="0 0 48 48"><path d="M24 45V20m0 13Q9 28 7 20q12-3 17 13m0-8q13-15 19-7-4 11-19 14" fill="#4d913e" stroke="#286d31" stroke-width="2"/><g fill="#f6ca35" stroke="#c18b20" stroke-width="1.2"><ellipse cx="24" cy="5" rx="4" ry="8"/><ellipse cx="24" cy="5" rx="4" ry="8" transform="rotate(45 24 15)"/><ellipse cx="24" cy="5" rx="4" ry="8" transform="rotate(90 24 15)"/><ellipse cx="24" cy="5" rx="4" ry="8" transform="rotate(135 24 15)"/></g><circle cx="24" cy="15" r="8" fill="#68401f" stroke="#4b2e1a" stroke-width="2"/></svg>',
  pimentao_verde:'<svg viewBox="0 0 48 48"><path d="M22 9c-2 5-1 8 2 9-8-5-17 1-16 12 1 10 8 15 16 12 8 3 15-2 16-12 1-11-8-17-16-12 3-3 4-6 2-9Z" fill="#4f9b45" stroke="#286b32" stroke-width="2"/><path d="M23 13q-5-8-12-5 4 7 12 7m2-2q4-8 12-6-3 7-12 8" fill="#43863b" stroke="#28622c" stroke-width="1.5"/></svg>',
  pimentao_vermelho:'<svg viewBox="0 0 48 48"><path d="M22 9c-2 5-1 8 2 9-8-5-17 1-16 12 1 10 8 15 16 12 8 3 15-2 16-12 1-11-8-17-16-12 3-3 4-6 2-9Z" fill="#c93632" stroke="#842a25" stroke-width="2"/><path d="M23 13q-5-8-12-5 4 7 12 7m2-2q4-8 12-6-3 7-12 8" fill="#43863b" stroke="#28622c" stroke-width="1.5"/></svg>',
  pimentao_amarelo:'<svg viewBox="0 0 48 48"><path d="M22 9c-2 5-1 8 2 9-8-5-17 1-16 12 1 10 8 15 16 12 8 3 15-2 16-12 1-11-8-17-16-12 3-3 4-6 2-9Z" fill="#f2c52f" stroke="#a77c18" stroke-width="2"/><path d="M23 13q-5-8-12-5 4 7 12 7m2-2q4-8 12-6-3 7-12 8" fill="#43863b" stroke="#28622c" stroke-width="1.5"/></svg>',
@@ -1351,7 +1389,7 @@ function forestIconMarkup(id){const tree=FOREST_TREES[id];if(!tree)return '';if(
 function discoverItem(category,id,name,icon='📌'){if(!state||!category||!id||!name)return;state.catalog=Array.isArray(state.catalog)?state.catalog:[];if(state.catalog.some(x=>x.category===category&&x.id===String(id)))return;state.catalog.push({category,id:String(id),name:String(name),icon:String(icon||'📌'),discoveredAt:Date.now()});state.progressCounters=state.progressCounters||{};state.progressCounters.discover=(state.progressCounters.discover||0)+1;bumpMissionProgress('discover',1)}
 function catalogLegacySeed(data){const add=(category,id,name,icon)=>{if(!data.catalog.some(x=>x.category===category&&x.id===String(id)))data.catalog.push({category,id:String(id),name:String(name),icon:icon||'📌',discoveredAt:Date.now()})};for(const p of data.plots||[])if(p?.crop&&CROPS[p.crop])add('canteiros',p.crop,CROPS[p.crop].name,CROPS[p.crop].icon);for(const t of data.orchardTrees||[])if(t?.type&&CROPS[t.type])add('pomar',t.type,CROPS[t.type].name,CROPS[t.type].icon);for(const t of data.forestPlots||[])if(t?.type&&FOREST_TREES[t.type])add('mata',t.type,FOREST_TREES[t.type].name,'🌳');for(const x of data.animals||[])if(ANIMALS[x.type])add('animais',x.type,ANIMALS[x.type].name,ANIMALS[x.type].icon);for(const id of data.dogBreedsOwned||[])if(DOG_BREEDS[id])add('caes',id,DOG_BREEDS[id].name,'🐕');for(const [id,n] of Object.entries(data.fishWarehouse||{}))if(n>0&&FISH_TYPES[id])add('rio',id,FISH_TYPES[id].name,FISH_TYPES[id].icon);for(const [id,n] of Object.entries(data.seaWarehouse||{}))if(n>0&&SEA_TYPES[id])add('mar',id,SEA_TYPES[id].name,SEA_TYPES[id].icon);if((data.inventory?.caviar||0)>0&&SEA_TYPES.caviar)add('mar','caviar',SEA_TYPES.caviar.name,SEA_TYPES.caviar.icon);for(const [id,n] of Object.entries(data.processedWarehouse||{}))if(n>0&&GRILL_RECIPES[id])add(GRILL_RECIPES[id].kitchenOnly?'cozinha':'churrasqueira',id,GRILL_RECIPES[id].name,GRILL_RECIPES[id].icon);for(const [id,n] of Object.entries(data.inventory||{}))if(n>0&&id.startsWith('mix_')&&MIX_HERB_RECIPES[id.slice(4)]){const r=MIX_HERB_RECIPES[id.slice(4)];add('ervas',id.slice(4),r.name,r.icon)}for(const [id,n] of Object.entries(data.warehouse||{}))if(n>0&&CROPS[id])add(CROPS[id].forestOnly?'mata':'canteiros',id,CROPS[id].name,CROPS[id].icon);for(const [id,n] of Object.entries(data.furnitureWarehouse||{}))if(n>0&&WOODWORK_RECIPES[id])add('marcenaria',id,WOODWORK_RECIPES[id].name,'🪚');for(const [id,n] of Object.entries(data.bouquets||{}))if(n>0&&BOUQUETS[id])add('buques',id,BOUQUETS[id].name,BOUQUETS[id].icon);for(const [id,n] of Object.entries(data.decorInventory||{}))if(n>0&&DECORATIONS[id])add('colecoes',id,DECORATIONS[id].name,'🌷');for(const id of data.ownedFarmThemes||[])if(FARM_THEMES[id])add('colecoes','tema_'+id,FARM_THEMES[id].name,'🎨');for(const [id,n] of Object.entries(data.giftInventory||{}))if(n>0&&GIFT_ITEMS[id])add('colecoes','presente_'+id,GIFT_ITEMS[id].name,'🎁');for(const id of data.fishing?.rods||[])if(FISHING_RODS[id])add('equipamentos','vara_'+id,'Vara '+FISHING_RODS[id].name,'🪝');for(const id of data.seaFishing?.nets||[])if(SEA_NETS[id])add('equipamentos','rede_'+id,'Rede '+SEA_NETS[id].name,'🪢');}
 
-const CLASSIC_CROP_ASSET_SLUGS={"abacaxi":"abacaxi","abobora":"abobora","amendoim":"amendoim","arroz":"arroz","banana":"banana","batata_doce":"batata-doce","batata":"batata","berinjela":"berinjela","cacau":"cacau","cana":"cana","cenoura":"cenoura","cereja":"cereja","coco":"coco","ervilha":"ervilha","goiaba":"goiaba","kiwi":"kiwi","laranja":"laranja","lichia":"lichia","limao":"limao","maca":"maca","manga":"manga","melancia":"melancia","melao":"melao","milho":"milho","morango":"morango","nabo":"nabo","noz":"noz","pessego":"pessego","pimenta":"pimenta","pitaya":"pitaya","roma":"roma","tomate":"tomate","uva":"uva"};
+const CLASSIC_CROP_ASSET_SLUGS={"abacaxi":"abacaxi","abobora":"abobora","amendoim":"amendoim","arroz":"arroz","banana":"banana","batata_doce":"batata-doce","batata":"batata","berinjela":"berinjela","cacau":"cacau","cana":"cana","cenoura":"cenoura","cereja":"cereja","coco":"coco","ervilha":"ervilha","goiaba":"goiaba","girassol":"girassol","kiwi":"kiwi","laranja":"laranja","lichia":"lichia","limao":"limao","maca":"maca","manga":"manga","melancia":"melancia","melao":"melao","milho":"milho","morango":"morango","nabo":"nabo","noz":"noz","pessego":"pessego","pimenta":"pimenta","pitaya":"pitaya","roma":"roma","tomate":"tomate","uva":"uva"};
 const CLASSIC_CROP_ASSET_BASE='https://raw.githubusercontent.com/dabb3/colheita-feliz-public/codex/online-core-compartilhado/assets/classic/crops/';
 function cropIconMarkup(id){return cropIconMarkupOriginal(id);}
 function renderDiscoveryCatalog(){const groups=[['canteiros','🌱 Plantado nos canteiros',FIELD_CROP_IDS.length],['pomar','🍎 Pomar',8],['mata','🌳 Mata Brasileira',FOREST_TREE_IDS.length],['cozinha','🍲 Pratos da cozinha',Object.values(GRILL_RECIPES).filter(x=>x.kitchenOnly).length],['ervas','🌿 Temperos e banhos',Object.keys(MIX_HERB_RECIPES).length],['churrasqueira','🔥 Pratos da churrasqueira',Object.values(GRILL_RECIPES).filter(x=>!x.kitchenOnly).length],['animais','🐾 Animais e aves',Object.keys(ANIMALS).length],['caes','🐕 Raças de cães',Object.keys(DOG_BREEDS).length],['rio','🎣 Peixes de rio',Object.keys(FISH_TYPES).length],['mar','🌊 Capturas do mar',Object.keys(SEA_TYPES).length],['marcenaria','🪚 Marcenaria',Object.keys(WOODWORK_RECIPES).length],['buques','💐 Buquês e outras produções',Object.keys(BOUQUETS).length],['colecoes','🎀 Decorações, temas e presentes',Object.keys(DECORATIONS).length+Object.keys(GIFT_ITEMS).length+Object.keys(FARM_THEMES).length],['equipamentos','🎣 Equipamentos adquiridos',Object.keys(FISHING_RODS).length+Object.keys(SEA_NETS).length]],records=Array.isArray(state.catalog)?state.catalog:[],total=groups.reduce((n,g)=>n+g[2],0),found=groups.reduce((n,g)=>n+records.filter(x=>x.category===g[0]).length,0),fishTotal=Object.values(state.fishWarehouse||{}).reduce((n,v)=>n+(Number(v)||0),0)+Object.values(state.seaWarehouse||{}).reduce((n,v)=>n+(Number(v)||0),0),sections=groups.map(([key,title,count])=>{const items=records.filter(x=>x.category===key).sort((x,y)=>x.name.localeCompare(y.name,'pt-BR'));return '<details class="catalog-section"><summary>'+title+' <span>('+items.length+'/'+count+' · faltam '+Math.max(0,count-items.length)+')</span></summary><div class="catalog-items">'+(items.map(x=>'<div class="list-line"><span>'+(x.category==='mata'&&FOREST_TREES[x.id]?forestIconMarkup(x.id):CROPS[x.id]?cropIconMarkup(x.id):x.category==='ervas'&&MIX_HERB_RECIPES[x.id]?mixHerbRecipeIconMarkup(x.id,MIX_HERB_RECIPES[x.id]):safe(x.icon))+' '+safe(x.name)+'</span><small>Descoberto</small></div>').join('')||'<p class="historical-note">Nenhum item descoberto nesta categoria.</p>')+'</div></details>'}).join('');return '<div class="gift-summary"><span class="symbol">📚</span><div><b>Seu catálogo de descobertas</b><small>Registra permanentemente o que você já plantou, produziu, adquiriu ou pescou.</small></div></div><div class="catalog-stats"><div><b>'+fmt(records.length)+'</b><small>descobertas</small></div><div><b>'+fmt(Math.max(0,total-found))+'</b><small>a descobrir</small></div><div><b>'+fmt(fishTotal)+'</b><small>peixes no depósito</small></div><div><b>'+fmt(state.progressCounters?.harvest||0)+'</b><small>colheitas registradas</small></div></div><p class="historical-note">Progresso de referência: '+fmt(found)+' de '+fmt(total)+' registros conhecidos. Itens nunca registrados não são presumidos como descobertos.</p>'+sections+'<p class="historical-note">O catálogo acompanha descobertas e estatísticas da fazenda.</p>'}
@@ -1831,7 +1869,7 @@ function updateNotificationBadges(){
   layer.innerHTML=marker(532,320,'🌾',counts.crops,'Plantação pronta para colher')+
    marker(1060,55,'🍳',counts.kitchen,'Receita pronta na cozinha')+
    marker(700,205,'🔥',counts.grill,'Receita pronta na churrasqueira')+
-   marker(1435,-145,'🐄',readyLivestock,'Produção pronta no curral')+
+   marker(1810,430,'🐄',readyLivestock,'Produção pronta no curral')+
    marker(45,-10,'🐦',readyBirds,'Produção pronta no viveiro')+
    marker(2670,155,'🍎',counts.orchard,'Frutas prontas no pomar')+
    marker(3890,-190,'🌳',counts.forest,'Folhas prontas na mata');
@@ -1864,6 +1902,25 @@ function launchFishingCelebrationEffects(style){
  setTimeout(()=>layer.remove(),2600);
 }
 function showFishingCelebration(catchInfo){
+ if((catchInfo.scene==='sea'||catchInfo.scene==='river')&&activeScene===catchInfo.scene){
+  const status=$('sea-fishing-status');
+  if(status){
+   launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
+   const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
+   const style=FISHING_RARITY_STYLE[rarity]||'common';
+   status.className='sea-fishing-status is-result toast fishing-toast rarity-'+style+' show';status.dataset.scene=catchInfo.scene;status.hidden=false;status.replaceChildren();
+   const content=document.createElement('div');content.className='fishing-toast-content';
+   const heading=document.createElement('strong');heading.className='fishing-toast-heading';heading.textContent=catchInfo.isExtraordinary?'✨ PESCA EXTRAORDINÁRIA! ✨':'🎣 PEIXE PESCADO!';
+   const fish=document.createElement('div');fish.className='fishing-toast-fish';
+   const icon=document.createElement('span');icon.className='fishing-toast-icon';icon.textContent=catchInfo.icon||'🐟';
+   const name=document.createElement('span');name.className='fishing-toast-name';name.textContent=catchInfo.name;fish.append(icon,name);
+   const detail=document.createElement('small');detail.className='fishing-toast-detail';detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+(catchInfo.reward?' · '+catchInfo.reward:'')+' · +'+catchInfo.xp+' XP';
+   content.append(heading,fish,detail);status.append(content);
+   playFishingSfx(rarity,catchInfo.isExtraordinary);
+   setTimeout(()=>{status.hidden=true;status.className='sea-fishing-status';status.replaceChildren()},3600);
+   return;
+  }
+ }
  const e=$('toast');if(!e)return;
  launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
  const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
@@ -1977,8 +2034,8 @@ const MOBILE_SHORTCUTS={shop:['🛒','Loja'],kitchen:['🍲','Produção'],anima
 function renderMobileNavigation(){const nav=$('mobile-navigation');if(!nav||!state)return;const ids=(Array.isArray(state.mobileShortcuts)?state.mobileShortcuts:[]).filter(id=>MOBILE_SHORTCUTS[id]).slice(0,4);while(ids.length<4){const next=Object.keys(MOBILE_SHORTCUTS).find(id=>!ids.includes(id));if(!next)break;ids.push(next)}const more=nav.querySelector('[data-more-toggle]');if(!more)return;nav.querySelectorAll('button:not([data-more-toggle])').forEach(button=>button.remove());ids.forEach(id=>more.insertAdjacentHTML('beforebegin','<button type="button" data-modal="'+id+'" aria-label="Abrir '+MOBILE_SHORTCUTS[id][1]+'"><span>'+MOBILE_SHORTCUTS[id][0]+'</span><small>'+MOBILE_SHORTCUTS[id][1]+'</small></button>'))}
 function refresh(){syncLakeFish();expireDecorations();expireFarmTheme();syncAnimalCycles();syncOrchardTrees();syncLevelPlotUnlocks();updateHud();renderMobileNavigation();renderPlots();renderAnimals();renderFarmAddons();if(currentModal&&!modalHasFocusedEditor())renderModal()}
 function infest(){if(!farmWriteAllowed(false))return;let changed=false;for(let i=0;i<state.plots.length;i++){const p=state.plots[i];if(p.status!=='growing'||p.initialGift||progress(p)>=1)continue;const h=(Date.now()-p.plantedAt)/HOUR;if(h>=3*CROP_TIME_FACTOR&&!p.weed&&!p.weedCleared&&(Math.floor(p.plantedAt/HOUR)+i*11)%5===0){p.weed=true;changed=true}if(h>=6*CROP_TIME_FACTOR&&!p.pest&&!p.pestCleared&&(Math.floor(p.plantedAt/HOUR)+i*13)%7===0){p.pest=true;changed=true}}if(changed){markDirty(true);refresh()}}
-function openModal(kind){setMusicContext(kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'&&farmLevel()>=22?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
-function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}setMusicContext('general');currentModal='';document.querySelector('.app')?.classList.remove('modal-open');$('overlay').classList.add('hidden');renderPlots();}
+function openModal(kind){if(kind==='sea')switchFarmScene('sea');setMusicContext(kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');document.querySelector('.app')?.classList.toggle('sea-fishing-open',kind==='sea');document.body.classList.toggle('sea-fishing-open',kind==='sea');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
+function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}setMusicContext(activeScene==='sea'?'sea':'general');currentModal='';document.querySelector('.app')?.classList.remove('modal-open','sea-fishing-open');document.body.classList.remove('sea-fishing-open');$('overlay').classList.add('hidden');renderPlots();}
 function dailyRewardAvailable(){return state.dailyRewardDate!==todayKey()}
 function claimDailyReward(){if(!farmWriteAllowed())return;
  if(!dailyRewardAvailable())return notify('A recompensa diária de hoje já foi resgatada.');
@@ -2024,7 +2081,7 @@ function syncPendingFishing(){
   discoverItem('rio',river.id,fish.name,fish.icon);const earnedXP=awardProfessionXP('fisher',fish.xp,'pescaria');
   const rod=FISHING_RODS[river.rod]||FISHING_RODS.normal;
   remember((river.isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
-  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:earnedXP,isExtraordinary:!!river.isExtraordinary});
+  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:earnedXP,isExtraordinary:!!river.isExtraordinary,scene:'river'});
   changed=true;
  }
  const sea=state.seaFishing?.pendingCatch;
@@ -2036,7 +2093,7 @@ function syncPendingFishing(){
   discoverItem('mar',sea.id,item.name,item.icon);const earnedXP=awardProfessionXP('fisher',item.xp,'pesca no mar');
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
   remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'. Recompensa adicional: 3 caviares.');
-  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:1,reward:'+3 caviares',isExtraordinary:!!sea.isExtraordinary});
+  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:1,reward:'+3 caviares',isExtraordinary:!!sea.isExtraordinary,scene:'sea'});
   changed=true;
  }
  if(changed){markDirty();refresh();celebrations.forEach(queueFishingCelebration)}
@@ -2044,16 +2101,28 @@ function syncPendingFishing(){
 }
 function updateFishingCooldownButtons(){
  syncPendingFishing();
- const now=Date.now(),body=$('modal-body');if(!body)return;
- const fishing=body.querySelector('[data-cast-fish]');if(fishing){
-  const pending=state.fishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
-  fishing.disabled=writeLocked||waiting;
-  fishing.textContent=pending?'🐟 Peixe fisgado · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
+ const now=Date.now(),body=$('modal-body');
+ if(body){
+  const fishing=body.querySelector('[data-cast-fish]');if(fishing){
+   const pending=state.fishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
+   fishing.disabled=writeLocked||waiting;
+   fishing.textContent=pending?'🐟 Peixe fisgado · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
+  }
+  const sea=body.querySelector('[data-cast-sea]');if(sea){
+   const pending=state.seaFishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
+   sea.disabled=writeLocked||waiting||farmLevel()<22;
+   sea.textContent=pending?'🐟 Captura na rede · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
+  }
  }
- const sea=body.querySelector('[data-cast-sea]');if(sea){
-  const pending=state.seaFishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
-  sea.disabled=writeLocked||waiting||farmLevel()<22;
-  sea.textContent=pending?'🐟 Captura na rede · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
+ const status=$('sea-fishing-status');
+ if(status&&!status.classList.contains('is-result')){
+  const isSea=activeScene==='sea',isRiver=activeScene==='river';
+  const pending=isSea?state?.seaFishing?.pendingCatch:isRiver?state?.fishing?.pendingCatch:null;
+  if(pending){
+   const duration=isSea?SEA_FISH_COOLDOWN:FISH_COOLDOWN,remaining=Math.max(0,pending.readyAt-now);
+   const seconds=Math.ceil(remaining/1000),progress=Math.max(0,Math.min(100,(1-remaining/duration)*100));
+   status.dataset.scene=activeScene;status.hidden=false;status.innerHTML='<strong>'+(isSea?'🌊 Pesca em andamento':'🎣 Pesca no Rio em andamento')+'</strong><span>Aguarde '+seconds+'s para descobrir o peixe</span><i><b style="width:'+progress+'%"></b></i>';
+  }else{status.hidden=true;status.replaceChildren();status.classList.remove('is-result')}
  }
 }
 function weightedFishingChoice(entries,levelKey,level){
@@ -2510,8 +2579,8 @@ function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
- if(layer.dataset.phase===phase)return;
- layer.dataset.phase=phase;
+ if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene)return;
+ layer.dataset.phase=phase;layer.dataset.scene=activeScene;
  const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
  const filter=phase==='sunset'?'sepia(.58) saturate(.9) brightness(.96)':phase==='night'?'brightness(.62) saturate(.78) contrast(1.06)':'';
  for(const id of environmentLayers){const node=$(id);if(node)node.style.filter=filter}
@@ -2524,6 +2593,10 @@ function updateDayNight(){
   const sun=phase==='sunset'?'#ff9a18':'#ffe600';
   const glow=phase==='sunset'?'#ffb347':'#fff36a';
   environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(1370 -42)"><circle r="58" fill="'+glow+'" opacity=".18"/><circle r="40" fill="'+sun+'"/><circle cx="-11" cy="-12" r="11" fill="#fff6a6" opacity=".45"/></g>';
+ }
+ if(activeScene==='sea'){
+  if(phase==='night')environment.innerHTML+='<g id="sea-night-sky" pointer-events="none"><g fill="#fff7d6"><circle cx="6650" cy="40" r="4"/><circle cx="7100" cy="155" r="3"/><circle cx="7550" cy="-20" r="4"/><circle cx="7900" cy="110" r="3"/><circle cx="8650" cy="-35" r="4"/><circle cx="9050" cy="125" r="3"/><circle cx="9650" cy="10" r="4"/><circle cx="10100" cy="145" r="3"/></g><g id="sea-moon" transform="translate(6900 105)"><circle r="270" fill="#dcecff" opacity=".13"/><circle r="205" fill="#e9edf0" stroke="#fff" stroke-width="12"/><path d="M-130 -72Q-18 -205 110 -105Q210 -26 135 112Q24 225 -112 126Q-208 28 -130 -72Z" fill="#d0d8df"/><g fill="#b9c4cf"><circle cx="-64" cy="-54" r="34"/><circle cx="74" cy="-92" r="22"/><circle cx="45" cy="70" r="42"/><circle cx="-92" cy="86" r="23"/></g><path d="M-80 -150Q-10 -195 60 -164" fill="none" stroke="#fff" stroke-width="13" opacity=".55"/></g></g>';
+  else environment.innerHTML+='<g id="sea-day-sun" pointer-events="none" transform="translate(8500 '+(phase==='sunset'?'415':'75')+')"><circle r="300" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".2"/><circle r="205" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'" stroke="'+(phase==='sunset'?'#ffd19a':'#fff3a0')+'" stroke-width="14"/><circle cx="-58" cy="-58" r="52" fill="#fff8c0" opacity=".48"/><path d="M-112 78Q-20 35 105 100" fill="none" stroke="#fff5c2" stroke-width="15" opacity=".32"/></g>';
  }
 }
 function applyMenuThemeColors(){
@@ -2622,7 +2695,160 @@ function placeLakeDecoration(id){if(writeLocked)return notify('Salvamento proteg
 function removeLakeDecoration(slot){if(!farmWriteAllowed())return;const i=state.lake.decorations.findIndex(d=>d.slot===slot);if(i<0)return;const d=state.lake.decorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;markDirty();refresh();notify('Decoração devolvida ao inventário.')}
 function placeLakeBridge(id){if(writeLocked)return notify('Salvamento protegido.');if(!WOODWORK_RECIPES[id]?.lakeBridge||(state.furnitureWarehouse[id]||0)<1)return;if(state.lake.bridges.some(b=>b.id===id))return notify('Esta ponte já está instalada.');const slot=[0,1,2,3].find(i=>!state.lake.bridges.some(b=>b.slot===i));if(slot===undefined)return notify('O Lago já possui quatro posições de ponte ocupadas.');state.furnitureWarehouse[id]--;state.lake.bridges.push({id,slot});markDirty();refresh();notify(WOODWORK_RECIPES[id].name+' instalada de uma margem a outra.')}
 function removeLakeBridge(slot){if(!farmWriteAllowed())return;const i=state.lake.bridges.findIndex(b=>b.slot===slot);if(i<0)return;const b=state.lake.bridges.splice(i,1)[0];state.furnitureWarehouse[b.id]=(state.furnitureWarehouse[b.id]||0)+1;markDirty();refresh();notify('Ponte devolvida à marcenaria.')}
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+// Mar: barco pesqueiro redesenhado e animações ambientais suaves, sem alterar a lógica de pesca.
+function renderSeaLandscapeMarkup(){
+ return `<g id="sea-landscape" pointer-events="none">
+  <defs>
+   <linearGradient id="sea-sky-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#75c7ec"/><stop offset=".62" stop-color="#b9e5ed"/><stop offset="1" stop-color="#f3d9ad"/></linearGradient>
+   <linearGradient id="sea-water-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#268fae"/><stop offset=".38" stop-color="#147c9b"/><stop offset="1" stop-color="#07506f"/></linearGradient>
+   <linearGradient id="sea-horizon-glow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff4c8" stop-opacity=".72"/><stop offset="1" stop-color="#fff4c8" stop-opacity="0"/></linearGradient>
+   <linearGradient id="sea-deck-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bd8952"/><stop offset=".45" stop-color="#8f5d35"/><stop offset="1" stop-color="#55351f"/></linearGradient>
+   <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
+  </defs>
+  <rect x="3000" y="-700" width="11000" height="2500" fill="url(#sea-sky-gradient)"/>
+  <g id="sea-sun" transform="translate(5200 125)" pointer-events="none">
+   <circle r="205" fill="#fff2b6" opacity=".13"/>
+   <circle r="158" fill="#ffe9a0" opacity=".22"/>
+   <g stroke="#ffe7a0" stroke-width="15" stroke-linecap="round" opacity=".82">
+    <path d="M0 -218V-252M0 218V252M-218 0H-252M218 0H252M-154 -154L-180 -180M154 154L180 180M154 -154L180 -180M-154 154L-180 180"/>
+   </g>
+   <circle r="128" fill="#ffd76f" stroke="#fff0b2" stroke-width="12"/>
+   <path d="M-82 -34Q-20 -66 42 -35Q78 -15 105 -31Q85 42 12 72Q-48 95 -95 43Z" fill="#fff0b0" opacity=".28"/>
+  </g>
+
+  <path d="M3000 270Q3500 215 4000 255T5000 245T6000 250T7000 245T8000 250T9000 240T10000 250T11000 230T12000 250T13000 235T14000 260V500H3000Z" fill="url(#sea-horizon-glow)"/>
+  <g fill="#fff" opacity=".56">
+   <path d="M6600 105Q6640 65 6690 91Q6730 42 6790 78Q6845 66 6865 112Q6900 145 6850 155H6650Q6590 150 6600 105Z"/>
+   <path d="M9100 145Q9140 104 9190 126Q9230 79 9290 111Q9340 99 9365 144Q9395 174 9350 185H9150Q9090 180 9100 145Z"/>
+  </g>
+  <g fill="#668b83" opacity=".88">
+   <path d="M3150 468Q3400 400 3630 448Q3860 365 4090 438Q4310 390 4550 468L4550 520H3150Z"/>
+   <path d="M4650 478Q4890 420 5100 462Q5350 378 5600 452Q5820 412 6060 478L6060 520H4650Z"/>
+   <path d="M10500 470Q10720 405 10930 448Q11180 370 11430 445Q11680 405 11900 472L11900 520H10500Z"/>
+   <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
+  </g>
+  <g id="sea-lighthouse" transform="translate(10400 0)">
+   <g transform="translate(0 490) scale(1.42) translate(0 -490)">
+    <path d="M-175 490Q-150 455 -125 420H145Q170 458 195 490Z" fill="#68736e" stroke="#485a53" stroke-width="8"/>
+    <path d="M-83 420L-58 260H76L105 420Z" fill="#f4ead3" stroke="#8d806b" stroke-width="10"/>
+    <path d="M-72 326H91M-82 385H101" stroke="#d36a48" stroke-width="25"/>
+    <path d="M-72 260L-48 205H67L91 260Z" fill="#b64d3c" stroke="#713b34" stroke-width="8"/>
+    <rect x="-28" y="276" width="58" height="52" rx="8" fill="#ffe9a4" stroke="#9c7442" stroke-width="7"/>
+    <path d="M-39 199Q9 153 57 199" fill="none" stroke="#f4ead3" stroke-width="14"/>
+    <path d="M-128 490Q5 456 168 490" fill="none" stroke="#f0e0b8" stroke-width="12"/>
+    <path d="M-30 280L-210 220M35 280L210 220" stroke="#fff1b5" stroke-width="20" opacity=".14"/>
+   </g>
+  </g>
+  <g id="sea-birds" fill="none" stroke="#385c64" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+   <g class="bird-position bird-a" transform="translate(7040 165) scale(1.05)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-b" transform="translate(7540 218) scale(.82)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-c" transform="translate(7920 140) scale(.96)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-d" transform="translate(10300 190) scale(.76)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+   <g class="bird-position bird-e" transform="translate(10700 125) scale(1.0)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
+  </g>
+  <path d="M3000 480Q3500 465 4000 478T5000 474T6000 478T7000 470T8000 476T9000 472T10000 478T11000 470T12000 476T13000 474T14000 480V1800H3000Z" fill="url(#sea-water-gradient)"/>
+  <path d="M3000 484Q3600 472 4200 486T5400 482T6600 481T7800 484T9000 481T10200 482T11400 480T12600 484T14000 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
+  <g id="sea-water-ripples" fill="none" stroke-linecap="round">
+   <g stroke="#bcecf0" opacity=".42" stroke-width="7">
+    <path d="M6350 570Q6510 552 6660 565M6900 625Q7070 604 7230 619M7620 555Q7780 540 7940 555M8450 655Q8650 631 8830 649M9400 570Q9560 550 9720 565M9900 735Q10070 716 10230 731"/>
+    <path d="M6520 820Q6700 799 6870 817M7280 900Q7470 878 7640 894M8120 790Q8320 765 8500 786M9000 930Q9180 907 9360 925M9700 850Q9870 830 10040 847"/>
+   </g>
+   <g stroke="#063e61" opacity=".28" stroke-width="5">
+    <path d="M6220 690Q6380 676 6540 688M7000 760Q7160 744 7320 756M7850 700Q8020 680 8190 695M8750 750Q8910 732 9070 746M9550 680Q9720 664 9890 678"/>
+    <path d="M6700 1010Q6890 990 7080 1008M7550 1080Q7740 1055 7930 1072M8660 1025Q8850 1003 9040 1020M9500 1110Q9690 1087 9880 1105"/>
+   </g>
+  </g>
+  <g opacity=".72">
+   <path d="M7180 470V365L7245 465Z" fill="#fff4d9" stroke="#7b8c83" stroke-width="4"/>
+   <path d="M7245 465V390L7290 464Z" fill="#f6e6c5" stroke="#7b8c83" stroke-width="3"/>
+   <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
+  </g>
+  <g id="sea-boat" transform="translate(8500 0)">
+   <g id="sea-boat-motion">
+    <!-- casco de barco pesqueiro, com proa elevada e pintura azul-petróleo -->
+    <path d="M-930 1015Q-790 975 -565 988L590 988Q850 990 1010 1060L805 1305Q700 1385 280 1410Q-350 1430 -700 1340Q-835 1305 -885 1205Z" fill="#29434a" stroke="#23383e" stroke-width="24" stroke-linejoin="round"/>
+    <path d="M-900 1032Q-660 1000 -420 1010L620 1010Q850 1015 974 1070L790 1285Q620 1360 260 1380Q-340 1395 -675 1320Q-800 1285 -850 1195Z" fill="#47636a" stroke="#b77b45" stroke-width="12" stroke-linejoin="round"/>
+    <path d="M-868 1060Q-520 1100 -130 1070Q440 1035 935 1080L880 1140Q420 1100 -80 1135Q-530 1160 -840 1120Z" fill="#d8b27a" stroke="#61472f" stroke-width="9"/>
+    <!-- convés de madeira e tábuas -->
+    <path d="M-790 1080Q-470 1110 -120 1090Q420 1055 870 1090L720 1250Q450 1310 100 1325Q-440 1335 -690 1240Z" fill="url(#sea-deck-gradient)" stroke="#573b27" stroke-width="12"/>
+    <g stroke="#e2b77e" stroke-width="9" opacity=".72" fill="none">
+     <path d="M-690 1120Q-360 1150 -40 1130T760 1120M-650 1165Q-320 1190 0 1170T810 1160M-610 1210Q-260 1235 80 1210T770 1200M-520 1250Q-180 1270 150 1250T710 1240"/>
+     <path d="M-460 1100L-400 1290M-220 1100L-180 1310M20 1090L35 1320M260 1080L280 1305M500 1070L520 1285" opacity=".42"/>
+    </g>
+    <!-- borda clara, defensas e amarras -->
+    <path d="M-920 1022Q-520 970 -80 1005T720 1000Q900 1015 1000 1060" fill="none" stroke="#f0d7a8" stroke-width="22" stroke-linecap="round"/>
+    <path d="M-890 1050Q-520 1005 -80 1038T720 1028Q900 1040 970 1070" fill="none" stroke="#387b82" stroke-width="12" stroke-linecap="round"/>
+    <g fill="#e8ddc7" stroke="#8a6748" stroke-width="6">
+     <ellipse cx="-690" cy="1055" rx="23" ry="35"/><ellipse cx="-350" cy="1080" rx="22" ry="32"/><ellipse cx="650" cy="1040" rx="22" ry="32"/>
+    </g>
+    <g fill="none" stroke="#60432d" stroke-width="18" stroke-linecap="round">
+     <path d="M-770 1035L-770 930M-560 1050L-560 950M770 1025L770 925"/>
+    </g>
+    <!-- reflexos, friso de proa e vigias do casco -->
+    <path d="M-760 1290Q-400 1380 30 1370Q520 1360 760 1260" fill="none" stroke="#8eb6b3" stroke-width="13" opacity=".7"/>
+    <path d="M-850 1178Q-420 1240 30 1220Q520 1200 900 1135" fill="none" stroke="#d9e7d8" stroke-width="8" opacity=".46"/>
+    <g fill="#d6e4d8" stroke="#35545a" stroke-width="8"><circle cx="-500" cy="1302" r="18"/><circle cx="-250" cy="1340" r="18"/><circle cx="20" cy="1350" r="18"/><circle cx="300" cy="1332" r="18"/></g>
+    <path d="M-890 1100Q-500 1145 -80 1125T900 1100" fill="none" stroke="#f7e4bb" stroke-width="10" opacity=".72"/>
+    <!-- pequena cabine de comando na popa -->
+    <g id="sea-boat-cabin" transform="translate(-650 0)">
+     <path d="M-175 1035V875Q-170 820 -115 810H105Q160 820 165 875V1035Z" fill="#e7dfc9" stroke="#60452e" stroke-width="13"/>
+     <path d="M-185 870Q-160 785 -95 770H95Q160 785 180 870Z" fill="#2e6671" stroke="#253f45" stroke-width="13"/>
+     <path d="M-195 862Q-150 770 -85 748H100Q168 770 192 862L165 880H-170Z" fill="#d8c49d" stroke="#5b4934" stroke-width="11"/>
+     <path d="M-165 858Q-120 790 -72 782H85Q137 790 163 858" fill="none" stroke="#f4e6c5" stroke-width="9"/>
+     <path d="M-135 885H-35V940H-135ZM15 885H115V940H15Z" fill="#b6d9d6" stroke="#4e6a6a" stroke-width="8"/>
+     <path d="M-125 894L-45 932M25 894L105 932" stroke="#eef4df" stroke-width="6" opacity=".8"/>
+     <path d="M-145 875H130V950H-145Z" fill="#8fc4c7" stroke="#5a4835" stroke-width="10"/>
+     <path d="M-12 875V950M-145 912H130" stroke="#f5e8c9" stroke-width="9"/>
+     <path d="M-160 1028H150" stroke="#b47b45" stroke-width="17"/>
+     <rect x="-45" y="955" width="90" height="72" rx="8" fill="#6b4930" stroke="#4b3526" stroke-width="8"/>
+     <circle cx="0" cy="990" r="13" fill="#e8c27c"/>
+     <path d="M-100 780V735H-82V780" fill="#6d5140" stroke="#4b3526" stroke-width="6"/>
+     <path d="M-92 735Q-78 710 -62 735" fill="none" stroke="#d8e9e5" stroke-width="7"/>
+    </g>
+    <!-- caixas de pesca, boia e pequeno barril -->
+    <g transform="translate(100 1170)">
+     <path d="M-115 -65H115V78H-115Z" fill="#a66d3d" stroke="#573b27" stroke-width="10"/>
+     <path d="M-115 -28H115M-75 -65V78M75 -65V78" stroke="#e0b47a" stroke-width="9"/>
+     <path d="M-88 -80H88" stroke="#593c28" stroke-width="14" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(700 1190)">
+     <path d="M-48 -70Q-62 -20 -42 56Q0 85 42 56Q62 -20 48 -70Z" fill="#b94e3e" stroke="#67392f" stroke-width="9"/>
+     <path d="M-45 -15H45" stroke="#f1d6a5" stroke-width="12"/>
+     <path d="M-24 -72Q0 -100 24 -72" fill="none" stroke="#69452d" stroke-width="10"/>
+    </g>
+    <!-- mastro curto e bandeirola -->
+    <path d="M410 1000V690" stroke="#62462e" stroke-width="17" stroke-linecap="round"/>
+    <path d="M420 700Q520 665 600 710L420 760Z" fill="#e7b75f" stroke="#76502e" stroke-width="7"/>
+    <path d="M420 700V760" stroke="#f6e7c8" stroke-width="7"/>
+    <!-- vara de pesca apoiada na amurada -->
+    <g transform="translate(760 965) rotate(-18)">
+     <path d="M0 0L-70 -280" stroke="#4d3526" stroke-width="13" stroke-linecap="round"/>
+     <path d="M-70 -280L-120 -470" stroke="#b88b5c" stroke-width="5" stroke-linecap="round"/>
+     <path d="M-120 -470Q-95 -260 -10 -55" fill="none" stroke="#eaf7ed" stroke-width="3" opacity=".75"/>
+    </g>
+   <g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+    <ellipse cx="0" cy="95" rx="125" ry="24" fill="#3b291d" opacity=".3"/>
+    <path d="M-82 12Q-78 -42 -34 -48H38Q82 -42 84 12L68 98Q0 124 -68 98Z" fill="#9b6034" stroke="#51331f" stroke-width="13"/>
+    <path d="M-53 -40Q-48 -102 0 -102Q48 -102 53 -40" fill="none" stroke="#4e3423" stroke-width="15"/>
+    <path d="M-78 12Q0 35 80 12L70 42Q0 65 -70 42Z" fill="#c28a4d" stroke="#6e4728" stroke-width="8"/>
+    <rect x="-17" y="27" width="34" height="29" rx="7" fill="#e8c16d" stroke="#694526" stroke-width="6"/><path d="M-95 4Q-120 35 -110 72M95 4Q120 35 110 72" fill="none" stroke="#e5c18c" stroke-width="9"/>
+    <rect x="-116" y="-112" width="232" height="250" rx="28" fill="transparent" stroke="transparent"/>
+    <text x="0" y="158" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🎒</text>
+   </g>
+   <g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
+    <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
+    <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
+    <path d="M-12 -20L-100 78L-8 112L92 20Z" fill="#e7d8ae" fill-opacity=".32" stroke="#f1dfb6" stroke-width="9"/>
+    <path d="M-72 59L51 -53M-42 83L76 -24M-90 30L20 93M-60 1L49 64M-30 -27L78 35" fill="none" stroke="#d7c69c" stroke-width="6" opacity=".9"/>
+    <path d="M-115 92Q-10 140 112 38" fill="none" stroke="#7b5837" stroke-width="13"/>
+    <rect x="-142" y="-125" width="284" height="280" rx="28" fill="transparent" stroke="transparent"/>
+    <text x="0" y="178" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🪢</text>
+   </g>
+   </g>
+  </g>
+ </g>`;
+}
+function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
@@ -2639,8 +2865,8 @@ function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)
  const grillSmoke=(state.grill?.queue||[]).some(job=>job.readyAt>Date.now());
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 98)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(650 205)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer;pointer-events:all;touch-action:manipulation" pointer-events="all" transform="translate(-1950 930)">
-  <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="all"/>
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
+  <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
   <path d="M-3 33V-6" stroke="#bd8b54" stroke-width="4" stroke-linecap="round"/>
@@ -2648,6 +2874,28 @@ function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)
   <path d="M-54 -51H54V-10H-54Z" fill="#f2d49a" stroke="#d4a76b" stroke-width="3"/>
   <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
+ </g>
+ <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)">
+  <rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/>
+  <ellipse cx="0" cy="58" rx="54" ry="11" fill="#294b24" opacity=".3"/>
+  <path d="M-30 -35Q-35 -58 -13 -60H13Q35 -58 30 -35" fill="none" stroke="#284b2d" stroke-width="10"/>
+  <path d="M-43 -28Q-47 -42 -30 -48L-20 -55H20L30 -48Q47 -42 43 -28L48 37Q0 60 -48 37Z" fill="#397b42" stroke="#214b2d" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M-34 -28Q0 -39 34 -28L39 30Q0 47 -39 30Z" fill="#4e9851" stroke="#a4c77b" stroke-width="3"/>
+  <path d="M-24 -39L-18 36M24 -39L18 36" stroke="#244e31" stroke-width="7" stroke-linecap="round"/>
+  <rect x="-25" y="-8" width="50" height="31" rx="7" fill="#d8c28a" stroke="#5d4a2b" stroke-width="3"/>
+  <path d="M-13 7Q0 -5 13 7Q0 20 -13 7Z" fill="#4d8b4d" stroke="#315b35" stroke-width="2"/>
+  <path d="M-36 -38L-25 -47M36 -38L25 -47" stroke="#d0b47b" stroke-width="4" stroke-linecap="round"/>
+ </g>
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900) rotate(-35)">
+  <rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/>
+  <ellipse cx="0" cy="8" rx="27" ry="7" fill="#294b24" opacity=".28"/>
+  <path d="M0 0Q-2 -48 7 -96Q13 -145 20 -194" fill="none" stroke="#4d2e1b" stroke-width="12" stroke-linecap="round"/>
+  <path d="M0 -8Q-1 -55 9 -103Q14 -151 21 -194" fill="none" stroke="#bd8b4f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M20 -194Q31 -207 40 -213" fill="none" stroke="#e4c98e" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M-1 -26Q-23 -37 -29 -20Q-31 -7 -12 -4" fill="none" stroke="#3d2920" stroke-width="6"/>
+  <circle cx="-10" cy="-17" r="10" fill="#c5cbd0" stroke="#4d3a2a" stroke-width="3"/>
+  <circle cx="-10" cy="-17" r="4" fill="#6c8590"/>
+  <path d="M-8 -1L-5 9" stroke="#70452c" stroke-width="7" stroke-linecap="round"/>
  </g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
@@ -2696,12 +2944,47 @@ function downloadSocialPackage(payload,filename){const blob=new Blob([JSON.strin
 
 
 function buildPublicFarmSnapshot(){
- const plots=(state.plots||[]).slice(0,72).map(p=>({status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',crop:CROPS[p.crop]?p.crop:null,progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'}));
- const animals=(state.animals||[]).filter(a=>ANIMALS[a.type]).slice(0,80).map(a=>({type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,stage:Math.max(1,Math.min(5,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null}));
- const orchard=(state.orchardTrees||[]).slice(0,8).map(t=>({type:CROPS[t.type]?t.type:null,status:t.status==='ready'||(t.type&&orchardTreeProgress(t)>=1)?'ready':t.type?'growing':'empty',progress:t.type?orchardTreeProgress(t):0,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0)}));
- const forest=(state.forestPlots||[]).slice(0,36).map(t=>({type:FOREST_TREES[t.type]?t.type:null,status:t.type&&forestProgress(t)>=1?'ready':t.type?'growing':'empty',progress:t.type?forestProgress(t):0}));
- return {version:1,farmTheme:FARM_THEMES[state.farmTheme]?state.farmTheme:'classic',plots,animals,orchard,forest,expansions:{orchard:!!state.expansions?.orchard,pond:!!state.expansions?.pond},decorations:(state.placedDecorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,60).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),grill:!!state.grill?.owned};
+ const plots=(state.plots||[]).slice(0,72).map(p=>({
+  status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',
+  crop:CROPS[p.crop]?p.crop:null,
+  progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,
+  plantedAt:Number.isFinite(p.plantedAt)?p.plantedAt:null,
+  wateredAt:Number.isFinite(p.wateredAt)?p.wateredAt:null,
+  regrowing:!!p.regrowing,
+  harvestsRemaining:Math.max(0,Number(p.harvestsRemaining)||0),
+  weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'
+ }));
+ const animals=(state.animals||[]).filter(a=>a&&ANIMALS[a.type]).slice(0,80).map(a=>({
+  type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),
+  status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',
+  slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,
+  stage:Math.max(1,Math.min(10,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null
+ }));
+ const orchard=(state.orchardTrees||[]).slice(0,8).map(t=>({
+  type:CROPS[t.type]?t.type:null,
+  status:t.status==='ready'||(t.type&&orchardTreeProgress(t)>=1)?'ready':t.type?'growing':'empty',
+  progress:t.type?orchardTreeProgress(t):0,plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:null,
+  regrowing:!!t.regrowing,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0)
+ }));
+ const forest=(state.forestPlots||[]).slice(0,36).map(t=>({
+  type:FOREST_TREES[t.type]?t.type:null,status:t.type&&forestProgress(t)>=1?'ready':t.type?'growing':'empty',
+  progress:t.type?forestProgress(t):0,plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:null
+ }));
+ const lake={
+  fish:Array.from({length:Math.min(10,(state.lake?.fish||[]).length)},()=>({})),
+  decorations:(state.lake?.decorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,12).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),
+  bridges:(state.lake?.bridges||[]).filter(d=>WOODWORK_RECIPES[d.id]).slice(0,4).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0}))
+ };
+ const activeQueue=queue=>(queue||[]).some(job=>Number(job?.readyAt)>Date.now());
+ return {
+  version:2,farmTheme:FARM_THEMES[state.farmTheme]?state.farmTheme:'classic',plots,animals,orchard,forest,lake,
+  expansions:{orchard:!!state.expansions?.orchard,pond:!!state.expansions?.pond,haras:!!state.expansions?.haras},
+  decorations:(state.placedDecorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,60).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),
+  grill:{owned:!!state.grill?.owned,assembled:!!state.grill?.assembled,queueActive:activeQueue(state.grill?.queue)},
+  kitchen:{queueActive:activeQueue(state.kitchen?.queue)}
+ };
 }
+let friendSelectedCropId='',friendSelectedArea='farm',friendSelectedAreaSlot=null;
 let onlineFriends=[],onlineFriendRequests=[],onlineSearchResults=[],onlineSocialBusy=false,onlineSocialLoaded=false,onlinePlayerCode='',onlineCodeSearchResult=null,farmVisitSettings={allow_visits:true,like_count:0};
 async function socialRpc(name,args={}){if(!supabaseClient||!cloudUser)throw new Error('Entre na sua conta para usar os recursos sociais.');const {data,error}=await supabaseClient.rpc(name,args);if(error)throw error;return data}
 async function publishSocialProfile(){if(!cloudUser||!state)return;const profile={p_farm_name:state.farmName||'Minha fazenda',p_level:farmLevel(),p_popularity:Math.max(0,Number(state.popularity)||0),p_farm_snapshot:buildPublicFarmSnapshot()};await socialRpc('social_publish_profile',profile);try{onlinePlayerCode=String(await socialRpc('social_get_player_code')||'');await socialRpc('social_update_player_code_profile',{p_farm_name:profile.p_farm_name,p_level:profile.p_level,p_popularity:profile.p_popularity})}catch(error){console.warn('Código de jogador indisponível; aplique a migração social:',error)}}
@@ -2769,7 +3052,7 @@ function updateSocialNotificationBadge(){
  });
 }
 
-let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null,selectedFriendPlot=null;farmVisitSettings={allow_visits:true,like_count:0};
+let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null,selectedFriendPlot=null,friendVisitedScene='farm';farmVisitSettings={allow_visits:true,like_count:0};
 async function refreshOnlineGifts(showError=true){
  if(!cloudUser||onlineGiftsBusy)return;
  onlineGiftsBusy=true;
@@ -2814,22 +3097,15 @@ function renderOnlineGifts(){
  const pending=onlineGifts.length?onlineGifts.map(g=>{const item=g.gift_type==='bouquet'?BOUQUETS[g.gift_id]:GIFT_ITEMS[g.gift_id];return '<div class="list-line"><span><b>'+(item?.icon||'🎁')+' '+safe(item?.name||'Presente')+'</b><br><small>De '+safe(g.sender_farm_name||'Fazendeiro')+' · '+new Date(g.created_at).toLocaleString('pt-BR')+'</small></span><button class="modal-action compact" data-claim-online-gift="'+safe(g.id)+'">Receber</button></div>'}).join(''):'<p>Nenhum presente aguardando recebimento.</p>';
  return '<div class="gift-summary"><span class="symbol">🎁</span><div><b>Presentes online</b><small>Os itens são transferidos pelo servidor e só entram na sua coleção quando você os recebe.</small></div></div><h3>📤 Enviar para um amigo</h3>'+(friendOptions?'<label class="auth-field">Destinatário<select id="online-gift-recipient">'+friendOptions+'</select></label><p>Escolha um dos itens que já possui. O envio consome uma unidade do seu inventário ou coleção de buquês.</p><h4>💐 Buquês</h4>'+(bouquetRows||'<p>Você ainda não tem buquês disponíveis.</p>')+'<h4>🎁 Presentes históricos</h4>'+(itemRows||'<p>Você ainda não tem itens históricos disponíveis para enviar.</p>'):'<p>Adicione amigos antes de enviar presentes.</p>')+'<h3>📥 Presentes recebidos ('+onlineGifts.length+')</h3>'+(pending||'')+'<div class="actions"><button class="modal-action alt" data-refresh-online-gifts="true">Atualizar presentes</button><button class="modal-action alt" data-open="friends">Meus amigos</button><button class="modal-action alt" data-open="factory">Fábrica de buquês</button></div><h3>🎁 Coleção histórica</h3><div class="grid-cards">'+Object.entries(GIFT_ITEMS).map(([id,g])=>'<div class="store-card decor-card"><span class="symbol">'+g.icon+'</span><strong>'+safe(g.name)+'</strong><small>Na coleção: '+fmt(state.giftInventory?.[id]||0)+'</small><b>🟡 '+fmt(g.price)+' · preço estimado</b><button data-buy-gift="'+id+'" '+(state.coins<g.price?'disabled':'')+'>Adicionar à coleção</button></div>').join('')+'</div>';
 }
+function visitorTimezone(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'}catch{return 'UTC'}}
 async function visitOnlineFriendFarm(friendId){
  const friend=onlineFriends.find(f=>f.user_id===friendId);if(!friend)return notify('Amigo não encontrado.');
  try{
-  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});
-  if(!farm||typeof farm!=='object')throw new Error('O servidor não retornou os dados desta fazenda.');
-  visitedFarm={...farm,friendId,helpUsed:0,helpLimit:15};selectedFriendPlot=null;
-  openModal('friend-farm');
+  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});if(!farm||typeof farm!=='object')throw new Error('O servidor não retornou os dados desta fazenda.');
+  visitedFarm={...farm,friendId,helpUsed:0,helpLimit:15};selectedFriendPlot=null;friendVisitedScene='farm';friendSelectedArea='farm';friendSelectedAreaSlot=null;openModal('friend-farm');
   socialRpc('social_notify_farm_visit',{p_owner:friendId}).catch(error=>console.warn('Notificação de visita:',error));
-  try{
-   const help=await socialRpc('social_help_friend_status',{p_owner:friendId});
-   const quota=Array.isArray(help)?help[0]:help;
-   if(currentModal==='friend-farm'&&visitedFarm?.friendId===friendId){
-    visitedFarm={...visitedFarm,helpUsed:Number(quota?.used)||0,helpLimit:Number(quota?.limit)||15};
-    renderModal();
-   }
-  }catch(error){console.warn('Não foi possível consultar o limite de ajudas; a visita continua disponível:',error)}
+  try{const help=await socialRpc('social_help_friend_status',{p_owner:friendId,p_timezone:visitorTimezone()}),quota=Array.isArray(help)?help[0]:help;if(currentModal==='friend-farm'&&visitedFarm?.friendId===friendId){visitedFarm={...visitedFarm,helpUsed:Number(quota?.used)||0,helpLimit:Number(quota?.limit)||15};renderModal()}}
+  catch(error){console.warn('Não foi possível consultar o contador diário; a visita continua disponível:',error)}
  }catch(error){notify(error.message||'Não foi possível visitar esta fazenda.')}
 }
 async function toggleVisitedFarmLike(){
@@ -2842,90 +3118,139 @@ async function toggleFarmVisitPermission(){
  catch(error){notify(error.message||'Não foi possível atualizar a privacidade da fazenda.')}
 }
 function friendPlotProgress(plot){
- const base=Math.max(0,Math.min(1,Number(plot&&plot.progress)||0));
- if(!plot||plot.status!=='growing'||!CROPS[plot.crop])return base;
- const updated=Date.parse(visitedFarm&&visitedFarm.updated_at||'');
+ if(!plot||plot.status!=='growing'||!CROPS[plot.crop])return 0;
+ const hours=cropHours(plot.crop,!!plot.regrowing);
+ if(typeof plot.plantedAt==='number'&&Number.isFinite(plot.plantedAt))return Math.max(0,Math.min(1,(Date.now()-plot.plantedAt)/(hours*HOUR)));
+ const base=Math.max(0,Math.min(1,Number(plot.progress)||0)),updated=Date.parse(visitedFarm?.updated_at||'');
  if(!Number.isFinite(updated)||updated<=0)return base;
- const cfg=CROPS[plot.crop],hours=plot.regrowing&&cfg.regrowHours?cfg.regrowHours:cfg.hours;
- return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,Number(hours)||1)*CROP_TIME_FACTOR*HOUR)));
+ return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,hours)*HOUR)));
+}
+function buildFriendVisualState(snap){
+ const visual=newGame(),level=Math.max(1,Math.min(999,Number(visitedFarm?.level)||1)),now=Date.now();
+ visual.xp=Math.max(0,8*(level-1)*(level+23));
+ visual.farmTheme=FARM_THEMES[snap.farmTheme]?snap.farmTheme:'classic';
+ visual.expansions={...visual.expansions,orchard:!!snap.expansions?.orchard,pond:!!snap.expansions?.pond,haras:!!snap.expansions?.haras};
+ visual.plots=Array.from({length:72},(_,i)=>{
+  const p=snap.plots?.[i]||{},status=['grass','dirt','spent','growing'].includes(p.status)?p.status:'grass',crop=CROPS[p.crop]?p.crop:null,regrowing=!!p.regrowing;
+  const hours=crop?cropHours(crop,regrowing):1,hasTime=typeof p.plantedAt==='number'&&Number.isFinite(p.plantedAt);
+  const plantedAt=hasTime?p.plantedAt:now-Math.max(0,Math.min(1,Number(p.progress)||0))*hours*HOUR;
+  return {...visual.plots[i],status,crop:status==='growing'?crop:null,plantedAt:status==='growing'&&crop?plantedAt:null,
+   wateredAt:typeof p.wateredAt==='number'&&Number.isFinite(p.wateredAt)?p.wateredAt:plantedAt,
+   regrowing,harvestsRemaining:Math.max(0,Number(p.harvestsRemaining)||0),weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'};
+ });
+ visual.animals=(snap.animals||[]).filter(a=>a&&ANIMALS[a.type]).slice(0,80).map((a,i)=>({
+  id:String(a.id||'friend-animal-'+i).slice(0,80),type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),
+  status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',
+  slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,
+  stage:Math.max(1,Math.min(10,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null
+ }));
+ visual.orchardTrees=Array.from({length:8},(_,i)=>{
+  const t=snap.orchard?.[i]||{},type=CROPS[t.type]?t.type:null;
+  if(!type)return {type:null,status:'empty',plantedAt:0,harvestsRemaining:0,regrowing:false};
+  const regrowing=!!t.regrowing,hours=cropHours(type,regrowing),p=Math.max(0,Math.min(1,Number(t.progress)||0));
+  const plantedAt=typeof t.plantedAt==='number'&&Number.isFinite(t.plantedAt)?t.plantedAt:now-p*hours*HOUR;
+  const ready=t.status==='ready'||p>=1;
+  return {type,status:ready?'ready':'growing',plantedAt:ready?Math.min(plantedAt,now-hours*HOUR):plantedAt,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0),regrowing};
+ });
+ visual.forestPlots=Array.from({length:36},(_,i)=>{
+  const t=snap.forest?.[i]||{},type=FOREST_TREES[t.type]?t.type:null;
+  if(!type)return {type:null,status:'empty',plantedAt:0};
+  const p=Math.max(0,Math.min(1,Number(t.progress)||0)),hours=FOREST_TREES[type].hours*FOREST_TIME_FACTOR;
+  const plantedAt=typeof t.plantedAt==='number'&&Number.isFinite(t.plantedAt)?t.plantedAt:now-p*hours*HOUR,ready=t.status==='ready'||p>=1;
+  return {type,status:ready?'ready':'growing',plantedAt:ready?Math.min(plantedAt,now-hours*HOUR):plantedAt};
+ });
+ visual.placedDecorations=(snap.decorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,60).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0}));
+ const lake=snap.lake||{};
+ visual.lake={
+  fish:Array.isArray(lake.fish)?lake.fish.slice(0,10):[],
+  decorations:(lake.decorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,12).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),
+  bridges:(lake.bridges||[]).filter(d=>WOODWORK_RECIPES[d.id]).slice(0,4).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0}))
+ };
+ const grill=typeof snap.grill==='object'&&snap.grill?snap.grill:{owned:!!snap.grill};
+ visual.grill={...visual.grill,owned:!!grill.owned,assembled:!!grill.assembled,queue:grill.queueActive?[{readyAt:now+60000}]:[]};
+ visual.kitchen={...visual.kitchen,queue:snap.kitchen?.queueActive?[{readyAt:now+60000}]:[]};
+ return visual;
 }
 function renderFriendFarmScene(snap){
- const plots=snap.plots||[];let field='';
- for(let i=0;i<72;i++){
-  const p=plots[i]||{status:'grass'},r=Math.floor((i%36)/6),c=i%6,index=i;
-  const xy=plotTilePoint(r,c,index),x=xy[0],y=xy[1],pts=diamondPoints(r,c,index),points=pts.map(q=>q.join(',')).join(' ');
-  const locked=p.status==='grass',red=p.soil==='red',selected=selectedFriendPlot===i;
-  field+='<g class="friend-farm-plot '+(locked?'is-locked ':'')+(selected?'is-selected':'')+'" data-help-plot="'+i+'" role="button" tabindex="0" aria-label="Canteiro '+(i+1)+'" style="cursor:'+(locked?'default':'pointer')+'">';
-  field+='<polygon points="'+pts.map(q=>(q[0]+2)+','+(q[1]+8)).join(' ')+'" fill="#214d18" opacity=".42"/>';
-  field+='<polygon points="'+points+'" fill="'+(locked?'#56604a':p.status==='spent'?'#765137':red?'#a9473f':'#60b62e')+'" stroke="'+(selected?'#ffe06b':locked?'#5a6255':red?'#78382f':'#3a7622')+'" stroke-width="'+(selected?7:3)+'"/>';
-  if(!locked&&p.status!=='spent')field+='<path d="M'+(x+12)+' '+(y-2)+'Q'+(x+53)+' '+(y-39)+' '+(x+100)+' '+(y-36)+'Q'+(x+153)+' '+(y-24)+' '+(x+188)+' '+(y-2)+'Q'+(x+145)+' '+(y-8)+' '+(x+100)+' '+(y+12)+'Q'+(x+55)+' '+(y+22)+' '+(x+12)+' '+(y-2)+'Z" fill="'+(red?'#cf7665':'#c7ed9b')+'" opacity=".86"/>';
-  if(p.status==='growing'&&CROPS[p.crop]){
-   const progress=friendPlotProgress(p),scale=.38+progress*.7,plant=farmPoint(x+100,y+5);
-   field+='<g transform="translate('+plant[0]+' '+plant[1]+')"><ellipse cy="10" rx="27" ry="9" fill="#553520" opacity=".78"/><g transform="scale('+scale+')">'+cropArt(p.crop,progress)+'</g></g>';
-   if(p.weed){const w=farmPoint(x+140,y+25);field+='<g transform="translate('+w[0]+' '+w[1]+')"><path d="M0 0l-4-26m4 26l15-22m-15 22l-18-15" stroke="#1b7d2a" stroke-width="5" fill="none"/><path d="M-4-20q-17-6-8-15q12 0 8 15m4 7q12-20 23-15q0 19-23 15" fill="#1f9e24"/></g>'}
-   if(p.pest){const q=farmPoint(x+77,y+5);field+='<g transform="translate('+q[0]+' '+q[1]+')"><ellipse rx="10" ry="7" fill="#c34225"/><circle cx="-4" cy="-1" r="2.3" fill="#242424"/><circle cx="3" cy="-3" r="2.3" fill="#242424"/><path d="M-9-4l-9-8m10 14l-10 9m23-15l9-7m-8 14l9 9" stroke="#472c1e" stroke-width="2"/></g>'}
-  }else if(p.status==='spent'){field+='<text x="'+(x+100)+'" y="'+(y+8)+'" text-anchor="middle" font-size="24">🪏</text>'}
-  else if(!locked){field+='<text x="'+(x+100)+'" y="'+(y+8)+'" text-anchor="middle" font-size="23">🌱</text>'}
-  if(p.weed||p.pest)field+='<g transform="translate('+(x+166)+' '+(y-18)+')"><circle r="13" fill="#fff7df" stroke="#a44b24" stroke-width="2"/><text text-anchor="middle" y="6" font-size="17">'+(p.pest?'🐛':'🌿')+'</text></g>';
-  if(locked)field+='<text x="'+(x+100)+'" y="'+(y+7)+'" text-anchor="middle" font-size="19">🔒</text>';
-  field+='<title>Canteiro '+(i+1)+(p.status==='growing'&&CROPS[p.crop]?' · '+safe(CROPS[p.crop].name):'')+'</title></g>';
- }
- const theme=FARM_THEMES[snap.farmTheme]||FARM_THEMES.classic;
- const decorations=(snap.decorations||[]).map(d=>{const pos=DECORATION_SLOTS[d.slot];return pos?renderDecorationMarkup(d.id,pos[0],pos[1]):''}).join('');
- const animalIcons=(snap.animals||[]).slice(0,16).map(a=>ANIMALS[a.type]?.icon||'🐾').join(' ');
- const orchardIcons=(snap.orchard||[]).filter(t=>t.type).map(t=>CROPS[t.type]?.icon||'🌳').join(' ');
- const forestCount=(snap.forest||[]).filter(t=>t.type).length;
- const bg='<defs><linearGradient id="friendGrass" x2="0" y2="1"><stop stop-color="'+(snap.farmTheme==='christmas'?'#dbe9d4':'#9bd45d')+'"/><stop offset="1" stop-color="#65ae37"/></linearGradient></defs><rect x="-1500" y="-220" width="3000" height="1350" fill="url(#friendGrass)"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#c7a36b" stroke-width="90"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#ead2a0" stroke-width="8" stroke-dasharray="5 28"/>';
- const fields='<g><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="#398d2b" opacity=".23"/><polygon points="-68,620 532,350 1132,620 532,890" fill="#398d2b" opacity=".23"/><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="none" stroke="#3c8127" stroke-width="14"/><polygon points="-68,620 532,350 1132,620 532,890" fill="none" stroke="#3c8127" stroke-width="14"/></g>';
- const buildings='<g transform="translate(820 120)"><ellipse cy="150" rx="170" ry="25" fill="#315d24" opacity=".25"/><path d="M-150 35L0-65L150 35V145H-150Z" fill="#f3dba8" stroke="#754a2b" stroke-width="12"/><path d="M-170 35L0-90L170 35" fill="#b84d38" stroke="#713c2b" stroke-width="13"/><rect x="-36" y="65" width="72" height="80" rx="6" fill="#81502e" stroke="#57351f" stroke-width="7"/><rect x="-112" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><rect x="64" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><text y="178" text-anchor="middle" font-size="26" font-weight="bold" fill="#fff8d8" stroke="#684323" stroke-width="4" paint-order="stroke">CASA</text></g><g transform="translate(1240 430)"><path d="M-115 10L0-70L115 10V110H-115Z" fill="#e5c88d" stroke="#79502d" stroke-width="10"/><path d="M-135 10L0-95L135 10" fill="#9b4931" stroke="#683d27" stroke-width="10"/><rect x="-38" y="38" width="76" height="72" fill="#80502f" stroke="#573b25" stroke-width="7"/><text y="142" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff5d4" stroke="#5b4025" stroke-width="4" paint-order="stroke">VIVEIRO</text></g>';
- const tint=snap.farmTheme&&snap.farmTheme!=='classic'?'<rect x="-1500" y="-220" width="3000" height="1350" fill="'+(theme?.accent||'#ffffff')+'" opacity=".045"/>':'';
- return '<svg class="friend-farm-scene" viewBox="-1500 -220 3000 1350" role="group" aria-label="Fazenda real de '+safe(visitedFarm?.farm_name||'amigo')+'" xmlns="http://www.w3.org/2000/svg">'+bg+fields+buildings+tint+field+decorations+'</svg><div class="friend-farm-areas"><span>🐾 '+safe(animalIcons||'Sem animais')+'</span><span>🌳 Pomar: '+safe(orchardIcons||'sem árvores')+' · Mata: '+forestCount+' árvore(s)</span><span>🔥 Churrasqueira: '+(snap.grill?'construída':'não construída')+'</span></div>';
-}
-async function performFriendFarmHelp(plotIndex,action){
- if(!visitedFarm?.friendId)return notify('Abra primeiro a fazenda de um amigo.');
- if(!farmWriteAllowed())return;
- if(hasPendingCloudChanges())return notify('Aguarde a sincronização da sua fazenda antes de ajudar um amigo.');
- if((Number(visitedFarm.helpUsed)||0)>=15)return notify('Você já realizou as 15 interações permitidas com este amigo.');
+ if(Number(snap?.version)<2)return '<div class="friend-snapshot-outdated"><b>Atualizando a propriedade...</b><p>O proprietário precisa entrar no jogo com a versão atual para publicar os dados visuais completos da fazenda. Assim que o resumo for atualizado, as três áreas aparecerão aqui.</p></div>';
+ const originalState=state,originalLastSelected=lastSelected,originalSelected=selectedPlotIndices,originalMulti=multiSelectMode,originalScene=activeScene;
+ let markup='';
  try{
-  const response=await socialRpc('social_help_friend_farm',{p_owner:visitedFarm.friendId,p_plot_index:plotIndex,p_action:action});
-  const row=Array.isArray(response)?response[0]:response;
-  if(!row?.state||!row?.revision)throw new Error('O servidor não confirmou a interação.');
-  const restored=normalizeFarmSnapshot(row.state);
-  if(!restored||!validateFarmSnapshot(restored))throw new Error('O salvamento atualizado não passou pela verificação de integridade.');
+  state=buildFriendVisualState(snap);
+  activeScene=friendVisitedScene;
+  lastSelected=Number.isInteger(selectedFriendPlot)?selectedFriendPlot:-1;
+  selectedPlotIndices=new Set();multiSelectMode=false;
+  updateSceneLandscapeVisibility();renderWeatherRain();
+  renderPlots();renderAnimals(false);renderFarmAddons(true);
+  const source=$('world');
+  if(!source)return '<p>Não foi possível montar a visualização da propriedade.</p>';
+  const clone=source.cloneNode(true);clone.removeAttribute('id');
+  clone.querySelectorAll('[data-plot-index]').forEach(node=>{
+   node.setAttribute('data-help-plot',node.getAttribute('data-plot-index'));
+   node.setAttribute('role','button');node.setAttribute('tabindex','0');
+  });
+  const idMap=new Map();
+  clone.querySelectorAll('[id]').forEach(node=>{const old=node.getAttribute('id'),next='friend-'+old;idMap.set(old,next);node.setAttribute('id',next)});
+  clone.querySelectorAll('*').forEach(node=>Array.from(node.attributes).forEach(attr=>{
+   let value=attr.value;
+   value=value.replace(/url\(#([^)]+)\)/g,(match,id)=>'url(#'+(idMap.get(id)||('friend-'+id))+')');
+   if((attr.name==='href'||attr.name==='xlink:href')&&value.startsWith('#'))value='#'+(idMap.get(value.slice(1))||('friend-'+value.slice(1)));
+   if(value!==attr.value)node.setAttribute(attr.name,value);
+  }));
+  const bounds=SCENE_BOUNDS[friendVisitedScene]||SCENE_BOUNDS.farm;
+  const viewBox=[bounds.left,bounds.top,bounds.right-bounds.left,bounds.bottom-bounds.top].join(' ');
+  markup='<svg id="friend-farm-world" class="friend-farm-scene" data-farm-theme="'+safe(snap.farmTheme||'classic')+'" viewBox="'+viewBox+'" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Propriedade de '+safe(visitedFarm?.farm_name||'amigo')+' · '+safe(bounds.label)+'" xmlns="http://www.w3.org/2000/svg">'+clone.innerHTML+'</svg>';
+ }finally{
+  state=originalState;lastSelected=originalLastSelected;selectedPlotIndices=originalSelected;multiSelectMode=originalMulti;activeScene=originalScene;
+  updateSceneLandscapeVisibility();renderWeatherRain();
+  if(originalState){renderPlots();renderAnimals();renderFarmAddons()}
+ }
+ return markup;
+}
+async function performFriendFarmAction(area,slot,action,cropId=null){
+ if(!visitedFarm?.friendId)return notify('Abra primeiro a fazenda de um amigo.');if(!farmWriteAllowed())return;
+ if(hasPendingCloudChanges())return notify('Aguarde a sincronização da sua fazenda antes de ajudar um amigo.');
+ try{
+  const response=await socialRpc('social_help_friend_action',{p_owner:visitedFarm.friendId,p_area:area,p_slot:slot,p_action:action,p_crop_id:cropId,p_timezone:visitorTimezone()}),row=Array.isArray(response)?response[0]:response;
+  if(!row?.state||!row?.revision)throw new Error('O servidor não confirmou a ação.');
+  const restored=normalizeFarmSnapshot(row.state);if(!restored||!validateFarmSnapshot(restored))throw new Error('O salvamento atualizado não passou pela verificação de integridade.');
   state=restored;cloudRevision=Number(row.revision)||cloudRevision+1;cloudUpdatedAt=row.updated_at||new Date().toISOString();dirty=false;cloudDirty=false;cloudRetryContext=null;clearTimeout(saveTimer);saveTimer=null;
-  const friendId=visitedFarm.friendId;
-  const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});
-  visitedFarm={...farm,friendId,helpUsed:Math.min(15,(Number(visitedFarm.helpUsed)||0)+1),helpLimit:15};
-  try{
-   const quota=await socialRpc('social_help_friend_status',{p_owner:friendId});
-   const status=Array.isArray(quota)?quota[0]:quota;
-   visitedFarm={...visitedFarm,helpUsed:Number(status?.used)||visitedFarm.helpUsed};
-  }catch(error){console.warn('Não foi possível atualizar o contador de ajudas:',error)}
-  selectedFriendPlot=plotIndex;refresh();
-  const labels={harvest:'Colheita concluída. A produção foi para o depósito do proprietário.',water:'Plantação regada com sucesso.',pest:'Pragas removidas.',weed:'Ervas daninhas removidas.'};
-  notify((labels[action]||'Ajuda realizada')+' +1 🟢');
+  const friendId=visitedFarm.friendId,farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId}),quota=await socialRpc('social_help_friend_status',{p_owner:friendId,p_timezone:visitorTimezone()}),status=Array.isArray(quota)?quota[0]:quota;
+  visitedFarm={...farm,friendId,helpUsed:Number(status?.used)||Number(row.daily_used)||0,helpLimit:Number(status?.limit)||15};selectedFriendPlot=area==='farm'?slot:null;friendSelectedArea=area;friendSelectedAreaSlot=area==='farm'?null:slot;
+  refresh();if(currentModal==='friend-farm')renderModal();
+  const xp=Number(row.xp_awarded)||0,green=Number(row.green_coin_awarded)||0;
+  const labels={harvest:'Colheita enviada ao depósito do proprietário.',water:'Plantação regada.',pest:'Pragas removidas.',weed:'Ervas daninhas removidas.',plow:'Solo preparado para o plantio.',plant:'Semente plantada na fazenda do amigo.',orchard_harvest:'Colheita do Pomar enviada ao depósito do proprietário.',forest_harvest:'Produção da Mata enviada ao estoque do proprietário.'};
+  notify((labels[action]||'Ajuda concluída')+' +'+xp+' XP'+(green?' · +'+green+' 🟢':' · sem moedas verdes nesta ajuda'));
  }catch(error){notify(error.message||'Não foi possível concluir a ajuda.')}
 }
-
+function friendAreaProgress(area,item){
+ if(!item?.type)return 0;
+ if(item.status==='ready')return 1;
+ const base=Math.max(0,Math.min(1,Number(item.progress)||0)),cfg=area==='orchard'?CROPS[item.type]:FOREST_TREES[item.type];
+ if(!cfg)return base;
+ const hours=area==='orchard'?cropHours(item.type,!!item.regrowing):cfg.hours*FOREST_TIME_FACTOR;
+ if(typeof item.plantedAt==='number'&&Number.isFinite(item.plantedAt))return Math.max(0,Math.min(1,(Date.now()-item.plantedAt)/(Math.max(1,hours)*HOUR)));
+ const updated=Date.parse(visitedFarm?.updated_at||'');
+ if(!Number.isFinite(updated)||updated<=0)return base;
+ return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,hours)*HOUR)));
+}
 function renderVisitedFarm(){
  if(!visitedFarm)return '<p>Nenhuma fazenda selecionada.</p>';
- const snap=visitedFarm.snapshot||{},theme=FARM_THEMES[snap.farmTheme]?.name||'Fazenda clássica';
- const plots=snap.plots||[],pcount=plots.filter(p=>p.status!=='grass').length,readyCount=plots.filter(p=>p.status==='growing'&&friendPlotProgress(p)>=1).length;
- const likeCount=Math.max(0,Number(visitedFarm.like_count)||0),liked=!!visitedFarm.liked_by_me;
- const used=Math.max(0,Number(visitedFarm.helpUsed)||0),limit=15,remaining=Math.max(0,limit-used),plot=Number.isInteger(selectedFriendPlot)?plots[selectedFriendPlot]:null;
- const crop=plot?.crop?CROPS[plot.crop]:null,ready=!!plot&&plot.status==='growing'&&friendPlotProgress(plot)>=1;
- let actionPanel='<p class="historical-note">Toque em um canteiro da fazenda para ver as ações disponíveis.</p>';
- if(plot){
-  const actions=[];
-  if(plot.status==='growing'){
-   if(ready)actions.push('<button class="modal-action" data-farm-help-action="harvest" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>🌾 Colher</button>');
-   actions.push('<button class="modal-action" data-farm-help-action="water" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>💧 Regar</button>');
-   if(plot.pest)actions.push('<button class="modal-action" data-farm-help-action="pest" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>🐛 Remover pragas</button>');
-   if(plot.weed)actions.push('<button class="modal-action" data-farm-help-action="weed" data-farm-help-plot="'+selectedFriendPlot+'" '+(!remaining?'disabled':'')+'>🌿 Remover ervas daninhas</button>');
-  }
-  actionPanel='<div class="friend-help-selected"><b>Canteiro '+(selectedFriendPlot+1)+' · '+safe(crop?.name||(plot.status==='grass'?'Bloqueado':plot.status==='spent'?'Colhido':'Livre'))+'</b><div class="actions">'+(actions.length?actions.join(''):'<small>Não há ações disponíveis neste canteiro.</small>')+'</div></div>';
- }
- return '<div class="gift-summary"><span class="symbol">🌾</span><div><b>'+safe(visitedFarm.farm_name||'Fazenda do amigo')+'</b><small>Nível '+fmt(visitedFarm.level||1)+' · Popularidade '+fmt(visitedFarm.popularity||0)+' · Tema: '+safe(theme)+'</small></div></div><div class="actions"><button class="modal-action alt" data-open="friends">← Voltar aos amigos</button><button class="modal-action alt" data-conversation="'+safe(visitedFarm.friendId)+'">Conversar</button><button class="modal-action" data-farm-like="true">'+(liked?'♥ Curtida registrada':'♡ Curtir fazenda')+' · '+fmt(likeCount)+'</button></div><div class="friend-help-quota"><b>🟢 Ajuda a este amigo: '+used+'/'+limit+'</b><span>'+(remaining?remaining+' interação(ões) restante(s) · +1 moeda verde por ação':'Limite de 15 interações atingido para este amigo')+'</span></div><h3>🌱 Fazenda ('+pcount+'/72 canteiros · '+readyCount+' prontos)</h3>'+renderFriendFarmScene(snap)+actionPanel+'<p class="historical-note">As ações são aplicadas diretamente na fazenda e no depósito do proprietário. A recompensa é creditada na sua própria fazenda, com limite de 15 interações por amigo.</p>';
+ const snap=visitedFarm.snapshot||{},theme=FARM_THEMES[snap.farmTheme]?.name||'Fazenda clássica',plots=snap.plots||[];
+ const pcount=plots.filter(p=>p.status!=='grass').length,readyCount=plots.filter(p=>p.status==='growing'&&friendPlotProgress(p)>=1).length,likeCount=Math.max(0,Number(visitedFarm.like_count)||0),liked=!!visitedFarm.liked_by_me;
+ const used=Math.max(0,Number(visitedFarm.helpUsed)||0),limit=15,plot=Number.isInteger(selectedFriendPlot)?plots[selectedFriendPlot]:null,crop=plot?.crop?CROPS[plot.crop]:null,ready=!!plot&&plot.status==='growing'&&friendPlotProgress(plot)>=1;
+ const VISIT_CROP_IDS=['pilea_involucrata','rosa_amarela','girassol'];
+ const availableSeeds=VISIT_CROP_IDS.filter(id=>(Number(state.inventory?.[id])||0)>0&&cropLevelAllowed(CROPS[id]));
+ if(!availableSeeds.includes(friendSelectedCropId))friendSelectedCropId=availableSeeds[0]||'';
+ const seedOptions=availableSeeds.map(id=>'<option value="'+id+'" '+(friendSelectedCropId===id?'selected':'')+'>'+safe(CROPS[id].name)+' · '+fmt(state.inventory[id]||0)+'</option>').join('');
+ const orchardCards=(snap.orchard||[]).map((t,i)=>{if(!t?.type||!CROPS[t.type])return '';const c=CROPS[t.type],p=friendAreaProgress('orchard',t),r=t.status==='ready'||p>=1;return '<div class="friend-area-card"><span class="symbol">'+cropIconMarkup(t.type)+'</span><strong>'+safe(c.name)+'</strong><small>Árvore '+(i+1)+' · '+(r?'Pronta para colher':Math.round(p*100)+'% de crescimento')+(t.harvestsRemaining?' · '+t.harvestsRemaining+' colheita(s) restante(s)':'')+'</small><button class="modal-action '+(r?'':'alt')+'" data-friend-area-harvest="orchard" data-friend-area-slot="'+i+'" '+(r?'':'disabled')+'>🍎 Colher</button></div>'}).join('');
+ const forestCards=(snap.forest||[]).map((t,i)=>{if(!t?.type||!FOREST_TREES[t.type])return '';const c=FOREST_TREES[t.type],p=friendAreaProgress('forest',t),r=t.status==='ready'||p>=1;return '<div class="friend-area-card"><span class="symbol">'+(c.icon||'🌳')+'</span><strong>'+safe(c.name)+'</strong><small>Árvore '+(i+1)+' · '+(r?'Pronta para colher':Math.round(p*100)+'% de crescimento')+'</small><button class="modal-action '+(r?'':'alt')+'" data-friend-area-harvest="forest" data-friend-area-slot="'+i+'" '+(r?'':'disabled')+'>🌳 Colher</button></div>'}).join('');
+ let plotActions='<small>Selecione um canteiro para usar as ferramentas.</small>';
+ if(plot){const actions=[];if(plot.status==='spent')actions.push('<button class="modal-action" data-friend-action="plow">🪏 Preparar solo</button>');if(plot.status==='dirt')actions.push('<button class="modal-action" data-friend-action="plant" '+(friendSelectedCropId?'':'disabled')+'>🌱 Plantar semente</button>');if(plot.status==='growing'){if(ready)actions.push('<button class="modal-action" data-friend-action="harvest">🌾 Colher</button>');actions.push('<button class="modal-action" data-friend-action="water">💧 Regar</button>');if(plot.pest)actions.push('<button class="modal-action" data-friend-action="pest">🐛 Remover pragas</button>');if(plot.weed)actions.push('<button class="modal-action" data-friend-action="weed">🌿 Remover ervas daninhas</button>')}plotActions=actions.length?actions.join(''):'<small>Não há ação disponível neste canteiro.</small>'}
+ const toolbar='<div class="friend-farm-toolbar"><div class="friend-farm-tools"><button class="modal-action alt compact" data-friend-action="plow" '+(plot?.status==='spent'?'':'disabled')+'>🪏 Arar</button><button class="modal-action alt compact" data-friend-action="plant" '+(plot?.status==='dirt'&&friendSelectedCropId?'':'disabled')+'>🌱 Plantar</button><button class="modal-action alt compact" data-friend-action="water" '+(plot?.status==='growing'?'':'disabled')+'>💧 Regar</button><button class="modal-action alt compact" data-friend-action="harvest" '+(ready?'':'disabled')+'>🌾 Colher</button><button class="modal-action alt compact" data-friend-action="weed" '+(plot?.status==='growing'&&plot.weed?'':'disabled')+'>🌿 Ervas</button><button class="modal-action alt compact" data-friend-action="pest" '+(plot?.status==='growing'&&plot.pest?'':'disabled')+'>🐛 Pragas</button></div><label for="friend-seed-select">Semente do visitante</label><select id="friend-seed-select" class="modal-select" '+(availableSeeds.length?'':'disabled')+'><option value="">'+(availableSeeds.length?'Escolha uma semente':'Nenhuma semente no inventário')+'</option>'+seedOptions+'</select><button class="modal-action alt compact" data-open="shop">🛒 Loja</button></div>';
+ const sceneNav=Number(snap.version)>=2?'<div class="friend-scene-nav">'+[['farm','Fazenda'],['river','Rio'],['nature','Pomar / Mata']].map(([id,label])=>'<button type="button" class="modal-action '+(friendVisitedScene===id?'':'alt')+(friendVisitedScene===id?' is-active':'')+'" data-friend-scene="'+id+'" aria-pressed="'+(friendVisitedScene===id?'true':'false')+'">'+label+'</button>').join('')+'</div>':'';
+ const areas='<h3>🌳 Pomar do amigo</h3><div class="friend-area-grid">'+(orchardCards||'<p class="historical-note">Nenhuma árvore plantada no Pomar.</p>')+'</div><h3>🌲 Mata do amigo</h3><div class="friend-area-grid">'+(forestCards||'<p class="historical-note">Nenhuma árvore plantada na Mata.</p>')+'</div>';
+ return '<div class="gift-summary"><span class="symbol">🌾</span><div><b>'+safe(visitedFarm.farm_name||'Fazenda do amigo')+'</b><small>Nível '+fmt(visitedFarm.level||1)+' · Popularidade '+fmt(visitedFarm.popularity||0)+' · Tema: '+safe(theme)+'</small></div></div><div class="actions"><button class="modal-action alt" data-open="friends">← Voltar aos amigos</button><button class="modal-action alt" data-conversation="'+safe(visitedFarm.friendId)+'">Conversar</button><button class="modal-action" data-farm-like="true">'+(liked?'♥ Curtida registrada':'♡ Curtir fazenda')+' · '+fmt(likeCount)+'</button></div><div class="friend-help-quota"><b>🟢 Ajudas realizadas hoje: '+used+'/'+limit+'</b><span>Ajuda ilimitada · moedas verdes nas primeiras 15 ações do dia; depois, apenas XP básico. O contador reinicia à meia-noite do seu fuso horário.</span></div><h3>🌎 '+(Number(snap.version)>=2?'Propriedade completa':'Visita à propriedade')+' · '+pcount+'/72 canteiros · '+readyCount+' prontos</h3>'+toolbar+sceneNav+renderFriendFarmScene(snap)+'<div class="friend-help-selected"><b>'+(plot?'Canteiro '+(selectedFriendPlot+1)+' · '+safe(crop?.name||(plot.status==='spent'?'Solo usado':plot.status==='dirt'?'Solo preparado':'Plantação')):'Ferramentas da fazenda')+'</b><div class="actions">'+plotActions+'</div></div>'+areas+'<p class="historical-note">As colheitas e produções são enviadas diretamente ao depósito/estoque do proprietário. As sementes usadas no plantio são consumidas do seu inventário. Você recebe XP e, nas primeiras 15 ajudas do dia, 1 moeda verde por ação; o proprietário recebe XP básico.</p>';
 }
 function renderOnlineInbox(){
  const friendName=id=>onlineFriends.find(f=>f.user_id===id)?.farm_name||'Amigo';
@@ -2985,7 +3310,7 @@ function renderDynamicHelp(){
  return '<button class="modal-action welcome-help-button" data-open="welcome">🌻 Abrir tela de boas-vindas</button><div class="gift-summary"><span class="symbol">❔</span><div><b>Central de ajuda</b><small>Veja um resumo das áreas e ferramentas disponíveis na fazenda.</small></div></div><details class="catalog-section" open><summary>🌱 Fazenda e plantio</summary><div class="catalog-items"><p>Compre sementes na Loja, selecione-as no inventário e clique ou toque em um canteiro preparado. Aguarde o crescimento e use a mão para colher. A colheita rápida recolhe todas as plantas maduras; a seleção múltipla permite escolher canteiros específicos e colher apenas os selecionados. A escavação rápida limpa os canteiros colhidos.</p><p>Use os botões de zoom, a roda do mouse ou as teclas + e −. Arraste para movimentar a fazenda; em telas sensíveis ao toque, arraste com um dedo e use dois dedos para ajustar o zoom.</p></div></details><details class="catalog-section"><summary>🐾 Animais e criações</summary><div class="catalog-items"><p>Abra Animais para comprar, alimentar, acompanhar o crescimento e recolher produtos. Cada espécie possui alimento e ciclo próprios.</p></div></details><details class="catalog-section"><summary>🎣 Pesca no rio e em alto-mar</summary><div class="catalog-items"><p>Libere o Rio nas Expansões para pescar com varas. A pesca marítima é desbloqueada no nível 22 e utiliza redes. Os dois modos compartilham o nível de Pescador: Aprendiz, Amador, Apaiari, Dourado, Titã Marinho, Caçador Abissal, Corsário e Mestre Pescador. Caviar é uma captura marítima rara e rende três unidades por captura.</p></div></details><details class="catalog-section"><summary>🍲 Produção e especializações</summary><div class="catalog-items"><p>Cozinha, Churrasqueira e Mix de Ervas possuem filas de preparo. Inicie receitas com ingredientes, aguarde o tempo indicado e recolha os produtos. A Mata Brasileira permite cultivar árvores e ervas; a Marcenaria transforma madeira em móveis.</p></div></details><details class="catalog-section"><summary>📚 Catálogo, missões e conquistas</summary><div class="catalog-items"><p>O Catálogo registra descobertas e mostra o progresso das coleções. Missões diárias e semanais oferecem moedas e experiência. Conquistas permanentes podem liberar recompensas e títulos exclusivos.</p></div></details><details class="catalog-section"><summary>👥 Recursos sociais e conta</summary><div class="catalog-items"><p>Adicione amigos pelo código de jogador, envie mensagens e presentes, visite fazendas, curta propriedades e acompanhe notificações. A fazenda é salva exclusivamente na nuvem; entre na sua conta para jogar.</p></div></details><h3>🧭 Funções disponíveis no jogo</h3><div class="help-feature-list">'+featuresHtml+'</div><h3>🛠️ Ferramentas de campo</h3><div class="help-tool-list">'+tools.map(label=>'<span>'+safe(label)+'</span>').join('')+'</div><p class="historical-note">Esta relação é atualizada automaticamente conforme os menus disponíveis no jogo.</p>';
 }
 function renderModal(){if(modalHasFocusedEditor())return;ensureMissionState();syncLakeFish();syncAnimalCycles();state.grill=state.grill&&typeof state.grill==='object'?state.grill:{owned:false,assembled:false,parts:{},queue:[]};state.grill.parts=state.grill.parts&&typeof state.grill.parts==='object'?state.grill.parts:{};state.grill.queue=Array.isArray(state.grill.queue)?state.grill.queue:[];state.kitchen=state.kitchen&&typeof state.kitchen==='object'?state.kitchen:{queue:[]};state.kitchen.queue=Array.isArray(state.kitchen.queue)?state.kitchen.queue:[];state.herbMix=state.herbMix&&typeof state.herbMix==='object'?state.herbMix:{queue:[]};state.herbMix.queue=Array.isArray(state.herbMix.queue)?state.herbMix.queue.filter(j=>j&&MIX_HERB_RECIPES[j.recipe]&&typeof j.id==='string'&&Number.isFinite(j.startedAt)&&Number.isFinite(j.readyAt)&&j.readyAt>=j.startedAt).slice(-30):[];state.processedWarehouse=state.processedWarehouse&&typeof state.processedWarehouse==='object'?state.processedWarehouse:{};const body=$('modal-body'),modalScrollTop=body.scrollTop,accordionOpen=['shop','warehouse'].includes(currentModal)?[...body.querySelectorAll('.shop-section')].map(section=>section.querySelector('.shop-category-toggle')?.getAttribute('aria-expanded')==='true'):null,detailOpen=['herb-mix','kitchen'].includes(currentModal)?Object.fromEntries([...body.querySelectorAll('details[data-accordion-key]')].map(section=>[section.dataset.accordionKey,section.open])):null;let title='',html='';switch(currentModal){case 'catalog':title='Catálogo de descobertas';html=renderDiscoveryCatalog();break;
-case 'shop':title='Loja da fazenda';const lockedPlot=nextLockedPlotIndex(),unlockCost=lockedPlot>=0?plotUnlockCost(lockedPlot):0,lockedCount=state.plots.filter((p,i)=>i>=24&&i<36&&p.status==='grass').length,newPlotCount=unlockedExpansionPlotCount(),soilCost=redSoilCost();html=`<h3>🌱 Sementes clássicas e históricas</h3><p>O catálogo reúne culturas da versão clássica, registros posteriores de 2010–2011 e sementes já incluídas nas versões anteriores. Todos os tempos exibidos respeitam a redução de 1/5.</p><div class="grid-cards historical-seed-grid">${BASIC_FIELD_CROP_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v);return `<div class="store-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>Nível ${v.minLevel||1} · ${formatHours(cropHours(id))} até a colheita${v.regrowHours?`<br/>Rebrota: ${formatHours(cropHours(id,true))}`:''}<br/>Temporadas: ${v.seasons||1} · Rendimento: ${v.yield}<br/>Sementes: ${fmt(state.inventory[id]||0)}${cropBalanceNote(v)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar semente</button></div>`}).join('')}</div><h3>🌳 Mudas e sementes da Mata Brasileira · ${FOREST_TREE_IDS.length} espécies</h3><p>Plante árvores e ervas brasileiras em até 36 canteiros. As espécies exigem níveis progressivos; a colheita fornece madeira ou folhas destinadas ao Mix de Ervas.</p><div class="grid-cards historical-seed-grid">${FOREST_TREE_IDS.map(id=>{const t=FOREST_TREES[id],have=state.inventory['tree_'+id]||0,locked=farmLevel()<t.level;return `<div class="store-card"><span class="symbol">${forestIconMarkup(id)}</span><strong>${t.name}</strong><small>Nível ${t.level}${locked?' · Bloqueada':''}<br/>Crescimento: ${formatHours(t.hours*FOREST_TIME_FACTOR)}<br/>${t.fruitCrop?'Frutos: '+t.yield:t.herbYield?'Folhas para o Mix de Ervas':'Madeira: '+t.yield} · Estoque: ${have}</small><b>🟡 ${fmt(t.price)} moedas</b><button data-buy-tree="${id}" ${locked||state.coins<t.price?'disabled':''}>${t.herbYield?'Comprar semente':'Comprar muda'}</button></div>`}).join('')}</div><h3>💝 Arquivo do evento · Dia dos Namorados 2010</h3><p>O registro de maio de 2010 lista dez sementes temáticas. Sete foram retiradas numa atualização posterior; nesta réplica offline, o arquivo preserva todas. Os dados de cultivo são estimativas fictícias. As três que permaneceram no catálogo original eram compradas com moedas verdes.</p><div class="grid-cards historical-seed-grid event-seed-grid">${EVENT_CROP_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v),status=v.eventAvailable?'Permaneceu após a atualização':'Listada e retirada posteriormente';return `<div class="store-card event-seed-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>${status}<br/>Nível ${v.minLevel||1} · ${formatHours(cropHours(id))} até colher · ${v.seasons||1} temporada(s)<br/>Rendimento: ${v.yield} · Em estoque: ${fmt(state.inventory[id]||0)}${cropBalanceNote(v)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar semente</button></div>`}).join('')}</div><h3>🧙 Sementes avançadas · somente terra vermelha</h3><p>As doze culturas avançadas desta edição exigem o nível indicado e um canteiro transformado com a Varinha da Terra Vermelha. Quando os parâmetros históricos estavam incompletos, foram preenchidos com estimativas fictícias identificadas em cada cartão.</p><div class="grid-cards advanced-seed-grid">${ADVANCED_CROP_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v);return `<div class="store-card advanced-seed-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>Nível ${v.minLevel} · ${formatHours(cropHours(id))} primeiro ciclo · ${v.seasons} colheitas<br/>Rebrota: ${formatHours(cropHours(id,true))}<br/>Rendimento: ${v.yield} · ${v.unitPrice} por unidade${cropBalanceNote(v)}<br/>Em estoque: ${fmt(state.inventory[id]||0)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar semente avançada</button></div>`}).join('')}</div><h3>⭐ Cartão VIP histórico</h3><div class="store-card vip-card"><span class="symbol">🎟️</span><strong>Cartão VIP · 30 dias</strong><small>${vipActive()?`Ativo até ${new Date(state.vipUntil).toLocaleString('pt-BR')}. A compra renova a validade.`:'Desbloqueia temporariamente sementes e produtos VIP. As sementes VIP também mantêm o desbloqueio offline por nível como alternativa.'}<br/>Preço e duração recuperados da tabela histórica.</small><b>🟢 100 moedas verdes</b><button data-buy-vip-card="true" ${state.greenCoins<100?'disabled':''}>${vipActive()?'Renovar Cartão VIP':'Comprar Cartão VIP'}</button></div><h3>🪄 Ferramentas especiais de solo</h3><div class="grid-cards"><div class="store-card soil-tool-card"><span class="symbol">🪄</span><strong>Varinha da Terra Vermelha</strong><small>Uma única compra libera o uso reutilizável. Aplicar terra vermelha em qualquer canteiro é gratuito. Aplicações realizadas: ${state.redSoilApplications||0}.</small><b>🟢 2 moedas verdes ou 🟡 30.000 moedas amarelas</b><div class="actions"><button data-buy-soil-wand="red" data-wand-currency="green" ${state.greenCoins<2||(state.inventory.redSoilWand||0)>0?'disabled':''}>Comprar por 2 verdes</button><button class="modal-action alt" data-buy-soil-wand="red" data-wand-currency="coins" ${state.coins<30000||(state.inventory.redSoilWand||0)>0?'disabled':''}>Comprar por 30.000 amarelas</button></div></div><div class="store-card soil-tool-card restore"><span class="symbol">🪄</span><strong>Varinha de Restauração</strong><small>Restaura um canteiro vermelho para terra normal. Em estoque: ${fmt(state.inventory.restoreSoilWand||0)}. O custo da terra vermelha não é reembolsado.</small><b>🟡 3.000 moedas amarelas</b><button data-buy-soil-wand="restore" ${state.coins<3000?'disabled':''}>Comprar 1 varinha</button></div></div><h3>🪏 Expansão da plantação</h3><div class="land-expansion-card"><div><b>🌾 ${36-lockedCount} / 36 canteiros liberados</b><small>${lockedCount} canteiro(s) ainda bloqueado(s). A próxima expansão custa 🟡 ${fmt(unlockCost||0)}${lockedPlot>=30?' e exige nível 10':''}.</small></div><button class="modal-action" data-unlock-plot="true" ${lockedPlot<0||state.coins<unlockCost||farmLevel()<(lockedPlot>=30?10:1)?'disabled':''}>Liberar próximo canteiro</button></div><h3>🌾 Segunda plantação · 36 novos canteiros</h3><div class="land-expansion-card"><div><b>🌱 ${newPlotCount} / 36 canteiros liberados</b><small>${newPlotCount<36?'Um novo canteiro é liberado automaticamente a cada nível, começando no nível 50. Próximo desbloqueio: nível '+(50+newPlotCount)+'.':'Todos os 36 novos canteiros foram liberados!'} Não há custo em moedas para esta expansão.</small></div><button class="modal-action alt" data-focus-area="new-fields">Centralizar nova plantação</button></div><h3>🌼 Catálogo histórico de flores</h3><p>As flores recuperadas podem ser plantadas, colhidas, guardadas no depósito e vendidas. As quatro receitas de buquê já documentadas continuam na fábrica; não foram inventadas novas receitas.</p><div class="grid-cards">${FLOWER_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v);return `<div class="store-card flower-store-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>${formatHours(cropHours(id))} até a colheita · Rendimento: ${v.yield}<br/>No depósito: ${fmt(state.flowerWarehouse[id]||0)}${cropBalanceNote(v)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar sementes</button></div>`}).join('')}</div><h3>🐾 Alimentos históricos dos animais</h3><div class="grid-cards">${Object.entries(ANIMALS).filter(([id,a])=>a.role!=='horse').map(([id,a])=>{const wallet=a.feedCurrency==='greenCoins'?'greenCoins':'coins',label=a.feedCurrency==='greenCoins'?'🟢':'🟡';return `<div class="store-card"><span class="symbol">${a.icon}</span><strong>${a.feedName}</strong><small>Estoque: ${fmt(state.inventory[a.feedKey]||0)}${a.feedHistorical?'<br/><b class="data-origin historic">Preço histórico recuperado</b>':'<br/><b class="data-origin estimated">Preço local estimado</b>'}</small><b>${label} ${fmt(a.feedPrice)}</b><button data-buy-feed="${id}" ${state[wallet]<a.feedPrice?'disabled':''}>Comprar alimento</button></div>`}).join('')}</div><h3>🥣 Alimentos genéricos históricos</h3><p>Podem alimentar qualquer animal da categoria correspondente. Os ciclos respeitam a redução de 1/5.</p><div class="grid-cards"><div class="store-card"><span class="symbol">🌾</span><strong>Alimento para animais que crescem</strong><small>Alimenta animais em crescimento por 12 horas-base. Estoque: ${fmt(state.inventory.feed_growers||0)}.</small><b>🟡 80 moedas amarelas</b><button data-buy-generic-food="grower" ${state.coins<80?'disabled':''}>Comprar alimento</button></div><div class="store-card"><span class="symbol">🥣</span><strong>Alimento para animais que produzem</strong><small>Ativa produção por 8 horas-base. Estoque: ${fmt(state.inventory.feed_producers||0)}.</small><b>🟡 120 moedas amarelas</b><button data-buy-generic-food="producer" ${state.coins<120?'disabled':''}>Comprar alimento</button></div></div><h3>🃏 Rações para aumentar o nível dos animais</h3><p>As rações históricas aumentam o nível do animal e sua produção. Nesta réplica, o nível vai até 5; cada nível acrescenta uma unidade à produção de galinhas e vacas, ou à carne/valor de venda dos porcos. A fórmula é um balanceamento local, pois a progressão completa não foi recuperada.</p><div class="grid-cards">${Object.entries(ANIMAL_RATIONS).map(([type,r])=>`<div class="store-card"><span class="symbol">${ANIMALS[type].icon}</span><strong>${r.name}</strong><small>Em estoque: ${fmt(state.inventory[r.key]||0)} · melhora um animal por aplicação.</small><b>🟢 ${r.price} moeda(s) verde(s)</b><button data-buy-animal-ration="${type}" ${state.greenCoins<r.price?'disabled':''}>Comprar ração de melhoria</button></div>`).join('')}</div><h3>🧪 Fertilizantes históricos</h3><p>Os tempos de redução são aplicados em 1/5, seguindo a regra desta réplica. Preços sem comprovação documental estão identificados como estimativas.</p><div class="grid-cards">${Object.entries(FERTILIZERS).map(([id,v])=>{const wallet=v.currency==='greenCoins'?'greenCoins':'coins',balance=v.currency==='gift'?0:state[wallet],buyable=v.currency!=='gift',price=v.currency==='greenCoins'?`🟢 ${v.price} moeda(s) verde(s)`:v.currency==='coins'?`🟡 ${fmt(v.price)} moedas amarelas`:'Presente diário';return `<div class="store-card soil-tool-card"><span class="symbol">${v.icon}</span><strong>${v.name}</strong><small>${v.note}<br/>Estoque: ${fmt(state.inventory[id]||0)} · redução efetiva: ${formatHours(v.hours*CROP_TIME_FACTOR)}</small><b>${price}</b><button data-buy-fertilizer="${id}" ${!buyable||balance<v.price?'disabled':''}>${buyable?'Comprar 1':'Obtido em recompensa'}</button></div>`}).join('')}</div><h3>🥣 Ingredientes culinários</h3><p>Mel, temperos, fermento químico, folha de bananeira e azeite de dendê são insumos para as receitas da cozinha e da churrasqueira. O caviar é obtido na pesca marítima; a carne de peru está disponível no fornecedor local enquanto o sistema social permanece offline.</p><div class="grid-cards">${Object.entries(GRILL_SUPPLIES).filter(([id])=>id!=='caviar').map(([id,v])=>`<div class="store-card"><span class="symbol">${v.icon}</span><strong>${v.name}</strong><small>Estoque: ${fmt(state.inventory[id]||0)}</small><b>🟡 ${fmt(v.price)}</b><button data-buy-grill-ingredient="${id}" ${state.coins<v.price?'disabled':''}>Comprar 1</button></div>`).join('')}<div class="store-card"><span class="symbol">🦃</span><strong>Carne de peru</strong><small>Estoque: ${fmt(state.meatWarehouse.turkey||0)} · fornecedor local offline</small><b>🟡 650</b><button data-buy-turkey-meat="true" ${state.coins<650?'disabled':''}>Comprar 1</button></div></div><h3>🗺️ Novas áreas da propriedade</h3><div class="grid-cards">${Object.entries(AREA_CONFIG).map(([id,a])=>{
+case 'shop':title='Loja da fazenda';const lockedPlot=nextLockedPlotIndex(),unlockCost=lockedPlot>=0?plotUnlockCost(lockedPlot):0,lockedCount=state.plots.filter((p,i)=>i>=24&&i<36&&p.status==='grass').length,newPlotCount=unlockedExpansionPlotCount(),soilCost=redSoilCost();html=`<h3>🌱 Sementes clássicas e históricas</h3><p>O catálogo reúne culturas da versão clássica, registros posteriores de 2010–2011 e sementes já incluídas nas versões anteriores. Todos os tempos exibidos respeitam a redução de 1/5.</p><div class="grid-cards historical-seed-grid">${BASIC_FIELD_CROP_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v);return `<div class="store-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>Nível ${v.minLevel||1} · ${formatHours(cropHours(id))} até a colheita${v.regrowHours?`<br/>Rebrota: ${formatHours(cropHours(id,true))}`:''}<br/>Temporadas: ${v.seasons||1} · Rendimento: ${v.yield}<br/>Sementes: ${fmt(state.inventory[id]||0)}${cropBalanceNote(v)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar semente</button></div>`}).join('')}</div><h3>🌼 Novas sementes de flores · Colheita Feliz 2</h3><p>Estas três culturas podem ser plantadas na sua fazenda e também durante a visita à fazenda de um amigo. Compre aqui; as sementes ficam no seu inventário pessoal e podem ser usadas para ajudar o amigo.</p><div class="grid-cards historical-seed-grid new-crop-seed-grid">${['pilea_involucrata','rosa_amarela','girassol'].map(id=>{const v=CROPS[id],available=cropAffordable(v);return '<div class="store-card" data-seed-card="'+id+'"><span class="symbol">'+cropIconMarkup(id)+'</span><strong>'+v.name+'</strong><small>Nível mínimo '+(v.minLevel||1)+'<br/>Crescimento: '+formatHours(cropHours(id))+'<br/>Rendimento: '+v.yield+' unidades<br/>Estoque pessoal: '+fmt(state.inventory[id]||0)+'</small><b>'+cropPriceLabel(v)+' moedas</b><button data-buy="'+id+'" '+(available?'':'disabled')+'>Comprar semente</button></div>'}).join('')}</div><h3>🌳 Mudas e sementes da Mata Brasileira · ${FOREST_TREE_IDS.length} espécies</h3><p>Plante árvores e ervas brasileiras em até 36 canteiros. As espécies exigem níveis progressivos; a colheita fornece madeira ou folhas destinadas ao Mix de Ervas.</p><div class="grid-cards historical-seed-grid">${FOREST_TREE_IDS.map(id=>{const t=FOREST_TREES[id],have=state.inventory['tree_'+id]||0,locked=farmLevel()<t.level;return `<div class="store-card"><span class="symbol">${forestIconMarkup(id)}</span><strong>${t.name}</strong><small>Nível ${t.level}${locked?' · Bloqueada':''}<br/>Crescimento: ${formatHours(t.hours*FOREST_TIME_FACTOR)}<br/>${t.fruitCrop?'Frutos: '+t.yield:t.herbYield?'Folhas para o Mix de Ervas':'Madeira: '+t.yield} · Estoque: ${have}</small><b>🟡 ${fmt(t.price)} moedas</b><button data-buy-tree="${id}" ${locked||state.coins<t.price?'disabled':''}>${t.herbYield?'Comprar semente':'Comprar muda'}</button></div>`}).join('')}</div><h3>💝 Arquivo do evento · Dia dos Namorados 2010</h3><p>O registro de maio de 2010 lista dez sementes temáticas. Sete foram retiradas numa atualização posterior; nesta réplica offline, o arquivo preserva todas. Os dados de cultivo são estimativas fictícias. As três que permaneceram no catálogo original eram compradas com moedas verdes.</p><div class="grid-cards historical-seed-grid event-seed-grid">${EVENT_CROP_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v),status=v.eventAvailable?'Permaneceu após a atualização':'Listada e retirada posteriormente';return `<div class="store-card event-seed-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>${status}<br/>Nível ${v.minLevel||1} · ${formatHours(cropHours(id))} até colher · ${v.seasons||1} temporada(s)<br/>Rendimento: ${v.yield} · Em estoque: ${fmt(state.inventory[id]||0)}${cropBalanceNote(v)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar semente</button></div>`}).join('')}</div><h3>🧙 Sementes avançadas · somente terra vermelha</h3><p>As doze culturas avançadas desta edição exigem o nível indicado e um canteiro transformado com a Varinha da Terra Vermelha. Quando os parâmetros históricos estavam incompletos, foram preenchidos com estimativas fictícias identificadas em cada cartão.</p><div class="grid-cards advanced-seed-grid">${ADVANCED_CROP_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v);return `<div class="store-card advanced-seed-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>Nível ${v.minLevel} · ${formatHours(cropHours(id))} primeiro ciclo · ${v.seasons} colheitas<br/>Rebrota: ${formatHours(cropHours(id,true))}<br/>Rendimento: ${v.yield} · ${v.unitPrice} por unidade${cropBalanceNote(v)}<br/>Em estoque: ${fmt(state.inventory[id]||0)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar semente avançada</button></div>`}).join('')}</div><h3>⭐ Cartão VIP histórico</h3><div class="store-card vip-card"><span class="symbol">🎟️</span><strong>Cartão VIP · 30 dias</strong><small>${vipActive()?`Ativo até ${new Date(state.vipUntil).toLocaleString('pt-BR')}. A compra renova a validade.`:'Desbloqueia temporariamente sementes e produtos VIP. As sementes VIP também mantêm o desbloqueio offline por nível como alternativa.'}<br/>Preço e duração recuperados da tabela histórica.</small><b>🟢 100 moedas verdes</b><button data-buy-vip-card="true" ${state.greenCoins<100?'disabled':''}>${vipActive()?'Renovar Cartão VIP':'Comprar Cartão VIP'}</button></div><h3>🪄 Ferramentas especiais de solo</h3><div class="grid-cards"><div class="store-card soil-tool-card"><span class="symbol">🪄</span><strong>Varinha da Terra Vermelha</strong><small>Uma única compra libera o uso reutilizável. Aplicar terra vermelha em qualquer canteiro é gratuito. Aplicações realizadas: ${state.redSoilApplications||0}.</small><b>🟢 2 moedas verdes ou 🟡 30.000 moedas amarelas</b><div class="actions"><button data-buy-soil-wand="red" data-wand-currency="green" ${state.greenCoins<2||(state.inventory.redSoilWand||0)>0?'disabled':''}>Comprar por 2 verdes</button><button class="modal-action alt" data-buy-soil-wand="red" data-wand-currency="coins" ${state.coins<30000||(state.inventory.redSoilWand||0)>0?'disabled':''}>Comprar por 30.000 amarelas</button></div></div><div class="store-card soil-tool-card restore"><span class="symbol">🪄</span><strong>Varinha de Restauração</strong><small>Restaura um canteiro vermelho para terra normal. Em estoque: ${fmt(state.inventory.restoreSoilWand||0)}. O custo da terra vermelha não é reembolsado.</small><b>🟡 3.000 moedas amarelas</b><button data-buy-soil-wand="restore" ${state.coins<3000?'disabled':''}>Comprar 1 varinha</button></div></div><h3>🪏 Expansão da plantação</h3><div class="land-expansion-card"><div><b>🌾 ${36-lockedCount} / 36 canteiros liberados</b><small>${lockedCount} canteiro(s) ainda bloqueado(s). A próxima expansão custa 🟡 ${fmt(unlockCost||0)}${lockedPlot>=30?' e exige nível 10':''}.</small></div><button class="modal-action" data-unlock-plot="true" ${lockedPlot<0||state.coins<unlockCost||farmLevel()<(lockedPlot>=30?10:1)?'disabled':''}>Liberar próximo canteiro</button></div><h3>🌾 Segunda plantação · 36 novos canteiros</h3><div class="land-expansion-card"><div><b>🌱 ${newPlotCount} / 36 canteiros liberados</b><small>${newPlotCount<36?'Um novo canteiro é liberado automaticamente a cada nível, começando no nível 50. Próximo desbloqueio: nível '+(50+newPlotCount)+'.':'Todos os 36 novos canteiros foram liberados!'} Não há custo em moedas para esta expansão.</small></div><button class="modal-action alt" data-focus-area="new-fields">Centralizar nova plantação</button></div><h3>🌼 Catálogo histórico de flores</h3><p>As flores recuperadas podem ser plantadas, colhidas, guardadas no depósito e vendidas. As quatro receitas de buquê já documentadas continuam na fábrica; não foram inventadas novas receitas.</p><div class="grid-cards">${FLOWER_IDS.map(id=>{const v=CROPS[id],available=cropAffordable(v);return `<div class="store-card flower-store-card" data-seed-card="${id}"><span class="symbol">${cropIconMarkup(id)}</span><strong>${v.name}</strong><small>${formatHours(cropHours(id))} até a colheita · Rendimento: ${v.yield}<br/>No depósito: ${fmt(state.flowerWarehouse[id]||0)}${cropBalanceNote(v)}</small><b>${cropPriceLabel(v)}</b><button data-buy="${id}" ${available?'':'disabled'}>Comprar sementes</button></div>`}).join('')}</div><h3>🐾 Alimentos históricos dos animais</h3><div class="grid-cards">${Object.entries(ANIMALS).filter(([id,a])=>a.role!=='horse').map(([id,a])=>{const wallet=a.feedCurrency==='greenCoins'?'greenCoins':'coins',label=a.feedCurrency==='greenCoins'?'🟢':'🟡';return `<div class="store-card"><span class="symbol">${a.icon}</span><strong>${a.feedName}</strong><small>Estoque: ${fmt(state.inventory[a.feedKey]||0)}${a.feedHistorical?'<br/><b class="data-origin historic">Preço histórico recuperado</b>':'<br/><b class="data-origin estimated">Preço local estimado</b>'}</small><b>${label} ${fmt(a.feedPrice)}</b><button data-buy-feed="${id}" ${state[wallet]<a.feedPrice?'disabled':''}>Comprar alimento</button></div>`}).join('')}</div><h3>🥣 Alimentos genéricos históricos</h3><p>Podem alimentar qualquer animal da categoria correspondente. Os ciclos respeitam a redução de 1/5.</p><div class="grid-cards"><div class="store-card"><span class="symbol">🌾</span><strong>Alimento para animais que crescem</strong><small>Alimenta animais em crescimento por 12 horas-base. Estoque: ${fmt(state.inventory.feed_growers||0)}.</small><b>🟡 80 moedas amarelas</b><button data-buy-generic-food="grower" ${state.coins<80?'disabled':''}>Comprar alimento</button></div><div class="store-card"><span class="symbol">🥣</span><strong>Alimento para animais que produzem</strong><small>Ativa produção por 8 horas-base. Estoque: ${fmt(state.inventory.feed_producers||0)}.</small><b>🟡 120 moedas amarelas</b><button data-buy-generic-food="producer" ${state.coins<120?'disabled':''}>Comprar alimento</button></div></div><h3>🃏 Rações para aumentar o nível dos animais</h3><p>As rações históricas aumentam o nível do animal e sua produção. Nesta réplica, o nível vai até 5; cada nível acrescenta uma unidade à produção de galinhas e vacas, ou à carne/valor de venda dos porcos. A fórmula é um balanceamento local, pois a progressão completa não foi recuperada.</p><div class="grid-cards">${Object.entries(ANIMAL_RATIONS).map(([type,r])=>`<div class="store-card"><span class="symbol">${ANIMALS[type].icon}</span><strong>${r.name}</strong><small>Em estoque: ${fmt(state.inventory[r.key]||0)} · melhora um animal por aplicação.</small><b>🟢 ${r.price} moeda(s) verde(s)</b><button data-buy-animal-ration="${type}" ${state.greenCoins<r.price?'disabled':''}>Comprar ração de melhoria</button></div>`).join('')}</div><h3>🧪 Fertilizantes históricos</h3><p>Os tempos de redução são aplicados em 1/5, seguindo a regra desta réplica. Preços sem comprovação documental estão identificados como estimativas.</p><div class="grid-cards">${Object.entries(FERTILIZERS).map(([id,v])=>{const wallet=v.currency==='greenCoins'?'greenCoins':'coins',balance=v.currency==='gift'?0:state[wallet],buyable=v.currency!=='gift',price=v.currency==='greenCoins'?`🟢 ${v.price} moeda(s) verde(s)`:v.currency==='coins'?`🟡 ${fmt(v.price)} moedas amarelas`:'Presente diário';return `<div class="store-card soil-tool-card"><span class="symbol">${v.icon}</span><strong>${v.name}</strong><small>${v.note}<br/>Estoque: ${fmt(state.inventory[id]||0)} · redução efetiva: ${formatHours(v.hours*CROP_TIME_FACTOR)}</small><b>${price}</b><button data-buy-fertilizer="${id}" ${!buyable||balance<v.price?'disabled':''}>${buyable?'Comprar 1':'Obtido em recompensa'}</button></div>`}).join('')}</div><h3>🥣 Ingredientes culinários</h3><p>Mel, temperos, fermento químico, folha de bananeira e azeite de dendê são insumos para as receitas da cozinha e da churrasqueira. O caviar é obtido na pesca marítima; a carne de peru está disponível no fornecedor local enquanto o sistema social permanece offline.</p><div class="grid-cards">${Object.entries(GRILL_SUPPLIES).filter(([id])=>id!=='caviar').map(([id,v])=>`<div class="store-card"><span class="symbol">${v.icon}</span><strong>${v.name}</strong><small>Estoque: ${fmt(state.inventory[id]||0)}</small><b>🟡 ${fmt(v.price)}</b><button data-buy-grill-ingredient="${id}" ${state.coins<v.price?'disabled':''}>Comprar 1</button></div>`).join('')}<div class="store-card"><span class="symbol">🦃</span><strong>Carne de peru</strong><small>Estoque: ${fmt(state.meatWarehouse.turkey||0)} · fornecedor local offline</small><b>🟡 650</b><button data-buy-turkey-meat="true" ${state.coins<650?'disabled':''}>Comprar 1</button></div></div><h3>🗺️ Novas áreas da propriedade</h3><div class="grid-cards">${Object.entries(AREA_CONFIG).map(([id,a])=>{
  const description=id==='orchard'?'Oito espaços para árvores produtivas.':id==='pond'?'Rio natural com margens, vegetação e pequeno píer.':'Haras octogonal próximo ao lago, com até 10 cavalos.';
  let controls='';
  if(state.expansions[id])controls='<span class="animal-state ready">Liberado</span><button class="modal-action alt" data-open="'+id+'">Ver área</button>';
@@ -3145,26 +3470,32 @@ function makeBouquet(id){if(writeLocked)return notify('Salvamento protegido. Abr
 function downloadBackup(){const snapshot=normalizeFarmSnapshot(state);if(!snapshot)return notify('O estado atual não passou pela verificação de integridade. O backup não foi exportado.');const data=JSON.stringify({version:2,exportedAt:new Date().toISOString(),state:snapshot},null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='ColheitaFeliz2-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
 async function importBackup(file){if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id)return notify('Entre na sua conta e carregue a fazenda da nuvem antes de importar um backup.');if(!file||file.size>8*1024*1024)return notify('Arquivo inválido ou maior que 8 MB.');try{const parsed=JSON.parse(await file.text()),data=[1,2].includes(parsed?.version)?normalizeFarmSnapshot(parsed.state):null;if(!data)throw Error('integridade');if(!confirm('Substituir a fazenda atual pelo conteúdo deste backup validado?'))return;state=data;writeLocked=false;markDirty();refresh();closeModal();notify('Backup validado e importado!')}catch(e){console.warn('Backup rejeitado:',e);notify('O backup está corrompido, incompleto ou não é compatível. A fazenda atual foi mantida.')}}
 function updateSceneLandscapeVisibility(){
+ // O Mar usa um fundo próprio que cobre a área inteira do playfield.
+ $('playfield')?.classList.toggle('sea-scene-active',activeScene==='sea');
  // Fazenda e Rio são regiões contíguas do mesmo mundo; manter ambas as imagens
  // visíveis evita que uma área revele um vazio ou um cenário independente.
  const farmLandscape=$('farm-landscape');
- if(farmLandscape)farmLandscape.style.display='';
+ if(farmLandscape)farmLandscape.style.display=activeScene==='sea'?'none':'';
  const riverLandscape=$('river-landscape');
- if(riverLandscape)riverLandscape.style.display='';
+ if(riverLandscape)riverLandscape.style.display=activeScene==='sea'?'none':'';
  const natureLandscape=$('nature-landscape');
- if(natureLandscape)natureLandscape.style.display='';
+ if(natureLandscape)natureLandscape.style.display=activeScene==='sea'?'none':'';
  const waterMotion=$('river-water-motion');
  if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
 }
-function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(mobileViewport?1.005:.985)))}
+function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=id==='sea'?height:mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(id==='sea'?.985:mobileViewport?1.005:.985)))}
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
-function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}cancelAnimationFrame(sceneAnimationFrame);activeScene=id;updateSceneLandscapeVisibility();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
-function panView(direction){const order=['river','farm','nature'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
+function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}const previous=activeScene;cancelAnimationFrame(sceneAnimationFrame);activeScene=id;if(id==='sea')setMusicContext('sea');else if(previous==='sea')setMusicContext('general');updateSceneLandscapeVisibility();if(id==='sea'){const groundLayer=$('ground-layer');if(groundLayer){groundLayer.querySelector('#sea-landscape')?.remove();groundLayer.insertAdjacentHTML('beforeend',renderSeaLandscapeMarkup())}}else if(previous==='sea')$('ground-layer')?.querySelector('#sea-landscape')?.remove();if(id==='sea'||previous==='sea')renderFarmAddons();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
+function panView(direction){const order=['river','farm','nature','sea'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
-svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
+// Interações do Rio registradas no documento para funcionar mesmo com os elementos SVG adicionados dinamicamente ao cenário.
+document.addEventListener('click',e=>{if(activeScene!=='river')return;const target=e.target.closest?.('[data-river-backpack],[data-river-rod]');if(!target)return;e.preventDefault();e.stopPropagation();if(drag||Date.now()<=suppressWorldClickUntil)return;if(target.matches('[data-river-backpack]'))openModal('pond');else if(target.matches('[data-river-rod]'))castFishingRod()},true);
+document.addEventListener('keydown',e=>{if(activeScene!=='river'||(e.key!=='Enter'&&e.key!==' '))return;const target=e.target.closest?.('[data-river-backpack],[data-river-rod]');if(!target)return;e.preventDefault();e.stopPropagation();if(target.matches('[data-river-backpack]'))openModal('pond');else if(target.matches('[data-river-rod]'))castFishingRod()},true);
+svg.addEventListener('click',e=>{const riverBag=e.target.closest?.('[data-river-backpack]');if(riverBag){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)openModal('pond');return}const riverRod=e.target.closest?.('[data-river-rod]');if(riverRod){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)castFishingRod();return}const bag=e.target.closest?.('[data-sea-bag]');if(bag){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)openModal('sea');return}const net=e.target.closest?.('[data-sea-net]');if(net){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)castSeaNet();return}},true);
+svg.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const riverBag=e.target.closest?.('[data-river-backpack]'),riverRod=e.target.closest?.('[data-river-rod]'),bag=e.target.closest?.('[data-sea-bag]'),net=e.target.closest?.('[data-sea-net]');if(!riverBag&&!riverRod&&!bag&&!net)return;e.preventDefault();if(riverBag)openModal('pond');else if(riverRod)castFishingRod();else if(bag)openModal('sea');else castSeaNet()});
 $('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const fishing=e.target.closest('[data-river-fishing]');if(fishing){e.preventDefault();e.stopPropagation();openModal('pond');return}const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
 $('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-river-fishing]')&&!drag&&Date.now()>suppressWorldClickUntil){openModal('pond');return}if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
@@ -3173,9 +3504,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');i
 document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
-$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('orientation-toggle-mobile')?.addEventListener('click',toggleLandscapeMode);$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
-$('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
-if(d.enableLocalWeather)enableLocalWeather();if(d.socialSearch)searchOnlinePlayers();if(d.socialCodeSearch)searchOnlinePlayerByCode();if(d.markAllNotifications)markAllOnlineNotificationsRead();if(d.copyPlayerCode)copyOnlinePlayerCode();if(d.socialRefresh)refreshOnlineSocial();if(d.socialAdd)sendOnlineFriendRequest(d.socialAdd);if(d.socialAccept)respondOnlineFriendRequest(d.socialAccept,true);if(d.socialReject)respondOnlineFriendRequest(d.socialReject,false);if(d.conversation){activeConversationId=d.conversation;onlineMessages=[];openModal('inbox');loadOnlineConversation(d.conversation,false)}if(d.socialInboxRefresh)refreshOnlineInbox();if(d.sendOnlineMessage)sendOnlineMessage();if(d.notificationRead)markOnlineNotificationRead(d.notificationRead);if(d.visitFarm)visitOnlineFriendFarm(d.visitFarm);if(d.farmLike)toggleVisitedFarmLike();if(d.farmVisitToggle)toggleFarmVisitPermission();if(d.sendOnlineGift)sendOnlineGift(d.sendOnlineGift);if(d.claimOnlineGift)claimOnlineGift(d.claimOnlineGift);if(d.refreshOnlineGifts)refreshOnlineGifts();if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.feedAll)feedAllHungryAnimals();if(d.saveMobileShortcuts){if(!farmWriteAllowed())return;const chosen=[...$('modal-body').querySelectorAll('[data-mobile-shortcut]:checked')].map(x=>x.dataset.mobileShortcut);if(chosen.length<1||chosen.length>4)return notify('Escolha entre um e quatro atalhos.');state.mobileShortcuts=chosen;markDirty();renderMobileNavigation();renderModal();notify('Barra inferior atualizada e salva na nuvem.')}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimMission)claimMission(d.missionPeriod,d.claimMission);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand,d.wandCurrency||'green');if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion,d.expansionCurrency);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
+$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('orientation-toggle-mobile')?.addEventListener('click',toggleLandscapeMode);
+const bottomNavToggle=$('bottom-nav-toggle');let bottomNavVisible=true;try{bottomNavVisible=localStorage.getItem('cf2-bottom-navigation-hidden')!=='1'}catch{}
+const applyBottomNavVisibility=visible=>{bottomNavVisible=!!visible;document.querySelector('.app')?.classList.toggle('bottom-navigation-hidden',!bottomNavVisible);if(bottomNavToggle){bottomNavToggle.innerHTML=bottomNavVisible?'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>':'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.1 3.8M6.2 6.2C3.5 8.1 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';bottomNavToggle.setAttribute('aria-pressed',String(bottomNavVisible));bottomNavToggle.setAttribute('aria-label',bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior');bottomNavToggle.title=bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior'}};
+applyBottomNavVisibility(bottomNavVisible);
+bottomNavToggle?.addEventListener('click',()=>{applyBottomNavVisibility(!bottomNavVisible);try{localStorage.setItem('cf2-bottom-navigation-hidden',bottomNavVisible?'0':'1')}catch{}});$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
+$('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.enableLocalWeather)enableLocalWeather();
+if(d.socialSearch)searchOnlinePlayers();if(d.socialCodeSearch)searchOnlinePlayerByCode();if(d.markAllNotifications)markAllOnlineNotificationsRead();if(d.copyPlayerCode)copyOnlinePlayerCode();if(d.socialRefresh)refreshOnlineSocial();if(d.socialAdd)sendOnlineFriendRequest(d.socialAdd);if(d.socialAccept)respondOnlineFriendRequest(d.socialAccept,true);if(d.socialReject)respondOnlineFriendRequest(d.socialReject,false);if(d.conversation){activeConversationId=d.conversation;onlineMessages=[];openModal('inbox');loadOnlineConversation(d.conversation,false)}if(d.socialInboxRefresh)refreshOnlineInbox();if(d.sendOnlineMessage)sendOnlineMessage();if(d.notificationRead)markOnlineNotificationRead(d.notificationRead);if(d.visitFarm)visitOnlineFriendFarm(d.visitFarm);if(d.farmLike)toggleVisitedFarmLike();if(d.farmVisitToggle)toggleFarmVisitPermission();if(d.sendOnlineGift)sendOnlineGift(d.sendOnlineGift);if(d.claimOnlineGift)claimOnlineGift(d.claimOnlineGift);if(d.refreshOnlineGifts)refreshOnlineGifts();if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.feedAll)feedAllHungryAnimals();if(d.saveMobileShortcuts){if(!farmWriteAllowed())return;const chosen=[...$('modal-body').querySelectorAll('[data-mobile-shortcut]:checked')].map(x=>x.dataset.mobileShortcut);if(chosen.length<1||chosen.length>4)return notify('Escolha entre um e quatro atalhos.');state.mobileShortcuts=chosen;markDirty();renderMobileNavigation();renderModal();notify('Barra inferior atualizada e salva na nuvem.')}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimMission)claimMission(d.missionPeriod,d.claimMission);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand,d.wandCurrency||'green');if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion,d.expansionCurrency);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
 if(d.setMood)setMood(d.setMood);if(d.buyRod)buyFishingRod(d.buyRod,d.currency);if(d.selectRod)selectFishingRod(d.selectRod);if(d.castFish)castFishingRod();if(d.buyGrill)buyGrill();if(d.buyGrillPart)buyGrillPart(d.buyGrillPart);if(d.buyGrillIngredient)buyGrillSupply(d.buyGrillIngredient);if(d.buyTurkeyMeat)buyTurkeyMeat();if(d.butcherAnimal)butcherAnimal(d.butcherAnimal);if(d.produceGrill)produceGrillRecipe(d.produceGrill,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectGrill)collectGrill();if(d.cookRecipe)produceKitchenRecipe(d.cookRecipe,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectKitchen)collectKitchen();if(d.selectForest!==undefined){selectedForestSlot=Number(d.selectForest);renderModal()}if(d.plantForest!==undefined)plantForestTree(Number(d.slot),d.plantForest);if(d.harvestForest!==undefined)harvestForestTree(Number(d.harvestForest));if(d.buySeaNet)buySeaNet(d.buySeaNet,d.currency);if(d.selectSeaNet)selectSeaNet(d.selectSeaNet);if(d.castSea)castSeaNet();if(d.craftWood)craftWoodItem(d.craftWood);if(d.collectWoodwork)collectWoodwork();if(d.buyLakeEgg)buyLakeEgg(d.buyLakeEgg);if(d.buyLakeFeed)buyLakeFeed();if(d.feedLakeFish)feedLakeFish(d.feedLakeFish);if(d.sellLakeFish)sellLakeFish(d.sellLakeFish);if(d.placeLakeDecor)placeLakeDecoration(d.placeLakeDecor);if(d.removeLakeDecor!==undefined)removeLakeDecoration(Number(d.removeLakeDecor));if(d.placeLakeBridge)placeLakeBridge(d.placeLakeBridge);if(d.removeLakeBridge!==undefined)removeLakeBridge(Number(d.removeLakeBridge));if(d.toggleMeatLock)toggleMeatLock(d.toggleMeatLock);if(d.sellFish){const qty=saleQuantity('fish',d.sellFish,state.fishWarehouse[d.sellFish]||0);if(qty)sellFishStock('river',d.sellFish,qty)}if(d.sellSeaFish){const qty=saleQuantity('sea',d.sellSeaFish,state.seaWarehouse[d.sellSeaFish]||0);if(qty)sellFishStock('sea',d.sellSeaFish,qty)}if(d.sellMeat){const qty=saleQuantity('meat',d.sellMeat,state.meatWarehouse[d.sellMeat]||0);if(qty)sellMeat(d.sellMeat,qty)}if(d.toggleProcessedLock)toggleProcessedLock(d.toggleProcessedLock);if(d.sellProcessed){const qty=saleQuantity('processed',d.sellProcessed,state.processedWarehouse[d.sellProcessed]||0);if(qty)sellProcessed(d.sellProcessed,qty)}if(d.assembleGrill)assembleGrill();if(d.buyTheme)buyFarmTheme(d.buyTheme,d.currency||'coins');if(d.applyTheme)applyFarmTheme(d.applyTheme);if(d.buyDecoration)buyDecoration(d.buyDecoration);if(d.placeDecoration)placeDecoration(d.placeDecoration);if(d.removeDecoration!==undefined)removeDecoration(d.removeDecoration);
 if(d.mixHerb)produceHerbMix(d.mixHerb);if(d.collectHerbMix)collectHerbMix();if(d.sellHerbMix){const qty=saleQuantity('mix',d.sellHerbMix,state.inventory['mix_'+d.sellHerbMix]||0);if(qty)sellHerbMix(d.sellHerbMix,qty);}if(d.buyTree){if(writeLocked)return notify('Salvamento protegido.');const t=FOREST_TREES[d.buyTree];if(!t||t.retired||farmLevel()<t.level)return notify('Muda ainda bloqueada ou retirada da loja.');if(state.coins<t.price)return notify('Moedas amarelas insuficientes.');state.coins-=t.price;const key='tree_'+d.buyTree;state.inventory[key]=(state.inventory[key]||0)+1;remember('Comprou muda de '+t.name+'.');markDirty();refresh();notify('Muda de '+t.name+' adicionada ao inventário.')}
 if(d.buy){if(writeLocked)return notify('Gravação bloqueada para proteger seu salvamento.');const c=CROPS[d.buy];if(!c||!cropLevelAllowed(c))return;const wallet=cropCurrency(c);if(state[wallet]<c.price)return notify(`Moedas insuficientes para comprar ${c.name}.`);state[wallet]-=c.price;state.inventory[d.buy]=(state.inventory[d.buy]||0)+1;remember('Comprou '+c.name);markDirty();refresh();notify('Semente comprada!')}
@@ -3184,31 +3519,34 @@ if(d.seed)chooseSeed(d.seed);if(d.open)openModal(d.open);if(d.tool){closeModal()
 if(d.export){if(writeLocked||!cloudUser)return notify('Entre na sua conta para exportar o backup da fazenda.');downloadBackup()}if(d.import){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de importar um backup.');$('import-file').click()}if(d.reset&&confirm('Deseja realmente iniciar uma NOVA fazenda? Recomendamos exportar um backup primeiro.')){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de reiniciar a fazenda.');state=newGame();markDirty();refresh();closeModal();notify('Nova fazenda iniciada e será salva na nuvem.')}});
 
 $('modal-body').addEventListener('click',e=>{
+ const sceneButton=e.target.closest('[data-friend-scene]');
+ if(sceneButton){
+  const scene=sceneButton.dataset.friendScene;
+  if(SCENE_BOUNDS[scene]){friendVisitedScene=scene;const bounds=SCENE_BOUNDS[scene],world=$('friend-farm-world');if(world)world.setAttribute('viewBox',[bounds.left,bounds.top,bounds.right-bounds.left,bounds.bottom-bounds.top].join(' '));document.querySelectorAll('[data-friend-scene]').forEach(button=>{const active=button.dataset.friendScene===scene;button.classList.toggle('is-active',active);button.classList.toggle('alt',!active);button.setAttribute('aria-pressed',String(active))})}
+  return;
+ }
  const plot=e.target.closest('[data-help-plot]');
  if(plot){
   const index=Number(plot.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
   if(!Number.isInteger(index)||!item||item.status==='grass')return;
-  selectedFriendPlot=index;renderModal();return;
+  selectedFriendPlot=index;friendSelectedArea='farm';friendSelectedAreaSlot=null;renderModal();return;
  }
- const action=e.target.closest('button[data-farm-help-action]');
- if(action){
-  e.preventDefault();
-  if(action.disabled)return;
-  const plotIndex=Number(action.dataset.farmHelpPlot),kind=action.dataset.farmHelpAction;
-  if(Number.isInteger(plotIndex)&&['harvest','water','pest','weed'].includes(kind))performFriendFarmHelp(plotIndex,kind);
- }
+ const action=e.target.closest('button[data-friend-action]');
+ if(action){e.preventDefault();if(action.disabled)return;const kind=action.dataset.friendAction,plotIndex=selectedFriendPlot;if(Number.isInteger(plotIndex)&&['harvest','water','pest','weed','plow','plant'].includes(kind)){if(kind==='plant'&&!friendSelectedCropId)return notify('Escolha uma semente do seu inventário.');performFriendFarmAction('farm',plotIndex,kind,kind==='plant'?friendSelectedCropId:null)}}
+ const areaHarvest=e.target.closest('button[data-friend-area-harvest]');
+ if(areaHarvest&&!areaHarvest.disabled){e.preventDefault();performFriendFarmAction(areaHarvest.dataset.friendAreaHarvest,Number(areaHarvest.dataset.friendAreaSlot),areaHarvest.dataset.friendAreaHarvest+'_harvest')}
 });
 $('modal-body').addEventListener('keydown',e=>{
  if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-help-plot]')){
   e.preventDefault();const index=Number(e.target.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
-  if(!item||item.status==='grass')return;selectedFriendPlot=index;renderModal();
+  if(!item||item.status==='grass')return;selectedFriendPlot=index;friendSelectedArea='farm';friendSelectedAreaSlot=null;renderModal();
  }
 });
-$('modal-body').addEventListener('change',e=>{if(e.target.id==='social-import-file')importSocialPackage(e.target.files[0]);if(e.target.id==='import-file')importBackup(e.target.files[0]);if(e.target.id==='profile-photo-file')processProfilePhoto(e.target.files?.[0])});$('modal-body').addEventListener('keydown',e=>{if(e.target.id==='farm-name-input'&&e.key==='Enter'){e.preventDefault();saveFarmName()}});
+$('modal-body').addEventListener('change',e=>{if(e.target.id==='friend-seed-select')friendSelectedCropId=e.target.value;if(e.target.id==='social-import-file')importSocialPackage(e.target.files[0]);if(e.target.id==='import-file')importBackup(e.target.files[0]);if(e.target.id==='profile-photo-file')processProfilePhoto(e.target.files?.[0])});$('modal-body').addEventListener('keydown',e=>{if(e.target.id==='farm-name-input'&&e.key==='Enter'){e.preventDefault();saveFarmName()}});
 $('quick-harvest').addEventListener('click',quickHarvest);$('quick-dig').addEventListener('click',quickDig);$('multi-select-plots')?.addEventListener('click',toggleMultiSelectPlots);$('multi-harvest-selected')?.addEventListener('click',harvestSelectedPlots);
 $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',fitWholeFarm);$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));document.querySelectorAll('[data-farm-scene]').forEach(button=>button.addEventListener('click',()=>switchFarmScene(button.dataset.farmScene)));
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
-window.addEventListener('resize',updateView);
+window.addEventListener('resize',()=>{if(activeScene==='sea'){const b=SCENE_BOUNDS.sea;view.zoom=sceneFitZoom('sea');view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2}updateView()});
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='ArrowLeft'){e.preventDefault();panView(-1)}if(e.key==='ArrowRight'){e.preventDefault();panView(1)}if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom;view.cy+=(e.key==='ArrowUp'?-1:1)*visibleH*.16;updateView()}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.1);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.1)});
 const pointerGeometry=e=>{
  const rect=svg.getBoundingClientRect();
@@ -3231,7 +3569,7 @@ $('playfield').addEventListener('pointerdown',e=>{
   pinchState={distance:dist,zoom:view.zoom,worldX:view.cx-visibleW/2+rx*visibleW,worldY:view.cy-visibleH/2+ry*visibleH};
   drag=null;e.preventDefault();return;
  }
- const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-modal],button');
+ const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-river-backpack],[data-river-rod],[data-sea-bag],[data-sea-net],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}

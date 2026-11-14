@@ -870,6 +870,163 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 @keyframes cf2-river-flow-b{from{stroke-dashoffset:-70}to{stroke-dashoffset:35}}
 @media(prefers-reduced-motion:reduce){#river-water-motion .river-current-flow path{animation:none!important}}
 
+/* Ferramentas de visita: mesma linguagem visual dos controles da fazenda. */
+.friend-farm-toolbar{display:grid;gap:9px;margin:12px 0;padding:12px;border:1px solid rgba(125,93,48,.25);border-radius:14px;background:rgba(250,244,224,.72)}
+.friend-farm-tools{display:flex;flex-wrap:wrap;gap:7px}
+.friend-farm-toolbar label{font-weight:800;font-size:.9rem}
+.friend-farm-toolbar .modal-select{width:100%;max-width:none}
+.friend-farm-toolbar button:disabled{opacity:.42;cursor:not-allowed}
+.friend-area-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0 18px}
+.friend-area-card{display:grid;gap:7px;align-content:start;padding:11px;border:1px solid rgba(125,93,48,.24);border-radius:12px;background:rgba(255,250,235,.78);min-width:0}
+.friend-area-card .symbol{font-size:1.7rem}
+.friend-area-card strong{font-size:.95rem}
+.friend-area-card small{line-height:1.4;color:#66533a}
+.friend-area-card button{width:100%}
+
+
+/* Visita completa: reutiliza o mundo real do proprietário nas três áreas. */
+.friend-scene-nav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.friend-scene-nav .modal-action.is-active{background:linear-gradient(#bfe16d,#75b82d);border-color:#6c9b2d;box-shadow:0 0 0 2px #fff1bd inset}
+.friend-farm-scene{display:block;width:100%;height:clamp(320px,52vh,620px);max-height:none;border:2px solid #8cae55;border-radius:13px;background:#8bc653;touch-action:pan-y;user-select:none}
+.friend-farm-scene [data-help-plot]{cursor:pointer}
+.friend-farm-scene .animal-wrap{pointer-events:none}
+@media(max-width:700px){.friend-farm-scene{height:clamp(260px,43vh,430px);max-height:none}.friend-scene-nav{gap:5px}.friend-scene-nav .modal-action{flex:1 1 auto}}
+
+
+/* O SVG da visita usa IDs isolados para não colidir com o mundo do visitante. */
+.friend-farm-scene #friend-garden-layer .plot-item{pointer-events:none}
+.friend-farm-scene #friend-garden-layer .plot-hit{fill:transparent;fill-opacity:0;stroke:transparent;stroke-width:1;pointer-events:all;cursor:pointer}
+.friend-farm-scene #friend-garden-layer .plot-hit:hover{fill:#fff1a1;fill-opacity:.2;stroke:#fff0a1;stroke-width:3}
+.friend-farm-scene #friend-garden-layer .plot-selection{fill:#ffe07a;fill-opacity:.22;stroke:#ffdf64;stroke-width:5;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(94,55,10,.5))}
+.friend-farm-scene #friend-crop-layer{pointer-events:none!important}
+.friend-farm-scene #friend-animal-layer,.friend-farm-scene #friend-decoration-layer{pointer-events:none!important}
+.friend-farm-scene #friend-animal-layer *,.friend-farm-scene #friend-decoration-layer *,.friend-farm-scene .animal-wrap{pointer-events:none!important}
+.friend-farm-scene [data-river-fishing],.friend-farm-scene [data-lake-open],.friend-farm-scene [data-orchard-slot],.friend-farm-scene [data-forest-slot]{pointer-events:none!important;cursor:default!important}
+.friend-farm-scene #friend-river-water-motion{opacity:0;transition:opacity .5s ease;pointer-events:none}
+.friend-farm-scene #friend-river-water-motion.is-active{opacity:1}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-a path{animation:cf2-river-flow-a 6.5s linear infinite}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-b path{animation:cf2-river-flow-b 8s linear infinite}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-a path:nth-child(3n){animation-delay:-2.1s}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-a path:nth-child(3n + 1){animation-delay:-4.2s}
+.friend-farm-scene #friend-river-water-motion .river-current-flow-b path:nth-child(2n){animation-delay:-3.5s}
+.friend-farm-scene[data-farm-theme="christmas"] #friend-ground-layer{filter:saturate(.88) brightness(1.035)}
+.friend-farm-scene[data-farm-theme="autumn"] #friend-ground-layer{filter:saturate(.93) sepia(.12)}
+.friend-farm-scene[data-farm-theme="van_gogh"] #friend-ground-layer{filter:saturate(1.18) contrast(1.035)}
+.friend-farm-scene[data-farm-theme="greek"] #friend-ground-layer{filter:saturate(.9) brightness(1.025)}
+.friend-farm-scene[data-farm-theme="science"] #friend-ground-layer{filter:saturate(.85) hue-rotate(5deg)}
+
+.friend-snapshot-outdated{margin:12px 0;padding:18px;border:2px dashed #bd995c;border-radius:12px;background:#fff8e8;color:#684a25;text-align:center}
+.friend-snapshot-outdated p{margin:8px 0 0;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.friend-farm-scene #friend-river-water-motion .river-current-flow path{animation:none!important}}
+
+/* Cena Mar: janela de pesca responsiva sem alterar os elementos do cenário. */
+body.sea-fishing-open .dialog{width:min(900px,96vw);max-height:min(90dvh,860px)}
+body.sea-fishing-open .modal-body{max-height:calc(min(90dvh,860px) - 72px);overscroll-behavior:contain}
+body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
+body.sea-fishing-open .fishing-rod-card{min-width:0;min-height:0;padding:10px}
+body.sea-fishing-open .fishing-rod-card button{min-height:42px}
+@media(max-width:900px) and (orientation:portrait){
+ body.sea-fishing-open .dialog{width:min(94vw,720px);max-height:92dvh}
+ body.sea-fishing-open .modal-body{max-height:calc(92dvh - 72px)}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px) and (orientation:portrait){
+ body.sea-fishing-open .dialog{width:96vw;max-height:94dvh;border-width:3px;border-radius:13px}
+ body.sea-fishing-open .dialog-head{padding:8px 11px}
+ body.sea-fishing-open .dialog-head h2{font-size:18px}
+ body.sea-fishing-open .modal-body{max-height:calc(94dvh - 58px);padding:9px}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ body.sea-fishing-open .fishing-rod-card{padding:8px;gap:5px}
+ body.sea-fishing-open .fishing-rod-card .symbol{font-size:25px}
+ body.sea-fishing-open .fishing-rod-card small{font-size:10px}
+ body.sea-fishing-open .fishing-rod-card button,body.sea-fishing-open .modal-action{min-height:44px;padding:8px 9px}
+}
+@media(max-width:700px) and (orientation:landscape){
+ body.sea-fishing-open .dialog{width:96vw;max-height:calc(100dvh - 8px);border-width:3px}
+ body.sea-fishing-open .dialog-head{padding:6px 11px}
+ body.sea-fishing-open .dialog-head h2{font-size:17px}
+ body.sea-fishing-open .modal-body{max-height:calc(100dvh - 58px);padding:8px}
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ body.sea-fishing-open .fishing-rod-card{padding:7px;gap:4px}
+ body.sea-fishing-open .fishing-rod-card .symbol{font-size:23px}
+ body.sea-fishing-open .fishing-rod-card small{font-size:9px}
+ body.sea-fishing-open .fishing-rod-card button,body.sea-fishing-open .modal-action{min-height:40px;padding:6px 8px}
+}
+@media(min-width:701px) and (orientation:landscape){
+ body.sea-fishing-open .fishing-rods{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+/* Mar: fundo integral, cenário costeiro mais rico e pontos de interação no barco. */
+.playfield.sea-scene-active{background:#0b6486;background-image:linear-gradient(180deg,#83cce7 0%,#c5e6e8 34%,#287f9c 49%,#07506f 100%)}
+.playfield.sea-scene-active #world{background:transparent}
+.farm-scene-navigation button[data-farm-scene="sea"]{background:linear-gradient(#e4f8fa,#a8dce4);border-color:#6caab4;color:#235b69}
+.farm-scene-navigation button[data-farm-scene="sea"].active{background:linear-gradient(#5bb8ca,#19788e);border-color:#125b70;color:#fff}
+#sea-landscape [data-sea-bag],#sea-landscape [data-sea-net]{cursor:pointer;filter:drop-shadow(0 3px 3px #25190f66);transition:filter .18s ease,transform .18s ease}
+#sea-landscape [data-sea-bag]:hover,#sea-landscape [data-sea-net]:hover{filter:drop-shadow(0 0 12px #fff0a4) brightness(1.12)}
+#sea-landscape [data-sea-bag]:focus,#sea-landscape [data-sea-net]:focus{outline:none;filter:drop-shadow(0 0 15px #fff0a4) brightness(1.15)}
+.sea-fishing-status{position:absolute;z-index:8;left:50%;bottom:clamp(22px,8vh,76px);transform:translateX(-50%);width:min(360px,calc(100% - 28px));padding:13px 18px;display:grid;gap:7px;text-align:center;border:2px solid #d8b77a;border-radius:16px;background:linear-gradient(145deg,#fff9e7ed,#d8eff0ed);box-shadow:0 8px 26px #063d5577;color:#285366;pointer-events:none;backdrop-filter:blur(5px)}
+.sea-fishing-status[hidden]{display:none}
+.sea-fishing-status strong{font-size:15px;color:#1c6278}
+.sea-fishing-status span{font-size:12px;font-weight:700}
+.sea-fishing-status>i{display:block;height:9px;border:1px solid #8ab6b7;border-radius:99px;overflow:hidden;background:#d0e3df}
+.sea-fishing-status>i b{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#55b7c6,#e5c66d);transition:width .2s linear}
+@media(max-width:700px){.sea-fishing-status{bottom:16px;padding:10px 13px}.farm-scene-navigation button[data-farm-scene="sea"]{padding-inline:7px}}
+
+/* Movimento ambiente do Mar: ondulação discreta, aves planando e barco flutuando. */
+#sea-water-ripples{animation:sea-ripple-drift 32s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sea-ripple-drift{0%{transform:translateX(0)}100%{transform:translateX(-150px)}}
+#sea-birds{animation:sea-birds-drift 34s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+#sea-birds .bird-position{transform-box:fill-box;transform-origin:center}
+#sea-birds .sea-bird{transform-box:fill-box;transform-origin:center}
+#sea-birds .bird-wing-left{transform-box:fill-box;transform-origin:100% 0%;animation:sea-wing-left 1.45s ease-in-out infinite}
+#sea-birds .bird-wing-right{transform-box:fill-box;transform-origin:0% 0%;animation:sea-wing-right 1.45s ease-in-out infinite}
+#sea-birds .bird-b .bird-wing-left,#sea-birds .bird-b .bird-wing-right{animation-delay:-.38s}
+#sea-birds .bird-c .bird-wing-left,#sea-birds .bird-c .bird-wing-right{animation-delay:-.82s}
+#sea-birds .bird-d .bird-wing-left,#sea-birds .bird-d .bird-wing-right{animation-delay:-1.08s}
+#sea-birds .bird-e .bird-wing-left,#sea-birds .bird-e .bird-wing-right{animation-delay:-.2s}
+@keyframes sea-birds-drift{0%{transform:translateX(-14px) translateY(3px)}100%{transform:translateX(32px) translateY(-8px)}}
+@keyframes sea-wing-left{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(24deg)}}
+@keyframes sea-wing-right{0%,100%{transform:rotate(7deg)}50%{transform:rotate(-24deg)}}
+#sea-boat-motion{transform-box:fill-box;transform-origin:50% 55%;animation:sea-boat-float 5.8s ease-in-out infinite}
+@keyframes sea-boat-float{0%,100%{transform:translateY(0) rotate(-.25deg)}50%{transform:translateY(7px) rotate(.35deg)}}
+@media(prefers-reduced-motion:reduce){#sea-water-ripples,#sea-birds,.sea-bird,#sea-boat-motion{animation:none!important}}
+
+
+/* Navegação de cena: Rio em azul e Pomar/Mata em verde, ambos distintos da Fazenda/Mar. */
+.farm-scene-navigation button[data-farm-scene="river"]{background:linear-gradient(#e5f4ff,#acd0f0);border-color:#78a9d2;color:#28577e}
+.farm-scene-navigation button[data-farm-scene="river"].active{background:linear-gradient(#6ab0e6,#286fae);border-color:#205b91;color:#fff}
+.farm-scene-navigation button[data-farm-scene="nature"]{background:linear-gradient(#e4f1c9,#b3d18a);border-color:#8eaf62;color:#46652b}
+.farm-scene-navigation button[data-farm-scene="nature"].active{background:linear-gradient(#8fbd56,#548b32);border-color:#456f29;color:#fff}
+
+/* Contagem e resultado da pesca ocupam a mesma posição, fora da barra inferior. */
+.sea-fishing-status{position:fixed;top:38%;bottom:auto;z-index:1000}
+.sea-fishing-status[data-scene="river"]{top:60%}
+.sea-fishing-status.is-result{position:fixed;top:38%;min-height:112px;padding:17px 22px;overflow:visible;animation:fish-toast-common .45s cubic-bezier(.2,.8,.2,1) both}
+.sea-fishing-status[data-scene="river"].is-result{top:60%}
+.sea-fishing-status .fishing-toast-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px}
+.sea-fishing-status .fishing-toast-heading{font-size:13px;letter-spacing:.08em}
+.sea-fishing-status .fishing-toast-fish{display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px}
+.sea-fishing-status .fishing-toast-icon{font-size:34px;filter:drop-shadow(0 2px 2px #0003)}
+.sea-fishing-status .fishing-toast-name{font-size:20px;font-weight:800}
+.sea-fishing-status .fishing-toast-detail{font-size:12px;opacity:.82}
+@media(max-width:700px){.sea-fishing-status{top:36%;width:min(340px,calc(100% - 24px))}.sea-fishing-status.is-result{top:36%}.sea-fishing-status[data-scene="river"]{top:61%}.sea-fishing-status[data-scene="river"].is-result{top:61%}}
+
+/* Controle da barra inferior: oculta sem alterar o desenho dos atalhos e permite reexibir pelo topo. */
+.bottom-nav-toggle{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 34px;width:34px;height:34px;padding:0;font-size:20px;line-height:1}
+@media(max-width:700px){
+ .bottom-nav-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:30px;height:30px;min-width:30px;padding:0;font-size:19px;line-height:1}
+ .app.bottom-navigation-hidden #mobile-navigation{display:none!important}
+ .app.bottom-navigation-hidden .tool-bar{bottom:calc(10px + env(safe-area-inset-bottom))}
+ .app.bottom-navigation-hidden .zoom-ui{bottom:calc(66px + env(safe-area-inset-bottom))}
+ .app.bottom-navigation-hidden .side-menu{bottom:calc(12px + env(safe-area-inset-bottom))}
+}
+
+
+/* Correção de acessibilidade das interações de pesca no Rio e controle universal da barra inferior. */
+#world #river-fishing-backpack,#world #river-fishing-rod{pointer-events:all;cursor:pointer;touch-action:manipulation;filter:drop-shadow(0 3px 3px #172b1766);transition:filter .16s ease}
+#world #river-fishing-backpack:hover,#world #river-fishing-rod:hover,#world #river-fishing-backpack:focus,#world #river-fishing-rod:focus{filter:drop-shadow(0 0 12px #fff0a4) brightness(1.12);outline:none}
+.app.bottom-navigation-hidden #mobile-navigation,.app.bottom-navigation-hidden .tool-bar{display:none!important}
+
 
 /* Tela de boas-vindas para novos fazendeiros */
 .welcome-help-button{width:100%;margin:0 0 16px}
