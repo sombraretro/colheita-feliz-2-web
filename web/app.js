@@ -2745,7 +2745,7 @@ function updateDayNight(){
   else{
    const sunsetProgress=phase==='sunset'?Math.max(0,Math.min(1,(minutes-1020)/120)):0;
    const sunY=phase==='sunset'?75+sunsetProgress*400:75;
-   environment.innerHTML+='<defs><clipPath id="sea-sky-horizon-clip"><rect x="3000" y="-700" width="11000" height="1170"/></clipPath></defs><g id="sea-day-sun" clip-path="url(#sea-sky-horizon-clip)" pointer-events="none" transform="translate(8500 '+sunY+')"><circle r="300" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".2"/><circle r="205" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'" stroke="'+(phase==='sunset'?'#ffd19a':'#fff3a0')+'" stroke-width="14"/><circle cx="-58" cy="-58" r="52" fill="#fff8c0" opacity=".48"/><path d="M-112 78Q-20 35 105 100" fill="none" stroke="#fff5c2" stroke-width="15" opacity=".32"/></g>';
+   const seaSun=$('sea-day-sun');if(seaSun)seaSun.setAttribute('transform','translate(8500 '+sunY+')');
   }
  }
 }
@@ -2856,6 +2856,7 @@ function renderSeaLandscapeMarkup(){
    <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
   </defs>
   <rect x="3000" y="-700" width="11000" height="2500" fill="url(#sea-sky-gradient)"/>
+  <g id="sea-day-sun" pointer-events="none" transform="translate(8500 75)"><circle r="300" fill="#fff36a" opacity=".2"/><circle r="205" fill="#ffe65b" stroke="#fff3a0" stroke-width="14"/><circle cx="-58" cy="-58" r="52" fill="#fff8c0" opacity=".48"/><path d="M-112 78Q-20 35 105 100" fill="none" stroke="#fff5c2" stroke-width="15" opacity=".32"/></g>
 
   <path d="M3000 270Q3500 215 4000 255T5000 245T6000 250T7000 245T8000 250T9000 240T10000 250T11000 230T12000 250T13000 235T14000 260V500H3000Z" fill="url(#sea-horizon-glow)"/>
   <g fill="#fff" opacity=".56">
