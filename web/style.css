@@ -1061,7 +1061,7 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 .hunt-backpack>span{font-size:clamp(30px,4vw,48px);line-height:1.05;filter:drop-shadow(0 3px 3px #142116aa)}
 .hunt-backpack small{font-size:clamp(9px,1vw,12px);font-weight:800;white-space:nowrap}
 .hunt-backpack:hover,.hunt-backpack:focus-visible{transform:translate(-50%,-54%) scale(1.05);filter:brightness(1.15);outline:2px solid #ffe4a0}
-.hunt-timer-widget{position:absolute;z-index:20;top:14px;right:14px;width:min(300px,calc(100% - 28px));padding:10px 13px;border:2px solid #b38a50;border-radius:13px;background:linear-gradient(145deg,rgba(255,249,227,.96),rgba(221,232,198,.94));box-shadow:0 6px 20px #172d1c66;color:#3f4b2d;pointer-events:none}
+.hunt-timer-widget{position:fixed;z-index:1200;top:70px;right:14px;width:min(300px,calc(100% - 28px));padding:10px 13px;border:2px solid #b38a50;border-radius:13px;background:linear-gradient(145deg,rgba(255,249,227,.96),rgba(221,232,198,.94));box-shadow:0 6px 20px #172d1c66;color:#3f4b2d;pointer-events:none}
 .hunt-timer-widget[hidden]{display:none!important}
 .hunt-timer-widget>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .hunt-timer-widget b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1121,7 +1121,7 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 .hunt-result-xp{text-align:center;margin:12px 0;padding:12px;border-radius:10px;background:#eaf1d8;color:#496b2d;font-weight:800}
 @media(max-width:700px){
  .hunt-backpack{left:72%;top:77%;padding:4px 7px}
- .hunt-timer-widget{top:8px;right:8px;width:min(260px,calc(100% - 16px));padding:8px 10px}
+ .hunt-timer-widget{top:58px;right:8px;width:min(260px,calc(100% - 16px));padding:8px 10px}
  .hunt-family-row{gap:4px}
  .hunt-family-btn{flex-direction:column;gap:2px;padding:6px 3px;font-size:10px}
  .hunt-family-btn>span{font-size:16px}
