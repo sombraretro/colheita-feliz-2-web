@@ -849,7 +849,6 @@ const ground=`<defs>
 <g id="farm-landscape" pointer-events="none">
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
- -->
 `;
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 updateSceneLandscapeVisibility();
