@@ -976,10 +976,17 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 #sea-water-ripples{animation:sea-ripple-drift 32s linear infinite;transform-box:fill-box;transform-origin:center}
 @keyframes sea-ripple-drift{0%{transform:translateX(0)}100%{transform:translateX(-150px)}}
 #sea-birds{animation:sea-birds-drift 34s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
-.sea-bird{transform-box:fill-box;transform-origin:center;animation:sea-bird-flap 1.7s ease-in-out infinite alternate}
-.sea-bird.bird-b{animation-delay:-.45s}.sea-bird.bird-c{animation-delay:-.9s}.sea-bird.bird-d{animation-delay:-1.2s}.sea-bird.bird-e{animation-delay:-.25s}
+#sea-birds .bird-position{transform-box:fill-box;transform-origin:center}
+#sea-birds .sea-bird{transform-box:fill-box;transform-origin:center}
+#sea-birds .bird-wing-left{transform-box:fill-box;transform-origin:100% 0%;animation:sea-wing-left 1.45s ease-in-out infinite}
+#sea-birds .bird-wing-right{transform-box:fill-box;transform-origin:0% 0%;animation:sea-wing-right 1.45s ease-in-out infinite}
+#sea-birds .bird-b .bird-wing-left,#sea-birds .bird-b .bird-wing-right{animation-delay:-.38s}
+#sea-birds .bird-c .bird-wing-left,#sea-birds .bird-c .bird-wing-right{animation-delay:-.82s}
+#sea-birds .bird-d .bird-wing-left,#sea-birds .bird-d .bird-wing-right{animation-delay:-1.08s}
+#sea-birds .bird-e .bird-wing-left,#sea-birds .bird-e .bird-wing-right{animation-delay:-.2s}
 @keyframes sea-birds-drift{0%{transform:translateX(-14px) translateY(3px)}100%{transform:translateX(32px) translateY(-8px)}}
-@keyframes sea-bird-flap{0%{transform:rotate(-9deg) scaleY(.78)}100%{transform:rotate(8deg) scaleY(1.08)}}
+@keyframes sea-wing-left{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(24deg)}}
+@keyframes sea-wing-right{0%,100%{transform:rotate(7deg)}50%{transform:rotate(-24deg)}}
 #sea-boat-motion{transform-box:fill-box;transform-origin:50% 55%;animation:sea-boat-float 5.8s ease-in-out infinite}
 @keyframes sea-boat-float{0%,100%{transform:translateY(0) rotate(-.25deg)}50%{transform:translateY(7px) rotate(.35deg)}}
 @media(prefers-reduced-motion:reduce){#sea-water-ripples,#sea-birds,.sea-bird,#sea-boat-motion{animation:none!important}}
