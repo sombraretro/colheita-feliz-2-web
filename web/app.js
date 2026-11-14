@@ -849,6 +849,16 @@ const ground=`<defs>
 <g id="farm-landscape" pointer-events="none">
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
+<!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
+<g id="curral-dirt-floor" pointer-events="none">
+ <path d="M1268 208H1772V772H1268Z" fill="#9a754f"/>
+ <path d="M1272 212H1768V768H1272Z" fill="#a7835d" opacity=".48"/>
+ <path d="M1280 300Q1370 270 1450 300T1610 294T1760 315L1760 390Q1660 365 1570 390T1390 385T1280 405Z" fill="#806044" opacity=".18"/>
+ <path d="M1280 575Q1380 545 1470 570T1635 565T1760 580V690Q1650 665 1550 692T1370 680T1280 700Z" fill="#77563b" opacity=".16"/>
+ <g fill="#6f5239" opacity=".28"><ellipse cx="1350" cy="335" rx="24" ry="7"/><ellipse cx="1585" cy="265" rx="18" ry="5"/><ellipse cx="1695" cy="470" rx="28" ry="7"/><ellipse cx="1420" cy="610" rx="22" ry="6"/><ellipse cx="1640" cy="725" rx="26" ry="7"/></g>
+ <g fill="#d1b18a" opacity=".34"><circle cx="1310" cy="470" r="3"/><circle cx="1480" cy="430" r="2.5"/><circle cx="1540" cy="650" r="3"/><circle cx="1725" cy="625" r="2.5"/><circle cx="1660" cy="355" r="2"/></g>
+ <path d="M1290 520Q1370 510 1435 520M1510 500Q1585 490 1660 500M1330 735Q1410 725 1485 735" fill="none" stroke="#c2a17a" stroke-width="2" opacity=".22" stroke-linecap="round"/>
+</g>
 `;
 $('ground-layer').innerHTML=ground+brickWalkwayMarkup();
 updateSceneLandscapeVisibility();
@@ -859,6 +869,7 @@ function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.len
 const roadLines=[[[532,890],[910,940],[1390,900],[2010,890],[2680,890],[3600,875],[4400,890]],[[532,890],[420,1010],[120,1040],[-300,1035],[-700,1025],[-1050,1030],[-1320,1020]],[[532,890],[510,830],[500,760],[500,720]],[[1120,455],[1185,455],[1210,470],[1240,505],[1285,560],[1330,650],[1370,740],[1400,820],[1410,865],[1390,900]]];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<48)return true}return false}
 function blocked(x,y){
+ if(x>1250&&x<1790&&y>190&&y<790)return true;
  if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
  if(x>680&&x<1150&&y>880&&y<1200)return true;
