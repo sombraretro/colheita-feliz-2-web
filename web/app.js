@@ -866,6 +866,10 @@ const ground=`<defs>
 <g id="farm-landscape" pointer-events="none">
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
+<!-- Cenário panorâmico do Rio: inclui a vegetação, o curso d'água, a ponte e o píer. -->
+<g id="river-landscape" pointer-events="none" style="display:none">
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3400" y="-350" width="3150" height="1743" preserveAspectRatio="none" pointer-events="none"/>
+</g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
  <path d="M1268 200H1772V772H1268Z" fill="#9a754f"/>
@@ -899,7 +903,7 @@ function blocked(x,y){
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
  if(x>2000&&x<3315&&y>-110&&y<590)return true;
- if(x>-2750&&x<-2100)return true;
+ if(x>=-3000&&x<=-700)return true;
  if(x>-660&&x<-100&&y>165&&y<500)return true;
  for(const [tx,ty,tw,th] of treePlacements)if(x>tx-35&&x<tx+tw+35&&y>ty-35&&y<ty+th+30)return true;
  return false;
@@ -1598,126 +1602,9 @@ function renderRiverBridgeMarkup(x,y,angle,half,tone,variant){
  </g>`;
 }
 function renderPondArea(){
- if(!state?.expansions?.pond)return '';
- return `<g id="pond-area" pointer-events="none" transform="translate(-1300 0)">
-  <defs>
-   <linearGradient id="riverBank" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#d7c18e"/><stop offset=".5" stop-color="#ad9160"/><stop offset="1" stop-color="#806342"/></linearGradient>
-   <linearGradient id="riverWater" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2e8296"/><stop offset=".38" stop-color="#55b7c0"/><stop offset=".7" stop-color="#287d98"/><stop offset="1" stop-color="#1c617b"/></linearGradient>
-   <clipPath id="riverClip"><path d="M-1390 -300 C-1285 -190 -1350 -45 -1250 105 C-1160 245 -1260 380 -1140 535 C-1030 675 -1160 825 -1040 1140 L-900 1140 C-1035 875 -900 735 -1000 575 C-1095 425 -970 270 -1080 115 C-1190 -35 -1100 -180 -1190 -300Z"/></clipPath>
-  </defs>
-  <path d="M-1400 -300 C-1300 -185 -1370 -35 -1270 115 C-1175 260 -1280 390 -1160 550 C-1050 690 -1180 850 -1060 1140 L-820 1140 C-945 860 -820 730 -925 585 C-1020 430 -890 265 -1000 105 C-1110 -50 -1020 -185 -1110 -300Z" fill="#3c6a32" opacity=".28"/>
-  <path d="M-1400 -300 C-1300 -185 -1370 -35 -1270 115 C-1175 260 -1280 390 -1160 550 C-1050 690 -1180 850 -1060 1140 L-820 1140 C-945 860 -820 730 -925 585 C-1020 430 -890 265 -1000 105 C-1110 -50 -1020 -185 -1110 -300Z" fill="url(#riverBank)" stroke="#7e6845" stroke-width="9"/>
-  <path d="M-1390 -300 C-1285 -190 -1350 -45 -1250 105 C-1160 245 -1260 380 -1140 535 C-1030 675 -1160 825 -1040 1140 L-900 1140 C-1035 875 -900 735 -1000 575 C-1095 425 -970 270 -1080 115 C-1190 -35 -1100 -180 -1190 -300Z" fill="url(#riverWater)" stroke="#d9c79a" stroke-width="7"/>
-  <g class="river-flow" clip-path="url(#riverClip)">
-   <path d="M-1420 -260 C-1320 -100 -1390 10 -1285 160 S-1295 420 -1170 570 S-1190 870 -1060 1160" fill="none" stroke="#b9e9df" stroke-width="13" opacity=".23"/>
-   <path d="M-1260 -280 C-1160 -100 -1230 0 -1125 150 S-1140 405 -1015 560 S-1030 850 -920 1160" fill="none" stroke="#e5ffff" stroke-width="5" opacity=".34"/>
-   <path d="M-1370 45q65-28 115 5m-100 18q60-20 105 8M-1245 330q65-22 115 10m-115 18q58-18 110 8M-1125 690q60-25 112 5m-102 20q56-18 105 8" fill="none" stroke="#d5f2e9" stroke-width="6" stroke-linecap="round" opacity=".24"/>
-   <ellipse cx="-1190" cy="230" rx="72" ry="150" fill="#b8e7d8" opacity=".1"/><ellipse cx="-1080" cy="740" rx="55" ry="125" fill="#c2f0e4" opacity=".1"/>
-  </g>
-  <g class="river-reeds" fill="none" stroke="#438b32" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-   <path d="M-1350 5v-24M-1245 300v-27M-1160 520v-25M-1110 930v-27M-930 110v-22M-850 480v-24M-900 1030v-25" stroke-width="5"/>
-   <path class="river-leaf" d="M-1350 -19q-12-20-25-24q-3 18 25 24Z" fill="#65a943" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1350 -19q12-22 26-26q5 18-26 26Z" fill="#83bd50" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1245 273q-14-20-27-24q-3 18 27 24Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1245 273q13-22 28-25q5 18-28 25Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1160 495q-11-18-23-22q-3 16 23 22Z" fill="#6da947" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1160 495q13-20 25-23q5 17-25 23Z" fill="#8fc45a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1110 903q-13-21-27-25q-3 18 27 25Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-1110 903q13-22 27-25q5 18-27 25Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-930 88q-11-17-23-20q-3 15 23 20Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-930 88q12-18 24-21q5 16-24 21Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-850 456q-12-18-24-22q-3 16 24 22Z" fill="#6da947" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-850 456q12-19 25-22q5 16-25 22Z" fill="#91c95a" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-900 1005q-12-18-25-22q-3 16 25 22Z" fill="#72b84b" stroke="#397b2e"/>
-   <path class="river-leaf" d="M-900 1005q13-19 25-22q5 16-25 22Z" fill="#91c95a" stroke="#397b2e"/>
-  </g>
-  <g class="river-bank-plants" opacity=".96" stroke="#397b2e" stroke-width="3" stroke-linecap="round">
-   <g fill="#72b84b">
-    <path d="M-1370 -75v-24M-1270 265v-26M-1190 610v-23M-1125 1010v-26"/>
-    <path class="river-leaf" d="M-1370 -99q-20-12-24 4q7 15 24 20Z"/><path class="river-leaf" d="M-1370 -99q17-22 20-26q8 18-20 26Z"/>
-    <path class="river-leaf" d="M-1270 239q-18-12-24 4q7 15 24 22Z"/><path class="river-leaf" d="M-1270 239q18-23 22-27q8 17-22 27Z"/>
-    <path class="river-leaf" d="M-1190 587q-19-11-23 4q7 14 23 19Z"/><path class="river-leaf" d="M-1190 587q17-22 21-25q8 17-21 25Z"/>
-    <path class="river-leaf" d="M-1125 984q-20-12-25 4q8 16 25 22Z"/><path class="river-leaf" d="M-1125 984q19-24 23-27q8 18-23 27Z"/>
-   </g>
-   <g fill="#91c95a">
-    <path d="M-900 55v-23M-830 540v-24"/>
-    <path class="river-leaf" d="M-900 32q-18-10-22 4q6 13 22 19Z"/><path class="river-leaf" d="M-900 32q16-21 20-24q7 16-20 24Z"/>
-    <path class="river-leaf" d="M-830 516q-18-11-23 4q7 15 23 20Z"/><path class="river-leaf" d="M-830 516q17-21 21-25q8 17-21 25Z"/>
-   </g>
-  </g>
-  <g fill="#e4d5b2" stroke="#9a8866" stroke-width="4"><ellipse cx="-1325" cy="150" rx="22" ry="12"/><ellipse cx="-1270" cy="430" rx="17" ry="10"/><ellipse cx="-1175" cy="820" rx="24" ry="13"/><ellipse cx="-980" cy="300" rx="19" ry="11"/><ellipse cx="-875" cy="850" rx="21" ry="12"/></g>
-  ${[
-   [-1235,-120,-6,128,'#b7834d',0],
-   [-1115,180,-32,126,'#477da8',1],
-   [-1107,500,-30,92,'#568b58',2],
-   [-1048,830,-21,128,'#a34f43',3]
-  ].map(b=>renderRiverBridgeMarkup(...b)).join('')}
-  <g class="river-left-grove" pointer-events="none">
-   ${[
-    [-1715,-245,.64,'hue-rotate(-8deg) saturate(1.12)'],
-    [-1585,-270,.78,'hue-rotate(12deg) saturate(1.18)'],
-    [-1460,-235,.58,'hue-rotate(-18deg) saturate(1.2)'],
-    [-1650,-80,.82,'hue-rotate(28deg) saturate(1.1)'],
-    [-1510,-65,.68,'hue-rotate(-4deg) saturate(1.25)'],
-    [-1740,105,.58,'hue-rotate(42deg) saturate(1.15)'],
-    [-1615,130,.76,'hue-rotate(-12deg) saturate(1.2)'],
-    [-1480,115,.62,'hue-rotate(18deg) saturate(1.16)'],
-    [-1690,300,.72,'hue-rotate(6deg) saturate(1.2)'],
-    [-1550,285,.86,'hue-rotate(34deg) saturate(1.12)'],
-    [-1435,325,.56,'hue-rotate(-20deg) saturate(1.22)'],
-    [-1650,485,.62,'hue-rotate(22deg) saturate(1.18)'],
-    [-1510,475,.8,'hue-rotate(-8deg) saturate(1.15)'],
-    [-1730,635,.72,'hue-rotate(38deg) saturate(1.1)'],
-    [-1590,650,.88,'hue-rotate(-15deg) saturate(1.2)'],
-    [-1460,625,.62,'hue-rotate(12deg) saturate(1.18)'],
-    [-1680,805,.62,'hue-rotate(-5deg) saturate(1.16)'],
-    [-1540,820,.82,'hue-rotate(30deg) saturate(1.15)'],
-    [-1425,790,.56,'hue-rotate(-18deg) saturate(1.2)'],
-    [-1645,970,.78,'hue-rotate(16deg) saturate(1.14)'],
-    [-1500,985,.7,'hue-rotate(-10deg) saturate(1.2)'],
-    [-1730,1110,.6,'hue-rotate(35deg) saturate(1.12)'],
-    [-1590,1135,.76,'hue-rotate(-20deg) saturate(1.18)'],
-    [-1460,1090,.62,'hue-rotate(8deg) saturate(1.2)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".2"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:none" opacity="${i%5===0?.94:1}"/></g>`).join('')} 
-   ${[
-    [-1845,-300,.72,'hue-rotate(68deg) saturate(1.35)'],
-    [-1980,-270,.86,'sepia(.42) saturate(1.45) hue-rotate(350deg)'],
-    [-2125,-235,.66,'hue-rotate(145deg) saturate(1.25)'],
-    [-2260,-190,.78,'hue-rotate(205deg) saturate(1.3)'],
-    [-1875,-105,.9,'hue-rotate(82deg) saturate(1.4)'],
-    [-2025,-70,.62,'hue-rotate(235deg) saturate(1.25)'],
-    [-2170,-35,.82,'sepia(.55) saturate(1.55) hue-rotate(5deg)'],
-    [-2300,35,.68,'hue-rotate(165deg) saturate(1.35)'],
-    [-1850,125,.65,'hue-rotate(205deg) saturate(1.4)'],
-    [-1995,155,.84,'hue-rotate(58deg) saturate(1.4)'],
-    [-2140,190,.72,'hue-rotate(285deg) saturate(1.35)'],
-    [-2280,245,.9,'sepia(.35) saturate(1.6) hue-rotate(330deg)'],
-    [-1885,325,.82,'hue-rotate(125deg) saturate(1.35)'],
-    [-2030,355,.64,'hue-rotate(220deg) saturate(1.45)'],
-    [-2180,390,.88,'hue-rotate(42deg) saturate(1.5)'],
-    [-2320,455,.7,'hue-rotate(175deg) saturate(1.35)'],
-    [-1855,525,.76,'sepia(.48) saturate(1.5) hue-rotate(345deg)'],
-    [-2005,555,.9,'hue-rotate(95deg) saturate(1.35)'],
-    [-2150,590,.62,'hue-rotate(245deg) saturate(1.4)'],
-    [-2295,645,.84,'hue-rotate(155deg) saturate(1.3)'],
-    [-1880,715,.68,'hue-rotate(35deg) saturate(1.5)'],
-    [-2025,745,.86,'hue-rotate(195deg) saturate(1.35)'],
-    [-2175,780,.72,'sepia(.5) saturate(1.55) hue-rotate(8deg)'],
-    [-2315,845,.9,'hue-rotate(115deg) saturate(1.4)'],
-    [-1850,915,.82,'hue-rotate(225deg) saturate(1.35)'],
-    [-1995,945,.65,'hue-rotate(72deg) saturate(1.45)'],
-    [-2140,980,.88,'hue-rotate(165deg) saturate(1.35)'],
-    [-2285,1050,.7,'sepia(.4) saturate(1.55) hue-rotate(340deg)'],
-    [-1900,1110,.76,'hue-rotate(255deg) saturate(1.3)'],
-    [-2050,1140,.86,'hue-rotate(105deg) saturate(1.4)'],
-    [-2200,1170,.68,'hue-rotate(25deg) saturate(1.5)']
-   ].map(([x,y,s,filter],i)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="8" rx="91" ry="15" fill="#294d25" opacity=".22"/><image href="/assets/arvore.png" x="-94" y="-265" width="188" height="265" preserveAspectRatio="none" style="filter:none" opacity="${i%6===0?.96:1}"/></g>`).join('')}
-   <g class="grove-flowers" stroke="#557b35" stroke-width="2">
-    ${[[-1660,-12,'#f0c94f'],[-1510,48,'#e879a5'],[-1735,245,'#f5e7d2'],[-1465,225,'#9d83d2'],[-1600,405,'#efc84f'],[-1740,555,'#e879a5'],[-1485,535,'#f4e4c7'],[-1650,755,'#9d83d2'],[-1510,905,'#f0c94f'],[-1730,1030,'#e879a5'],[-1450,1015,'#f4e4c7']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><path d="M0 7v-12" stroke-width="2.5"/><circle cy="-16" r="4.5" fill="${c}"/><circle cx="-5.5" cy="-13" r="4" fill="${c}"/><circle cx="5.5" cy="-13" r="4" fill="${c}"/><circle cy="-10" r="3.8" fill="${c}"/><circle cy="-13" r="2" fill="#f8e6a7"/></g>`).join('')}
-   </g>
-  </g>
-
- </g>`;
+ // A paisagem do Rio, incluindo árvores, água, ponte e píer, agora é a imagem
+ // panorâmica em #river-landscape. Não renderizar a antiga vegetação/água por cima.
+ return '';
 }
 
 function professionXPReward(key,baseXP){const level=specialistLevelFromXP(state.specialistProgress?.[key]?.xp||0);return Math.max(1,Math.round(Math.max(0,Number(baseXP)||0)*(1+Math.max(0,level-1)*.2)))}
@@ -3105,6 +2992,8 @@ async function importBackup(file){if(writeLocked||!cloudUser||cloudSessionReadyU
 function updateSceneLandscapeVisibility(){
  const farmLandscape=$('farm-landscape');
  if(farmLandscape)farmLandscape.style.display=activeScene==='farm'?'':'none';
+ const riverLandscape=$('river-landscape');
+ if(riverLandscape)riverLandscape.style.display=activeScene==='river'?'':'none';
 }
 function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,fitHeight=Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*.985))}
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
