@@ -912,7 +912,7 @@ const ground=`<defs>
 <!-- Cenário panorâmico do Pomar e Mata: continuação texturizada da Fazenda. -->
 <g id="nature-landscape" pointer-events="none">
  <defs>
-  <mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1300" y="-250" width="4900" height="2475"><rect x="1300" y="-250" width="4900" height="2475" fill="white"/><rect x="1245" y="175" width="550" height="630" fill="black"/></mask>
+  <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0"><stop offset="0" stop-color="white" stop-opacity="0"/><stop offset=".22" stop-color="white" stop-opacity=".12"/><stop offset=".48" stop-color="white" stop-opacity=".42"/><stop offset=".76" stop-color="white" stop-opacity=".82"/><stop offset="1" stop-color="white" stop-opacity="1"/></linearGradient><mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1245" y="-250" width="4955" height="2475"><rect x="1300" y="-250" width="4900" height="2475" fill="url(#nature-farm-seam-gradient)"/><rect x="1245" y="175" width="550" height="630" fill="black"/></mask>
  </defs>
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4900" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
 </g>
