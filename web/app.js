@@ -702,27 +702,25 @@ function playSfx(kind){
 // Trilhas MP3: nove músicas gerais e temas próprios para as pescarias.
 const GENERAL_MUSIC_FILES=Array.from({length:9},(_,i)=>'/song/general/NewFarmSong'+(i?i+1:'')+'.mp3');
 const SPECIAL_MUSIC_FILES={river:'/song/river/PescaRio.mp3',sea:'/song/sea/PescaMar.mp3'};
-let musicAudio=null,musicContext='general',musicFadeLevel=1,musicFadeTimer=null,musicTransitionId=0,musicGeneralPath='',musicGeneralTime=0;
-function ensureMusicAudio(){
- if(!musicAudio){
-  musicAudio=new Audio();musicAudio.preload='auto';musicAudio.volume=musicVolume/100;
-  musicAudio.addEventListener('timeupdate',()=>{if(musicAudio?.dataset.musicContext==='general'&&!musicAudio.paused)musicGeneralTime=musicAudio.currentTime});
-  musicAudio.addEventListener('ended',()=>{musicPlaying=false;if(!musicEnabled)return;if(musicAudio.dataset.musicContext==='general'){musicGeneralPath='';musicGeneralTime=0;playNextGeneralMusic()}});
- }
- return musicAudio;
+let musicAudio=null,musicSpareAudio=null,musicContext='general',musicFadeLevel=1,musicOutFadeLevel=0,musicFadeTimer=null,musicTransitionId=0,musicGeneralPath='',musicGeneralTime=0;
+function createMusicAudio(){
+ const audio=new Audio();audio.preload='auto';audio.volume=0;
+ audio.addEventListener('timeupdate',()=>{if(audio===musicAudio&&audio.dataset.musicContext==='general'&&!audio.paused)musicGeneralTime=audio.currentTime});
+ audio.addEventListener('ended',()=>{if(audio!==musicAudio||!musicEnabled)return;musicPlaying=false;if(audio.dataset.musicContext==='general'){musicGeneralPath='';musicGeneralTime=0;playNextGeneralMusic()}});
+ return audio;
 }
+function ensureMusicAudio(){if(!musicAudio&&!musicSpareAudio)musicSpareAudio=createMusicAudio();return musicAudio||musicSpareAudio}
 function applyAudioVolumes(){
  if(musicBus)musicBus.gain.setTargetAtTime((musicVolume/100)*2.15,audioCtx.currentTime,.04);
  if(sfxBus)sfxBus.gain.setTargetAtTime((sfxVolume/100)*1.8,audioCtx.currentTime,.025);
- if(musicAudio)musicAudio.volume=Math.max(0,Math.min(1,(musicVolume/100)*musicFadeLevel));
+ const base=musicVolume/100;if(musicAudio)musicAudio.volume=Math.max(0,Math.min(1,base*musicFadeLevel));if(musicSpareAudio)musicSpareAudio.volume=Math.max(0,Math.min(1,base*musicOutFadeLevel));
 }
-function fadeMusicTo(target,duration=650,done){
+function fadeMusicTransition(outgoing,fromLevel){
  if(musicFadeTimer)clearInterval(musicFadeTimer);
- const from=musicFadeLevel,started=Date.now();
+ const started=Date.now(),duration=700;
  musicFadeTimer=setInterval(()=>{
-  const progress=Math.min(1,(Date.now()-started)/duration);
-  musicFadeLevel=from+(target-from)*progress;applyAudioVolumes();
-  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;if(done)done()}
+  const progress=Math.min(1,(Date.now()-started)/duration);musicFadeLevel=progress;musicOutFadeLevel=fromLevel*(1-progress);applyAudioVolumes();
+  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;if(outgoing)outgoing.pause();musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=true}
  },35);
 }
 function nextGeneralMusicPath(){
@@ -735,18 +733,22 @@ function nextGeneralMusicPath(){
 }
 function playMusicFile(path,context,resumeAt=0){
  if(!musicEnabled)return;
- const audio=ensureMusicAudio(),transition=++musicTransitionId;
- const begin=()=>{
-  if(transition!==musicTransitionId)return;
-  if(audio.dataset.musicContext==='general'&&musicGeneralPath===audio.getAttribute('src'))musicGeneralTime=audio.currentTime;
-  audio.pause();audio.src=path;audio.dataset.musicContext=context;audio.loop=context!=='general';
-  try{audio.currentTime=Math.max(0,resumeAt||0)}catch{}
-  musicFadeLevel=0;applyAudioVolumes();
-  const playing=audio.play();
-  if(playing&&typeof playing.then==='function')playing.then(()=>{if(transition===musicTransitionId){musicPlaying=true;fadeMusicTo(1,700)}}).catch(()=>{musicPlaying=false});
-  else{musicPlaying=true;fadeMusicTo(1,700)}
+ if(musicFadeTimer){clearInterval(musicFadeTimer);musicFadeTimer=null}
+ const outgoing=musicAudio;
+ if(musicSpareAudio&&musicSpareAudio!==outgoing){musicSpareAudio.pause();musicOutFadeLevel=0}
+ const incoming=musicSpareAudio||createMusicAudio(),transition=++musicTransitionId;
+ incoming.pause();incoming.src=path;incoming.dataset.musicContext=context;incoming.loop=context!=='general';incoming.volume=0;
+ try{incoming.currentTime=Math.max(0,resumeAt||0)}catch{}
+ const activate=()=>{
+  if(transition!==musicTransitionId){incoming.pause();return}
+  if(outgoing&&outgoing.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=outgoing.currentTime;
+  const oldLevel=outgoing&&!outgoing.paused?musicFadeLevel:0;
+  musicAudio=incoming;musicSpareAudio=outgoing;musicFadeLevel=0;musicOutFadeLevel=oldLevel;applyAudioVolumes();
+  fadeMusicTransition(outgoing,oldLevel);
  };
- if(!audio.paused&&audio.currentSrc)fadeMusicTo(0,550,begin);else begin();
+ const playing=incoming.play();
+ if(playing&&typeof playing.then==='function')playing.then(activate).catch(()=>{if(transition===musicTransitionId)musicPlaying=!!(outgoing&&!outgoing.paused)});
+ else activate();
 }
 function playNextGeneralMusic(){
  if(!musicEnabled||musicContext!=='general')return;
@@ -754,10 +756,8 @@ function playNextGeneralMusic(){
 }
 function startCurrentMusic(){
  if(!musicEnabled)return;
- if(musicContext==='general'){
-  if(musicGeneralPath)playMusicFile(musicGeneralPath,'general',musicGeneralTime);
-  else playNextGeneralMusic();
- }else playMusicFile(SPECIAL_MUSIC_FILES[musicContext],musicContext,0);
+ if(musicContext==='general'){if(musicGeneralPath)playMusicFile(musicGeneralPath,'general',musicGeneralTime);else playNextGeneralMusic()}
+ else playMusicFile(SPECIAL_MUSIC_FILES[musicContext],musicContext,0);
 }
 function setMusicContext(context){
  const next=context==='river'||context==='sea'?context:'general';
@@ -769,10 +769,14 @@ function setMusicContext(context){
 }
 function stopMusicPlayback(){
  if(musicFadeTimer)clearInterval(musicFadeTimer);musicFadeTimer=null;
- if(!musicAudio){musicPlaying=false;return}
- const audio=musicAudio,transition=++musicTransitionId;
- const finish=()=>{if(transition!==musicTransitionId)return;if(audio.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=audio.currentTime;audio.pause();musicFadeLevel=1;applyAudioVolumes();musicPlaying=false};
- if(!audio.paused)fadeMusicTo(0,350,finish);else finish();
+ const active=musicAudio,spare=musicSpareAudio,transition=++musicTransitionId;
+ if((!active||active.paused)&&(!spare||spare.paused)){musicPlaying=false;return}
+ const activeFrom=musicFadeLevel,spareFrom=musicOutFadeLevel,started=Date.now(),duration=350;
+ musicFadeTimer=setInterval(()=>{
+  if(transition!==musicTransitionId){clearInterval(musicFadeTimer);musicFadeTimer=null;return}
+  const progress=Math.min(1,(Date.now()-started)/duration);musicFadeLevel=activeFrom*(1-progress);musicOutFadeLevel=spareFrom*(1-progress);applyAudioVolumes();
+  if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;for(const audio of [active,spare])if(audio){if(audio.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=audio.currentTime;audio.pause()}musicFadeLevel=1;musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=false}
+ },35);
 }
 function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.04)}
 function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startCurrentMusic();else stopMusicPlayback()}
