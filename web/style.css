@@ -882,3 +882,12 @@ html.orientation-landscape-fallback .more-menu button{flex:0 0 auto}
 .friend-area-card strong{font-size:.95rem}
 .friend-area-card small{line-height:1.4;color:#66533a}
 .friend-area-card button{width:100%}
+
+
+/* Visita completa: reutiliza o mundo real do proprietário nas três áreas. */
+.friend-scene-nav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.friend-scene-nav .modal-action.is-active{background:linear-gradient(#bfe16d,#75b82d);border-color:#6c9b2d;box-shadow:0 0 0 2px #fff1bd inset}
+.friend-farm-scene{display:block;width:100%;height:clamp(320px,52vh,620px);max-height:none;border:2px solid #8cae55;border-radius:13px;background:#8bc653;touch-action:pan-y;user-select:none}
+.friend-farm-scene [data-help-plot]{cursor:pointer}
+.friend-farm-scene .animal-wrap{pointer-events:none}
+@media(max-width:700px){.friend-farm-scene{height:clamp(260px,43vh,430px);max-height:none}.friend-scene-nav{gap:5px}.friend-scene-nav .modal-action{flex:1 1 auto}}
