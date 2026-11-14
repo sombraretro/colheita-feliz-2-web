@@ -1444,8 +1444,9 @@ function startHunt(familyId,animalId,randomMode=false){
    mode='random-long';durationMs=huntRandomInt(family.max*60,family.max*120)*1000;multiplier=3;
   }
  }else{
-  family=HUNT_FAMILIES[familyId];animal=huntAnimal(familyId,animalId);
-  if(!family||!animal)return notify('Selecione uma família e um animal válidos.');
+  family=HUNT_FAMILIES[familyId];
+  if(!family)return notify('Selecione uma família de caça válida.');
+  animal=family.animals[huntRandomInt(0,family.animals.length-1)];
   durationMs=huntRandomInt(family.min,family.max)*60000;
  }
  const now=Date.now();
@@ -1492,9 +1493,9 @@ function renderHuntMenu(){
  if(h.pendingResult)out+='<div class="offline-feature"><span>🎒</span><b>Há um resultado aguardando</b><p>Abra a janela de resultado antes de iniciar outra expedição.</p><button class="modal-action" data-show-hunt-result>Ver resultado</button></div>';
  const familyButtons=Object.entries(HUNT_FAMILIES).map(([id,f])=>'<button type="button" class="hunt-family-btn '+f.color+(selectedHuntFamily===id?' is-selected':'')+'" data-hunt-family="'+id+'" aria-pressed="'+(selectedHuntFamily===id?'true':'false')+'"><span>'+f.icon+'</span>'+f.label+'</button>').join('');
  out+='<h3>Escolha o tipo de caça</h3><div class="hunt-family-row">'+familyButtons+'<button type="button" class="hunt-family-btn random" data-start-random-hunt><span>🎲</span>Aleatória</button></div>';
- const family=HUNT_FAMILIES[selectedHuntFamily],selected=family.animals.some(a=>a.id===selectedHuntAnimal)?selectedHuntAnimal:family.animals[0].id;selectedHuntAnimal=selected;
- out+='<div class="hunt-animal-heading"><b>'+family.icon+' '+family.label+'</b><small>Escolha um dos seis animais · '+family.min+' a '+family.max+' min</small></div><div class="hunt-animal-grid">'+family.animals.map(a=>'<button type="button" class="hunt-animal-btn '+(selected===a.id?'is-selected':'')+'" data-hunt-animal="'+a.id+'" aria-pressed="'+(selected===a.id?'true':'false')+'">'+safe(a.name)+'</button>').join('')+'</div>';
- out+='<p class="historical-note">A atividade é representada somente por texto. Nenhum animal ou ação de caça será exibido no cenário.</p><button class="modal-action hunt-start-btn" data-start-hunt>▶ Iniciar</button>';return out;
+ const family=HUNT_FAMILIES[selectedHuntFamily];
+ out+='<div class="hunt-animal-heading"><b>'+family.icon+' '+family.label+'</b><small>Um dos seis animais será sorteado · '+family.min+' a '+family.max+' min</small></div>';
+ out+='<p class="historical-note">O animal e o recurso correspondente são definidos aleatoriamente no início da expedição. A atividade é representada somente por texto, sem animais ou ações de caça no cenário.</p><button class="modal-action hunt-start-btn" data-start-hunt>▶ Iniciar</button>';return out;
 }
 function renderHunterInventory(){
  const h=state.hunter,progress=hunterXpProgress(),title=hunterTitle();
@@ -2722,6 +2723,8 @@ function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
+ const huntBackdrop=$('hunt-scene-background');
+ if(huntBackdrop)huntBackdrop.dataset.phase=phase;
  if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene)return;
  layer.dataset.phase=phase;layer.dataset.scene=activeScene;
  const environmentLayers=['ground-layer','day-night-ground-layer','theme-ground-layer'];
@@ -3692,11 +3695,11 @@ $('quick-harvest').addEventListener('click',quickHarvest);$('quick-dig').addEven
 $('zoom-in').addEventListener('click',()=>setZoom(view.zoom+.15));$('zoom-out').addEventListener('click',()=>setZoom(view.zoom-.15));$('zoom-fit').addEventListener('click',fitWholeFarm);$('zoom-reset').addEventListener('click',fitWholeFarm);$('pan-left').addEventListener('click',()=>panView(-1));$('pan-right').addEventListener('click',()=>panView(1));document.querySelectorAll('[data-farm-scene]').forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.farmScene;switchFarmScene(id);if(id==='hunt')openModal('hunt');else if(currentModal==='hunt')closeModal()}));
 document.addEventListener('click',event=>{
  const familyButton=event.target.closest('[data-hunt-family]');
- if(familyButton){selectedHuntFamily=familyButton.dataset.huntFamily;selectedHuntAnimal=HUNT_FAMILIES[selectedHuntFamily]?.animals[0]?.id||'';if(currentModal==='hunt')renderModal();return}
+ if(familyButton){selectedHuntFamily=familyButton.dataset.huntFamily;selectedHuntAnimal='';if(currentModal==='hunt')renderModal();return}
  const animalButton=event.target.closest('[data-hunt-animal]');
- if(animalButton){selectedHuntAnimal=animalButton.dataset.huntAnimal;if(currentModal==='hunt')renderModal();return}
+ 
  if(event.target.closest('[data-start-random-hunt]')){startHunt('', '', true);return}
- if(event.target.closest('[data-start-hunt]')){startHunt(selectedHuntFamily,selectedHuntAnimal,false);return}
+ if(event.target.closest('[data-start-hunt]')){startHunt(selectedHuntFamily,'',false);return}
  if(event.target.closest('[data-show-hunt-result]')){openModal('hunt-result');return}
  if(event.target.closest('[data-hunt-ack]')){if(state?.hunter){state.hunter.pendingResult=null;markDirty()}closeModal();return}
 });
