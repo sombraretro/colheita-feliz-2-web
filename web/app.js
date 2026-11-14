@@ -467,7 +467,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:11000,top:-300,bottom:1400,w:14400,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400},sea:{label:'Mar',left:6100,right:10500,top:-250,bottom:1400}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -955,7 +955,7 @@ ${fencePath([[4400,960],[4750,970],[5100,960],[5450,970],[5800,960],[6200,970]],
  <path d="M1290 520Q1370 510 1435 520M1510 500Q1585 490 1660 500M1330 735Q1410 725 1485 735" fill="none" stroke="#c2a17a" stroke-width="2" opacity=".22" stroke-linecap="round"/>
 </g>
 `;
-$('ground-layer').innerHTML=ground+brickWalkwayMarkup();
+$('ground-layer').innerHTML=ground+brickWalkwayMarkup();if(activeScene==='sea')$('ground-layer').insertAdjacentHTML('beforeend',renderSeaLandscapeMarkup());
 updateSceneLandscapeVisibility();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
@@ -2014,8 +2014,8 @@ const MOBILE_SHORTCUTS={shop:['🛒','Loja'],kitchen:['🍲','Produção'],anima
 function renderMobileNavigation(){const nav=$('mobile-navigation');if(!nav||!state)return;const ids=(Array.isArray(state.mobileShortcuts)?state.mobileShortcuts:[]).filter(id=>MOBILE_SHORTCUTS[id]).slice(0,4);while(ids.length<4){const next=Object.keys(MOBILE_SHORTCUTS).find(id=>!ids.includes(id));if(!next)break;ids.push(next)}const more=nav.querySelector('[data-more-toggle]');if(!more)return;nav.querySelectorAll('button:not([data-more-toggle])').forEach(button=>button.remove());ids.forEach(id=>more.insertAdjacentHTML('beforebegin','<button type="button" data-modal="'+id+'" aria-label="Abrir '+MOBILE_SHORTCUTS[id][1]+'"><span>'+MOBILE_SHORTCUTS[id][0]+'</span><small>'+MOBILE_SHORTCUTS[id][1]+'</small></button>'))}
 function refresh(){syncLakeFish();expireDecorations();expireFarmTheme();syncAnimalCycles();syncOrchardTrees();syncLevelPlotUnlocks();updateHud();renderMobileNavigation();renderPlots();renderAnimals();renderFarmAddons();if(currentModal&&!modalHasFocusedEditor())renderModal()}
 function infest(){if(!farmWriteAllowed(false))return;let changed=false;for(let i=0;i<state.plots.length;i++){const p=state.plots[i];if(p.status!=='growing'||p.initialGift||progress(p)>=1)continue;const h=(Date.now()-p.plantedAt)/HOUR;if(h>=3*CROP_TIME_FACTOR&&!p.weed&&!p.weedCleared&&(Math.floor(p.plantedAt/HOUR)+i*11)%5===0){p.weed=true;changed=true}if(h>=6*CROP_TIME_FACTOR&&!p.pest&&!p.pestCleared&&(Math.floor(p.plantedAt/HOUR)+i*13)%7===0){p.pest=true;changed=true}}if(changed){markDirty(true);refresh()}}
-function openModal(kind){setMusicContext(kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'&&farmLevel()>=22?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
-function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}setMusicContext('general');currentModal='';document.querySelector('.app')?.classList.remove('modal-open');$('overlay').classList.add('hidden');renderPlots();}
+function openModal(kind){if(kind==='sea')switchFarmScene('sea');setMusicContext(kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');document.querySelector('.app')?.classList.toggle('sea-fishing-open',kind==='sea');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
+function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}setMusicContext(activeScene==='sea'?'sea':'general');currentModal='';document.querySelector('.app')?.classList.remove('modal-open','sea-fishing-open');$('overlay').classList.add('hidden');renderPlots();}
 function dailyRewardAvailable(){return state.dailyRewardDate!==todayKey()}
 function claimDailyReward(){if(!farmWriteAllowed())return;
  if(!dailyRewardAvailable())return notify('A recompensa diária de hoje já foi resgatada.');
@@ -2552,6 +2552,10 @@ function updateDayNight(){
   const glow=phase==='sunset'?'#ffb347':'#fff36a';
   environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(1370 -42)"><circle r="58" fill="'+glow+'" opacity=".18"/><circle r="40" fill="'+sun+'"/><circle cx="-11" cy="-12" r="11" fill="#fff6a6" opacity=".45"/></g>';
  }
+ if(activeScene==='sea'){
+  if(phase==='night')environment.innerHTML+='<g id="sea-night-sky" pointer-events="none"><g fill="#fff7d6"><circle cx="6650" cy="40" r="4"/><circle cx="7100" cy="155" r="3"/><circle cx="7550" cy="-20" r="4"/><circle cx="7900" cy="110" r="3"/><circle cx="8650" cy="-35" r="4"/><circle cx="9050" cy="125" r="3"/><circle cx="9650" cy="10" r="4"/><circle cx="10100" cy="145" r="3"/></g><g transform="translate(8300 80)"><circle r="48" fill="#e9edf0"/><path d="M-39 -18Q-5 -55 25 -28Q48 -7 29 24Q4 50 -25 28Q-47 8 -39 -18Z" fill="#d0d8df"/><g fill="#b9c4cf"><circle cx="-13" cy="-12" r="8"/><circle cx="17" cy="-19" r="5"/><circle cx="10" cy="17" r="10"/></g></g></g>';
+  else environment.innerHTML+='<g id="sea-day-sun" pointer-events="none" transform="translate(8300 '+(phase==='sunset'?'415':'75')+')"><circle r="86" fill="'+(phase==='sunset'?'#ffb04b':'#fff36a')+'" opacity=".22"/><circle r="56" fill="'+(phase==='sunset'?'#ff8a35':'#ffe65b')+'"/><circle cx="-15" cy="-14" r="15" fill="#fff8c0" opacity=".48"/></g>';
+ }
 }
 function applyMenuThemeColors(){
  const root=document.querySelector('.app');if(!root)return;
@@ -2649,6 +2653,60 @@ function placeLakeDecoration(id){if(writeLocked)return notify('Salvamento proteg
 function removeLakeDecoration(slot){if(!farmWriteAllowed())return;const i=state.lake.decorations.findIndex(d=>d.slot===slot);if(i<0)return;const d=state.lake.decorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;markDirty();refresh();notify('Decoração devolvida ao inventário.')}
 function placeLakeBridge(id){if(writeLocked)return notify('Salvamento protegido.');if(!WOODWORK_RECIPES[id]?.lakeBridge||(state.furnitureWarehouse[id]||0)<1)return;if(state.lake.bridges.some(b=>b.id===id))return notify('Esta ponte já está instalada.');const slot=[0,1,2,3].find(i=>!state.lake.bridges.some(b=>b.slot===i));if(slot===undefined)return notify('O Lago já possui quatro posições de ponte ocupadas.');state.furnitureWarehouse[id]--;state.lake.bridges.push({id,slot});markDirty();refresh();notify(WOODWORK_RECIPES[id].name+' instalada de uma margem a outra.')}
 function removeLakeBridge(slot){if(!farmWriteAllowed())return;const i=state.lake.bridges.findIndex(b=>b.slot===slot);if(i<0)return;const b=state.lake.bridges.splice(i,1)[0];state.furnitureWarehouse[b.id]=(state.furnitureWarehouse[b.id]||0)+1;markDirty();refresh();notify('Ponte devolvida à marcenaria.')}
+function renderSeaLandscapeMarkup(){
+ return `<g id="sea-landscape" pointer-events="none">
+  <defs>
+   <linearGradient id="sea-sky-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#75c7ec"/><stop offset=".62" stop-color="#b9e5ed"/><stop offset="1" stop-color="#f3d9ad"/></linearGradient>
+   <linearGradient id="sea-water-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#268fae"/><stop offset=".38" stop-color="#147c9b"/><stop offset="1" stop-color="#07506f"/></linearGradient>
+   <linearGradient id="sea-horizon-glow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff4c8" stop-opacity=".72"/><stop offset="1" stop-color="#fff4c8" stop-opacity="0"/></linearGradient>
+   <linearGradient id="sea-deck-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bd8952"/><stop offset=".45" stop-color="#8f5d35"/><stop offset="1" stop-color="#55351f"/></linearGradient>
+   <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
+  </defs>
+  <rect x="6100" y="-250" width="4400" height="1650" fill="url(#sea-sky-gradient)"/>
+  <path d="M6100 270Q6500 210 6900 255T7700 245T8500 250T9300 230T10500 260V500H6100Z" fill="url(#sea-horizon-glow)"/>
+  <g fill="#fff" opacity=".56">
+   <path d="M6600 105Q6640 65 6690 91Q6730 42 6790 78Q6845 66 6865 112Q6900 145 6850 155H6650Q6590 150 6600 105Z"/>
+   <path d="M9100 145Q9140 104 9190 126Q9230 79 9290 111Q9340 99 9365 144Q9395 174 9350 185H9150Q9090 180 9100 145Z"/>
+  </g>
+  <g fill="#668b83" opacity=".78">
+   <path d="M6200 470Q6350 410 6500 450Q6640 390 6780 454Q6910 420 7040 470L7040 505H6200Z"/>
+   <path d="M9300 470Q9460 415 9590 455Q9740 385 9890 450Q10020 410 10500 470V510H9300Z"/>
+  </g>
+  <path d="M6100 475Q6500 465 6900 477T7700 474T8500 478T9300 470T10500 476V1400H6100Z" fill="url(#sea-water-gradient)"/>
+  <path d="M6100 484Q6600 472 7100 486T8100 482T9100 481T10500 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
+  <g fill="none" stroke-linecap="round">
+   <g stroke="#bcecf0" opacity=".42" stroke-width="7">
+    <path d="M6350 570Q6510 552 6660 565M6900 625Q7070 604 7230 619M7620 555Q7780 540 7940 555M8450 655Q8650 631 8830 649M9400 570Q9560 550 9720 565M9900 735Q10070 716 10230 731"/>
+    <path d="M6520 820Q6700 799 6870 817M7280 900Q7470 878 7640 894M8120 790Q8320 765 8500 786M9000 930Q9180 907 9360 925M9700 850Q9870 830 10040 847"/>
+   </g>
+   <g stroke="#063e61" opacity=".28" stroke-width="5">
+    <path d="M6220 690Q6380 676 6540 688M7000 760Q7160 744 7320 756M7850 700Q8020 680 8190 695M8750 750Q8910 732 9070 746M9550 680Q9720 664 9890 678"/>
+    <path d="M6700 1010Q6890 990 7080 1008M7550 1080Q7740 1055 7930 1072M8660 1025Q8850 1003 9040 1020M9500 1110Q9690 1087 9880 1105"/>
+   </g>
+  </g>
+  <g opacity=".72">
+   <path d="M7180 470V365L7245 465Z" fill="#fff4d9" stroke="#7b8c83" stroke-width="4"/>
+   <path d="M7245 465V390L7290 464Z" fill="#f6e6c5" stroke="#7b8c83" stroke-width="3"/>
+   <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
+  </g>
+  <g id="sea-boat" transform="translate(8300 0)">
+   <path d="M-900 1080Q-610 1035 -300 1058Q0 1075 300 1058Q610 1035 900 1080L690 1335Q0 1435 -690 1335Z" fill="url(#sea-boat-side)" stroke="#3e2b20" stroke-width="18"/>
+   <path d="M-830 1080Q0 1135 830 1080L660 1280Q0 1360 -660 1280Z" fill="url(#sea-deck-gradient)" stroke="#d1a06a" stroke-width="12"/>
+   <g stroke="#e4bb82" stroke-width="10" opacity=".72">
+    <path d="M-680 1110L-560 1300M-480 1120L-390 1320M-270 1128L-210 1335M-60 1135L-35 1340M160 1130L190 1335M380 1120L430 1310M600 1105L660 1280"/>
+   </g>
+   <path d="M-850 1068Q0 1120 850 1068" fill="none" stroke="#f0cf9b" stroke-width="17" stroke-linecap="round"/>
+   <path d="M-720 1025L-720 890M720 1025L720 890" stroke="#65432a" stroke-width="25" stroke-linecap="round"/>
+   <path d="M-720 900Q0 820 720 900" fill="none" stroke="#b77b45" stroke-width="24" stroke-linecap="round"/>
+   <path d="M-710 900Q0 820 710 900" fill="none" stroke="#f1c58b" stroke-width="7" stroke-linecap="round"/>
+   <g transform="translate(520 855) rotate(-13)">
+    <path d="M0 0L-70 -280" stroke="#4d3526" stroke-width="13" stroke-linecap="round"/>
+    <path d="M-70 -280L-120 -470" stroke="#b88b5c" stroke-width="5" stroke-linecap="round"/>
+    <path d="M-120 -470Q-95 -260 -10 -55" fill="none" stroke="#eaf7ed" stroke-width="3" opacity=".75"/>
+   </g>
+  </g>
+ </g>`;
+}
 function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
@@ -3249,12 +3307,12 @@ function updateSceneLandscapeVisibility(){
  const waterMotion=$('river-water-motion');
  if(waterMotion)waterMotion.classList.toggle('is-active',activeScene==='river');
 }
-function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(mobileViewport?1.005:.985)))}
+function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,mobileViewport=matchMedia('(max-width:700px), (max-height:500px) and (pointer:coarse)').matches,fitHeight=id==='sea'?(aspect<.82?height:Math.max(height,width/aspect)):mobileViewport?height:Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*(id==='sea'?.985:mobileViewport?1.005:.985)))}
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
-function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}cancelAnimationFrame(sceneAnimationFrame);activeScene=id;updateSceneLandscapeVisibility();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
-function panView(direction){const order=['river','farm','nature'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
+function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}const previous=activeScene;cancelAnimationFrame(sceneAnimationFrame);activeScene=id;if(id==='sea')setMusicContext('sea');else if(previous==='sea')setMusicContext('general');updateSceneLandscapeVisibility();if(id==='sea'||previous==='sea')renderFarmAddons();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
+function panView(direction){const order=['river','farm','nature','sea'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
 svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
