@@ -971,8 +971,9 @@ const treePlacements=[
 for(const [x,y,w,h,filter] of treePlacements)scenery+=svgImage('arvore',x,y,w,h,`style="filter:none"`);
 for(let i=0;i<330;i++){
  const x=seedNoise(i*17+3)*6800-2600,y=seedNoise(i*31+8)*1160-140;
- if(blocked(x,y))continue;
- if(x>=-1450&&x<=1800){if(y>=235&&i<230)scenery+=grassClump(x,y,.5+seedNoise(i)*.8)}
+ // Vegetação decorativa somente no terreno; não desenhar tufos ou flores no céu.
+ if(y<235||blocked(x,y))continue;
+ if(x>=-1450&&x<=1800){if(i<230)scenery+=grassClump(x,y,.5+seedNoise(i)*.8)}
  else scenery+=i%6===0?flower(x,y,.4+seedNoise(i*13)*.5,['#fff5df','#f79cc4','#e4a3ef','#fff7ae'][i%4]):grassClump(x,y,.5+seedNoise(i)*.8);
 }
 const groundFlowerSpots=[
@@ -988,7 +989,7 @@ const groundStoneSpots=[
 for(const [x,y,s] of groundStoneSpots)if(!blocked(x,y))scenery+=`<g pointer-events="none" opacity=".9" transform="translate(${x} ${y}) scale(${s})"><ellipse cx="2" cy="5" rx="15" ry="5" fill="#315a2a" opacity=".22"/><path d="M-13 1Q-12-8-3-10Q5-15 13-7Q18 0 10 5Q-2 10-13 1Z" fill="#b8b4a2" stroke="#8c897b" stroke-width="1.7"/><path d="M-6-5Q0-11 7-6" fill="none" stroke="#e2dfd0" stroke-width="2" stroke-linecap="round" opacity=".8"/></g>`;
 for(let i=0;i<95;i++){
  const x=seedNoise(i*5+17)*6800-2600,y=seedNoise(i*9+71)*1160-140;
- if(blocked(x,y)||(x>=-1450&&x<=1800&&y<235))continue;
+ if(y<235||blocked(x,y))continue;
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
 // Bases orgânicas de grama substituem as sombras dos prédios.
