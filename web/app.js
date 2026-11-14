@@ -467,7 +467,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:11000,top:-300,bottom:1400,w:14400,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400},sea:{label:'Mar',left:6000,right:11000,top:-700,bottom:1800}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:14000,top:-900,bottom:1800,w:17400,h:2700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:250,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:1900,right:5700,top:-250,bottom:1400},sea:{label:'Mar',left:3000,right:14000,top:-700,bottom:1800}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -2081,16 +2081,26 @@ function syncPendingFishing(){
 }
 function updateFishingCooldownButtons(){
  syncPendingFishing();
- const now=Date.now(),body=$('modal-body');if(!body)return;
- const fishing=body.querySelector('[data-cast-fish]');if(fishing){
-  const pending=state.fishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
-  fishing.disabled=writeLocked||waiting;
-  fishing.textContent=pending?'🐟 Peixe fisgado · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
+ const now=Date.now(),body=$('modal-body');
+ if(body){
+  const fishing=body.querySelector('[data-cast-fish]');if(fishing){
+   const pending=state.fishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,FISH_COOLDOWN-(now-(state.fishing.lastCastAt||0))),waiting=remaining>0;
+   fishing.disabled=writeLocked||waiting;
+   fishing.textContent=pending?'🐟 Peixe fisgado · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a vara · Pescar';
+  }
+  const sea=body.querySelector('[data-cast-sea]');if(sea){
+   const pending=state.seaFishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
+   sea.disabled=writeLocked||waiting||farmLevel()<22;
+   sea.textContent=pending?'🐟 Captura na rede · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
+  }
  }
- const sea=body.querySelector('[data-cast-sea]');if(sea){
-  const pending=state.seaFishing.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):Math.max(0,SEA_FISH_COOLDOWN-(now-(state.seaFishing.lastCastAt||0))),waiting=remaining>0;
-  sea.disabled=writeLocked||waiting||farmLevel()<22;
-  sea.textContent=pending?'🐟 Captura na rede · '+Math.ceil(remaining/1000)+'s':waiting?'Aguarde '+Math.ceil(remaining/1000)+'s':'Lançar a rede · Pescar no mar';
+ const status=$('sea-fishing-status');
+ if(status){
+  const pending=state?.seaFishing?.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):0;
+  if(activeScene==='sea'&&pending){
+   const seconds=Math.ceil(remaining/1000),progress=Math.max(0,Math.min(100,(1-remaining/SEA_FISH_COOLDOWN)*100));
+   status.hidden=false;status.innerHTML='<strong>🌊 Pesca em andamento</strong><span>Aguarde '+seconds+'s para recolher a rede</span><i><b style="width:'+progress+'%"></b></i>';
+  }else{status.hidden=true;status.replaceChildren()}
  }
 }
 function weightedFishingChoice(entries,levelKey,level){
@@ -2662,15 +2672,26 @@ function renderSeaLandscapeMarkup(){
    <linearGradient id="sea-deck-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bd8952"/><stop offset=".45" stop-color="#8f5d35"/><stop offset="1" stop-color="#55351f"/></linearGradient>
    <linearGradient id="sea-boat-side" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#70472c"/><stop offset="1" stop-color="#3e2b20"/></linearGradient>
   </defs>
-  <rect x="6000" y="-700" width="5000" height="2500" fill="url(#sea-sky-gradient)"/>
+  <rect x="3000" y="-700" width="11000" height="2500" fill="url(#sea-sky-gradient)"/>
   <path d="M6000 270Q6500 210 6900 255T7700 245T8500 250T9300 230T11000 260V500H6000Z" fill="url(#sea-horizon-glow)"/>
   <g fill="#fff" opacity=".56">
    <path d="M6600 105Q6640 65 6690 91Q6730 42 6790 78Q6845 66 6865 112Q6900 145 6850 155H6650Q6590 150 6600 105Z"/>
    <path d="M9100 145Q9140 104 9190 126Q9230 79 9290 111Q9340 99 9365 144Q9395 174 9350 185H9150Q9090 180 9100 145Z"/>
   </g>
-  <g fill="#668b83" opacity=".78">
-   <path d="M6200 470Q6350 410 6500 450Q6640 390 6780 454Q6910 420 7040 470L7040 505H6200Z"/>
-   <path d="M9300 470Q9460 415 9590 455Q9740 385 9890 450Q10020 410 11000 470V510H9300Z"/>
+  <g fill="#668b83" opacity=".88">
+   <path d="M3150 468Q3400 400 3630 448Q3860 365 4090 438Q4310 390 4550 468L4550 520H3150Z"/>
+   <path d="M4650 478Q4890 420 5100 462Q5350 378 5600 452Q5820 412 6060 478L6060 520H4650Z"/>
+   <path d="M10500 470Q10720 405 10930 448Q11180 370 11430 445Q11680 405 11900 472L11900 520H10500Z"/>
+   <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
+  </g>
+  <g id="sea-lighthouse" transform="translate(12450 0)">
+   <path d="M-150 490L-105 420H125L175 490Z" fill="#6f7770"/><path d="M-76 420L-55 270H70L96 420Z" fill="#f4ead3" stroke="#8d806b" stroke-width="9"/>
+   <path d="M-65 330H83M-80 390H105" stroke="#d36a48" stroke-width="24"/><path d="M-68 270L-42 220H58L82 270Z" fill="#b64d3c" stroke="#713b34" stroke-width="7"/>
+   <rect x="-20" y="285" width="48" height="42" rx="8" fill="#ffe9a4" stroke="#9c7442" stroke-width="6"/><path d="M-30 215Q8 178 47 215" fill="none" stroke="#f4ead3" stroke-width="12"/>
+   <path d="M-105 490Q5 460 150 490" fill="none" stroke="#f0e0b8" stroke-width="10"/>
+  </g>
+  <g fill="none" stroke="#455e5b" stroke-width="9" stroke-linecap="round" opacity=".72">
+   <path d="M7600 170Q7640 130 7680 170Q7720 130 7760 170M7920 225Q7960 185 8000 225Q8040 185 8080 225M10100 165Q10140 125 10180 165Q10220 125 10260 165"/>
   </g>
   <path d="M6000 475Q6500 465 6900 477T7700 474T8500 478T9300 470T11000 476V1800H6000Z" fill="url(#sea-water-gradient)"/>
   <path d="M6000 484Q6600 472 7100 486T8100 482T9100 481T11000 480" fill="none" stroke="#e9f5df" stroke-width="8" opacity=".72"/>
@@ -2703,6 +2724,24 @@ function renderSeaLandscapeMarkup(){
     <path d="M0 0L-70 -280" stroke="#4d3526" stroke-width="13" stroke-linecap="round"/>
     <path d="M-70 -280L-120 -470" stroke="#b88b5c" stroke-width="5" stroke-linecap="round"/>
     <path d="M-120 -470Q-95 -260 -10 -55" fill="none" stroke="#eaf7ed" stroke-width="3" opacity=".75"/>
+   </g>
+   <g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+    <ellipse cx="0" cy="95" rx="125" ry="24" fill="#3b291d" opacity=".3"/>
+    <path d="M-82 12Q-78 -42 -34 -48H38Q82 -42 84 12L68 98Q0 124 -68 98Z" fill="#9b6034" stroke="#51331f" stroke-width="13"/>
+    <path d="M-53 -40Q-48 -102 0 -102Q48 -102 53 -40" fill="none" stroke="#4e3423" stroke-width="15"/>
+    <path d="M-78 12Q0 35 80 12L70 42Q0 65 -70 42Z" fill="#c28a4d" stroke="#6e4728" stroke-width="8"/>
+    <rect x="-17" y="27" width="34" height="29" rx="7" fill="#e8c16d" stroke="#694526" stroke-width="6"/><path d="M-95 4Q-120 35 -110 72M95 4Q120 35 110 72" fill="none" stroke="#e5c18c" stroke-width="9"/>
+    <rect x="-116" y="-112" width="232" height="250" rx="28" fill="transparent" stroke="transparent"/>
+    <text x="0" y="158" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🎒</text>
+   </g>
+   <g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
+    <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
+    <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
+    <path d="M-12 -20L-100 78L-8 112L92 20Z" fill="#e7d8ae" fill-opacity=".32" stroke="#f1dfb6" stroke-width="9"/>
+    <path d="M-72 59L51 -53M-42 83L76 -24M-90 30L20 93M-60 1L49 64M-30 -27L78 35" fill="none" stroke="#d7c69c" stroke-width="6" opacity=".9"/>
+    <path d="M-115 92Q-10 140 112 38" fill="none" stroke="#7b5837" stroke-width="13"/>
+    <rect x="-142" y="-125" width="284" height="280" rx="28" fill="transparent" stroke="transparent"/>
+    <text x="0" y="178" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🪢</text>
    </g>
   </g>
  </g>`;
@@ -3296,6 +3335,8 @@ function makeBouquet(id){if(writeLocked)return notify('Salvamento protegido. Abr
 function downloadBackup(){const snapshot=normalizeFarmSnapshot(state);if(!snapshot)return notify('O estado atual não passou pela verificação de integridade. O backup não foi exportado.');const data=JSON.stringify({version:2,exportedAt:new Date().toISOString(),state:snapshot},null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='ColheitaFeliz2-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
 async function importBackup(file){if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id)return notify('Entre na sua conta e carregue a fazenda da nuvem antes de importar um backup.');if(!file||file.size>8*1024*1024)return notify('Arquivo inválido ou maior que 8 MB.');try{const parsed=JSON.parse(await file.text()),data=[1,2].includes(parsed?.version)?normalizeFarmSnapshot(parsed.state):null;if(!data)throw Error('integridade');if(!confirm('Substituir a fazenda atual pelo conteúdo deste backup validado?'))return;state=data;writeLocked=false;markDirty();refresh();closeModal();notify('Backup validado e importado!')}catch(e){console.warn('Backup rejeitado:',e);notify('O backup está corrompido, incompleto ou não é compatível. A fazenda atual foi mantida.')}}
 function updateSceneLandscapeVisibility(){
+ // O Mar usa um fundo próprio que cobre a área inteira do playfield.
+ $('playfield')?.classList.toggle('sea-scene-active',activeScene==='sea');
  // Fazenda e Rio são regiões contíguas do mesmo mundo; manter ambas as imagens
  // visíveis evita que uma área revele um vazio ou um cenário independente.
  const farmLandscape=$('farm-landscape');
@@ -3312,10 +3353,11 @@ function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=
 function setZoom(next){view.zoom=Math.round(Math.max(sceneFitZoom(activeScene),Math.min(2.5,next))*100)/100;updateView()}
 function fitWholeFarm(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm;view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(activeScene);updateView()}
 function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fitWholeFarm();return}const previous=activeScene;cancelAnimationFrame(sceneAnimationFrame);activeScene=id;if(id==='sea')setMusicContext('sea');else if(previous==='sea')setMusicContext('general');updateSceneLandscapeVisibility();if(id==='sea'){const groundLayer=$('ground-layer');if(groundLayer){groundLayer.querySelector('#sea-landscape')?.remove();groundLayer.insertAdjacentHTML('beforeend',renderSeaLandscapeMarkup())}}else if(previous==='sea')$('ground-layer')?.querySelector('#sea-landscape')?.remove();if(id==='sea'||previous==='sea')renderFarmAddons();renderWeatherRain();const b=SCENE_BOUNDS[id];view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2;view.zoom=sceneFitZoom(id);svg.style.transition='opacity .16s ease';svg.style.opacity='.35';updateView();requestAnimationFrame(()=>{svg.style.opacity='1'})}
-function panView(direction){const order=['river','farm','nature'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
+function panView(direction){const order=['river','farm','nature','sea'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
-svg.addEventListener('click',e=>{const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
+svg.addEventListener('click',e=>{const bag=e.target.closest?.('[data-sea-bag]');if(bag){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)openModal('sea');return}const net=e.target.closest?.('[data-sea-net]');if(net){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)castSeaNet();return}const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
+svg.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const bag=e.target.closest?.('[data-sea-bag]'),net=e.target.closest?.('[data-sea-net]');if(!bag&&!net)return;e.preventDefault();if(bag)openModal('sea');else castSeaNet()});
 $('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const fishing=e.target.closest('[data-river-fishing]');if(fishing){e.preventDefault();e.stopPropagation();openModal('pond');return}const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
 $('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-river-fishing]')&&!drag&&Date.now()>suppressWorldClickUntil){openModal('pond');return}if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
@@ -3385,7 +3427,7 @@ $('playfield').addEventListener('pointerdown',e=>{
   pinchState={distance:dist,zoom:view.zoom,worldX:view.cx-visibleW/2+rx*visibleW,worldY:view.cy-visibleH/2+ry*visibleH};
   drag=null;e.preventDefault();return;
  }
- const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-modal],button');
+ const interactive=e.target.closest('.plot-hit,[data-animal-id],[data-orchard-slot],[data-river-fishing],[data-sea-bag],[data-sea-net],[data-modal],button');
  const requested=e.altKey||e.button===1,freeDrag=e.button===0&&!interactive;
  if(!requested&&!freeDrag)return;
  try{$('playfield').setPointerCapture(e.pointerId)}catch{}
