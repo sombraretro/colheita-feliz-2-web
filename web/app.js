@@ -464,7 +464,7 @@ function starterAnimals(){return [
 ]}
 const SHOP_EXCLUDED_CROP_IDS=['caviar','cacau_pascoa','semente_papai','arvore_jujuba','arvore_pirulito','arvore_serpentina','lilas','arvore_romantica_chinesa','arvore_natal','arvore_namorados','pinheiro_natal','eucalipto','pinha','arvore_garrafa','nepenthes'],CROP_IDS=Object.keys(CROPS),FLOWER_IDS=CROP_IDS.filter(id=>CROPS[id].kind==='flower'&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),FIELD_CROP_IDS=CROP_IDS.filter(id=>CROPS[id].kind!=='flower'&&!CROPS[id].forestOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),ADVANCED_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].advanced&&!['arvore_garrafa','nepenthes'].includes(id)),EVENT_CROP_IDS=FIELD_CROP_IDS.filter(id=>CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BASIC_FIELD_CROP_IDS=FIELD_CROP_IDS.filter(id=>!CROPS[id].advanced&&!CROPS[id].eventOnly&&!SHOP_EXCLUDED_CROP_IDS.includes(id)),BOUQUET_IDS=Object.keys(BOUQUETS),$=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('pt-BR'),safe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#039;'}[c]));
 for(const [recipeId,recipe] of Object.entries(GRILL_RECIPES)){if((recipe.ingredients||[]).some(([type,id])=>type==='crop'&&SHOP_EXCLUDED_CROP_IDS.includes(id)))delete GRILL_RECIPES[recipeId]}for(const [bouquetId,bouquet] of Object.entries(BOUQUETS)){if(Object.keys(bouquet.recipe||{}).some(id=>SHOP_EXCLUDED_CROP_IDS.includes(id)))delete BOUQUETS[bouquetId]}
-const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-1450,right:1800,top:-250,bottom:1400},river:{label:'Rio',left:-3000,right:-700,top:-350,bottom:1400},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-300,bottom:950}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
+const WORLD={left:-3400,right:4400,top:-300,bottom:1400,w:7800,h:1700},SCENE_BOUNDS={farm:{label:'Fazenda',left:-2100,right:2100,top:-250,bottom:1400},river:{label:'Rio',left:-6300,right:-2100,top:-250,bottom:1400},nature:{label:'Pomar e Mata',left:2100,right:4420,top:-300,bottom:950}},view={zoom:.8,cx:950,cy:490},svg=$('world');let activeScene='farm',sceneAnimationFrame=0;let writeLocked=false,multiSelectMode=false,selectedPlotIndices=new Set();let state,tool='inspect',chosenCrop=null,chosenFertilizer='quick',currentModal='',saving=Promise.resolve(),dirty=false,saveTimer=null,toastTimer=null,lastSelected=-1,profilePhotoDraft='';
 let audioCtx=null,musicTimer=null,musicIndex=0,musicPlaying=false,musicBus=null,sfxBus=null,musicTrackOrder=[],musicTrackPosition=0,lastMusicTrack=-1;
 let musicVolume=100,sfxVolume=100,musicMode='random';
 try{musicVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.musicVolume')??100)));sfxVolume=Math.max(0,Math.min(100,Number(localStorage.getItem('cf2.sfxVolume')??100)));musicMode=localStorage.getItem('cf2.musicMode')==='sequential'?'sequential':'random'}catch{}
@@ -867,8 +867,8 @@ const ground=`<defs>
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
 <!-- Cenário panorâmico do Rio: inclui a vegetação, o curso d'água, a ponte e o píer. -->
-<g id="river-landscape" pointer-events="none" style="display:none">
- <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3400" y="-350" width="3150" height="1743" preserveAspectRatio="none" pointer-events="none"/>
+<g id="river-landscape" pointer-events="none">
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-6300" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
@@ -903,7 +903,7 @@ function blocked(x,y){
  if(x>1810&&x<1990&&y>120&&y<330)return true;
  if(nearRoad(x,y))return true;
  if(x>2000&&x<3315&&y>-110&&y<590)return true;
- if(x>=-3000&&x<=-700)return true;
+ if(x>=-6300&&x<=-2100)return true;
  if(x>-660&&x<-100&&y>165&&y<500)return true;
  for(const [tx,ty,tw,th] of treePlacements)if(x>tx-35&&x<tx+tw+35&&y>ty-35&&y<ty+th+30)return true;
  return false;
@@ -2990,10 +2990,12 @@ function makeBouquet(id){if(writeLocked)return notify('Salvamento protegido. Abr
 function downloadBackup(){const snapshot=normalizeFarmSnapshot(state);if(!snapshot)return notify('O estado atual não passou pela verificação de integridade. O backup não foi exportado.');const data=JSON.stringify({version:2,exportedAt:new Date().toISOString(),state:snapshot},null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='ColheitaFeliz2-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
 async function importBackup(file){if(writeLocked||!cloudUser||cloudSessionReadyUserId!==cloudUser.id)return notify('Entre na sua conta e carregue a fazenda da nuvem antes de importar um backup.');if(!file||file.size>8*1024*1024)return notify('Arquivo inválido ou maior que 8 MB.');try{const parsed=JSON.parse(await file.text()),data=[1,2].includes(parsed?.version)?normalizeFarmSnapshot(parsed.state):null;if(!data)throw Error('integridade');if(!confirm('Substituir a fazenda atual pelo conteúdo deste backup validado?'))return;state=data;writeLocked=false;markDirty();refresh();closeModal();notify('Backup validado e importado!')}catch(e){console.warn('Backup rejeitado:',e);notify('O backup está corrompido, incompleto ou não é compatível. A fazenda atual foi mantida.')}}
 function updateSceneLandscapeVisibility(){
+ // Fazenda e Rio são regiões contíguas do mesmo mundo; manter ambas as imagens
+ // visíveis evita que uma área revele um vazio ou um cenário independente.
  const farmLandscape=$('farm-landscape');
- if(farmLandscape)farmLandscape.style.display=activeScene==='farm'?'':'none';
+ if(farmLandscape)farmLandscape.style.display='';
  const riverLandscape=$('river-landscape');
- if(riverLandscape)riverLandscape.style.display=activeScene==='river'?'':'none';
+ if(riverLandscape)riverLandscape.style.display='';
 }
 function sceneFitZoom(id=activeScene){const b=SCENE_BOUNDS[id]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=Math.max(.25,rect.width/Math.max(1,rect.height)),width=b.right-b.left,height=b.bottom-b.top,fitHeight=Math.max(height,width/aspect);return Math.max(.08,Math.min(2.5,WORLD.h/fitHeight*.985))}
 function updateView(){const b=SCENE_BOUNDS[activeScene]||SCENE_BOUNDS.farm,rect=svg.getBoundingClientRect(),aspect=rect.width/Math.max(1,rect.height),minZoom=sceneFitZoom(activeScene),v=Math.min(2.5,Math.max(minZoom,view.zoom));view.zoom=v;const h=WORLD.h/v,w=h*aspect,minX=b.left+w/2,maxX=b.right-w/2,minY=b.top+h/2,maxY=b.bottom-h/2;view.cx=minX>maxX?(b.left+b.right)/2:Math.max(minX,Math.min(maxX,view.cx));view.cy=minY>maxY?(b.top+b.bottom)/2:Math.max(minY,Math.min(maxY,view.cy));svg.setAttribute('viewBox',`${view.cx-w/2} ${view.cy-h/2} ${w} ${h}`);$('zoom-label').textContent=`${Math.round(v*100)}%`;document.querySelectorAll('[data-farm-scene]').forEach(button=>{const active=button.dataset.farmScene===activeScene;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
