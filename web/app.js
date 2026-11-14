@@ -812,7 +812,7 @@ function flower(x,y,s=1,color='#ffe8c3'){let a='';for(let i=0;i<5;i++){const ang
 function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#68452c" stroke-width="15" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-30}L${b[0]} ${b[1]-30}M${a[0]} ${a[1]-10}L${b[0]} ${b[1]-10}" fill="none" stroke="#b77a43" stroke-width="9" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-34}L${b[0]} ${b[1]-34}M${a[0]} ${a[1]-14}L${b[0]} ${b[1]-14}" fill="none" stroke="#e8bd79" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="14" ry="7" fill="#31551e" opacity=".28"/><path d="M${x-12} ${y-55}L${x-10} ${y-65}L${x+1} ${y-72}L${x+12} ${y-65}L${x+13} ${y+8}L${x-11} ${y+8}Z" fill="#85512f" stroke="#57391f" stroke-width="3.5"/><path d="M${x-10} ${y-55}L${x-8} ${y-64}L${x+1} ${y-69}L${x+10} ${y-63}L${x+10} ${y+3}L${x-8} ${y+3}Z" fill="#b87943"/><path d="M${x-8} ${y-55}L${x+1} ${y-63}L${x+9} ${y-55}" fill="none" stroke="#e8bd79" stroke-width="3.5" stroke-linecap="round"/><path d="M${x-4} ${y-43}V${y-2}" stroke="#d59a5b" stroke-width="3" opacity=".8"/><ellipse cx="${x+1}" cy="${y-29}" rx="3" ry="5" fill="#71452a" opacity=".7"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none"><path d="${points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y+4}`).join(' ')}" fill="none" stroke="#6f5836" stroke-width="20" stroke-linecap="round" opacity=".14"/>${rails}${posts}</g>`}
-const ROAD_POINTS=[[-3400,1018],[-3000,1018],[-2600,1020],[-2200,1022],[-1800,1020],[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[360,1020],[445,990],[490,950],[532,890],[700,920],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
+const ROAD_POINTS=[[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[360,1020],[445,990],[490,950],[532,890],[700,920],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
 function roadOffsetPoints(side,spacing=118){
  const out=[];
  for(let i=1;i<ROAD_POINTS.length;i++){
@@ -915,6 +915,16 @@ const ground=`<defs>
   <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0"><stop offset="0" stop-color="white" stop-opacity="0"/><stop offset=".22" stop-color="white" stop-opacity=".12"/><stop offset=".48" stop-color="white" stop-opacity=".42"/><stop offset=".76" stop-color="white" stop-opacity=".82"/><stop offset="1" stop-color="white" stop-opacity="1"/></linearGradient><mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1245" y="-250" width="4955" height="2475"><rect x="1300" y="-250" width="4900" height="2475" fill="url(#nature-farm-seam-gradient)"/><rect x="1245" y="175" width="550" height="630" fill="black"/></mask>
  </defs>
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4900" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
+<!-- Estrada própria do Pomar e Mata, prolongada até a extremidade direita do cenário. -->
+<g id="nature-road-network" pointer-events="none">
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#77512e" stroke-width="94" stroke-linecap="round" stroke-linejoin="round" opacity=".10"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#9b7448" stroke-width="82" stroke-linecap="round" stroke-linejoin="round" opacity=".28"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#9b7448" stroke-width="72" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="url(#farmRoad)" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#f3e0b5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 23" opacity=".30"/>
+${fencePath([[4400,820],[4750,830],[5100,820],[5450,830],[5800,820],[6200,830]],"nature-road-north")}
+${fencePath([[4400,960],[4750,970],[5100,960],[5450,970],[5800,960],[6200,970]],"nature-road-south")}
+</g>
 </g>
 <!-- Piso de terra batida do curral, limitado ao interior das cercas. -->
 <g id="curral-dirt-floor" pointer-events="none">
