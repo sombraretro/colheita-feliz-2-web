@@ -1901,6 +1901,25 @@ function launchFishingCelebrationEffects(style){
  setTimeout(()=>layer.remove(),2600);
 }
 function showFishingCelebration(catchInfo){
+ if((catchInfo.scene==='sea'||catchInfo.scene==='river')&&activeScene===catchInfo.scene){
+  const status=$('sea-fishing-status');
+  if(status){
+   clearTimeout(toastTimer);
+   launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
+   const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
+   status.dataset.scene=catchInfo.scene;status.classList.add('is-result');status.hidden=false;status.replaceChildren();
+   const content=document.createElement('div');content.className='fishing-toast-content';
+   const heading=document.createElement('strong');heading.className='fishing-toast-heading';heading.textContent=catchInfo.isExtraordinary?'✨ PESCA EXTRAORDINÁRIA! ✨':'🎣 PEIXE PESCADO!';
+   const fish=document.createElement('div');fish.className='fishing-toast-fish';
+   const icon=document.createElement('span');icon.className='fishing-toast-icon';icon.textContent=catchInfo.icon||'🐟';
+   const name=document.createElement('span');name.className='fishing-toast-name';name.textContent=catchInfo.name;fish.append(icon,name);
+   const detail=document.createElement('small');detail.className='fishing-toast-detail';detail.textContent=rarity+(catchInfo.quantity>1?' · '+catchInfo.quantity+' unidades':'')+(catchInfo.reward?' · '+catchInfo.reward:'')+' · +'+catchInfo.xp+' XP';
+   content.append(heading,fish,detail);status.append(content);
+   playFishingSfx(rarity,catchInfo.isExtraordinary);
+   toastTimer=setTimeout(()=>{status.hidden=true;status.classList.remove('is-result');status.replaceChildren()},3600);
+   return;
+  }
+ }
  const e=$('toast');if(!e)return;
  launchFishingCelebrationEffects(catchInfo.isExtraordinary?'extraordinary':(FISHING_RARITY_STYLE[catchInfo.rarity||'Comum']||'common'));
  const rarity=catchInfo.isExtraordinary?'Extraordinário':(catchInfo.rarity||'Comum');
@@ -2061,7 +2080,7 @@ function syncPendingFishing(){
   discoverItem('rio',river.id,fish.name,fish.icon);const earnedXP=awardProfessionXP('fisher',fish.xp,'pescaria');
   const rod=FISHING_RODS[river.rod]||FISHING_RODS.normal;
   remember((river.isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
-  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:earnedXP,isExtraordinary:!!river.isExtraordinary});
+  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:earnedXP,isExtraordinary:!!river.isExtraordinary,scene:'river'});
   changed=true;
  }
  const sea=state.seaFishing?.pendingCatch;
@@ -2073,7 +2092,7 @@ function syncPendingFishing(){
   discoverItem('mar',sea.id,item.name,item.icon);const earnedXP=awardProfessionXP('fisher',item.xp,'pesca no mar');
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
   remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'. Recompensa adicional: 3 caviares.');
-  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:1,reward:'+3 caviares',isExtraordinary:!!sea.isExtraordinary});
+  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:1,reward:'+3 caviares',isExtraordinary:!!sea.isExtraordinary,scene:'sea'});
   changed=true;
  }
  if(changed){markDirty();refresh();celebrations.forEach(queueFishingCelebration)}
@@ -2095,12 +2114,14 @@ function updateFishingCooldownButtons(){
   }
  }
  const status=$('sea-fishing-status');
- if(status){
-  const pending=state?.seaFishing?.pendingCatch,remaining=pending?Math.max(0,pending.readyAt-now):0;
-  if(activeScene==='sea'&&pending){
-   const seconds=Math.ceil(remaining/1000),progress=Math.max(0,Math.min(100,(1-remaining/SEA_FISH_COOLDOWN)*100));
-   status.hidden=false;status.innerHTML='<strong>🌊 Pesca em andamento</strong><span>Aguarde '+seconds+'s para recolher a rede</span><i><b style="width:'+progress+'%"></b></i>';
-  }else{status.hidden=true;status.replaceChildren()}
+ if(status&&!status.classList.contains('is-result')){
+  const isSea=activeScene==='sea',isRiver=activeScene==='river';
+  const pending=isSea?state?.seaFishing?.pendingCatch:isRiver?state?.fishing?.pendingCatch:null;
+  if(pending){
+   const duration=isSea?SEA_FISH_COOLDOWN:FISH_COOLDOWN,remaining=Math.max(0,pending.readyAt-now);
+   const seconds=Math.ceil(remaining/1000),progress=Math.max(0,Math.min(100,(1-remaining/duration)*100));
+   status.dataset.scene=activeScene;status.hidden=false;status.innerHTML='<strong>'+(isSea?'🌊 Pesca em andamento':'🎣 Pesca no Rio em andamento')+'</strong><span>Aguarde '+seconds+'s para descobrir o peixe</span><i><b style="width:'+progress+'%"></b></i>';
+  }else{status.hidden=true;status.replaceChildren();status.classList.remove('is-result')}
  }
 }
 function weightedFishingChoice(entries,levelKey,level){
@@ -2833,7 +2854,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
  const grillSmoke=(state.grill?.queue||[]).some(job=>job.readyAt>Date.now());
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 98)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(650 205)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" data-river-fishing="true" tabindex="0" role="button" aria-label="Abrir pescaria do Rio" style="cursor:pointer;pointer-events:all;touch-action:manipulation" pointer-events="all" transform="translate(-1950 930)">
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
   <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="all"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
@@ -2842,6 +2863,28 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <path d="M-54 -51H54V-10H-54Z" fill="#f2d49a" stroke="#d4a76b" stroke-width="3"/>
   <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
+ </g>
+ <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 1010)">
+  <rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/>
+  <ellipse cx="0" cy="58" rx="54" ry="11" fill="#294b24" opacity=".3"/>
+  <path d="M-30 -35Q-35 -58 -13 -60H13Q35 -58 30 -35" fill="none" stroke="#284b2d" stroke-width="10"/>
+  <path d="M-43 -28Q-47 -42 -30 -48L-20 -55H20L30 -48Q47 -42 43 -28L48 37Q0 60 -48 37Z" fill="#397b42" stroke="#214b2d" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M-34 -28Q0 -39 34 -28L39 30Q0 47 -39 30Z" fill="#4e9851" stroke="#a4c77b" stroke-width="3"/>
+  <path d="M-24 -39L-18 36M24 -39L18 36" stroke="#244e31" stroke-width="7" stroke-linecap="round"/>
+  <rect x="-25" y="-8" width="50" height="31" rx="7" fill="#d8c28a" stroke="#5d4a2b" stroke-width="3"/>
+  <path d="M-13 7Q0 -5 13 7Q0 20 -13 7Z" fill="#4d8b4d" stroke="#315b35" stroke-width="2"/>
+  <path d="M-36 -38L-25 -47M36 -38L25 -47" stroke="#d0b47b" stroke-width="4" stroke-linecap="round"/>
+ </g>
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-1650 1025) rotate(35)">
+  <rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/>
+  <ellipse cx="0" cy="8" rx="27" ry="7" fill="#294b24" opacity=".28"/>
+  <path d="M0 0Q-2 -48 7 -96Q13 -145 20 -194" fill="none" stroke="#4d2e1b" stroke-width="12" stroke-linecap="round"/>
+  <path d="M0 -8Q-1 -55 9 -103Q14 -151 21 -194" fill="none" stroke="#bd8b4f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M20 -194Q31 -207 40 -213" fill="none" stroke="#e4c98e" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M-1 -26Q-23 -37 -29 -20Q-31 -7 -12 -4" fill="none" stroke="#3d2920" stroke-width="6"/>
+  <circle cx="-10" cy="-17" r="10" fill="#c5cbd0" stroke="#4d3a2a" stroke-width="3"/>
+  <circle cx="-10" cy="-17" r="4" fill="#6c8590"/>
+  <path d="M-8 -1L-5 9" stroke="#70452c" stroke-width="7" stroke-linecap="round"/>
  </g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
@@ -3426,8 +3469,8 @@ function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fi
 function panView(direction){const order=['river','farm','nature','sea'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
-svg.addEventListener('click',e=>{const bag=e.target.closest?.('[data-sea-bag]');if(bag){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)openModal('sea');return}const net=e.target.closest?.('[data-sea-net]');if(net){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)castSeaNet();return}const sign=e.target.closest?.('[data-river-fishing]');if(sign){e.preventDefault();e.stopPropagation();openModal('pond')}},true);
-svg.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const bag=e.target.closest?.('[data-sea-bag]'),net=e.target.closest?.('[data-sea-net]');if(!bag&&!net)return;e.preventDefault();if(bag)openModal('sea');else castSeaNet()});
+svg.addEventListener('click',e=>{const riverBag=e.target.closest?.('[data-river-backpack]');if(riverBag){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)openModal('pond');return}const riverRod=e.target.closest?.('[data-river-rod]');if(riverRod){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)castFishingRod();return}const bag=e.target.closest?.('[data-sea-bag]');if(bag){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)openModal('sea');return}const net=e.target.closest?.('[data-sea-net]');if(net){e.preventDefault();e.stopPropagation();if(!drag&&Date.now()>suppressWorldClickUntil)castSeaNet();return}},true);
+svg.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const riverBag=e.target.closest?.('[data-river-backpack]'),riverRod=e.target.closest?.('[data-river-rod]'),bag=e.target.closest?.('[data-sea-bag]'),net=e.target.closest?.('[data-sea-net]');if(!riverBag&&!riverRod&&!bag&&!net)return;e.preventDefault();if(riverBag)openModal('pond');else if(riverRod)castFishingRod();else if(bag)openModal('sea');else castSeaNet()});
 $('garden-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-i]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)plotAction(Number(hit.dataset.i))});$('foreground-layer').addEventListener('click',e=>{const fishing=e.target.closest('[data-river-fishing]');if(fishing){e.preventDefault();e.stopPropagation();openModal('pond');return}const sign=e.target.closest('[data-farm-sign]');if(sign&&!drag&&Date.now()>suppressWorldClickUntil)openModal('profile')});$('foreground-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-farm-sign]')){e.preventDefault();openModal('profile')}});$('decoration-layer').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-river-fishing]')){e.preventDefault();openModal('pond')}});
 $('decoration-layer').addEventListener('click',e=>{if(e.target.closest('[data-river-fishing]')&&!drag&&Date.now()>suppressWorldClickUntil){openModal('pond');return}if(e.target.closest('[data-lake-open]')&&!drag){openModal('lake');return}const hit=e.target.closest('[data-orchard-slot]');if(hit&&!drag&&Date.now()>suppressWorldClickUntil)harvestOrchardTree(Number(hit.dataset.orchardSlot))});$('decoration-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-forest-slot]');if(hit&&!drag){selectedForestSlot=Number(hit.dataset.forestSlot);openModal('forest')}});
 $('animal-layer').addEventListener('click',e=>{const hit=e.target.closest('[data-animal-id]');if(!hit||drag||Date.now()<=suppressWorldClickUntil)return;const a=state.animals.find(x=>x.id===hit.dataset.animalId);if(!a)return;const cfg=ANIMALS[a.type];if(a.status==='hungry'&&(state.inventory[cfg.feedKey]||0)>0){feedAnimal(a.id)}else openModal('animals')});
@@ -3436,7 +3479,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-modal]');i
 document.querySelectorAll('[data-area-nav="forest"]').forEach(b=>b.addEventListener('click',()=>{focusForestArea(false);selectedForestSlot=0;openModal('forest')}));
 
 document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
-$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('orientation-toggle-mobile')?.addEventListener('click',toggleLandscapeMode);$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
+$('orientation-toggle')?.addEventListener('click',toggleLandscapeMode);$('orientation-toggle-mobile')?.addEventListener('click',toggleLandscapeMode);
+const bottomNavToggle=$('bottom-nav-toggle');let bottomNavVisible=true;try{bottomNavVisible=localStorage.getItem('cf2-bottom-navigation-hidden')!=='1'}catch{}
+const applyBottomNavVisibility=visible=>{bottomNavVisible=!!visible;document.querySelector('.app')?.classList.toggle('bottom-navigation-hidden',!bottomNavVisible);if(bottomNavToggle){bottomNavToggle.textContent=bottomNavVisible?'⌄':'⌃';bottomNavToggle.setAttribute('aria-pressed',String(bottomNavVisible));bottomNavToggle.setAttribute('aria-label',bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior');bottomNavToggle.title=bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior'}};
+applyBottomNavVisibility(bottomNavVisible);
+bottomNavToggle?.addEventListener('click',()=>{applyBottomNavVisibility(!bottomNavVisible);try{localStorage.setItem('cf2-bottom-navigation-hidden',bottomNavVisible?'0':'1')}catch{}});$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
 $('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
 if(d.socialSearch)searchOnlinePlayers();if(d.socialCodeSearch)searchOnlinePlayerByCode();if(d.markAllNotifications)markAllOnlineNotificationsRead();if(d.copyPlayerCode)copyOnlinePlayerCode();if(d.socialRefresh)refreshOnlineSocial();if(d.socialAdd)sendOnlineFriendRequest(d.socialAdd);if(d.socialAccept)respondOnlineFriendRequest(d.socialAccept,true);if(d.socialReject)respondOnlineFriendRequest(d.socialReject,false);if(d.conversation){activeConversationId=d.conversation;onlineMessages=[];openModal('inbox');loadOnlineConversation(d.conversation,false)}if(d.socialInboxRefresh)refreshOnlineInbox();if(d.sendOnlineMessage)sendOnlineMessage();if(d.notificationRead)markOnlineNotificationRead(d.notificationRead);if(d.visitFarm)visitOnlineFriendFarm(d.visitFarm);if(d.farmLike)toggleVisitedFarmLike();if(d.farmVisitToggle)toggleFarmVisitPermission();if(d.sendOnlineGift)sendOnlineGift(d.sendOnlineGift);if(d.claimOnlineGift)claimOnlineGift(d.claimOnlineGift);if(d.refreshOnlineGifts)refreshOnlineGifts();if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.feedAll)feedAllHungryAnimals();if(d.saveMobileShortcuts){if(!farmWriteAllowed())return;const chosen=[...$('modal-body').querySelectorAll('[data-mobile-shortcut]:checked')].map(x=>x.dataset.mobileShortcut);if(chosen.length<1||chosen.length>4)return notify('Escolha entre um e quatro atalhos.');state.mobileShortcuts=chosen;markDirty();renderMobileNavigation();renderModal();notify('Barra inferior atualizada e salva na nuvem.')}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimMission)claimMission(d.missionPeriod,d.claimMission);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand,d.wandCurrency||'green');if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion,d.expansionCurrency);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
 if(d.setMood)setMood(d.setMood);if(d.buyRod)buyFishingRod(d.buyRod,d.currency);if(d.selectRod)selectFishingRod(d.selectRod);if(d.castFish)castFishingRod();if(d.buyGrill)buyGrill();if(d.buyGrillPart)buyGrillPart(d.buyGrillPart);if(d.buyGrillIngredient)buyGrillSupply(d.buyGrillIngredient);if(d.buyTurkeyMeat)buyTurkeyMeat();if(d.butcherAnimal)butcherAnimal(d.butcherAnimal);if(d.produceGrill)produceGrillRecipe(d.produceGrill,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectGrill)collectGrill();if(d.cookRecipe)produceKitchenRecipe(d.cookRecipe,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectKitchen)collectKitchen();if(d.selectForest!==undefined){selectedForestSlot=Number(d.selectForest);renderModal()}if(d.plantForest!==undefined)plantForestTree(Number(d.slot),d.plantForest);if(d.harvestForest!==undefined)harvestForestTree(Number(d.harvestForest));if(d.buySeaNet)buySeaNet(d.buySeaNet,d.currency);if(d.selectSeaNet)selectSeaNet(d.selectSeaNet);if(d.castSea)castSeaNet();if(d.craftWood)craftWoodItem(d.craftWood);if(d.collectWoodwork)collectWoodwork();if(d.buyLakeEgg)buyLakeEgg(d.buyLakeEgg);if(d.buyLakeFeed)buyLakeFeed();if(d.feedLakeFish)feedLakeFish(d.feedLakeFish);if(d.sellLakeFish)sellLakeFish(d.sellLakeFish);if(d.placeLakeDecor)placeLakeDecoration(d.placeLakeDecor);if(d.removeLakeDecor!==undefined)removeLakeDecoration(Number(d.removeLakeDecor));if(d.placeLakeBridge)placeLakeBridge(d.placeLakeBridge);if(d.removeLakeBridge!==undefined)removeLakeBridge(Number(d.removeLakeBridge));if(d.toggleMeatLock)toggleMeatLock(d.toggleMeatLock);if(d.sellFish){const qty=saleQuantity('fish',d.sellFish,state.fishWarehouse[d.sellFish]||0);if(qty)sellFishStock('river',d.sellFish,qty)}if(d.sellSeaFish){const qty=saleQuantity('sea',d.sellSeaFish,state.seaWarehouse[d.sellSeaFish]||0);if(qty)sellFishStock('sea',d.sellSeaFish,qty)}if(d.sellMeat){const qty=saleQuantity('meat',d.sellMeat,state.meatWarehouse[d.sellMeat]||0);if(qty)sellMeat(d.sellMeat,qty)}if(d.toggleProcessedLock)toggleProcessedLock(d.toggleProcessedLock);if(d.sellProcessed){const qty=saleQuantity('processed',d.sellProcessed,state.processedWarehouse[d.sellProcessed]||0);if(qty)sellProcessed(d.sellProcessed,qty)}if(d.assembleGrill)assembleGrill();if(d.buyTheme)buyFarmTheme(d.buyTheme,d.currency||'coins');if(d.applyTheme)applyFarmTheme(d.applyTheme);if(d.buyDecoration)buyDecoration(d.buyDecoration);if(d.placeDecoration)placeDecoration(d.placeDecoration);if(d.removeDecoration!==undefined)removeDecoration(d.removeDecoration);
