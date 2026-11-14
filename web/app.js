@@ -1062,7 +1062,7 @@ function blinkMarkup(animal){
  };
  return lids[animal]||'';
 }
-function renderAnimals(){
+function renderAnimals(scheduleBlink=true){
  if(!state||!Array.isArray(state.animals))return;
  let markup='';
  const animals=[...state.animals].sort((a,b)=>isBirdType(a.type)&&isBirdType(b.type)?(a.aviarySlot??99)-(b.aviarySlot??99):(a.slot??99)-(b.slot??99));
@@ -1092,7 +1092,7 @@ function renderAnimals(){
   markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
  }
  $('animal-layer').innerHTML=markup;
- scheduleAnimalBlinking();
+ if(scheduleBlink)scheduleAnimalBlinking();
 }
 
 const FIELD_OFFSET_X=-100;
@@ -2628,7 +2628,7 @@ function placeLakeDecoration(id){if(writeLocked)return notify('Salvamento proteg
 function removeLakeDecoration(slot){if(!farmWriteAllowed())return;const i=state.lake.decorations.findIndex(d=>d.slot===slot);if(i<0)return;const d=state.lake.decorations.splice(i,1)[0];state.decorInventory[d.id]=(state.decorInventory[d.id]||0)+1;markDirty();refresh();notify('Decoração devolvida ao inventário.')}
 function placeLakeBridge(id){if(writeLocked)return notify('Salvamento protegido.');if(!WOODWORK_RECIPES[id]?.lakeBridge||(state.furnitureWarehouse[id]||0)<1)return;if(state.lake.bridges.some(b=>b.id===id))return notify('Esta ponte já está instalada.');const slot=[0,1,2,3].find(i=>!state.lake.bridges.some(b=>b.slot===i));if(slot===undefined)return notify('O Lago já possui quatro posições de ponte ocupadas.');state.furnitureWarehouse[id]--;state.lake.bridges.push({id,slot});markDirty();refresh();notify(WOODWORK_RECIPES[id].name+' instalada de uma margem a outra.')}
 function removeLakeBridge(slot){if(!farmWriteAllowed())return;const i=state.lake.bridges.findIndex(b=>b.slot===slot);if(i<0)return;const b=state.lake.bridges.splice(i,1)[0];state.furnitureWarehouse[b.id]=(state.furnitureWarehouse[b.id]||0)+1;markDirty();refresh();notify('Ponte devolvida à marcenaria.')}
-function renderFarmAddons(){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=280;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
  <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
  <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
@@ -2702,11 +2702,45 @@ function downloadSocialPackage(payload,filename){const blob=new Blob([JSON.strin
 
 
 function buildPublicFarmSnapshot(){
- const plots=(state.plots||[]).slice(0,72).map(p=>({status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',crop:CROPS[p.crop]?p.crop:null,progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'}));
- const animals=(state.animals||[]).filter(a=>ANIMALS[a.type]).slice(0,80).map(a=>({type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,stage:Math.max(1,Math.min(5,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null}));
- const orchard=(state.orchardTrees||[]).slice(0,8).map(t=>({type:CROPS[t.type]?t.type:null,status:t.status==='ready'||(t.type&&orchardTreeProgress(t)>=1)?'ready':t.type?'growing':'empty',progress:t.type?orchardTreeProgress(t):0,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0)}));
- const forest=(state.forestPlots||[]).slice(0,36).map(t=>({type:FOREST_TREES[t.type]?t.type:null,status:t.type&&forestProgress(t)>=1?'ready':t.type?'growing':'empty',progress:t.type?forestProgress(t):0}));
- return {version:1,farmTheme:FARM_THEMES[state.farmTheme]?state.farmTheme:'classic',plots,animals,orchard,forest,expansions:{orchard:!!state.expansions?.orchard,pond:!!state.expansions?.pond},decorations:(state.placedDecorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,60).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),grill:!!state.grill?.owned};
+ const plots=(state.plots||[]).slice(0,72).map(p=>({
+  status:['grass','dirt','spent','growing'].includes(p.status)?p.status:'dirt',
+  crop:CROPS[p.crop]?p.crop:null,
+  progress:p.status==='growing'&&CROPS[p.crop]&&Number.isFinite(p.plantedAt)?progress(p):0,
+  plantedAt:Number.isFinite(p.plantedAt)?p.plantedAt:null,
+  wateredAt:Number.isFinite(p.wateredAt)?p.wateredAt:null,
+  regrowing:!!p.regrowing,
+  harvestsRemaining:Math.max(0,Number(p.harvestsRemaining)||0),
+  weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'
+ }));
+ const animals=(state.animals||[]).filter(a=>ANIMALS[a.type]).slice(0,80).map(a=>({
+  id:String(a.id||'').slice(0,80),type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),
+  status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',
+  slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,
+  stage:Math.max(1,Math.min(10,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null
+ }));
+ const orchard=(state.orchardTrees||[]).slice(0,8).map(t=>({
+  type:CROPS[t.type]?t.type:null,
+  status:t.status==='ready'||(t.type&&orchardTreeProgress(t)>=1)?'ready':t.type?'growing':'empty',
+  progress:t.type?orchardTreeProgress(t):0,plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:null,
+  regrowing:!!t.regrowing,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0)
+ }));
+ const forest=(state.forestPlots||[]).slice(0,36).map(t=>({
+  type:FOREST_TREES[t.type]?t.type:null,status:t.type&&forestProgress(t)>=1?'ready':t.type?'growing':'empty',
+  progress:t.type?forestProgress(t):0,plantedAt:Number.isFinite(t.plantedAt)?t.plantedAt:null
+ }));
+ const lake={
+  fish:Array.from({length:Math.min(10,(state.lake?.fish||[]).length)},()=>({})),
+  decorations:(state.lake?.decorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,12).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),
+  bridges:(state.lake?.bridges||[]).filter(d=>WOODWORK_RECIPES[d.id]).slice(0,4).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0}))
+ };
+ const activeQueue=queue=>(queue||[]).some(job=>Number(job?.readyAt)>Date.now());
+ return {
+  version:2,farmTheme:FARM_THEMES[state.farmTheme]?state.farmTheme:'classic',plots,animals,orchard,forest,lake,
+  expansions:{orchard:!!state.expansions?.orchard,pond:!!state.expansions?.pond,haras:!!state.expansions?.haras},
+  decorations:(state.placedDecorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,60).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),
+  grill:{owned:!!state.grill?.owned,assembled:!!state.grill?.assembled,queueActive:activeQueue(state.grill?.queue)},
+  kitchen:{queueActive:activeQueue(state.kitchen?.queue)}
+ };
 }
 let friendSelectedCropId='',friendSelectedArea='farm',friendSelectedAreaSlot=null;
 let onlineFriends=[],onlineFriendRequests=[],onlineSearchResults=[],onlineSocialBusy=false,onlineSocialLoaded=false,onlinePlayerCode='',onlineCodeSearchResult=null,farmVisitSettings={allow_visits:true,like_count:0};
@@ -2776,7 +2810,7 @@ function updateSocialNotificationBadge(){
  });
 }
 
-let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null,selectedFriendPlot=null;farmVisitSettings={allow_visits:true,like_count:0};
+let onlineGifts=[],onlineGiftsLoaded=false,onlineGiftsBusy=false,visitedFarm=null,selectedFriendPlot=null,friendVisitedScene='farm';farmVisitSettings={allow_visits:true,like_count:0};
 async function refreshOnlineGifts(showError=true){
  if(!cloudUser||onlineGiftsBusy)return;
  onlineGiftsBusy=true;
@@ -2826,7 +2860,7 @@ async function visitOnlineFriendFarm(friendId){
  const friend=onlineFriends.find(f=>f.user_id===friendId);if(!friend)return notify('Amigo não encontrado.');
  try{
   const farm=await socialRpc('social_visit_friend_farm',{p_friend:friendId});if(!farm||typeof farm!=='object')throw new Error('O servidor não retornou os dados desta fazenda.');
-  visitedFarm={...farm,friendId,helpUsed:0,helpLimit:15};selectedFriendPlot=null;friendSelectedArea='farm';friendSelectedAreaSlot=null;openModal('friend-farm');
+  visitedFarm={...farm,friendId,helpUsed:0,helpLimit:15};selectedFriendPlot=null;friendVisitedScene='farm';friendSelectedArea='farm';friendSelectedAreaSlot=null;openModal('friend-farm');
   socialRpc('social_notify_farm_visit',{p_owner:friendId}).catch(error=>console.warn('Notificação de visita:',error));
   try{const help=await socialRpc('social_help_friend_status',{p_owner:friendId,p_timezone:visitorTimezone()}),quota=Array.isArray(help)?help[0]:help;if(currentModal==='friend-farm'&&visitedFarm?.friendId===friendId){visitedFarm={...visitedFarm,helpUsed:Number(quota?.used)||0,helpLimit:Number(quota?.limit)||15};renderModal()}}
   catch(error){console.warn('Não foi possível consultar o contador diário; a visita continua disponível:',error)}
@@ -2842,44 +2876,90 @@ async function toggleFarmVisitPermission(){
  catch(error){notify(error.message||'Não foi possível atualizar a privacidade da fazenda.')}
 }
 function friendPlotProgress(plot){
- const base=Math.max(0,Math.min(1,Number(plot&&plot.progress)||0));
- if(!plot||plot.status!=='growing'||!CROPS[plot.crop])return base;
- const updated=Date.parse(visitedFarm&&visitedFarm.updated_at||'');
+ if(!plot||plot.status!=='growing'||!CROPS[plot.crop])return 0;
+ const hours=cropHours(plot.crop,!!plot.regrowing);
+ if(typeof plot.plantedAt==='number'&&Number.isFinite(plot.plantedAt))return Math.max(0,Math.min(1,(Date.now()-plot.plantedAt)/(hours*HOUR)));
+ const base=Math.max(0,Math.min(1,Number(plot.progress)||0)),updated=Date.parse(visitedFarm?.updated_at||'');
  if(!Number.isFinite(updated)||updated<=0)return base;
- const cfg=CROPS[plot.crop],hours=plot.regrowing&&cfg.regrowHours?cfg.regrowHours:cfg.hours;
- return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,Number(hours)||1)*CROP_TIME_FACTOR*HOUR)));
+ return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,hours)*HOUR)));
+}
+function buildFriendVisualState(snap){
+ const visual=newGame(),level=Math.max(1,Math.min(999,Number(visitedFarm?.level)||1)),now=Date.now();
+ visual.xp=Math.max(0,8*(level-1)*(level+23));
+ visual.farmTheme=FARM_THEMES[snap.farmTheme]?snap.farmTheme:'classic';
+ visual.expansions={...visual.expansions,orchard:!!snap.expansions?.orchard,pond:!!snap.expansions?.pond,haras:!!snap.expansions?.haras};
+ visual.plots=Array.from({length:72},(_,i)=>{
+  const p=snap.plots?.[i]||{},status=['grass','dirt','spent','growing'].includes(p.status)?p.status:'grass',crop=CROPS[p.crop]?p.crop:null,regrowing=!!p.regrowing;
+  const hours=crop?cropHours(crop,regrowing):1,hasTime=typeof p.plantedAt==='number'&&Number.isFinite(p.plantedAt);
+  const plantedAt=hasTime?p.plantedAt:now-Math.max(0,Math.min(1,Number(p.progress)||0))*hours*HOUR;
+  return {...visual.plots[i],status,crop:status==='growing'?crop:null,plantedAt:status==='growing'&&crop?plantedAt:null,
+   wateredAt:typeof p.wateredAt==='number'&&Number.isFinite(p.wateredAt)?p.wateredAt:plantedAt,
+   regrowing,harvestsRemaining:Math.max(0,Number(p.harvestsRemaining)||0),weed:!!p.weed,pest:!!p.pest,soil:p.soil==='red'?'red':'normal'};
+ });
+ visual.animals=(snap.animals||[]).filter(a=>ANIMALS[a.type]).slice(0,80).map((a,i)=>({
+  id:String(a.id||'friend-animal-'+i).slice(0,80),type:a.type,name:String(a.name||ANIMALS[a.type].name).slice(0,32),
+  status:['hungry','producing','ready','growing','adult','guarding'].includes(a.status)?a.status:'hungry',
+  slot:Number.isInteger(a.slot)?a.slot:0,aviarySlot:Number.isInteger(a.aviarySlot)?a.aviarySlot:0,
+  stage:Math.max(1,Math.min(10,Number(a.stage)||1)),breed:DOG_BREEDS[a.breed]?a.breed:null
+ }));
+ visual.orchardTrees=Array.from({length:8},(_,i)=>{
+  const t=snap.orchard?.[i]||{},type=CROPS[t.type]?t.type:null;
+  if(!type)return {type:null,status:'empty',plantedAt:0,harvestsRemaining:0,regrowing:false};
+  const regrowing=!!t.regrowing,hours=cropHours(type,regrowing),p=Math.max(0,Math.min(1,Number(t.progress)||0));
+  const plantedAt=typeof t.plantedAt==='number'&&Number.isFinite(t.plantedAt)?t.plantedAt:now-p*hours*HOUR;
+  const ready=t.status==='ready'||p>=1;
+  return {type,status:ready?'ready':'growing',plantedAt:ready?Math.min(plantedAt,now-hours*HOUR):plantedAt,harvestsRemaining:Math.max(0,Number(t.harvestsRemaining)||0),regrowing};
+ });
+ visual.forestPlots=Array.from({length:36},(_,i)=>{
+  const t=snap.forest?.[i]||{},type=FOREST_TREES[t.type]?t.type:null;
+  if(!type)return {type:null,status:'empty',plantedAt:0};
+  const p=Math.max(0,Math.min(1,Number(t.progress)||0)),hours=FOREST_TREES[type].hours*FOREST_TIME_FACTOR;
+  const plantedAt=typeof t.plantedAt==='number'&&Number.isFinite(t.plantedAt)?t.plantedAt:now-p*hours*HOUR,ready=t.status==='ready'||p>=1;
+  return {type,status:ready?'ready':'growing',plantedAt:ready?Math.min(plantedAt,now-hours*HOUR):plantedAt};
+ });
+ visual.placedDecorations=(snap.decorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,60).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0}));
+ const lake=snap.lake||{};
+ visual.lake={
+  fish:Array.isArray(lake.fish)?lake.fish.slice(0,10):[],
+  decorations:(lake.decorations||[]).filter(d=>DECORATIONS[d.id]).slice(0,12).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0})),
+  bridges:(lake.bridges||[]).filter(d=>WOODWORK_RECIPES[d.id]).slice(0,4).map(d=>({id:d.id,slot:Number.isInteger(d.slot)?d.slot:0}))
+ };
+ const grill=typeof snap.grill==='object'&&snap.grill?snap.grill:{owned:!!snap.grill};
+ visual.grill={...visual.grill,owned:!!grill.owned,assembled:!!grill.assembled,queue:grill.queueActive?[{readyAt:now+60000}]:[]};
+ visual.kitchen={...visual.kitchen,queue:snap.kitchen?.queueActive?[{readyAt:now+60000}]:[]};
+ return visual;
 }
 function renderFriendFarmScene(snap){
- const plots=snap.plots||[];let field='';
- for(let i=0;i<72;i++){
-  const p=plots[i]||{status:'grass'},r=Math.floor((i%36)/6),c=i%6,index=i;
-  const xy=plotTilePoint(r,c,index),x=xy[0],y=xy[1],pts=diamondPoints(r,c,index),points=pts.map(q=>q.join(',')).join(' ');
-  const locked=p.status==='grass',red=p.soil==='red',selected=selectedFriendPlot===i;
-  field+='<g class="friend-farm-plot '+(locked?'is-locked ':'')+(selected?'is-selected':'')+'" data-help-plot="'+i+'" role="button" tabindex="0" aria-label="Canteiro '+(i+1)+'" style="cursor:'+(locked?'default':'pointer')+'">';
-  field+='<polygon points="'+pts.map(q=>(q[0]+2)+','+(q[1]+8)).join(' ')+'" fill="#214d18" opacity=".42"/>';
-  field+='<polygon points="'+points+'" fill="'+(locked?'#56604a':p.status==='spent'?'#765137':red?'#a9473f':'#60b62e')+'" stroke="'+(selected?'#ffe06b':locked?'#5a6255':red?'#78382f':'#3a7622')+'" stroke-width="'+(selected?7:3)+'"/>';
-  if(!locked&&p.status!=='spent')field+='<path d="M'+(x+12)+' '+(y-2)+'Q'+(x+53)+' '+(y-39)+' '+(x+100)+' '+(y-36)+'Q'+(x+153)+' '+(y-24)+' '+(x+188)+' '+(y-2)+'Q'+(x+145)+' '+(y-8)+' '+(x+100)+' '+(y+12)+'Q'+(x+55)+' '+(y+22)+' '+(x+12)+' '+(y-2)+'Z" fill="'+(red?'#cf7665':'#c7ed9b')+'" opacity=".86"/>';
-  if(p.status==='growing'&&CROPS[p.crop]){
-   const progress=friendPlotProgress(p),scale=.38+progress*.7,phase=progress>=1?5:Math.min(4,Math.floor(progress*5)+1),phaseImage=cropPhaseImageMarkup(p.crop,phase),plant=farmPoint(x+100,y+5);
-   field+='<g transform="translate('+plant[0]+' '+plant[1]+')"><ellipse cy="10" rx="27" ry="9" fill="#553520" opacity=".78"/><g transform="scale('+scale+')">'+(phaseImage||cropArt(p.crop,progress))+'</g></g>';
-   if(p.weed){const w=farmPoint(x+140,y+25);field+='<g transform="translate('+w[0]+' '+w[1]+')"><path d="M0 0l-4-26m4 26l15-22m-15 22l-18-15" stroke="#1b7d2a" stroke-width="5" fill="none"/><path d="M-4-20q-17-6-8-15q12 0 8 15m4 7q12-20 23-15q0 19-23 15" fill="#1f9e24"/></g>'}
-   if(p.pest){const q=farmPoint(x+77,y+5);field+='<g transform="translate('+q[0]+' '+q[1]+')"><ellipse rx="10" ry="7" fill="#c34225"/><circle cx="-4" cy="-1" r="2.3" fill="#242424"/><circle cx="3" cy="-3" r="2.3" fill="#242424"/><path d="M-9-4l-9-8m10 14l-10 9m23-15l9-7m-8 14l9 9" stroke="#472c1e" stroke-width="2"/></g>'}
-  }else if(p.status==='spent'){field+='<text x="'+(x+100)+'" y="'+(y+8)+'" text-anchor="middle" font-size="24">🪏</text>'}
-  else if(!locked){field+='<text x="'+(x+100)+'" y="'+(y+8)+'" text-anchor="middle" font-size="23">🌱</text>'}
-  if(p.weed||p.pest)field+='<g transform="translate('+(x+166)+' '+(y-18)+')"><circle r="13" fill="#fff7df" stroke="#a44b24" stroke-width="2"/><text text-anchor="middle" y="6" font-size="17">'+(p.pest?'🐛':'🌿')+'</text></g>';
-  if(locked)field+='<text x="'+(x+100)+'" y="'+(y+7)+'" text-anchor="middle" font-size="19">🔒</text>';
-  field+='<title>Canteiro '+(i+1)+(p.status==='growing'&&CROPS[p.crop]?' · '+safe(CROPS[p.crop].name):'')+'</title></g>';
+ const originalState=state,originalLastSelected=lastSelected,originalSelected=selectedPlotIndices,originalMulti=multiSelectMode;
+ let markup='';
+ try{
+  state=buildFriendVisualState(snap);
+  lastSelected=Number.isInteger(selectedFriendPlot)?selectedFriendPlot:-1;
+  selectedPlotIndices=new Set();multiSelectMode=false;
+  renderPlots();renderAnimals(false);renderFarmAddons(true);
+  const source=$('world');
+  if(!source)return '<p>Não foi possível montar a visualização da propriedade.</p>';
+  const clone=source.cloneNode(true);clone.removeAttribute('id');
+  clone.querySelectorAll('[data-plot-index]').forEach(node=>{
+   node.setAttribute('data-help-plot',node.getAttribute('data-plot-index'));
+   node.setAttribute('role','button');node.setAttribute('tabindex','0');
+  });
+  const idMap=new Map();
+  clone.querySelectorAll('[id]').forEach(node=>{const old=node.getAttribute('id'),next='friend-'+old;idMap.set(old,next);node.setAttribute('id',next)});
+  clone.querySelectorAll('*').forEach(node=>Array.from(node.attributes).forEach(attr=>{
+   let value=attr.value;
+   value=value.replace(/url\\(#([^)]+)\\)/g,(match,id)=>'url(#'+(idMap.get(id)||('friend-'+id))+')');
+   if((attr.name==='href'||attr.name==='xlink:href')&&value.startsWith('#'))value='#'+(idMap.get(value.slice(1))||('friend-'+value.slice(1)));
+   if(value!==attr.value)node.setAttribute(attr.name,value);
+  }));
+  const bounds=SCENE_BOUNDS[friendVisitedScene]||SCENE_BOUNDS.farm;
+  const viewBox=[bounds.left,bounds.top,bounds.right-bounds.left,bounds.bottom-bounds.top].join(' ');
+  markup='<svg id="friend-farm-world" class="friend-farm-scene" data-farm-theme="'+safe(snap.farmTheme||'classic')+'" viewBox="'+viewBox+'" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Propriedade de '+safe(visitedFarm?.farm_name||'amigo')+' · '+safe(bounds.label)+'" xmlns="http://www.w3.org/2000/svg">'+clone.innerHTML+'</svg>';
+ }finally{
+  state=originalState;lastSelected=originalLastSelected;selectedPlotIndices=originalSelected;multiSelectMode=originalMulti;
+  if(originalState){renderPlots();renderAnimals();renderFarmAddons()}
  }
- const theme=FARM_THEMES[snap.farmTheme]||FARM_THEMES.classic;
- const decorations=(snap.decorations||[]).map(d=>{const pos=DECORATION_SLOTS[d.slot];return pos?renderDecorationMarkup(d.id,pos[0],pos[1]):''}).join('');
- const animalIcons=(snap.animals||[]).slice(0,16).map(a=>ANIMALS[a.type]?.icon||'🐾').join(' ');
- const orchardIcons=(snap.orchard||[]).filter(t=>t.type).map(t=>CROPS[t.type]?.icon||'🌳').join(' ');
- const forestCount=(snap.forest||[]).filter(t=>t.type).length;
- const bg='<defs><linearGradient id="friendGrass" x2="0" y2="1"><stop stop-color="'+(snap.farmTheme==='christmas'?'#dbe9d4':'#9bd45d')+'"/><stop offset="1" stop-color="#65ae37"/></linearGradient></defs><rect x="-1500" y="-220" width="3000" height="1350" fill="url(#friendGrass)"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#c7a36b" stroke-width="90"/><path d="M-1500 1040Q-900 930-350 1000T700 990T1500 1040" fill="none" stroke="#ead2a0" stroke-width="8" stroke-dasharray="5 28"/>';
- const fields='<g><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="#398d2b" opacity=".23"/><polygon points="-68,620 532,350 1132,620 532,890" fill="#398d2b" opacity=".23"/><polygon points="-1368,620 -768,350 -168,620 -768,890" fill="none" stroke="#3c8127" stroke-width="14"/><polygon points="-68,620 532,350 1132,620 532,890" fill="none" stroke="#3c8127" stroke-width="14"/></g>';
- const buildings='<g transform="translate(820 120)"><ellipse cy="150" rx="170" ry="25" fill="#315d24" opacity=".25"/><path d="M-150 35L0-65L150 35V145H-150Z" fill="#f3dba8" stroke="#754a2b" stroke-width="12"/><path d="M-170 35L0-90L170 35" fill="#b84d38" stroke="#713c2b" stroke-width="13"/><rect x="-36" y="65" width="72" height="80" rx="6" fill="#81502e" stroke="#57351f" stroke-width="7"/><rect x="-112" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><rect x="64" y="55" width="48" height="42" fill="#a8d9e9" stroke="#70462b" stroke-width="7"/><text y="178" text-anchor="middle" font-size="26" font-weight="bold" fill="#fff8d8" stroke="#684323" stroke-width="4" paint-order="stroke">CASA</text></g><g transform="translate(1240 430)"><path d="M-115 10L0-70L115 10V110H-115Z" fill="#e5c88d" stroke="#79502d" stroke-width="10"/><path d="M-135 10L0-95L135 10" fill="#9b4931" stroke="#683d27" stroke-width="10"/><rect x="-38" y="38" width="76" height="72" fill="#80502f" stroke="#573b25" stroke-width="7"/><text y="142" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff5d4" stroke="#5b4025" stroke-width="4" paint-order="stroke">VIVEIRO</text></g>';
- const tint=snap.farmTheme&&snap.farmTheme!=='classic'?'<rect x="-1500" y="-220" width="3000" height="1350" fill="'+(theme?.accent||'#ffffff')+'" opacity=".045"/>':'';
- return '<svg class="friend-farm-scene" viewBox="-1500 -220 3000 1350" role="group" aria-label="Fazenda real de '+safe(visitedFarm?.farm_name||'amigo')+'" xmlns="http://www.w3.org/2000/svg">'+bg+fields+buildings+tint+field+decorations+'</svg><div class="friend-farm-areas"><span>🐾 '+safe(animalIcons||'Sem animais')+'</span><span>🌳 Pomar: '+safe(orchardIcons||'sem árvores')+' · Mata: '+forestCount+' árvore(s)</span><span>🔥 Churrasqueira: '+(snap.grill?'construída':'não construída')+'</span></div>';
+ return markup;
 }
 async function performFriendFarmAction(area,slot,action,cropId=null){
  if(!visitedFarm?.friendId)return notify('Abra primeiro a fazenda de um amigo.');if(!farmWriteAllowed())return;
@@ -2898,10 +2978,14 @@ async function performFriendFarmAction(area,slot,action,cropId=null){
  }catch(error){notify(error.message||'Não foi possível concluir a ajuda.')}
 }
 function friendAreaProgress(area,item){
- if(!item?.type)return 0;if(item.status==='ready')return 1;
- const base=Math.max(0,Math.min(1,Number(item.progress)||0)),updated=Date.parse(visitedFarm?.updated_at||''),cfg=area==='orchard'?CROPS[item.type]:FOREST_TREES[item.type];
- if(!cfg||!Number.isFinite(updated)||updated<=0)return base;
- const hours=area==='orchard'?cropHours(item.type,false):cfg.hours*FOREST_TIME_FACTOR;
+ if(!item?.type)return 0;
+ if(item.status==='ready')return 1;
+ const base=Math.max(0,Math.min(1,Number(item.progress)||0)),cfg=area==='orchard'?CROPS[item.type]:FOREST_TREES[item.type];
+ if(!cfg)return base;
+ const hours=area==='orchard'?cropHours(item.type,!!item.regrowing):cfg.hours*FOREST_TIME_FACTOR;
+ if(typeof item.plantedAt==='number'&&Number.isFinite(item.plantedAt))return Math.max(0,Math.min(1,(Date.now()-item.plantedAt)/(Math.max(1,hours)*HOUR)));
+ const updated=Date.parse(visitedFarm?.updated_at||'');
+ if(!Number.isFinite(updated)||updated<=0)return base;
  return Math.max(0,Math.min(1,base+Math.max(0,Date.now()-updated)/(Math.max(1,hours)*HOUR)));
 }
 function renderVisitedFarm(){
@@ -2909,7 +2993,8 @@ function renderVisitedFarm(){
  const snap=visitedFarm.snapshot||{},theme=FARM_THEMES[snap.farmTheme]?.name||'Fazenda clássica',plots=snap.plots||[];
  const pcount=plots.filter(p=>p.status!=='grass').length,readyCount=plots.filter(p=>p.status==='growing'&&friendPlotProgress(p)>=1).length,likeCount=Math.max(0,Number(visitedFarm.like_count)||0),liked=!!visitedFarm.liked_by_me;
  const used=Math.max(0,Number(visitedFarm.helpUsed)||0),limit=15,plot=Number.isInteger(selectedFriendPlot)?plots[selectedFriendPlot]:null,crop=plot?.crop?CROPS[plot.crop]:null,ready=!!plot&&plot.status==='growing'&&friendPlotProgress(plot)>=1;
- const VISIT_CROP_IDS=['pilea_involucrata','rosa_amarela','girassol'];const availableSeeds=VISIT_CROP_IDS.filter(id=>(Number(state.inventory?.[id])||0)>0&&cropLevelAllowed(CROPS[id])&&(Number(visitedFarm.level)||1)>=(CROPS[id].minLevel||1));
+ const VISIT_CROP_IDS=['pilea_involucrata','rosa_amarela','girassol'];
+ const availableSeeds=VISIT_CROP_IDS.filter(id=>(Number(state.inventory?.[id])||0)>0&&cropLevelAllowed(CROPS[id])&&(Number(visitedFarm.level)||1)>=(CROPS[id].minLevel||1));
  if(!availableSeeds.includes(friendSelectedCropId))friendSelectedCropId=availableSeeds[0]||'';
  const seedOptions=availableSeeds.map(id=>'<option value="'+id+'" '+(friendSelectedCropId===id?'selected':'')+'>'+safe(CROPS[id].name)+' · '+fmt(state.inventory[id]||0)+'</option>').join('');
  const orchardCards=(snap.orchard||[]).map((t,i)=>{if(!t?.type||!CROPS[t.type])return '';const c=CROPS[t.type],p=friendAreaProgress('orchard',t),r=t.status==='ready'||p>=1;return '<div class="friend-area-card"><span class="symbol">'+cropIconMarkup(t.type)+'</span><strong>'+safe(c.name)+'</strong><small>Árvore '+(i+1)+' · '+(r?'Pronta para colher':Math.round(p*100)+'% de crescimento')+(t.harvestsRemaining?' · '+t.harvestsRemaining+' colheita(s) restante(s)':'')+'</small><button class="modal-action '+(r?'':'alt')+'" data-friend-area-harvest="orchard" data-friend-area-slot="'+i+'" '+(r?'':'disabled')+'>🍎 Colher</button></div>'}).join('');
@@ -2917,8 +3002,9 @@ function renderVisitedFarm(){
  let plotActions='<small>Selecione um canteiro para usar as ferramentas.</small>';
  if(plot){const actions=[];if(plot.status==='spent')actions.push('<button class="modal-action" data-friend-action="plow">🪏 Preparar solo</button>');if(plot.status==='dirt')actions.push('<button class="modal-action" data-friend-action="plant" '+(friendSelectedCropId?'':'disabled')+'>🌱 Plantar semente</button>');if(plot.status==='growing'){if(ready)actions.push('<button class="modal-action" data-friend-action="harvest">🌾 Colher</button>');actions.push('<button class="modal-action" data-friend-action="water">💧 Regar</button>');if(plot.pest)actions.push('<button class="modal-action" data-friend-action="pest">🐛 Remover pragas</button>');if(plot.weed)actions.push('<button class="modal-action" data-friend-action="weed">🌿 Remover ervas daninhas</button>')}plotActions=actions.length?actions.join(''):'<small>Não há ação disponível neste canteiro.</small>'}
  const toolbar='<div class="friend-farm-toolbar"><div class="friend-farm-tools"><button class="modal-action alt compact" data-friend-action="plow" '+(plot?.status==='spent'?'':'disabled')+'>🪏 Arar</button><button class="modal-action alt compact" data-friend-action="plant" '+(plot?.status==='dirt'&&friendSelectedCropId?'':'disabled')+'>🌱 Plantar</button><button class="modal-action alt compact" data-friend-action="water" '+(plot?.status==='growing'?'':'disabled')+'>💧 Regar</button><button class="modal-action alt compact" data-friend-action="harvest" '+(ready?'':'disabled')+'>🌾 Colher</button><button class="modal-action alt compact" data-friend-action="weed" '+(plot?.status==='growing'&&plot.weed?'':'disabled')+'>🌿 Ervas</button><button class="modal-action alt compact" data-friend-action="pest" '+(plot?.status==='growing'&&plot.pest?'':'disabled')+'>🐛 Pragas</button></div><label for="friend-seed-select">Semente do visitante</label><select id="friend-seed-select" class="modal-select" '+(availableSeeds.length?'':'disabled')+'><option value="">'+(availableSeeds.length?'Escolha uma semente':'Nenhuma semente no inventário')+'</option>'+seedOptions+'</select><button class="modal-action alt compact" data-open="shop">🛒 Loja</button></div>';
+ const sceneNav='<div class="friend-scene-nav">'+[['farm','Fazenda'],['river','Rio'],['nature','Pomar / Mata']].map(([id,label])=>'<button type="button" class="modal-action '+(friendVisitedScene===id?'':'alt')+(friendVisitedScene===id?' is-active':'')+'" data-friend-scene="'+id+'" aria-pressed="'+(friendVisitedScene===id?'true':'false')+'">'+label+'</button>').join('')+'</div>';
  const areas='<h3>🌳 Pomar do amigo</h3><div class="friend-area-grid">'+(orchardCards||'<p class="historical-note">Nenhuma árvore plantada no Pomar.</p>')+'</div><h3>🌲 Mata do amigo</h3><div class="friend-area-grid">'+(forestCards||'<p class="historical-note">Nenhuma árvore plantada na Mata.</p>')+'</div>';
- return '<div class="gift-summary"><span class="symbol">🌾</span><div><b>'+safe(visitedFarm.farm_name||'Fazenda do amigo')+'</b><small>Nível '+fmt(visitedFarm.level||1)+' · Popularidade '+fmt(visitedFarm.popularity||0)+' · Tema: '+safe(theme)+'</small></div></div><div class="actions"><button class="modal-action alt" data-open="friends">← Voltar aos amigos</button><button class="modal-action alt" data-conversation="'+safe(visitedFarm.friendId)+'">Conversar</button><button class="modal-action" data-farm-like="true">'+(liked?'♥ Curtida registrada':'♡ Curtir fazenda')+' · '+fmt(likeCount)+'</button></div><div class="friend-help-quota"><b>🟢 Ajudas realizadas hoje: '+used+'/'+limit+'</b><span>Ajuda ilimitada · moedas verdes nas primeiras 15 ações do dia; depois, apenas XP básico. O contador reinicia à meia-noite do seu fuso horário.</span></div><h3>🌱 Fazenda ('+pcount+'/72 canteiros · '+readyCount+' prontos)</h3>'+toolbar+renderFriendFarmScene(snap)+'<div class="friend-help-selected"><b>'+(plot?'Canteiro '+(selectedFriendPlot+1)+' · '+safe(crop?.name||(plot.status==='spent'?'Solo usado':plot.status==='dirt'?'Solo preparado':'Plantação')):'Ferramentas da fazenda')+'</b><div class="actions">'+plotActions+'</div></div>'+areas+'<p class="historical-note">As colheitas e produções são enviadas diretamente ao depósito/estoque do proprietário. As sementes usadas no plantio são consumidas do seu inventário. Você recebe XP e, nas primeiras 15 ajudas do dia, 1 moeda verde por ação; o proprietário recebe XP básico.</p>';
+ return '<div class="gift-summary"><span class="symbol">🌾</span><div><b>'+safe(visitedFarm.farm_name||'Fazenda do amigo')+'</b><small>Nível '+fmt(visitedFarm.level||1)+' · Popularidade '+fmt(visitedFarm.popularity||0)+' · Tema: '+safe(theme)+'</small></div></div><div class="actions"><button class="modal-action alt" data-open="friends">← Voltar aos amigos</button><button class="modal-action alt" data-conversation="'+safe(visitedFarm.friendId)+'">Conversar</button><button class="modal-action" data-farm-like="true">'+(liked?'♥ Curtida registrada':'♡ Curtir fazenda')+' · '+fmt(likeCount)+'</button></div><div class="friend-help-quota"><b>🟢 Ajudas realizadas hoje: '+used+'/'+limit+'</b><span>Ajuda ilimitada · moedas verdes nas primeiras 15 ações do dia; depois, apenas XP básico. O contador reinicia à meia-noite do seu fuso horário.</span></div><h3>🌎 Propriedade completa · '+pcount+'/72 canteiros · '+readyCount+' prontos</h3>'+toolbar+sceneNav+renderFriendFarmScene(snap)+'<div class="friend-help-selected"><b>'+(plot?'Canteiro '+(selectedFriendPlot+1)+' · '+safe(crop?.name||(plot.status==='spent'?'Solo usado':plot.status==='dirt'?'Solo preparado':'Plantação')):'Ferramentas da fazenda')+'</b><div class="actions">'+plotActions+'</div></div>'+areas+'<p class="historical-note">As colheitas e produções são enviadas diretamente ao depósito/estoque do proprietário. As sementes usadas no plantio são consumidas do seu inventário. Você recebe XP e, nas primeiras 15 ajudas do dia, 1 moeda verde por ação; o proprietário recebe XP básico.</p>';
 }
 function renderOnlineInbox(){
  const friendName=id=>onlineFriends.find(f=>f.user_id===id)?.farm_name||'Amigo';
@@ -3166,6 +3252,12 @@ if(d.seed)chooseSeed(d.seed);if(d.open)openModal(d.open);if(d.tool){closeModal()
 if(d.export){if(writeLocked||!cloudUser)return notify('Entre na sua conta para exportar o backup da fazenda.');downloadBackup()}if(d.import){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de importar um backup.');$('import-file').click()}if(d.reset&&confirm('Deseja realmente iniciar uma NOVA fazenda? Recomendamos exportar um backup primeiro.')){if(writeLocked||!cloudUser)return notify('Entre na sua conta antes de reiniciar a fazenda.');state=newGame();markDirty();refresh();closeModal();notify('Nova fazenda iniciada e será salva na nuvem.')}});
 
 $('modal-body').addEventListener('click',e=>{
+ const sceneButton=e.target.closest('[data-friend-scene]');
+ if(sceneButton){
+  const scene=sceneButton.dataset.friendScene;
+  if(SCENE_BOUNDS[scene]){friendVisitedScene=scene;const bounds=SCENE_BOUNDS[scene],world=$('friend-farm-world');if(world)world.setAttribute('viewBox',[bounds.left,bounds.top,bounds.right-bounds.left,bounds.bottom-bounds.top].join(' '));document.querySelectorAll('[data-friend-scene]').forEach(button=>{const active=button.dataset.friendScene===scene;button.classList.toggle('is-active',active);button.classList.toggle('alt',!active);button.setAttribute('aria-pressed',String(active))})}
+  return;
+ }
  const plot=e.target.closest('[data-help-plot]');
  if(plot){
   const index=Number(plot.dataset.helpPlot),item=visitedFarm?.snapshot?.plots?.[index];
