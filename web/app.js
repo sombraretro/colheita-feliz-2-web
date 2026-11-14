@@ -1010,9 +1010,30 @@ for(let i=0;i<95;i++){
  if(y<235||blocked(x,y))continue;
  scenery+=`<circle cx="${x}" cy="${y}" r="${1+seedNoise(i*10)*2}" fill="#d3e571" opacity=".5"/>`;
 }
-// Bases orgânicas de grama substituem as sombras dos prédios.
-scenery+=`<g pointer-events="none"><path d="M760 450Q835 438 905 450T1045 448T1225 455L1210 480Q1090 490 980 480T780 482Z" fill="#4f9a2d" opacity=".72"/><path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/></g>`;
-for(const [gx,gy,gs] of [[780,468,.8],[820,476,.65],[900,478,.7],[1080,478,.8],[1170,472,.7],[1760,630,.55],[1935,632,.6]])scenery+=grassClump(gx,gy,gs);
+// Bases orgânicas alinhadas ao ponto real de contato de cada construção.
+// As manchas ficam no cenário, atrás dos prédios, e não alteram suas dimensões ou hitboxes.
+scenery+=`<g pointer-events="none">
+ <!-- Celeiro: base acompanha a parede frontal e a lateral com feno. -->
+ <ellipse cx="-438" cy="354" rx="222" ry="18" fill="#294d20" opacity=".24"/>
+ <path d="M-675 354Q-632 341-575 347T-470 344T-360 348T-215 356L-230 373Q-330 380-430 372T-575 375T-665 369Z" fill="#4d922d" opacity=".66"/>
+ <path d="M-628 351Q-590 343-552 349T-475 346T-398 350T-320 352" fill="none" stroke="#76ad42" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+ <!-- Casa: acompanha a projeção da fachada, sem avançar sobre as paredes. -->
+ <ellipse cx="1000" cy="390" rx="226" ry="17" fill="#294d20" opacity=".25"/>
+ <path d="M770 391Q818 380 873 385T979 382T1085 386T1225 392L1212 410Q1120 416 1030 409T900 410T780 407Z" fill="#4f982e" opacity=".7"/>
+ <path d="M806 390Q856 382 901 389T997 386T1096 390T1184 394" fill="none" stroke="#7db64a" stroke-width="7" stroke-linecap="round" opacity=".52"/>
+ <!-- Viveiro: base ampla e baixa, alinhada aos quatro apoios da estrutura. -->
+ <ellipse cx="25" cy="419" rx="220" ry="17" fill="#294d20" opacity=".25"/>
+ <path d="M-205 420Q-157 408-105 414T-5 411T95 415T255 422L242 439Q145 445 57 438T-80 440T-195 435Z" fill="#4d942d" opacity=".68"/>
+ <path d="M-166 418Q-120 411-77 417T12 414T103 418T207 423" fill="none" stroke="#79b348" stroke-width="7" stroke-linecap="round" opacity=".52"/>
+ <!-- Base já existente do elemento decorativo à direita. -->
+ <path d="M1815 615Q1870 606 1945 616L1935 640Q1870 645 1820 636Z" fill="#4d982d" opacity=".72"/>
+</g>`;
+for(const [gx,gy,gs] of [
+ [-650,363,.72],[-600,370,.55],[-520,373,.68],[-430,374,.62],[-330,370,.72],[-245,365,.55],
+ [785,402,.58],[830,407,.72],[900,409,.62],[1090,409,.68],[1170,404,.58],[1210,399,.5],
+ [-180,431,.55],[-120,437,.65],[-45,440,.58],[65,439,.62],[145,434,.58],[220,430,.5],
+ [1760,630,.55],[1935,632,.6]
+])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none">${svgImage('casa',780,35,440,430)}</g>`;
 scenery+=`<g id="barn-building" pointer-events="none">${svgImage('celeiro',-650,55,430,350)}</g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 15)">
