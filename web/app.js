@@ -1189,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" pointer-events="none" transform="translate(0 -50)">${svgImage('casinha-cachorro',520,245,145,140)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none" transform="translate(0 -50)">${svgImage('casinha-cachorro',450,245,145,140)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=675;y=285;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=610;y=260;w=150;h=112.5;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
