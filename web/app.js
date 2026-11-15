@@ -3600,6 +3600,7 @@ if(['shop','warehouse'].includes(currentModal)){
 if(detailOpen){for(const section of body.querySelectorAll('details[data-accordion-key]')){const key=section.dataset.accordionKey;if(Object.prototype.hasOwnProperty.call(detailOpen,key))section.open=detailOpen[key];}}
 if(['shop','warehouse','inventory','herb-mix','kitchen'].includes(currentModal)){body.scrollTop=modalScrollTop;requestAnimationFrame(()=>{body.scrollTop=modalScrollTop;});}
 
+$('dialog').dataset.modal=currentModal;
 $('dialog').classList.toggle('wide',['shop','inventory','warehouse','factory','decor','grill','kitchen','herb-mix','carpentry','free-gifts','mood','gifts','areas','orchard','animals','friend-farm'].includes(currentModal));
 }
 function popularityBonusRate(){return Math.min(.25,Math.floor((state.popularity||0)/100)*.01)}
