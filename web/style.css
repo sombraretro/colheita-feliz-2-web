@@ -1566,6 +1566,3 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 @keyframes grill-flame-flicker{0%,100%{opacity:.88}50%{opacity:1}}
 .grill-fire{transform-origin:center bottom;animation:grill-flame-flicker .55s ease-in-out infinite}
 @media(max-width:560px){.animal-manager-tabs{gap:5px}.animal-manager-tab{flex-basis:76px;padding:7px 6px;font-size:12px}.hunt-backpack-image{width:clamp(110px,34vw,180px)}}
-
-/* Integra os JPGs de cenário com fundo branco ao cenário por mesclagem. */
-#world image[href*="/Cenario/"],.hunt-backpack-image{mix-blend-mode:multiply}
