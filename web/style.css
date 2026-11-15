@@ -1166,3 +1166,109 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
   bottom:calc(72px + env(safe-area-inset-bottom))!important;
  }
 }
+
+
+/* Etapa 1 — refinamento visual compartilhado da interface (Preview) */
+:root{
+ --ui-cream:#fff5dc;
+ --ui-wood:#bd8954;
+ --ui-green:#75b82d;
+ --ui-gold:#dca94d;
+ --ui-brown:#70491e;
+ --ui-ink:#543713;
+ --ui-focus:#f4cf68;
+}
+.topbar{
+ background:linear-gradient(180deg,#fff9e9 0%,#f8e6bd 58%,#eacb92 100%);
+ border-bottom-color:#8b5727;
+ box-shadow:0 3px 8px rgba(49,80,16,.28),inset 0 1px rgba(255,255,255,.9);
+}
+.brand-name{filter:drop-shadow(0 1px 0 rgba(255,255,255,.65))}
+.tabs button,.iconbtn,.side-menu button,.quick-actions button{
+ transition:background .16s ease,box-shadow .16s ease,transform .16s ease,filter .16s ease;
+}
+.tabs button{box-shadow:inset 0 1px rgba(255,255,255,.85),0 2px 3px rgba(104,70,31,.12)}
+.tabs button.active{box-shadow:inset 0 1px rgba(255,255,255,.28),0 2px 5px rgba(47,91,22,.24)}
+.iconbtn{box-shadow:inset 0 1px rgba(255,255,255,.85),0 2px 3px rgba(104,70,31,.18)}
+.iconbtn:hover,.side-menu button:hover,.quick-actions button:hover:not(:disabled){filter:brightness(1.045);box-shadow:0 4px 7px rgba(75,54,25,.22)}
+.farm-stats{
+ background:linear-gradient(145deg,#fff9e9 0%,#f8e8c7 68%,#f0d9ad 100%);
+ border-color:#c99a5c;
+ box-shadow:0 3px 0 rgba(142,91,38,.42),0 7px 15px rgba(45,58,20,.2),inset 0 1px rgba(255,255,255,.9);
+}
+.avatar{box-shadow:0 2px 5px rgba(87,59,27,.28),inset 0 0 0 1px rgba(255,255,255,.55)}
+.xp-track{height:11px;background:#e8d7b5;border-color:#b9965d;box-shadow:inset 0 1px 2px rgba(88,60,27,.16)}
+.xp-track>div{background:linear-gradient(180deg,#c9ef79 0%,#83c342 55%,#659e2c 100%);box-shadow:inset 0 1px rgba(255,255,255,.42)}
+.currencies{align-items:center}
+.currencies span{padding:2px 5px;border-radius:6px;background:rgba(255,250,230,.5)}
+.tool-bar{
+ background:linear-gradient(180deg,rgba(40,105,19,.96),rgba(12,66,17,.98));
+ border-color:#78ad37;
+ box-shadow:0 4px 0 rgba(16,57,10,.42),0 7px 15px rgba(23,52,12,.22),inset 0 1px 3px rgba(225,255,176,.22);
+}
+.tool{position:relative}
+.tool.active{background:linear-gradient(180deg,rgba(160,218,91,.42),rgba(49,139,36,.28));border-color:#b1e36d;box-shadow:inset 0 1px rgba(255,255,255,.2),0 0 0 1px rgba(30,79,17,.3),0 0 10px rgba(175,227,74,.42)}
+.tool:active{transform:translateY(1px) scale(.97)}
+.dialog{
+ background:linear-gradient(160deg,#fff9e9 0%,#f6e8c6 58%,#eed9aa 100%);
+ border-color:#a97539;
+ box-shadow:0 18px 48px rgba(12,33,0,.48),inset 0 0 0 1px rgba(255,255,255,.5);
+}
+.dialog-head{
+ background:linear-gradient(180deg,#d1e58d 0%,#9fca58 52%,#75ae38 100%);
+ border-bottom-color:#a1763d;
+ box-shadow:inset 0 1px rgba(255,255,255,.55);
+}
+.dialog-head h2{text-shadow:0 1px rgba(255,255,255,.72),0 2px rgba(67,91,35,.12)}
+.dialog-head button{
+ min-width:40px;min-height:40px;
+ display:grid;place-items:center;
+ color:#70491e;
+ box-shadow:inset 0 1px rgba(255,255,255,.9),0 2px 3px rgba(75,54,25,.18);
+ transition:transform .15s ease,filter .15s ease,background .15s ease;
+}
+.dialog-head button:hover{background:#fffdf0;transform:scale(1.04)}
+.modal-body{scrollbar-width:thin;scrollbar-color:#bd9861 #f1e2c1;overscroll-behavior:contain}
+.modal-body h3{padding-bottom:5px;border-bottom:1px solid rgba(185,145,79,.35)}
+.store-card,.animal-card,.queue-line,.history-entry,.welcome-card{
+ box-shadow:0 2px 5px rgba(103,75,34,.07),inset 0 1px rgba(255,255,255,.65);
+ transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.store-card:hover,.animal-card:hover,.welcome-card:hover{
+ border-color:#c49a56;box-shadow:0 4px 10px rgba(103,75,34,.13),inset 0 1px rgba(255,255,255,.7);
+}
+.store-card button,.modal-action,.hunt-start-btn,.hunt-family-btn,.hunt-animal-btn{
+ transition:filter .15s ease,transform .15s ease,box-shadow .15s ease;
+}
+.store-card button:hover:not(:disabled),.modal-action:hover:not(:disabled),.hunt-start-btn:hover:not(:disabled){
+ filter:brightness(1.045);transform:translateY(-1px);box-shadow:0 3px 6px rgba(77,83,34,.17)
+}
+.store-card button:active:not(:disabled),.modal-action:active:not(:disabled){transform:translateY(1px)}
+button:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+ outline:3px solid var(--ui-focus);outline-offset:2px;
+}
+.toast{
+ border-color:#c18a43;
+ background:linear-gradient(145deg,#fff9e8,#f4e2b9);
+ box-shadow:0 8px 24px rgba(37,71,22,.34),inset 0 1px rgba(255,255,255,.9);
+}
+.savedot{box-shadow:0 0 0 2px rgba(255,255,255,.24),0 0 7px currentColor}
+@media(max-width:760px){
+ .dialog{width:min(680px,96vw);max-height:calc(100dvh - 20px);border-width:3px;border-radius:15px}
+ .dialog-head{padding:10px 13px;min-height:56px}
+ .dialog-head h2{font-size:clamp(18px,5vw,22px)}
+ .dialog-head button{width:40px;height:40px}
+ .modal-body{max-height:none;min-height:0;padding:12px;overscroll-behavior:contain}
+ .overlay{padding:10px}
+ .store-card{padding:11px}
+ .store-card button,.modal-action{min-height:40px}
+}
+@media(max-width:430px){
+ .dialog{width:100%;max-height:calc(100dvh - 12px);border-radius:13px}
+ .overlay{padding:6px}
+ .dialog-head{padding:9px 11px}
+ .modal-body{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .tabs button,.iconbtn,.side-menu button,.quick-actions button,.tool,.dialog-head button,.store-card,.animal-card,.queue-line,.history-entry,.welcome-card,.store-card button,.modal-action{transition:none!important}
+}
