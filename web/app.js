@@ -1701,7 +1701,7 @@ function compareFarmIntegrity(local,remote){
   ['Canteiros e árvores',['plots','orchardTrees','forestTrees']],
   ['Inventário e depósitos',['inventory','warehouse','animalWarehouse','flowerWarehouse','fishWarehouse','seaWarehouse','meatWarehouse','processedWarehouse','bouquets','giftInventory']],
   ['Animais',['animals','dogBreedsOwned','temporaryDogBreeds']],
-  ['Áreas e estruturas',['expansions','lake','grill','kitchen','herbMix','fishing','decorInventory','placedDecorations','farmTheme','ownedFarmThemes']],
+  ['Áreas e estruturas',['expansions','lake','grill','kitchen','herbMix','fishing','foodBuff','bathBuff','decorInventory','placedDecorations','farmTheme','ownedFarmThemes']],
   ['Catálogo, coleções e encomendas',['catalog','albumClaims','orders','history','social']]
  ];
  const differences=[];
