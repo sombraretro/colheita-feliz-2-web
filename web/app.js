@@ -3648,6 +3648,7 @@ function switchFarmScene(id){if(!SCENE_BOUNDS[id])return;if(id===activeScene){fi
 function panView(direction){const order=['river','farm','nature','sea','hunt'],index=order.indexOf(activeScene),next=order[Math.max(0,Math.min(order.length-1,index+Math.sign(direction)))];if(next!==activeScene)switchFarmScene(next)}
 let drag=null,selectedForestSlot=0,activePointers=new Map(),pinchState=null,suppressWorldClickUntil=0;
 function setupEvents(){
+ document.addEventListener('click',event=>{const button=event.target.closest?.('#auth-signin,#auth-signup');if(!button)return;event.preventDefault();event.stopImmediatePropagation();authenticate(button.id==='auth-signup'?'signup':'signin')},true);
 // Interações do Rio registradas no documento para funcionar mesmo com os elementos SVG adicionados dinamicamente ao cenário.
 document.addEventListener('click',e=>{if(activeScene!=='river')return;const target=e.target.closest?.('[data-river-backpack],[data-river-rod]');if(!target)return;e.preventDefault();e.stopPropagation();if(drag||Date.now()<=suppressWorldClickUntil)return;if(target.matches('[data-river-backpack]'))openModal('pond');else if(target.matches('[data-river-rod]'))castFishingRod()},true);
 document.addEventListener('keydown',e=>{if(activeScene!=='river'||(e.key!=='Enter'&&e.key!==' '))return;const target=e.target.closest?.('[data-river-backpack],[data-river-rod]');if(!target)return;e.preventDefault();e.stopPropagation();if(target.matches('[data-river-backpack]'))openModal('pond');else if(target.matches('[data-river-rod]'))castFishingRod()},true);
