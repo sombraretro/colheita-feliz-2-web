@@ -1417,7 +1417,7 @@ function renderPlots(){
   else{riverTiles+=part.tile;riverCrops+=part.crop}
  }
  $('garden-layer').innerHTML='<g id="first-field-position" transform="translate(0 -55)">'+base(0)+farmTiles+'</g>'+`<g transform="translate(766 185)">${base(EXPANSION_PLOT_OFFSET_X)}${riverTiles}</g>`;
- $('crop-layer').innerHTML='<g transform="translate(0 -55)">'+farmCrops+'</g>'+`<g transform="translate(180 -240)">${riverCrops}</g>`
+ $('crop-layer').innerHTML='<g transform="translate(0 -55)">'+farmCrops+'</g>'+`<g transform="translate(766 185)">${riverCrops}</g>`
 }
 const TUTORIAL_TASKS=[
  {id:'harvest',title:'Faça sua primeira colheita',detail:'Use a mão para colher um dos nabos que recebeu de presente.',event:'harvest',goal:1,reward:350,xp:10,icon:'🌱'},
