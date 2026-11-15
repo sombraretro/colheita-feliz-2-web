@@ -2509,8 +2509,8 @@ function consumeCookedFood(id){
 function createOrderState(){return {active:[],completed:0,nextId:1,history:[]}}
 function orderStock(item){if(!item)return 0;const source={tailor:state.tailorWarehouse,carpentry:state.furnitureWarehouse,kitchen:state.processedWarehouse,grill:state.processedWarehouse,herbs:state.inventory,bouquets:state.bouquets}[item.type];const key=item.type==='herbs'?'mix_'+item.id:item.id;return Math.max(0,Math.floor(Number(source?.[key])||0))}
 function orderProductInfo(item){const recipes={tailor:TAILOR_RECIPES,carpentry:WOODWORK_RECIPES,kitchen:GRILL_RECIPES,grill:GRILL_RECIPES,herbs:MIX_HERB_RECIPES,bouquets:BOUQUETS};const recipe=recipes[item?.type]?.[item?.id];if(!recipe)return null;const name=recipe.name,icon=recipe.icon||(item.type==='carpentry'?'🪚':'📦');return {id:item.id,type:item.type,name,icon}}
-function createOrderRecord(data){
- const pool=ORDER_PROFESSIONS.map(p=>({profession:p,items:p.items(data)})).filter(p=>p.items.length);
+function createOrderRecord(orders,farm=state){
+ const pool=ORDER_PROFESSIONS.map(p=>({profession:p,items:p.items(farm)})).filter(p=>p.items.length);
  if(pool.length<2)return null;
  const chosen=[];const usedProfessions=[];
  const first=pool[Math.floor(Math.random()*pool.length)];usedProfessions.push(first.profession.id);
@@ -2522,7 +2522,7 @@ function createOrderRecord(data){
   for(const product of selected)chosen.push({...product,qty:1+Math.floor(Math.random()*2)});
  }
  if(chosen.length<2)return null;
- const id='order_'+(data.nextId++);
+ const id='order_'+(orders.nextId++);
  const npc=ORDER_NPCS[Math.floor(Math.random()*ORDER_NPCS.length)];
  const base=chosen.reduce((sum,item)=>sum+item.base*item.qty,0);
  const coins=Math.max(180,Math.round(base*.42/10)*10);
@@ -2532,13 +2532,13 @@ function createOrderRecord(data){
 function normalizeOrdersState(data){
  const raw=data.orders&&typeof data.orders==='object'?data.orders:createOrderState();
  data.orders={active:Array.isArray(raw.active)?raw.active.filter(o=>o&&typeof o.id==='string'&&typeof o.npc==='string'&&Array.isArray(o.items)&&o.items.length>=2&&o.items.length<=4&&o.items.every(i=>ORDER_PROFESSIONS.some(p=>p.id===i.type)&&orderProductInfo(i)&&Number.isSafeInteger(i.qty)&&i.qty>0)&&Number.isSafeInteger(o.reward?.coins)&&o.reward.coins>=0&&Number.isSafeInteger(o.reward?.xp)&&o.reward.xp>=0).slice(0,3):[],completed:Number.isSafeInteger(raw.completed)?Math.max(0,raw.completed):0,nextId:Number.isSafeInteger(raw.nextId)?Math.max(1,raw.nextId):1,history:Array.isArray(raw.history)?raw.history.filter(entry=>entry&&typeof entry.id==='string'&&typeof entry.npc==='string'&&Number.isFinite(entry.completedAt)&&Array.isArray(entry.items)&&entry.items.length>=2&&entry.items.length<=4&&entry.items.every(i=>ORDER_PROFESSIONS.some(p=>p.id===i.type)&&orderProductInfo(i)&&Number.isSafeInteger(i.qty)&&i.qty>0)&&Number.isSafeInteger(entry.reward?.coins)&&entry.reward.coins>=0&&Number.isSafeInteger(entry.reward?.xp)&&entry.reward.xp>=0).slice(0,5000).map(entry=>({...entry,items:entry.items.map(i=>({...i,name:String(i.name||orderProductInfo(i)?.name||i.id),icon:String(i.icon||orderProductInfo(i)?.icon||'📦')})),greenBonus:Number.isSafeInteger(entry.greenBonus)?Math.max(0,entry.greenBonus):0,bonusSeed:typeof entry.bonusSeed==='string'&&CROPS[entry.bonusSeed]?entry.bonusSeed:null})):[]};
- while(data.orders.active.length<3){const order=createOrderRecord(data.orders);if(!order)break;data.orders.active.push(order)}
+
 }
 function renderOrdersModal(){
  if(!state.orders)state.orders=createOrderState();
  state.orders.active=Array.isArray(state.orders.active)?state.orders.active:[];
  state.orders.history=Array.isArray(state.orders.history)?state.orders.history:[];
- let generated=false;while(state.orders.active.length<3){const next=createOrderRecord(state.orders);if(!next)break;state.orders.active.push(next);generated=true}
+ let generated=false;while(state.orders.active.length<3){const next=createOrderRecord(state.orders,state);if(!next)break;state.orders.active.push(next);generated=true}
  if(generated)markDirty();
  const orders=state.orders.active||[],completed=state.orders.completed||0,history=state.orders.history||[];
  const historyHtml=history.length?'<details class="order-history"><summary>📚 Histórico de entregas ('+fmt(history.length)+')</summary><div class="order-history-list">'+history.slice(0,20).map(entry=>'<div class="list-line"><span><b>'+safe(entry.npc)+'</b><br/><small>'+safe(entry.items.map(item=>item.name+' × '+item.qty).join(' · '))+'<br/>'+new Date(entry.completedAt).toLocaleString('pt-BR')+'</small></span><span class="order-history-reward">🟡 '+fmt(entry.reward.coins)+' · ⭐ '+fmt(entry.reward.xp)+' XP'+(entry.greenBonus?' · 🟢 +'+entry.greenBonus:'')+(entry.bonusSeed?' · 🌱 +3 '+safe(CROPS[entry.bonusSeed]?.name||entry.bonusSeed):'')+'</span></div>').join('')+'</div><p class="historical-note">Exibindo as 20 entregas mais recentes. A fazenda mantém até 5.000 registros detalhados de entregas.</p></details>':'<details class="order-history"><summary>📚 Histórico de entregas (0)</summary><p class="historical-note">As encomendas concluídas aparecerão aqui.</p></details>';
@@ -2564,7 +2564,7 @@ function fulfillOrder(id){
  if(state.orders.completed%5===0){const bonusSeeds=['nabo','cenoura','feijao','milho','tomate'].filter(id=>CROPS[id]&&Object.prototype.hasOwnProperty.call(state.inventory,id));const seed=bonusSeeds[Math.floor(Math.random()*bonusSeeds.length)]||'nabo';bonusSeed=seed;state.inventory[seed]=(state.inventory[seed]||0)+3;bonusText=' · +3 sementes de '+(CROPS[seed]?.name||seed)}
  state.orders.history=Array.isArray(state.orders.history)?state.orders.history:[];state.orders.history.unshift({id:order.id,npc:order.npc,npcIcon:order.npcIcon,items:order.items.map(item=>({...item})),reward:{...order.reward},completedAt:Date.now(),greenBonus,bonusSeed});
  state.orders.active=state.orders.active.filter(o=>o.id!==id);
- while(state.orders.active.length<3){const next=createOrderRecord(state.orders);if(!next)break;state.orders.active.push(next)}
+ while(state.orders.active.length<3){const next=createOrderRecord(state.orders,state);if(!next)break;state.orders.active.push(next)}
  remember('Concluiu uma encomenda de '+order.npc+'.');markDirty();refresh();
  notify('Encomenda entregue! +'+fmt(order.reward.coins)+' moedas amarelas · +'+fmt(order.reward.xp)+' XP'+(greenBonus?' · +1 moeda verde':'')+bonusText+'.');
 }
