@@ -1154,3 +1154,10 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
  .playfield.hunt-scene-active .farm-scene-navigation button{flex:1 1 0;min-width:0;padding:8px 3px;font-size:clamp(9px,2.7vw,11px);min-height:38px;white-space:nowrap}
 }
 @media(prefers-reduced-motion:reduce){.hunt-scene-background>img{transition:filter 2.5s ease!important}}
+
+/* Na Caça mobile, posiciona a navegação acima da barra personalizável inferior. */
+@media(max-width:760px){
+ .playfield.hunt-scene-active .farm-scene-navigation{
+  bottom:calc(64px + env(safe-area-inset-bottom))!important;
+ }
+}
