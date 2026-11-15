@@ -1525,3 +1525,6 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 @media(prefers-reduced-motion:reduce){
  .topbar .tabs,.tool-bar,.farm-scene-navigation,.mobile-navigation,.side-menu,.more-menu{scroll-behavior:auto}
 }
+
+/* Alfaiataria: navegação e campos da loja de materiais. */
+.tailor-tabs,.tailor-category-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.tailor-tabs .modal-action,.tailor-category-tabs .modal-action{flex:1 1 auto;min-width:125px}.store-card input[data-tailor-qty],.store-card input[data-sale-qty^="tailor:"]{width:100%;min-height:36px;padding:7px 9px;border:1px solid #c9ad78;border-radius:8px;background:#fffdf6;color:#49351f;font:inherit}.tailor-category-tabs{margin:10px 0 14px}.tailor-category-tabs .modal-action{font-size:12px;padding:7px 9px}
