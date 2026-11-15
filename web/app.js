@@ -2,6 +2,7 @@
 /* Build refresh: ajuda ilimitada em visitas, sementes ornamentais e colheita de Pomar/Mata (2026-11-14). */
 /* Colheita Feliz 2 1.9.0: cloud save and visual revision, inbox, friend cards and gift packages. */
 let inventorySortMode='default';
+let animalManagerTab='curral';
 const NS='http://www.w3.org/2000/svg', HOUR=3600000, CROP_TIME_FACTOR=.2, PLOT_COLS=6, PLOT_COUNT=72, BASE_PLOT_COUNT=30, EXPANSION_PLOT_START=36, EXPANSION_PLOT_OFFSET_X=-1412;
 const CROPS={
  pimentao_verde:{name:'Pimentão Verde',icon:'🫑',price:1650,hours:34,regrowHours:14,yield:42,unitPrice:68,xp:105,minLevel:12,seasons:3,flower:'#d9e9a5',fruit:'#4f9b45'},
@@ -526,9 +527,11 @@ const FERTILIZERS={
  surfConcentrate:{name:'Surf Líquido Concentrado · 20h',icon:'🧼',hours:20,price:0,currency:'gift',flowerOnly:true,balance:'historical',note:'Presente diário ou de amigos; reduz 20h e só pode ser usado em flores.'}
 };
 const ANIMAL_SLOTS=[
- {x:1280,y:245,w:140,h:105},{x:1440,y:245,w:140,h:105},{x:1600,y:245,w:140,h:105},
- {x:1280,y:385,w:140,h:105},{x:1440,y:385,w:140,h:105},{x:1600,y:385,w:140,h:105},
- {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
+ {x:1280,y:220,w:115,h:86},{x:1405,y:220,w:115,h:86},{x:1530,y:220,w:115,h:86},{x:1655,y:220,w:115,h:86},
+ {x:1280,y:330,w:115,h:86},{x:1405,y:330,w:115,h:86},{x:1530,y:330,w:115,h:86},{x:1655,y:330,w:115,h:86},
+ {x:1280,y:440,w:115,h:86},{x:1405,y:440,w:115,h:86},{x:1530,y:440,w:115,h:86},{x:1655,y:440,w:115,h:86},
+ {x:1280,y:550,w:115,h:86},{x:1405,y:550,w:115,h:86},{x:1530,y:550,w:115,h:86},{x:1655,y:550,w:115,h:86},
+ {x:1280,y:660,w:115,h:86},{x:1405,y:660,w:115,h:86},{x:1530,y:660,w:115,h:86},{x:1655,y:660,w:115,h:86}
  ];
 const HORSE_SLOTS=[
   {x:-1808,y:182,w:96,h:72},{x:-1708,y:182,w:96,h:72},{x:-1608,y:182,w:96,h:72},{x:-1508,y:182,w:96,h:72},{x:-1408,y:182,w:96,h:72},
@@ -961,7 +964,7 @@ function flower(x,y,s=1,color='#ffe8c3'){let a='';for(let i=0;i<5;i++){const ang
 function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#68452c" stroke-width="15" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-30}L${b[0]} ${b[1]-30}M${a[0]} ${a[1]-10}L${b[0]} ${b[1]-10}" fill="none" stroke="#b77a43" stroke-width="9" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-34}L${b[0]} ${b[1]-34}M${a[0]} ${a[1]-14}L${b[0]} ${b[1]-14}" fill="none" stroke="#e8bd79" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="14" ry="7" fill="#31551e" opacity=".28"/><path d="M${x-12} ${y-55}L${x-10} ${y-65}L${x+1} ${y-72}L${x+12} ${y-65}L${x+13} ${y+8}L${x-11} ${y+8}Z" fill="#85512f" stroke="#57391f" stroke-width="3.5"/><path d="M${x-10} ${y-55}L${x-8} ${y-64}L${x+1} ${y-69}L${x+10} ${y-63}L${x+10} ${y+3}L${x-8} ${y+3}Z" fill="#b87943"/><path d="M${x-8} ${y-55}L${x+1} ${y-63}L${x+9} ${y-55}" fill="none" stroke="#e8bd79" stroke-width="3.5" stroke-linecap="round"/><path d="M${x-4} ${y-43}V${y-2}" stroke="#d59a5b" stroke-width="3" opacity=".8"/><ellipse cx="${x+1}" cy="${y-29}" rx="3" ry="5" fill="#71452a" opacity=".7"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none"><path d="${points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y+4}`).join(' ')}" fill="none" stroke="#6f5836" stroke-width="20" stroke-linecap="round" opacity=".14"/>${rails}${posts}</g>`}
-const ROAD_POINTS=[[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[300,1030],[380,1040],[455,1070],[535,1090],[620,1092],[700,1070],[770,1025],[825,980],[875,950],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
+const ROAD_POINTS=[[-1370,1300],[-1350,1190],[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[300,1030],[380,1040],[455,1070],[535,1090],[620,1092],[700,1070],[770,1025],[825,980],[875,950],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
 function roadOffsetPoints(side,spacing=118){
  const out=[];
  for(let i=1;i<ROAD_POINTS.length;i++){
@@ -1172,8 +1175,8 @@ for(const [gx,gy,gs] of [
  [-180,376,.55],[-120,382,.65],[-45,385,.58],[65,384,.62],[145,379,.58],[220,375,.5],
  [1760,630,.55],[1935,632,.6]
 ])scenery+=grassClump(gx,gy,gs);
-scenery+=`<g pointer-events="none" transform="translate(0 -45)">${svgImage('casa',780,35,440,430)}</g>`;
-scenery+=`<g id="barn-building" pointer-events="none" transform="translate(0 -55)">${svgImage('celeiro',-650,55,430,350)}</g>`;
+scenery+=`<g pointer-events="none" transform="translate(0 -45)"><image id="farm-house" href="/assets/casa.png" x="780" y="35" width="440" height="430" preserveAspectRatio="xMidYMid meet"/></g>`;
+scenery+=`<g id="barn-building" pointer-events="none" transform="translate(0 -55)"><image href="/Cenario/Celeiro.jpg" x="-650" y="55" width="430" height="350" preserveAspectRatio="xMidYMid meet"/></g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 -40)">
  <ellipse cx="205" cy="405" rx="220" ry="22" fill="#244d1b" opacity=".22"/>
  <path d="M12 55L205 0L398 55V390H12Z" fill="#9bdcf0" fill-opacity=".12" stroke="#76563a" stroke-width="10"/>
@@ -1186,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" transform="translate(0 -50)">${svgImage('casinha-cachorro',370,145,145,140)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none" transform="translate(0 -50)">${svgImage('casinha-cachorro',520,245,145,140)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1242,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=500;y=105;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=675;y=285;w=150;h=112.5;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -1263,7 +1266,7 @@ function renderAnimals(scheduleBlink=true){
   const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo','iaque'].includes(a.type)?'svg':'png');
   const assetUrl=cfg.role==='horse'?HORSE_ASSETS.horse:(a.type==='cachorro'&&breed?.image?breed.image:a.type==='pavao'?HORSE_ASSETS.peacock:a.type==='cabra'?HORSE_ASSETS.goat:null);
   const animalGraphic=['peru','boi','bufala','coelho'].includes(a.type)?'<text x="724" y="850" text-anchor="middle" font-size="760">'+cfg.icon+'</text>':'<image class="animal-sprite" href="'+(assetUrl||('/assets/'+assetName+'.'+assetExt))+'" x="0" y="0" width="1448" height="1086" preserveAspectRatio="none"/>';
-  markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="all"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
+  markup+='<g class="animal-wrap animal-'+a.type+'" data-animal="'+a.type+'" data-animal-id="'+safe(a.id)+'"'+(cfg.role==='horse'?' data-horse-breed="'+a.type+'"':'')+' data-world-x="'+x+'" data-world-y="'+y+'" data-world-w="'+w+'" data-world-h="'+h+'" data-world-ground-y="'+baseY+'" pointer-events="none"><rect class="animal-hitbox" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="transparent" pointer-events="none"/><ellipse class="animal-shadow" cx="'+(x+w*.5)+'" cy="'+(baseY+2)+'" rx="'+(shadowRx*1.22)+'" ry="'+Math.max(12,w*.085)+'" fill="#18380f" opacity=".42"/><ellipse class="animal-shadow-core" cx="'+(x+w*.5)+'" cy="'+(baseY+1)+'" rx="'+(shadowRx*.7)+'" ry="'+Math.max(6,w*.04)+'" fill="#102b0d" opacity=".32"/><g transform="translate('+x+' '+y+') scale('+scaleX+' '+scaleY+')">'+animalGraphic+sheepEyes+'<g class="blink-overlay">'+blinkMarkup(a.type)+'</g></g></g>';
  }
  $('animal-layer').innerHTML=markup;
  if(scheduleBlink)scheduleAnimalBlinking();
@@ -2013,29 +2016,7 @@ function renderPondArea(){
 }
 function renderRiverLandmarks(){
  return `
- <g id="river-hut" pointer-events="none" transform="translate(-1770 610) scale(1.95 2.2)">
-  <ellipse cx="118" cy="166" rx="142" ry="20" fill="#254b22" opacity=".28"/>
-  <path d="M12 68Q18 42 42 35H196Q220 43 224 68V158H12Z" fill="#8c542f" stroke="#563821" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M18 72Q20 52 43 47H194Q216 53 218 72V151H18Z" fill="#bd8048" stroke="#6d4328" stroke-width="4"/>
-  <path d="M22 81H214M20 101H216M19 122H217M18 143H218" stroke="#77472c" stroke-width="5" opacity=".8"/>
-  <path d="M22 77H213M22 97H213M22 118H213M22 139H213" stroke="#e0aa69" stroke-width="2.5" opacity=".75"/>
-  <path d="M30 49V153M204 49V153" stroke="#704329" stroke-width="8"/>
-  <path d="M34 51V151M200 51V151" stroke="#e0a363" stroke-width="2.5" opacity=".75"/>
-  <path d="M5 69L116 -17L235 69L218 88L116 18L22 88Z" fill="#70452b" stroke="#4d3425" stroke-width="7" stroke-linejoin="round"/>
-  <path d="M0 65Q116 -42 238 65Q232 87 215 87Q116 5 22 87Q5 86 0 65Z" fill="#b8873e" stroke="#68452b" stroke-width="7"/>
-  <path d="M8 61Q116 -35 230 61M13 53Q116 -39 225 53M22 45Q116 -36 216 45M33 37Q116 -31 205 37" fill="none" stroke="#e5c276" stroke-width="5" stroke-linecap="round"/>
-  <path d="M15 67l-7 13m22-28l-9 18m34-42l-8 18m39-35l-7 18m34-23l-2 19m38-15l4 18m35-4l8 18m18 8l10 14" stroke="#f0d28a" stroke-width="3" stroke-linecap="round" opacity=".9"/>
-  <path d="M16 72Q116 10 222 72" fill="none" stroke="#6a452b" stroke-width="5"/>
-  <path d="M83 158V105Q83 77 116 77Q149 77 149 105V158Z" fill="#543522" stroke="#4a2e20" stroke-width="7"/>
-  <path d="M91 158V106Q91 86 116 86Q141 86 141 106V158Z" fill="#a66a3c" stroke="#e0b477" stroke-width="3"/>
-  <path d="M105 91V157M127 91V157M94 112H138M94 137H138" stroke="#704329" stroke-width="3" opacity=".9"/>
-  <circle cx="132" cy="127" r="4" fill="#f8d77d" stroke="#70452a" stroke-width="1.5"/>
-  <rect x="35" y="86" width="39" height="39" rx="2" fill="#583a28" stroke="#5b3924" stroke-width="6"/>
-  <rect x="40" y="91" width="29" height="29" fill="#8fd0df" stroke="#f0cf91" stroke-width="3"/>
-  <path d="M54.5 92V119M41 105.5H68" stroke="#fff0c7" stroke-width="3.5"/>
-  <path d="M29 159H207" stroke="#563820" stroke-width="9"/>
-  <path d="M30 155H206" stroke="#e0a86a" stroke-width="3"/>
- </g>
+ <g id="river-hut" pointer-events="none" transform="translate(-1770 590) scale(1.95 2.2)"><image href="/Cenario/Pergolado.jpg" x="0" y="-42" width="238" height="210" preserveAspectRatio="xMidYMid meet"/></g>
 `;
 }
 
@@ -2303,7 +2284,7 @@ const MOBILE_SHORTCUTS={orders:['📜','Encomendas'],album:['🏅','Coleções']
 function renderMobileNavigation(){const nav=$('mobile-navigation');if(!nav||!state)return;const ids=(Array.isArray(state.mobileShortcuts)?state.mobileShortcuts:[]).filter(id=>MOBILE_SHORTCUTS[id]).slice(0,4);while(ids.length<4){const next=Object.keys(MOBILE_SHORTCUTS).find(id=>!ids.includes(id));if(!next)break;ids.push(next)}const more=nav.querySelector('[data-more-toggle]');if(!more)return;nav.querySelectorAll('button:not([data-more-toggle])').forEach(button=>button.remove());ids.forEach(id=>more.insertAdjacentHTML('beforebegin','<button type="button" data-modal="'+id+'" aria-label="Abrir '+MOBILE_SHORTCUTS[id][1]+'"><span>'+MOBILE_SHORTCUTS[id][0]+'</span><small>'+MOBILE_SHORTCUTS[id][1]+'</small></button>'))}
 function refresh(){syncLakeFish();expireDecorations();expireFarmTheme();syncAnimalCycles();syncOrchardTrees();syncLevelPlotUnlocks();updateHud();renderMobileNavigation();renderPlots();renderAnimals();renderFarmAddons();if(currentModal&&!modalHasFocusedEditor())renderModal()}
 function infest(){if(!farmWriteAllowed(false))return;let changed=false;for(let i=0;i<state.plots.length;i++){const p=state.plots[i];if(p.status!=='growing'||p.initialGift||progress(p)>=1)continue;const h=(Date.now()-p.plantedAt)/HOUR;if(h>=3*CROP_TIME_FACTOR&&!p.weed&&!p.weedCleared&&(Math.floor(p.plantedAt/HOUR)+i*11)%5===0){p.weed=true;changed=true}if(h>=6*CROP_TIME_FACTOR&&!p.pest&&!p.pestCleared&&(Math.floor(p.plantedAt/HOUR)+i*13)%7===0){p.pest=true;changed=true}}if(changed){markDirty(true);refresh()}}
-function openModal(kind){if(kind==='sea')switchFarmScene('sea');setMusicContext(activeScene==='hunt'?'hunt':activeScene==='river'?'river':activeScene==='sea'?'sea':kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');document.querySelector('.app')?.classList.toggle('sea-fishing-open',kind==='sea');document.body.classList.toggle('sea-fishing-open',kind==='sea');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
+function openModal(kind){if(kind==='animals')animalManagerTab='curral';if(kind==='sea')switchFarmScene('sea');setMusicContext(activeScene==='hunt'?'hunt':activeScene==='river'?'river':activeScene==='sea'?'sea':kind==='pond'&&state?.expansions?.pond?'river':kind==='sea'?'sea':'general');if(kind==='inbox'&&cloudUser)onlineInboxLoaded=false;if(kind==='gifts'&&cloudUser)onlineGiftsLoaded=false;if(kind==='lake')focusLakeArea(false);if(kind==='orchard'&&state?.expansions?.orchard)focusFarmArea('orchard',false);if(kind==='pond'&&state?.expansions?.pond)focusFarmArea('pond',false);if(kind==='haras'&&state?.expansions?.haras)focusFarmArea('haras',false);currentModal=kind;document.querySelector('.app')?.classList.add('modal-open');document.querySelector('.app')?.classList.toggle('sea-fishing-open',kind==='sea');document.body.classList.toggle('sea-fishing-open',kind==='sea');if(kind==='profile')profilePhotoDraft=state?.profilePhoto||'';$('overlay').classList.remove('hidden');try{renderModal()}catch(err){console.error('Falha ao abrir janela '+kind,err);$('modal-title').textContent=kind==='kitchen'?'Cozinha da fazenda':kind==='grill'?'Churrasqueira':kind==='account'?'Conta e sincronização':kind==='settings'?'Configurações':'Fazenda';$('modal-body').innerHTML='<p>Não foi possível carregar esta janela. Seus dados continuam preservados.</p><p class="historical-note" id="modal-error-detail"></p>';const detail=$('modal-error-detail');if(detail)detail.textContent='Detalhe técnico: '+(err?.message||String(err))}$('modal-body').scrollTop=0}
 function closeModal(){if(writeLocked&&(!cloudUser||cloudSessionReadyUserId!==cloudUser.id)){notify('Entre na sua conta para acessar a fazenda.');return}setMusicContext(activeScene==='hunt'?'hunt':activeScene==='river'?'river':activeScene==='sea'?'sea':'general');currentModal='';document.querySelector('.app')?.classList.remove('modal-open','sea-fishing-open');document.body.classList.remove('sea-fishing-open');$('overlay').classList.add('hidden');renderPlots();}
 function dailyRewardAvailable(){return state.dailyRewardDate!==todayKey()}
 function claimDailyReward(){if(!farmWriteAllowed())return;
@@ -2876,6 +2857,7 @@ function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
+ const farmHouse=$('farm-house');if(farmHouse)farmHouse.setAttribute('href',phase==='night'?'/Cenario/Casa-Noite.jpg':'/assets/casa.png');
  const huntBackdrop=$('hunt-scene-background');
  if(huntBackdrop)huntBackdrop.dataset.phase=phase;
  if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene&&!(activeScene==='sea'&&phase==='sunset'))return;
@@ -3024,16 +3006,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
   </g>
   <g id="sea-lighthouse" transform="translate(10400 0)">
-   <g transform="translate(0 490) scale(1.42) translate(0 -490)">
-    <path d="M-175 490Q-150 455 -125 420H145Q170 458 195 490Z" fill="#68736e" stroke="#485a53" stroke-width="8"/>
-    <path d="M-83 420L-58 260H76L105 420Z" fill="#f4ead3" stroke="#8d806b" stroke-width="10"/>
-    <path d="M-72 326H91M-82 385H101" stroke="#d36a48" stroke-width="25"/>
-    <path d="M-72 260L-48 205H67L91 260Z" fill="#b64d3c" stroke="#713b34" stroke-width="8"/>
-    <rect x="-28" y="276" width="58" height="52" rx="8" fill="#ffe9a4" stroke="#9c7442" stroke-width="7"/>
-    <path d="M-39 199Q9 153 57 199" fill="none" stroke="#f4ead3" stroke-width="14"/>
-    <path d="M-128 490Q5 456 168 490" fill="none" stroke="#f0e0b8" stroke-width="12"/>
-    <path d="M-30 280L-210 220M35 280L210 220" stroke="#fff1b5" stroke-width="20" opacity=".14"/>
-   </g>
+   <g transform="translate(0 490) scale(1.42) translate(0 -490)"><image href="/Cenario/Farol.jpg" x="-195" y="150" width="390" height="340" preserveAspectRatio="xMidYMid meet"/></g>
   </g>
   <g id="sea-birds" fill="none" stroke="#385c64" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
    <g class="bird-position bird-a" transform="translate(7040 165) scale(1.05)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
@@ -3060,78 +3033,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 0)">
-   <g id="sea-boat-motion">
-    <!-- casco de barco pesqueiro, com proa elevada e pintura azul-petróleo -->
-    <path d="M-930 1015Q-790 975 -565 988L590 988Q850 990 1010 1060L805 1305Q700 1385 280 1410Q-350 1430 -700 1340Q-835 1305 -885 1205Z" fill="#29434a" stroke="#23383e" stroke-width="24" stroke-linejoin="round"/>
-    <path d="M-900 1032Q-660 1000 -420 1010L620 1010Q850 1015 974 1070L790 1285Q620 1360 260 1380Q-340 1395 -675 1320Q-800 1285 -850 1195Z" fill="#47636a" stroke="#b77b45" stroke-width="12" stroke-linejoin="round"/>
-    <path d="M-868 1060Q-520 1100 -130 1070Q440 1035 935 1080L880 1140Q420 1100 -80 1135Q-530 1160 -840 1120Z" fill="#d8b27a" stroke="#61472f" stroke-width="9"/>
-    <!-- convés de madeira e tábuas -->
-    <path d="M-790 1080Q-470 1110 -120 1090Q420 1055 870 1090L720 1250Q450 1310 100 1325Q-440 1335 -690 1240Z" fill="url(#sea-deck-gradient)" stroke="#573b27" stroke-width="12"/>
-    <g stroke="#e2b77e" stroke-width="9" opacity=".72" fill="none">
-     <path d="M-690 1120Q-360 1150 -40 1130T760 1120M-650 1165Q-320 1190 0 1170T810 1160M-610 1210Q-260 1235 80 1210T770 1200M-520 1250Q-180 1270 150 1250T710 1240"/>
-     <path d="M-460 1100L-400 1290M-220 1100L-180 1310M20 1090L35 1320M260 1080L280 1305M500 1070L520 1285" opacity=".42"/>
-    </g>
-    <!-- borda clara, defensas e amarras -->
-    <path d="M-920 1022Q-520 970 -80 1005T720 1000Q900 1015 1000 1060" fill="none" stroke="#f0d7a8" stroke-width="22" stroke-linecap="round"/>
-    <path d="M-890 1050Q-520 1005 -80 1038T720 1028Q900 1040 970 1070" fill="none" stroke="#387b82" stroke-width="12" stroke-linecap="round"/>
-    <g fill="#e8ddc7" stroke="#8a6748" stroke-width="6">
-     <ellipse cx="-690" cy="1055" rx="23" ry="35"/><ellipse cx="-350" cy="1080" rx="22" ry="32"/><ellipse cx="650" cy="1040" rx="22" ry="32"/>
-    </g>
-    <g fill="none" stroke="#60432d" stroke-width="18" stroke-linecap="round">
-     <path d="M-770 1035L-770 930M-560 1050L-560 950M770 1025L770 925"/>
-    </g>
-    <!-- reflexos, friso de proa e vigias do casco -->
-    <path d="M-760 1290Q-400 1380 30 1370Q520 1360 760 1260" fill="none" stroke="#8eb6b3" stroke-width="13" opacity=".7"/>
-    <path d="M-850 1178Q-420 1240 30 1220Q520 1200 900 1135" fill="none" stroke="#d9e7d8" stroke-width="8" opacity=".46"/>
-    <g fill="#d6e4d8" stroke="#35545a" stroke-width="8"><circle cx="-500" cy="1302" r="18"/><circle cx="-250" cy="1340" r="18"/><circle cx="20" cy="1350" r="18"/><circle cx="300" cy="1332" r="18"/></g>
-    <path d="M-890 1100Q-500 1145 -80 1125T900 1100" fill="none" stroke="#f7e4bb" stroke-width="10" opacity=".72"/>
-    <!-- pequena cabine de comando na popa -->
-    <g id="sea-boat-cabin" transform="translate(-650 0)">
-     <path d="M-175 1035V875Q-170 820 -115 810H105Q160 820 165 875V1035Z" fill="#e7dfc9" stroke="#60452e" stroke-width="13"/>
-     <path d="M-185 870Q-160 785 -95 770H95Q160 785 180 870Z" fill="#2e6671" stroke="#253f45" stroke-width="13"/>
-     <path d="M-195 862Q-150 770 -85 748H100Q168 770 192 862L165 880H-170Z" fill="#d8c49d" stroke="#5b4934" stroke-width="11"/>
-     <path d="M-165 858Q-120 790 -72 782H85Q137 790 163 858" fill="none" stroke="#f4e6c5" stroke-width="9"/>
-     <path d="M-135 885H-35V940H-135ZM15 885H115V940H15Z" fill="#b6d9d6" stroke="#4e6a6a" stroke-width="8"/>
-     <path d="M-125 894L-45 932M25 894L105 932" stroke="#eef4df" stroke-width="6" opacity=".8"/>
-     <path d="M-145 875H130V950H-145Z" fill="#8fc4c7" stroke="#5a4835" stroke-width="10"/>
-     <path d="M-12 875V950M-145 912H130" stroke="#f5e8c9" stroke-width="9"/>
-     <path d="M-160 1028H150" stroke="#b47b45" stroke-width="17"/>
-     <rect x="-45" y="955" width="90" height="72" rx="8" fill="#6b4930" stroke="#4b3526" stroke-width="8"/>
-     <circle cx="0" cy="990" r="13" fill="#e8c27c"/>
-     <path d="M-100 780V735H-82V780" fill="#6d5140" stroke="#4b3526" stroke-width="6"/>
-     <path d="M-92 735Q-78 710 -62 735" fill="none" stroke="#d8e9e5" stroke-width="7"/>
-    </g>
-    <!-- caixas de pesca, boia e pequeno barril -->
-    <g transform="translate(100 1170)">
-     <path d="M-115 -65H115V78H-115Z" fill="#a66d3d" stroke="#573b27" stroke-width="10"/>
-     <path d="M-115 -28H115M-75 -65V78M75 -65V78" stroke="#e0b47a" stroke-width="9"/>
-     <path d="M-88 -80H88" stroke="#593c28" stroke-width="14" stroke-linecap="round"/>
-    </g>
-    <g transform="translate(700 1190)">
-     <path d="M-48 -70Q-62 -20 -42 56Q0 85 42 56Q62 -20 48 -70Z" fill="#b94e3e" stroke="#67392f" stroke-width="9"/>
-     <path d="M-45 -15H45" stroke="#f1d6a5" stroke-width="12"/>
-     <path d="M-24 -72Q0 -100 24 -72" fill="none" stroke="#69452d" stroke-width="10"/>
-    </g>
-    <!-- mastro curto e bandeirola -->
-    <path d="M410 1000V690" stroke="#62462e" stroke-width="17" stroke-linecap="round"/>
-    <path d="M420 700Q520 665 600 710L420 760Z" fill="#e7b75f" stroke="#76502e" stroke-width="7"/>
-    <path d="M420 700V760" stroke="#f6e7c8" stroke-width="7"/>
-    <!-- vara de pesca apoiada na amurada -->
-    <g transform="translate(760 965) rotate(-18)">
-     <path d="M0 0L-70 -280" stroke="#4d3526" stroke-width="13" stroke-linecap="round"/>
-     <path d="M-70 -280L-120 -470" stroke="#b88b5c" stroke-width="5" stroke-linecap="round"/>
-     <path d="M-120 -470Q-95 -260 -10 -55" fill="none" stroke="#eaf7ed" stroke-width="3" opacity=".75"/>
-    </g>
-   <g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
-    <ellipse cx="0" cy="95" rx="125" ry="24" fill="#3b291d" opacity=".3"/>
-    <path d="M-82 12Q-78 -42 -34 -48H38Q82 -42 84 12L68 98Q0 124 -68 98Z" fill="#9b6034" stroke="#51331f" stroke-width="13"/>
-    <path d="M-53 -40Q-48 -102 0 -102Q48 -102 53 -40" fill="none" stroke="#4e3423" stroke-width="15"/>
-    <path d="M-78 12Q0 35 80 12L70 42Q0 65 -70 42Z" fill="#c28a4d" stroke="#6e4728" stroke-width="8"/>
-    <rect x="-17" y="27" width="34" height="29" rx="7" fill="#e8c16d" stroke="#694526" stroke-width="6"/><path d="M-95 4Q-120 35 -110 72M95 4Q120 35 110 72" fill="none" stroke="#e5c18c" stroke-width="9"/>
-    <rect x="-116" y="-112" width="232" height="250" rx="28" fill="transparent" stroke="transparent"/>
-    <text x="0" y="158" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🎒</text>
-   </g>
-   <g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="/Cenario/Barco.jpg" x="-1030" y="945" width="2060" height="500" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
     <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
     <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
     <path d="M-12 -20L-100 78L-8 112L92 20Z" fill="#e7d8ae" fill-opacity=".32" stroke="#f1dfb6" stroke-width="9"/>
@@ -3139,28 +3041,19 @@ function renderSeaLandscapeMarkup(){
     <path d="M-115 92Q-10 140 112 38" fill="none" stroke="#7b5837" stroke-width="13"/>
     <rect x="-142" y="-125" width="284" height="280" rx="28" fill="transparent" stroke="transparent"/>
     <text x="0" y="178" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🪢</text>
-   </g>
-   </g>
+   </g></g>
   </g>
  </g>`;
 }
-function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();if(state.grill?.owned){const x=700,y=230;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
- <ellipse cx="0" cy="66" rx="58" ry="12" fill="#234b13" opacity=".25"/>
- <path d="M-48 -5L-40 -45H40L48 -5V52H-48Z" fill="${state.grill.assembled?'#a94c34':'#a9a09a'}" stroke="#633c24" stroke-width="5"/>
- <path d="M-48 -44L-30 -66H30L48 -44" fill="#8b4930" stroke="#603821" stroke-width="6"/>
- <path d="M-38 -36H38" stroke="#e7a56b" stroke-width="6"/>
- <path d="M-32 -24H32V25H-32Z" fill="#33231d" stroke="#5c3828" stroke-width="5"/>
- <path d="M-26 -16H26M-26 -7H26M-26 2H26" stroke="#b6a18a" stroke-width="4"/>
- <path d="M-28 30Q-16 8 -4 30Q8 8 20 30" fill="none" stroke="#ef8d31" stroke-width="6"/>
- <path d="M-36 50V68M36 50V68" stroke="#67402a" stroke-width="9" stroke-linecap="round"/>
- <path d="M-54 -42L-54 -68H-36V-42" fill="#9a5133" stroke="#633c24" stroke-width="5"/>
- <path d="M-51 -67H-33" stroke="#4a3429" stroke-width="8"/>
- 
+function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();const now=Date.now(),grillActive=(state.grill?.queue||[]).some(job=>Number.isFinite(job.startedAt)&&job.startedAt<=now&&Number.isFinite(job.readyAt)&&job.readyAt>now);
+ if(state.grill?.owned){const x=700,y=230;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
+ <image href="/Cenario/Churrasqueira.jpg" x="-64" y="-72" width="128" height="145" preserveAspectRatio="xMidYMid meet"/>
+ ${grillActive?`<g class="grill-fire" transform="translate(0 30)" pointer-events="none"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g>`:''}
  </g>`}
  const kitchenSmoke=(state.kitchen?.queue||[]).some(job=>job.readyAt>Date.now());
- const grillSmoke=(state.grill?.queue||[]).some(job=>job.readyAt>Date.now());
+ const grillSmoke=grillActive;
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 53)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
- if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(650 155)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
+ if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(700 158)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
  for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
   <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
@@ -3171,28 +3064,8 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
  </g>
- <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)">
-  <rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/>
-  <ellipse cx="0" cy="58" rx="54" ry="11" fill="#294b24" opacity=".3"/>
-  <path d="M-30 -35Q-35 -58 -13 -60H13Q35 -58 30 -35" fill="none" stroke="#284b2d" stroke-width="10"/>
-  <path d="M-43 -28Q-47 -42 -30 -48L-20 -55H20L30 -48Q47 -42 43 -28L48 37Q0 60 -48 37Z" fill="#397b42" stroke="#214b2d" stroke-width="7" stroke-linejoin="round"/>
-  <path d="M-34 -28Q0 -39 34 -28L39 30Q0 47 -39 30Z" fill="#4e9851" stroke="#a4c77b" stroke-width="3"/>
-  <path d="M-24 -39L-18 36M24 -39L18 36" stroke="#244e31" stroke-width="7" stroke-linecap="round"/>
-  <rect x="-25" y="-8" width="50" height="31" rx="7" fill="#d8c28a" stroke="#5d4a2b" stroke-width="3"/>
-  <path d="M-13 7Q0 -5 13 7Q0 20 -13 7Z" fill="#4d8b4d" stroke="#315b35" stroke-width="2"/>
-  <path d="M-36 -38L-25 -47M36 -38L25 -47" stroke="#d0b47b" stroke-width="4" stroke-linecap="round"/>
- </g>
- <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900) rotate(-35)">
-  <rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/>
-  <ellipse cx="0" cy="8" rx="27" ry="7" fill="#294b24" opacity=".28"/>
-  <path d="M0 0Q-2 -48 7 -96Q13 -145 20 -194" fill="none" stroke="#4d2e1b" stroke-width="12" stroke-linecap="round"/>
-  <path d="M0 -8Q-1 -55 9 -103Q14 -151 21 -194" fill="none" stroke="#bd8b4f" stroke-width="5" stroke-linecap="round"/>
-  <path d="M20 -194Q31 -207 40 -213" fill="none" stroke="#e4c98e" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M-1 -26Q-23 -37 -29 -20Q-31 -7 -12 -4" fill="none" stroke="#3d2920" stroke-width="6"/>
-  <circle cx="-10" cy="-17" r="10" fill="#c5cbd0" stroke="#4d3a2a" stroke-width="3"/>
-  <circle cx="-10" cy="-17" r="4" fill="#6c8590"/>
-  <path d="M-8 -1L-5 9" stroke="#70452c" stroke-width="7" stroke-linecap="round"/>
- </g>`)}}
+ <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)"><rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/MochilaPesca.jpg" x="-62" y="-66" width="124" height="132" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900) rotate(-35)"><rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/VaraDePesca.jpg" x="-32" y="-210" width="76" height="230" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
 function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
@@ -3582,6 +3455,23 @@ async function importSocialPackage(file){if(!farmWriteAllowed())return;if(!file|
 function renderInbox(){const rows=state.social.inbox||[];return rows.length?rows.map(m=>`<div class="list-line"><span><b>${m.kind==='gift'?'🎁':m.kind==='message'?'✉️':'📬'} ${safe(m.from||'Sistema')}</b><br/>${safe(m.text)}<br/><small>${new Date(m.createdAt||Date.now()).toLocaleString('pt-BR')}</small></span><button class="modal-action alt compact" data-read-message="${safe(m.id)}" ${m.read?'disabled':''}>${m.read?'Lida':'Marcar lida'}</button></div>`).join(''):'<div class="offline-feature"><span>📭</span><b>Sua caixa de entrada está vazia</b><p>Importe um arquivo de mensagem, cartão de amigo ou presente para receber correspondências de outros jogadores.</p></div>'}
 function renderHistory(){return state.history.length?`<div class="history-list">${state.history.slice(0,25).map(h=>`<div class="history-entry"><span>🌾 ${safe(h.message)}</span><small>${new Date(h.time).toLocaleString('pt-BR')}</small></div>`).join('')}</div>`:'<p>Seu assistente ainda não registrou atividades. Plante, colha e cuide da fazenda para começar o histórico.</p>'}
 function feedAllHungryAnimals(){if(!farmWriteAllowed())return;const candidates=state.animals.filter(animal=>{const cfg=ANIMALS[animal.type];if(!cfg||cfg.role==='horse')return false;if(animal.type==='cachorro')return animal.status!=='guarding';if(isDualPurposeAnimal(animal.type))return !['producing','ready'].includes(animal.productionStatus||'hungry');return animal.status==='hungry'});if(!candidates.length)return notify('Não há animais precisando de alimentação.');const keys=[...new Set(candidates.map(animal=>ANIMALS[animal.type].feedKey).filter(Boolean).concat(['feed_producers','feed_growers']))],before=keys.reduce((sum,key)=>sum+(state.inventory[key]||0),0);for(const animal of candidates)feedAnimal(animal.id);const after=keys.reduce((sum,key)=>sum+(state.inventory[key]||0),0),fed=Math.max(0,before-after);notify(fed?fed+' alimentação(ões) realizada(s) em lote.':'Nenhum animal pôde ser alimentado; confira o estoque de ração.')}
+function renderAnimalManager(){
+ const tab=animalManagerTab||'curral',birds=state.animals.filter(a=>isBirdType(a.type)),livestock=state.animals.filter(a=>a.type!=='cachorro'&&!isBirdType(a.type)&&ANIMALS[a.type]?.role!=='horse'),horses=state.animals.filter(a=>ANIMALS[a.type]?.role==='horse'),dog=state.animals.find(a=>a.type==='cachorro');
+ const tabs=[['curral','🐄','Curral'],['viveiro','🐦','Viveiro'],['haras','🐎','Haras'],['cao','🐕','Cão']];
+ const bar='<div class="animal-manager-tabs" role="tablist" aria-label="Categorias de animais">'+tabs.map(([id,icon,label])=>'<button type="button" role="tab" aria-selected="'+(tab===id)+'" class="animal-manager-tab '+id+(tab===id?' is-active':'')+'" data-animal-tab="'+id+'"><span>'+icon+'</span>'+label+'</button>').join('')+'</div>';
+ let content='';
+ if(tab==='curral'){
+  content='<div class="animal-summary"><b>🐄 Curral: '+farmAnimalCount()+' de '+ANIMAL_SLOTS.length+' animais</b><small>Até 20 animais. Gerencie alimentação, produção, crescimento, coleta e venda nesta aba.</small></div><div class="animal-list">'+(livestock.length?livestock.map(renderAnimalCard).join(''):'<p>O curral está vazio. Compre animais abaixo para iniciar a criação.</p>')+'</div><h3>🛒 Comprar animais para o curral</h3><div class="grid-cards">'+Object.entries(ANIMALS).filter(([id,a])=>a.role!=='guard'&&a.role!=='horse'&&!isBirdType(id)).map(([id,a])=>'<div class="store-card"><span class="symbol">'+a.icon+'</span><strong>'+a.name+'</strong><small>'+(a.productName?'Produz '+a.productName.toLowerCase()+'. ':'')+'Ração: '+a.feedName+'</small><b>'+(a.currency==='greenCoins'?'🟢 '+fmt(a.price)+' moedas verdes':'🟡 '+fmt(a.price)+' moedas amarelas')+'</b><button data-buy-animal="'+id+'" '+(state[a.currency==='greenCoins'?'greenCoins':'coins']<a.price||farmAnimalCount()>=ANIMAL_SLOTS.length?'disabled':'')+'>Comprar animal</button></div>').join('')+'</div>';
+ }else if(tab==='viveiro'){
+  content='<div class="animal-summary"><b>🐦 Viveiro: '+birds.length+' ave(s)</b><small>Galinha sem limite específico; pombo, pato, pavão e peru têm limite de duas unidades por espécie.</small></div><div class="animal-list">'+(birds.length?birds.map(renderAnimalCard).join(''):'<p>O viveiro está vazio. Adquira aves abaixo para começar.</p>')+'</div><h3>🛒 Comprar aves para o viveiro</h3><div class="grid-cards">'+BIRD_TYPES.map(id=>{const a=ANIMALS[id],count=birdCount(id),limited=id!=='galinha',limit=birdLimitReached(id),wallet=a.currency==='greenCoins'?'greenCoins':'coins';return '<div class="store-card"><span class="symbol">'+a.icon+'</span><strong>'+a.name+'</strong><small>Em criação: '+count+(limited?' / 2':'')+' · Ração: '+a.feedName+'</small><b>'+(a.currency==='greenCoins'?'🟢 '+fmt(a.price)+' moedas verdes':'🟡 '+fmt(a.price)+' moedas amarelas')+'</b><button data-buy-animal="'+id+'" '+(limit||state[wallet]<a.price?'disabled':'')+'>'+(limit?'Limite atingido':'Comprar ave')+'</button></div>'}).join('')+'</div>';
+ }else if(tab==='haras'){
+  const unlocked=horseUnlockedSlots(),nextLevel=20+unlocked*2;
+  content=state.expansions.haras?'<div class="animal-summary"><b>🐎 Haras: '+horses.length+' / '+unlocked+' vagas liberadas</b><small>'+(unlocked<10?'Próxima vaga no nível '+nextLevel+'.':'Todas as vagas foram liberadas.')+'</small></div><div class="animal-list">'+(horses.length?horses.map(renderAnimalCard).join(''):'<p>O Haras está vazio.</p>')+'</div><h3>🛒 Comprar cavalos</h3><div class="grid-cards horse-breed-grid">'+Object.entries(HORSE_BREEDS).map(([id,b])=>'<div class="store-card horse-breed-card"><img class="horse-breed-preview horse-breed-'+id+'" src="'+HORSE_ASSETS.horse+'" alt="Cavalo '+b.name+'"><strong>'+b.name+'</strong><small>'+b.coat+'<br/>Venda adulta: 🟡 '+fmt(b.sellPrice)+' moedas</small><b>🟡 '+fmt(b.price)+' moedas</b><button data-buy-animal="'+id+'" '+(horses.length>=unlocked||state.coins<b.price?'disabled':'')+'>Comprar cavalo</button></div>').join('')+'</div><h3>🌾 Alimentação</h3><div class="store-card"><strong>Ração para cavalos</strong><small>Estoque: '+fmt(state.inventory.feed_horse||0)+'</small><b>🟡 180 moedas</b><button data-buy-feed="horse_percheron" '+(state.coins<180?'disabled':'')+'>Comprar ração</button></div>':'<div class="offline-feature"><span>🐎</span><b>O Haras ainda está bloqueado</b><p>Libere a expansão no nível 20 por 16.000 moedas amarelas ou 25 moedas verdes.</p><button class="modal-action" data-open="areas">Ver expansões</button></div>';
+ }else{
+  content='<div class="animal-summary"><b>🐕 Cão de guarda</b><small>O cão permanece no cenário e é gerenciado somente por esta aba.</small></div>'+(dog?'<div class="animal-list">'+renderAnimalCard(dog)+'</div>':'<p>Nenhum cão está cadastrado.</p>')+'<div class="actions"><button class="modal-action alt" data-equip-dog-breed="classico" '+(dog?.breed==='classico'?'disabled':'')+'>Restaurar aparência original</button></div><h3>🐕 Aparência do cão</h3><div class="grid-cards dog-breed-grid">'+Object.entries(DOG_BREEDS).filter(([id])=>id!=='classico').map(([id,b])=>{const owned=isDogBreedOwned(id),active=dog?.breed===id,wallet=b.currency==='greenCoins'?'greenCoins':'coins',symbol=b.currency==='greenCoins'?'🟢':'🟡';return '<div class="store-card dog-breed-card"><img class="dog-breed-preview" src="'+(b.image||('/assets/'+b.asset+'.'+(b.ext||'svg')))+'" alt="'+b.name+'"><strong>'+b.name+'</strong><small>'+b.id+(b.event?' · Variante de evento':'')+'</small><b>'+symbol+' '+fmt(b.price)+'</b>'+(owned?'<button data-equip-dog-breed="'+id+'" '+(active?'disabled':'')+'>'+(active?'Em uso':'Equipar raça')+'</button>':'<button data-buy-dog-breed="'+id+'" '+(state[wallet]<b.price?'disabled':'')+'>Comprar e equipar</button>')+'</div>'}).join('')+'</div>';
+ }
+ return bar+'<div class="animal-manager-panel">'+content+'</div>';
+}
 function renderAnimalCard(a){
  const cfg=ANIMALS[a.type],feedCount=state.inventory[cfg.feedKey]||0,feedSymbol=cfg.feedCurrency==='greenCoins'?'🟢':'🟡';let status='',action='';
  if(cfg.role==='horse'){
@@ -3653,18 +3543,8 @@ break;} case 'haras':title='Haras da fazenda';if(!state.expansions.haras){html='
  html=summary+specialistSummary('haras','Haras')+capacity+'<button class="modal-action alt" data-focus-area="haras">Centralizar Haras no cenário</button><h3>🐎 Meus cavalos</h3><div class="animal-list">'+(horses.length?horses.map(renderAnimalCard).join(''):'<p>O Haras está vazio. Escolha uma raça na loja para adquirir seu primeiro cavalo.</p>')+'</div><h3>🛒 Loja de raças</h3><div class="grid-cards horse-breed-grid">'+breedCards+'</div>'+feed+'<p class="historical-note">Os títulos do Haras evoluem separadamente do nível da fazenda. As raças disponíveis para compra são Percheron, Quarto de Milha, Puro Sangue, Frísio e Andaluz.</p>';
  break;
 }
-case 'animals':title='Animais da fazenda';{
-const birds=state.animals.filter(a=>isBirdType(a.type)),livestock=state.animals.filter(a=>!isBirdType(a.type)&&ANIMALS[a.type]?.role!=='horse'),horses=state.animals.filter(a=>ANIMALS[a.type]?.role==='horse');
-html=`<div class="actions"><button class="modal-action alt" data-feed-all="true">🐾 Alimentar animais aptos em lote</button></div><div class="animal-summary"><b>🐦 Viveiro: ${birds.length} ave(s)</b><small>Galinha sem limite específico. Pombo, pato, pavão e peru: até 2 unidades de cada espécie.</small></div>
-<div class="animal-summary"><b>🐾 Curral: ${farmAnimalCount()} de ${ANIMAL_SLOTS.length} espaços ocupados</b><small>Alimente os animais para iniciar a produção ou avançar seu crescimento. Os ciclos desta edição seguem a redução de tempo de 1/5.</small></div><div class="animal-summary"><b>🐎 Haras: ${horses.length} cavalo(s)</b><small>${state.expansions.haras?'Gerencie raças, alimentação e crescimento na janela do Haras.':'Desbloqueie no nível 20 em Expansões.'}</small><button class="modal-action alt" data-open="haras">${state.expansions.haras?'Abrir Haras':'Ver expansão do Haras'}</button></div>
-<h3>🐦 Aves do viveiro</h3><div class="animal-list">${birds.length?birds.map(renderAnimalCard).join(''):'<p>O viveiro ainda está vazio. Adquira aves abaixo para começar sua criação.</p>'}</div>
-<h3>🛒 Comprar aves para o viveiro</h3><div class="grid-cards">${BIRD_TYPES.map(id=>{const a=ANIMALS[id],count=birdCount(id),limited=id!=='galinha',limitReached=birdLimitReached(id),wallet=a.currency==='greenCoins'?'greenCoins':'coins',price=a.currency==='greenCoins'?`🟢 ${fmt(a.price)} moedas verdes`:`🟡 ${fmt(a.price)} moedas amarelas`,description=isDualPurposeAnimal(id)?`Produz ${a.productName.toLowerCase()} e também pode crescer até o nível 10 para abate.`:a.role==='producer'?`Produz ${a.productName.toLowerCase()} após ser alimentada.`:'Cresce em cinco etapas e pode ser vendida quando adulta.';return `<div class="store-card"><span class="symbol">${a.icon}</span><strong>${a.name}</strong><small>${description}<br/>${limited?`Limite: 2 · ${count}/2`:`Quantidade atual: ${count} · sem limite específico`}<br/>Ração: ${a.feedName}${a.estimateNote?`<br/><span class="data-origin estimated">${safe(a.estimateNote)}</span>`:''}</small><b>${price}</b><button data-buy-animal="${id}" ${limitReached||state[wallet]<a.price?'disabled':''}>${limitReached?'Limite atingido':'Comprar ave'}</button></div>`}).join('')}</div>
-<h3>🐄 Animais do curral</h3><div class="animal-list">${livestock.map(renderAnimalCard).join('')}</div>
-<div class="actions"><button class="modal-action alt" data-equip-dog-breed="classico" ${state.animals.find(a=>a.type==='cachorro')?.breed==='classico'?'disabled':''}>↩ Restaurar cachorro original</button></div>
-<h3>🐕 Canil · raças históricas</h3><p>Os IDs das raças foram recuperados de catálogos antigos. Os preços abaixo são estimativas locais; as raças alteram a aparência do cão de guarda, sem criar animais extras.</p><div class="grid-cards dog-breed-grid">${Object.entries(DOG_BREEDS).filter(([id])=>id!=='classico').map(([id,b])=>{const owned=isDogBreedOwned(id),active=state.animals.find(a=>a.type==='cachorro')?.breed===id,wallet=b.currency==='greenCoins'?'greenCoins':'coins',symbol=b.currency==='greenCoins'?'🟢':'🟡',priceNote='Preço local estimado';return `<div class="store-card dog-breed-card"><img class="dog-breed-preview" src="${b.image||("/assets/"+b.asset+"."+(b.ext||"svg"))}" alt="${b.name}"><strong>${b.name}</strong><small>ID histórico ${b.id}${b.event?'<br/>Variante de evento':''}<br/>${owned?'Adquirido permanentemente':priceNote}</small><b>${symbol} ${fmt(b.price)} ${b.currency==='greenCoins'?'moedas verdes':'moedas'}</b>${owned?`<button data-equip-dog-breed="${id}" ${active?'disabled':''}>${active?'Em uso':'Equipar raça'}</button>`:`<button data-buy-dog-breed="${id}" ${state[wallet]<b.price?'disabled':''}>Comprar e equipar</button>`}</div>`}).join('')}</div>
-<h3>🛒 Comprar animais para o curral</h3><div class="grid-cards">${Object.entries(ANIMALS).filter(([id,a])=>a.role!=='guard'&&!isBirdType(id)).map(([id,a])=>`<div class="store-card"><span class="symbol">${a.icon}</span><strong>${a.name}</strong><small>${isDualPurposeAnimal(id)?`Produz ${a.productName.toLowerCase()} e pode crescer até o nível 10 para abate.`:a.role==='producer'?`Produz ${a.productName.toLowerCase()} a cada ciclo após ser alimentado.`:'Cresce em cinco etapas; pode ser vendido quando adulto.'}<br/>Ração: ${a.feedName}${a.estimateNote?`<br/><span class="data-origin estimated">${safe(a.estimateNote)}</span>`:''}</small><b>${a.currency==='greenCoins'?`🟢 ${fmt(a.price)} moedas verdes`:`🟡 ${fmt(a.price)} moedas amarelas`}</b><button data-buy-animal="${id}" ${state[a.currency==='greenCoins'?'greenCoins':'coins']<a.price||farmAnimalCount()>=ANIMAL_SLOTS.length?'disabled':''}>Comprar animal</button></div>`).join('')}</div>
-<p class="historical-note">As aves agora ocupam o viveiro e não consomem espaços do curral. Os animais de corte do viveiro (galinha, peru e pato) e do curral, exceto o burro, podem produzir e crescer em paralelo até o nível 10; no nível máximo, podem ser abatidos para gerar carne. Pombo e pavão permanecem fora desse sistema.</p>`;break;
-}case 'factory':title='Fábrica de flores';html=`<div class="gift-summary"><span class="symbol">🏭</span><div><b>Monte buquês com as flores do depósito</b><small>Os ingredientes são consumidos na produção. Cada receita aumenta sua popularidade local e concede experiência.</small></div></div><div class="grid-cards bouquet-recipes">${BOUQUET_IDS.map(id=>{const r=BOUQUETS[id],need=Object.entries(r.recipe).map(([flower,amount])=>`${CROPS[flower].icon} ${amount} ${CROPS[flower].name}`).join(' + '),enough=Object.entries(r.recipe).every(([flower,amount])=>(state.flowerWarehouse[flower]||0)>=amount),owned=state.bouquets[id]||0;return `<div class="store-card bouquet-card"><span class="symbol">${r.icon}</span><strong>${r.name}</strong><small>${r.description}<br/>Ingredientes: ${need}<br/>Em estoque: ${owned} buquê(s)</small><b>⭐ +${r.popularity} popularidade · +${r.xp} XP</b><button data-make-bouquet="${id}" ${enough?'':'disabled'}>Produzir buquê</button></div>`}).join('')}</div><p class="historical-note">Receitas históricas documentadas: 6 crisântemos, 16 peônias, 20 cravos e 26 rosas vermelhas por buquê. A popularidade de 520 pontos do buquê de rosas vermelhas é citada em guia de 2010; os demais valores e o bônus offline são balanceamento desta reconstrução.</p><div class="actions"><button class="modal-action alt" data-open="warehouse">Abrir depósito de flores</button><button class="modal-action alt" data-open="gifts">Casa de presentes</button><button class="modal-action alt" data-open="shop">Comprar sementes de flores</button></div>`;break;
+case 'animals':title='Animais da fazenda';html=renderAnimalManager();break;
+case 'factory':title='Fábrica de flores';html=`<div class="gift-summary"><span class="symbol">🏭</span><div><b>Monte buquês com as flores do depósito</b><small>Os ingredientes são consumidos na produção. Cada receita aumenta sua popularidade local e concede experiência.</small></div></div><div class="grid-cards bouquet-recipes">${BOUQUET_IDS.map(id=>{const r=BOUQUETS[id],need=Object.entries(r.recipe).map(([flower,amount])=>`${CROPS[flower].icon} ${amount} ${CROPS[flower].name}`).join(' + '),enough=Object.entries(r.recipe).every(([flower,amount])=>(state.flowerWarehouse[flower]||0)>=amount),owned=state.bouquets[id]||0;return `<div class="store-card bouquet-card"><span class="symbol">${r.icon}</span><strong>${r.name}</strong><small>${r.description}<br/>Ingredientes: ${need}<br/>Em estoque: ${owned} buquê(s)</small><b>⭐ +${r.popularity} popularidade · +${r.xp} XP</b><button data-make-bouquet="${id}" ${enough?'':'disabled'}>Produzir buquê</button></div>`}).join('')}</div><p class="historical-note">Receitas históricas documentadas: 6 crisântemos, 16 peônias, 20 cravos e 26 rosas vermelhas por buquê. A popularidade de 520 pontos do buquê de rosas vermelhas é citada em guia de 2010; os demais valores e o bônus offline são balanceamento desta reconstrução.</p><div class="actions"><button class="modal-action alt" data-open="warehouse">Abrir depósito de flores</button><button class="modal-action alt" data-open="gifts">Casa de presentes</button><button class="modal-action alt" data-open="shop">Comprar sementes de flores</button></div>`;break;
 case 'gifts':title='Casa de presentes';if(!cloudUser){html='<div class="gift-summary"><span class="symbol">🔐</span><div><b>Entre na sua conta para enviar e receber presentes online</b><small>Sua coleção local continua disponível neste dispositivo.</small></div></div><button class="modal-action" data-open="account">Entrar ou criar conta</button>';break;}html=renderOnlineGifts();break;
 case 'areas':title='Expansões da fazenda';{
  const cards=Object.entries(AREA_CONFIG).map(([id,a])=>{
@@ -3826,7 +3706,7 @@ const bottomNavToggle=$('bottom-nav-toggle');let bottomNavVisible=true;try{botto
 const applyBottomNavVisibility=visible=>{bottomNavVisible=!!visible;document.querySelector('.app')?.classList.toggle('bottom-navigation-hidden',!bottomNavVisible);if(bottomNavToggle){bottomNavToggle.innerHTML=bottomNavVisible?'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>':'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.1 3.8M6.2 6.2C3.5 8.1 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';bottomNavToggle.setAttribute('aria-pressed',String(bottomNavVisible));bottomNavToggle.setAttribute('aria-label',bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior');bottomNavToggle.title=bottomNavVisible?'Ocultar barra inferior':'Mostrar barra inferior'}};
 applyBottomNavVisibility(bottomNavVisible);
 bottomNavToggle?.addEventListener('click',()=>{applyBottomNavVisibility(!bottomNavVisible);try{localStorage.setItem('cf2-bottom-navigation-hidden',bottomNavVisible?'0':'1')}catch{}});$('close-modal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});
-$('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.enableLocalWeather)enableLocalWeather();
+$('modal-body').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.animalTab){animalManagerTab=d.animalTab;renderModal();return}if(d.enableLocalWeather)enableLocalWeather();
 if(d.socialSearch)searchOnlinePlayers();if(d.socialCodeSearch)searchOnlinePlayerByCode();if(d.markAllNotifications)markAllOnlineNotificationsRead();if(d.copyPlayerCode)copyOnlinePlayerCode();if(d.socialRefresh)refreshOnlineSocial();if(d.socialAdd)sendOnlineFriendRequest(d.socialAdd);if(d.socialAccept)respondOnlineFriendRequest(d.socialAccept,true);if(d.socialReject)respondOnlineFriendRequest(d.socialReject,false);if(d.conversation){activeConversationId=d.conversation;onlineMessages=[];openModal('inbox');loadOnlineConversation(d.conversation,false)}if(d.socialInboxRefresh)refreshOnlineInbox();if(d.sendOnlineMessage)sendOnlineMessage();if(d.notificationRead)markOnlineNotificationRead(d.notificationRead);if(d.visitFarm)visitOnlineFriendFarm(d.visitFarm);if(d.farmLike)toggleVisitedFarmLike();if(d.farmVisitToggle)toggleFarmVisitPermission();if(d.sendOnlineGift)sendOnlineGift(d.sendOnlineGift);if(d.claimOnlineGift)claimOnlineGift(d.claimOnlineGift);if(d.refreshOnlineGifts)refreshOnlineGifts();if(d.exportFriend)exportFriendCard();if(d.exportMessage)exportSocialMessage();if(d.exportBouquet)exportBouquetGift(d.exportBouquet);if(d.importSocial)$('social-import-file')?.click();if(d.readMessage){const m=state.social.inbox.find(x=>x.id===d.readMessage);if(m){m.read=true;markDirty();renderModal()}}if(d.feedAll)feedAllHungryAnimals();if(d.saveMobileShortcuts){if(!farmWriteAllowed())return;const chosen=[...$('modal-body').querySelectorAll('[data-mobile-shortcut]:checked')].map(x=>x.dataset.mobileShortcut);if(chosen.length<1||chosen.length>4)return notify('Escolha entre um e quatro atalhos.');state.mobileShortcuts=chosen;markDirty();renderMobileNavigation();renderModal();notify('Barra inferior atualizada e salva na nuvem.')}if(d.acceptTask)acceptTutorialTask(d.acceptTask);if(d.confirmTask)confirmTutorialTask(d.confirmTask);if(d.claimMission)claimMission(d.missionPeriod,d.claimMission);if(d.claimAchievement)claimAchievement(d.claimAchievement);if(d.saveFarmName)saveFarmName();if(d.buyVipCard)buyVIPCard();if(d.buyDogBreed)buyDogBreed(d.buyDogBreed);if(d.equipDogBreed)equipDogBreed(d.equipDogBreed);if(d.buyGenericFood)buyGenericAnimalFood(d.buyGenericFood);if(d.buyAnimalRation)buyAnimalRation(d.buyAnimalRation);if(d.upgradeAnimal)upgradeAnimal(d.upgradeAnimal);if(d.saveProfilePhoto)saveProfilePhoto();if(d.removeProfilePhoto)removeProfilePhoto();if(d.buySoilWand)buySoilWand(d.buySoilWand,d.wandCurrency||'green');if(d.unlockPlot!==undefined)buyNextPlot();if(d.buyFertilizer)buyFertilizer(d.buyFertilizer);if(d.useFertilizer){chosenFertilizer=d.useFertilizer;tool='fertilizer';closeModal();document.querySelectorAll('.tool').forEach(btn=>btn.classList.toggle('active',btn.dataset.tool==='fertilizer'));$('tip').textContent=`${FERTILIZERS[chosenFertilizer]?.name||'Fertilizante'}: clique em uma planta em crescimento.`}if(d.buyExpansion)buyExpansion(d.buyExpansion,d.expansionCurrency);if(d.plantOrchardTree!==undefined)plantOrchardTree(Number(d.slot),d.plantOrchardTree);if(d.buyGift)buyGiftItem(d.buyGift);if(d.harvestOrchard!==undefined)harvestOrchardTree(Number(d.harvestOrchard));if(d.focusArea)focusFarmArea(d.focusArea);
 if(d.setMood)setMood(d.setMood);if(d.buyRod)buyFishingRod(d.buyRod,d.currency);if(d.selectRod)selectFishingRod(d.selectRod);if(d.castFish)castFishingRod();if(d.buyGrill)buyGrill();if(d.buyGrillPart)buyGrillPart(d.buyGrillPart);if(d.buyGrillIngredient)buyGrillSupply(d.buyGrillIngredient);if(d.buyTurkeyMeat)buyTurkeyMeat();if(d.butcherAnimal)butcherAnimal(d.butcherAnimal);if(d.produceGrill)produceGrillRecipe(d.produceGrill,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectGrill)collectGrill();if(d.cookRecipe)produceKitchenRecipe(d.cookRecipe,Number(b.closest('.store-card')?.querySelector('[data-batch-qty]')?.value||1));if(d.collectKitchen)collectKitchen();if(d.selectForest!==undefined){selectedForestSlot=Number(d.selectForest);renderModal()}if(d.plantForest!==undefined)plantForestTree(Number(d.slot),d.plantForest);if(d.harvestForest!==undefined)harvestForestTree(Number(d.harvestForest));if(d.buySeaNet)buySeaNet(d.buySeaNet,d.currency);if(d.selectSeaNet)selectSeaNet(d.selectSeaNet);if(d.castSea)castSeaNet();if(d.tailorTab){selectedTailorTab=d.tailorTab;renderModal()}if(d.tailorGroup){selectedTailorGroup=d.tailorGroup;renderModal()}if(d.craftTailor)craftTailorItem(d.craftTailor);if(d.collectTailor)collectTailorItems();if(d.buyTailorSupply)buyTailorSupply(d.buyTailorSupply);if(d.sellTailor){const qty=saleQuantity('tailor',d.sellTailor,state.tailorWarehouse[d.sellTailor]||0);if(qty)sellTailorItem(d.sellTailor,qty)}if(d.craftWood)craftWoodItem(d.craftWood);if(d.collectWoodwork)collectWoodwork();if(d.claimAlbum)claimAlbumCollection(d.claimAlbum);if(d.fulfillOrder)fulfillOrder(d.fulfillOrder);if(d.buyLakeEgg)buyLakeEgg(d.buyLakeEgg);if(d.buyLakeFeed)buyLakeFeed();if(d.feedLakeFish)feedLakeFish(d.feedLakeFish);if(d.sellLakeFish)sellLakeFish(d.sellLakeFish);if(d.placeLakeDecor)placeLakeDecoration(d.placeLakeDecor);if(d.removeLakeDecor!==undefined)removeLakeDecoration(Number(d.removeLakeDecor));if(d.placeLakeBridge)placeLakeBridge(d.placeLakeBridge);if(d.removeLakeBridge!==undefined)removeLakeBridge(Number(d.removeLakeBridge));if(d.toggleMeatLock)toggleMeatLock(d.toggleMeatLock);if(d.sellFish){const qty=saleQuantity('fish',d.sellFish,state.fishWarehouse[d.sellFish]||0);if(qty)sellFishStock('river',d.sellFish,qty)}if(d.sellSeaFish){const qty=saleQuantity('sea',d.sellSeaFish,state.seaWarehouse[d.sellSeaFish]||0);if(qty)sellFishStock('sea',d.sellSeaFish,qty)}if(d.sellMeat){const qty=saleQuantity('meat',d.sellMeat,state.meatWarehouse[d.sellMeat]||0);if(qty)sellMeat(d.sellMeat,qty)}if(d.toggleProcessedLock)toggleProcessedLock(d.toggleProcessedLock);if(d.sellProcessed){const qty=saleQuantity('processed',d.sellProcessed,state.processedWarehouse[d.sellProcessed]||0);if(qty)sellProcessed(d.sellProcessed,qty)}if(d.assembleGrill)assembleGrill();if(d.buyTheme)buyFarmTheme(d.buyTheme,d.currency||'coins');if(d.applyTheme)applyFarmTheme(d.applyTheme);if(d.buyDecoration)buyDecoration(d.buyDecoration);if(d.placeDecoration)placeDecoration(d.placeDecoration);if(d.removeDecoration!==undefined)removeDecoration(d.removeDecoration);
 if(d.mixHerb)produceHerbMix(d.mixHerb);if(d.collectHerbMix)collectHerbMix();if(d.sellHerbMix){const qty=saleQuantity('mix',d.sellHerbMix,state.inventory['mix_'+d.sellHerbMix]||0);if(qty)sellHerbMix(d.sellHerbMix,qty);}if(d.buyTree){if(writeLocked)return notify('Salvamento protegido.');const t=FOREST_TREES[d.buyTree];if(!t||t.retired||farmLevel()<t.level)return notify('Muda ainda bloqueada ou retirada da loja.');if(state.coins<t.price)return notify('Moedas amarelas insuficientes.');state.coins-=t.price;const key='tree_'+d.buyTree;state.inventory[key]=(state.inventory[key]||0)+1;remember('Comprou muda de '+t.name+'.');markDirty();refresh();notify('Muda de '+t.name+' adicionada ao inventário.')}
