@@ -964,15 +964,15 @@ function flower(x,y,s=1,color='#ffe8c3'){let a='';for(let i=0;i<5;i++){const ang
 function grassClump(x,y,s=1){return `<g pointer-events="none" opacity=".67" transform="translate(${x} ${y}) scale(${s})"><path d="M0 0q-5-10-14-11M0 0q3-13-1-18M0 0q8-11 14-8M0 0q-8-6-11-4" fill="none" stroke="#2b8d1d" stroke-width="2.4" stroke-linecap="round"/></g>`}
 function fencePath(points,section=''){let rails='';for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];rails+=`<path d="M${a[0]} ${a[1]-29}L${b[0]} ${b[1]-29}M${a[0]} ${a[1]-9}L${b[0]} ${b[1]-9}" fill="none" stroke="#68452c" stroke-width="15" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-30}L${b[0]} ${b[1]-30}M${a[0]} ${a[1]-10}L${b[0]} ${b[1]-10}" fill="none" stroke="#b77a43" stroke-width="9" stroke-linecap="round"/><path d="M${a[0]} ${a[1]-34}L${b[0]} ${b[1]-34}M${a[0]} ${a[1]-14}L${b[0]} ${b[1]-14}" fill="none" stroke="#e8bd79" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>`}
 let posts=points.map(([x,y])=>`<g><ellipse cx="${x+3}" cy="${y+9}" rx="14" ry="7" fill="#31551e" opacity=".28"/><path d="M${x-12} ${y-55}L${x-10} ${y-65}L${x+1} ${y-72}L${x+12} ${y-65}L${x+13} ${y+8}L${x-11} ${y+8}Z" fill="#85512f" stroke="#57391f" stroke-width="3.5"/><path d="M${x-10} ${y-55}L${x-8} ${y-64}L${x+1} ${y-69}L${x+10} ${y-63}L${x+10} ${y+3}L${x-8} ${y+3}Z" fill="#b87943"/><path d="M${x-8} ${y-55}L${x+1} ${y-63}L${x+9} ${y-55}" fill="none" stroke="#e8bd79" stroke-width="3.5" stroke-linecap="round"/><path d="M${x-4} ${y-43}V${y-2}" stroke="#d59a5b" stroke-width="3" opacity=".8"/><ellipse cx="${x+1}" cy="${y-29}" rx="3" ry="5" fill="#71452a" opacity=".7"/></g>`).join('');return `<g class="fence-section ${section}" data-fence-section="${section}" pointer-events="none"><path d="${points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y+4}`).join(' ')}" fill="none" stroke="#6f5836" stroke-width="20" stroke-linecap="round" opacity=".14"/>${rails}${posts}</g>`}
-const ROAD_POINTS=[[-1370,1300],[-1350,1190],[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[300,1030],[380,1040],[455,1070],[535,1090],[620,1092],[700,1070],[770,1025],[825,980],[875,950],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
+const ROAD_POINTS=[[-1415,2050],[-1400,1800],[-1385,1550],[-1370,1300],[-1350,1190],[-1320,1020],[-1050,1030],[-700,1025],[-300,1035],[120,1040],[300,1030],[380,1040],[455,1070],[535,1090],[620,1092],[700,1070],[770,1025],[825,980],[875,950],[910,940],[1120,930],[1390,900],[1650,918],[2010,890],[2350,870],[2680,890],[3100,905],[3600,875],[4050,870],[4400,890]];
 function roadOffsetPoints(side,spacing=118){
  const out=[];
  for(let i=1;i<ROAD_POINTS.length;i++){
-  const a=ROAD_POINTS[i-1],b=ROAD_POINTS[i],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*side*70,ny=dx/len*side*70,steps=Math.max(1,Math.ceil(len/spacing));
+  const a=ROAD_POINTS[i-1],b=ROAD_POINTS[i],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*side*92,ny=dx/len*side*92,steps=Math.max(1,Math.ceil(len/spacing));
   for(let j=0;j<steps;j++){const t=j/steps;out.push([a[0]+dx*t+nx,a[1]+dy*t+ny])}
  }
  const a=ROAD_POINTS[ROAD_POINTS.length-2],b=ROAD_POINTS[ROAD_POINTS.length-1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1;
- out.push([b[0]-dy/len*side*70,b[1]+dx/len*side*70]);return out;
+ out.push([b[0]-dy/len*side*92,b[1]+dx/len*side*92]);return out;
 }
 function roadFenceMarkup(side){
  const pts=roadOffsetPoints(side),isGate=p=>side===-1&&p[0]>1135&&p[0]<1260;
@@ -1189,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" pointer-events="none" transform="translate(0 -50)">${svgImage('casinha-cachorro',450,245,145,140)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none" transform="translate(0 -50)">${svgImage('casinha-cachorro',520,245,145,140)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=610;y=260;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=675;y=285;w=150;h=112.5;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -3132,7 +3132,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
  </g>
  <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)"><rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/MochilaPesca.jpg" x="-62" y="-66" width="124" height="132" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>
- <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900) rotate(-35)"><rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/VaraDePesca.jpg" x="-32" y="-210" width="76" height="230" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900)"><rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/VaraDePesca.jpg" x="-32" y="-210" width="76" height="230" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
 function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
