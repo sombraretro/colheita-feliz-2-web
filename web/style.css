@@ -1383,3 +1383,146 @@ button:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:fo
 @media(prefers-reduced-motion:reduce){
  .farm-scene-navigation button,.orchard-seed-list button,.forest-slot-card{transition:none!important}
 }
+
+
+/* Etapa 4 — adaptação final por faixa de tela, sem alterar cenários ou mecânicas. */
+html,body,.app{min-width:0;min-height:0}
+button,input,select,textarea{font:inherit}
+img,svg,video,canvas{max-width:100%}
+.dialog,.modal-body,.store-card,.animal-card,.queue-line,.list-line,.actions{min-width:0}
+.modal-body{overflow-x:hidden;overflow-y:auto;scrollbar-gutter:stable}
+.modal-body :where(input,select,textarea,button){max-width:100%}
+.modal-body :where(input:not([type=checkbox]):not([type=radio]),select,textarea){min-width:0}
+.modal-body :where(p,small,strong,b,span,label){overflow-wrap:anywhere}
+.actions{align-items:center}
+.grid-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.dialog{max-height:min(90dvh,900px)}
+.dialog-head{flex:0 0 auto}
+.modal-body{flex:1 1 auto;max-height:none;min-height:0}
+.toast{width:max-content;max-width:calc(100vw - 24px);overflow-wrap:anywhere}
+.farm-scene-navigation{width:max-content;max-width:calc(100% - 24px)}
+.farm-scene-navigation button{min-width:0}
+.side-menu,.more-menu{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
+@media(min-width:1025px){
+ .topbar{min-width:0;gap:10px;padding-inline:clamp(10px,1.2vw,20px)}
+ .brand{flex:0 0 auto;min-width:clamp(230px,19vw,310px)}
+ .topbar .tabs{flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#b98a4b transparent;padding:0 2px}
+ .topbar .tabs .tab{flex:0 0 auto;padding:10px clamp(7px,.85vw,15px);font-size:clamp(10px,.82vw,12px)}
+ .topright{flex:0 0 auto;gap:4px}
+ .topright .iconbtn{margin-left:3px}
+ .farm-stats{max-width:min(390px,31vw)}
+ .side-menu{max-height:calc(100% - 150px)}
+ .tool-bar{max-width:min(760px,calc(100% - 330px))}
+ .dialog{max-height:min(88dvh,920px)}
+}
+@media(min-width:1025px) and (max-width:1450px){
+ .brand{min-width:220px}
+ .brand-name{font-size:clamp(19px,1.8vw,25px)}
+ .brand-flower{font-size:30px}
+ .topbar .tabs .tab{padding-inline:7px;font-size:10px}
+ .topright #connection-label{display:none}
+}
+@media(min-width:701px) and (max-width:1024px){
+ .topbar{height:auto;min-height:56px;max-height:82px;flex:0 0 auto;flex-wrap:nowrap;align-items:center;gap:8px;padding:6px 12px}
+ .topbar .brand{min-width:0;max-width:none;flex:1 1 auto}
+ .topbar .brand-name{font-size:clamp(19px,2.6vw,26px)}
+ .topbar .tabs{display:none!important}
+ .topright{margin-left:auto;flex:0 0 auto;gap:5px}
+ .topright .iconbtn{margin-left:2px}
+ .playfield{min-height:0}
+ .farm-stats{left:12px;top:12px;transform:scale(.88);transform-origin:top left}
+ .side-menu{max-height:calc(100% - 160px);max-width:min(300px,36vw)}
+ .farm-scene-navigation{top:10px;max-width:calc(100% - 24px);gap:4px}
+ .farm-scene-navigation button{padding:8px 10px;font-size:11px}
+ .tool-bar{bottom:calc(82px + env(safe-area-inset-bottom));width:min(700px,calc(100% - 36px));max-width:none}
+ .quick-actions{bottom:calc(160px + env(safe-area-inset-bottom));max-width:190px}
+ .zoom-ui{bottom:calc(148px + env(safe-area-inset-bottom))}
+ .footer{display:none}
+ .mobile-navigation{min-height:72px;padding-bottom:max(7px,env(safe-area-inset-bottom))}
+}
+@media(max-width:700px){
+ .app{height:100dvh;min-height:0}
+ .topbar{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+ .topright{gap:3px}
+ .topright .iconbtn{margin-left:1px}
+ .farm-stats{max-width:calc(100vw - 58px)}
+ .tool-bar{left:50%;width:calc(100% - 16px);max-width:520px;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+ .tool-bar::-webkit-scrollbar{display:none}
+ .tool{flex:0 0 clamp(36px,10vw,48px);width:auto}
+ .farm-scene-navigation{width:calc(100% - 12px);max-width:calc(100% - 12px);gap:3px}
+ .farm-scene-navigation button{flex:1 1 0;padding-inline:clamp(2px,1.2vw,7px);font-size:clamp(8px,2.45vw,10px);white-space:nowrap}
+ .zoom-ui{max-width:calc(100% - 12px)}
+ .overlay{padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left))}
+ .dialog{width:100%;max-height:calc(100dvh - 12px);border-width:3px}
+ .dialog-head{min-height:52px;padding:7px 10px}
+ .dialog-head h2{min-width:0;overflow-wrap:anywhere}
+ .dialog-head button{flex:0 0 40px}
+ .modal-body{padding:10px}
+ .store-card{min-width:0}
+ .store-card button,.modal-action,.dialog-head button{min-height:42px}
+ .list-line{align-items:flex-start;flex-wrap:wrap}
+ .list-line>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .list-line>.actions{max-width:100%;flex-wrap:wrap}
+ .sale-qty-input{max-width:100%}
+ .mobile-navigation{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(5px,env(safe-area-inset-bottom))}
+ .mobile-navigation button{min-width:0;overflow:hidden}
+ .mobile-navigation button small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media(max-width:430px){
+ .farm-stats{left:6px;max-width:calc(100vw - 54px)}
+ .farm-scene-navigation button{font-size:clamp(7.5px,2.25vw,9px);padding-inline:2px}
+ .mobile-navigation{gap:3px}
+ .mobile-navigation button{padding-inline:1px}
+ .mobile-navigation button span{font-size:18px}
+ .mobile-navigation button small{font-size:9px}
+ .modal-body{padding:8px}
+ .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .store-card{padding:8px}
+ .store-card strong{font-size:11px}
+ .store-card small{font-size:9px}
+ .actions{gap:6px}
+ .actions .modal-action{flex:1 1 auto}
+}
+@media(max-width:380px){
+ .brand-name{font-size:14px}
+ .topright .iconbtn{width:28px;height:28px}
+ .farm-scene-navigation{gap:2px;padding:3px}
+ .farm-scene-navigation button{font-size:7.5px;min-height:34px}
+ .tool-bar{gap:1px;padding-inline:3px}
+ .tool{flex-basis:35px}
+ .zoom-ui{right:4px;gap:1px}
+ .zoom-ui output{font-size:9px;padding:5px}
+ .dialog-head h2{font-size:17px}
+ .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .topbar{min-height:42px;height:42px;max-height:42px}
+ .farm-scene-navigation{top:4px}
+ .farm-stats{top:4px;transform:scale(.56)}
+ .tool-bar{height:42px;bottom:calc(54px + env(safe-area-inset-bottom))}
+ .zoom-ui{bottom:calc(100px + env(safe-area-inset-bottom))}
+ .mobile-navigation{min-height:48px}
+ .mobile-navigation button{min-height:38px;flex-direction:row;gap:4px}
+ .dialog{max-height:calc(100dvh - 8px)}
+ .dialog-head{min-height:44px;padding:4px 9px}
+ .dialog-head button{width:36px;height:36px;min-height:36px}
+ .modal-body{padding:7px}
+}
+@media(max-height:560px) and (min-width:701px){
+ .topbar{min-height:48px;height:48px}
+ .farm-stats{transform:scale(.72);transform-origin:top left}
+ .side-menu{max-height:calc(100% - 110px)}
+ .tool-bar{height:52px;bottom:8px}
+ .quick-actions{bottom:72px}
+ .zoom-ui{bottom:68px}
+ .dialog{max-height:calc(100dvh - 12px)}
+}
+@media(min-width:1451px){
+ .topbar .tabs .tab{padding-inline:clamp(10px,.9vw,18px)}
+ .farm-stats{max-width:390px}
+ .side-menu{width:min(390px,22vw)}
+}
+@media(prefers-reduced-motion:reduce){
+ .topbar .tabs,.tool-bar,.farm-scene-navigation,.mobile-navigation,.side-menu,.more-menu{scroll-behavior:auto}
+}
