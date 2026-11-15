@@ -2439,14 +2439,7 @@ const MIX_HERB_RECIPES={
  tempero_pimentoes_coloridos:{name:'Tempero de Pimentões Coloridos',icon:'🌈',yield:3,xp:44,ingredients:[['crop','pimentao_verde',1],['crop','pimentao_vermelho',1],['crop','pimentao_amarelo',1],['herb','alecrim',1]],note:'Mistura tricolor de pimentões e alecrim.'},
  tempero_ervas_provence:{name:'Ervas de Provence',icon:'🌿',yield:2,xp:42,ingredients:[['herb','alecrim',1],['herb','manjericao',1],['herb','folha_louro',1],['supply','lavender',1]],note:'Mistura inspirada nas ervas aromáticas provençais.'}
 };
-const ALBUM_COLLECTIONS=[
-{id:'tailoring',category:'alfaiataria',title:'Alfaiataria',icon:'🧵',description:'Roupas, calçados e acessórios criados no ateliê.',items:Object.keys(TAILOR_RECIPES)},
-{id:'carpentry',category:'marcenaria',title:'Marcenaria',icon:'🪚',description:'Móveis e peças produzidos na marcenaria.',items:Object.keys(WOODWORK_RECIPES)},
-{id:'kitchen',category:'cozinha',title:'Cozinha',icon:'🍲',description:'Receitas preparadas na cozinha.',items:Object.keys(GRILL_RECIPES).filter(id=>GRILL_RECIPES[id].kitchenOnly)},
-{id:'grill',category:'churrasqueira',title:'Churrasqueira',icon:'🔥',description:'Preparos feitos na churrasqueira.',items:Object.keys(GRILL_RECIPES).filter(id=>!GRILL_RECIPES[id].kitchenOnly)},
-{id:'herbs',category:'ervas',title:'Mix de Ervas',icon:'🌿',description:'Temperos e banhos preparados com ervas.',items:Object.keys(MIX_HERB_RECIPES)},
-{id:'bouquets',category:'buques',title:'Buquês',icon:'💐',description:'Arranjos florais montados na fazenda.',items:Object.keys(BOUQUETS)}
-];
+
 
 const ORDER_NPCS=[
  {name:'Dona Amélia',icon:'👩‍🌾',line:'Estou preparando uma feira e preciso de alguns produtos da fazenda.'},
@@ -2642,6 +2635,15 @@ for(const [id,r] of Object.entries(GRILL_RECIPES)){
 }
 const MIX_HERB_PREP_MINUTES={banho_sete_ervas:35,banho_descarrego:30,banho_energizacao:25,banho_protecao:30,banho_renovacao_pitangueira:25,banho_folhas_aromaticas:25,banho_mata:35,banho_louro_alfazema:30,banho_louro_prosperidade:25,banho_louro_amor:30,banho_pipoca:35,banho_casca_laranja:20,banho_pitangueira:25,tempero_aromatico:15,tempero_verde_mata:15,tempero_pimenta_alecrim:15,tempero_pimentao_verde:18,tempero_pimentao_vermelho:20,tempero_pimentao_amarelo:15,tempero_cajun:15,tempero_italiano:20,tempero_citrico_peixes:12,tempero_mineiro:15,tempero_pimentoes_coloridos:20,tempero_ervas_provence:12};
 for(const [id,r] of Object.entries(MIX_HERB_RECIPES))r.minutes=MIX_HERB_PREP_MINUTES[id]||(id.startsWith('banho_')?25:15);
+
+const ALBUM_COLLECTIONS=[
+{id:'tailoring',category:'alfaiataria',title:'Alfaiataria',icon:'🧵',description:'Roupas, calçados e acessórios criados no ateliê.',items:Object.keys(TAILOR_RECIPES)},
+{id:'carpentry',category:'marcenaria',title:'Marcenaria',icon:'🪚',description:'Móveis e peças produzidos na marcenaria.',items:Object.keys(WOODWORK_RECIPES)},
+{id:'kitchen',category:'cozinha',title:'Cozinha',icon:'🍲',description:'Receitas preparadas na cozinha.',items:Object.keys(GRILL_RECIPES).filter(id=>GRILL_RECIPES[id].kitchenOnly)},
+{id:'grill',category:'churrasqueira',title:'Churrasqueira',icon:'🔥',description:'Preparos feitos na churrasqueira.',items:Object.keys(GRILL_RECIPES).filter(id=>!GRILL_RECIPES[id].kitchenOnly)},
+{id:'herbs',category:'ervas',title:'Mix de Ervas',icon:'🌿',description:'Temperos e banhos preparados com ervas.',items:Object.keys(MIX_HERB_RECIPES)},
+{id:'bouquets',category:'buques',title:'Buquês',icon:'💐',description:'Arranjos florais montados na fazenda.',items:Object.keys(BOUQUETS)}
+];
 
 const MIX_HERB_SALE_PRICES={
  banho_sete_ervas:520,banho_descarrego:420,banho_energizacao:400,banho_protecao:360,
