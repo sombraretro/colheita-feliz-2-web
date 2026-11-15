@@ -1099,9 +1099,9 @@ function blocked(x,y){
  if(x>1250&&x<1790&&y>190&&y<790)return true;
  if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
- if(x>950&&x<1640&&y>1020&&y<1380)return true;
+ if(x>950&&x<1810&&y>1020&&y<1380)return true;
  if(x>-700&&x<-200&&y>665&&y<1080)return true;
- if(x>950&&x<1640&&y>1020&&y<1380)return true;
+ if(x>950&&x<1810&&y>1020&&y<1380)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>510&&x<730&&y>125&&y<300)return true;
  if(x>1240&&x<1800&&y>150&&y<785)return true;
