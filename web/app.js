@@ -1445,7 +1445,7 @@ function normalizeHunterState(data){
  for(const item of HUNT_MATERIALS)h.materials[item.id]=Number.isFinite(h.materials[item.id])?Math.max(0,Math.floor(h.materials[item.id])):0;
  h.titleRewardsClaimed=Array.isArray(h.titleRewardsClaimed)?[...new Set(h.titleRewardsClaimed.filter(level=>HUNT_TITLES.some(title=>title.level===level)))]:[1];
  if(!h.titleRewardsClaimed.includes(1))h.titleRewardsClaimed.push(1);
- h.activeHunt=h.activeHunt&&typeof h.activeHunt==='object'&&HUNT_FAMILIES[h.activeHunt.familyId]&&huntAnimal(h.activeHunt.familyId,h.activeHunt.animalId)&&huntMaterial(h.activeHunt.resourceId)&&Number.isFinite(h.activeHunt.startedAt)&&Number.isFinite(h.activeHunt.endsAt)&&h.activeHunt.endsAt>h.activeHunt.startedAt?{...h.activeHunt}:null;
+ h.activeHunt=h.activeHunt&&typeof h.activeHunt==='object'&&HUNT_FAMILIES[h.activeHunt.familyId]&&huntAnimal(h.activeHunt.familyId,h.activeHunt.animalId)&&huntMaterial(h.activeHunt.resourceId)&&Number.isFinite(h.activeHunt.startedAt)&&Number.isFinite(h.activeHunt.endsAt)&&h.activeHunt.endsAt>h.activeHunt.startedAt?{...h.activeHunt,foodBuffBonus:Number.isFinite(h.activeHunt.foodBuffBonus)?Math.max(0,Math.min(.2,h.activeHunt.foodBuffBonus)):0}:null;
  h.pendingResult=h.pendingResult&&typeof h.pendingResult==='object'&&typeof h.pendingResult.animalName==='string'&&typeof h.pendingResult.resourceName==='string'&&Number.isFinite(h.pendingResult.quantity)?h.pendingResult:null;
  h.history=Array.isArray(h.history)?h.history.filter(entry=>entry&&typeof entry.animalName==='string'&&Number.isFinite(entry.completedAt)).slice(0,20):[];
 }
@@ -2477,7 +2477,7 @@ function foodBuffType(recipeId,recipe){
 }
 function normalizeFoodBuffState(data){
  const b=data.foodBuff;
- data.foodBuff=b&&FOOD_BUFFS[b.type]&&Number.isFinite(b.activatedAt)&&Number.isFinite(b.expiresAt)&&b.expiresAt>b.activatedAt&&typeof b.recipe==='string'&&GRILL_RECIPES[b.recipe]?{type:b.type,activatedAt:b.activatedAt,expiresAt:b.expiresAt,recipe:b.recipe}:null;
+ data.foodBuff=b&&FOOD_BUFFS[b.type]&&Number.isFinite(b.activatedAt)&&Number.isFinite(b.expiresAt)&&b.expiresAt>b.activatedAt&&b.expiresAt<=b.activatedAt+FOOD_BUFFS[b.type].duration&&typeof b.recipe==='string'&&GRILL_RECIPES[b.recipe]&&foodBuffType(b.recipe,GRILL_RECIPES[b.recipe])===b.type?{type:b.type,activatedAt:b.activatedAt,expiresAt:b.expiresAt,recipe:b.recipe}:null;
  if(data.foodBuff&&data.foodBuff.expiresAt<=Date.now())data.foodBuff=null;
 }
 function activeFoodBuff(type){
