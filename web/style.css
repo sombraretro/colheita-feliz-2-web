@@ -1145,3 +1145,12 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
  .playfield.hunt-scene-active .farm-scene-navigation{width:calc(100% - 12px);max-width:560px;flex-wrap:wrap}
 }
 @media(prefers-reduced-motion:reduce){.hunt-light,.hunt-mist,.hunt-foliage-motion,.hunt-ground-breeze,.hunt-scene-background>img,.hunt-backpack{animation:none!important;transition:none!important}}
+
+/* Ajustes mobile da Caça: deslocamento menos brusco e navegação sempre acessível. */
+.hunt-scene-background>img{transition:filter 2.5s ease,object-position .14s cubic-bezier(.22,.61,.36,1)}
+.playfield.hunt-scene-active .farm-scene-navigation{display:flex!important;visibility:visible!important;opacity:1!important;position:absolute;left:50%;right:auto;top:auto;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:1300;width:min(560px,calc(100% - 16px));max-width:none;flex-wrap:nowrap;justify-content:center}
+@media(max-width:760px){
+ .playfield.hunt-scene-active .farm-scene-navigation{bottom:max(10px,env(safe-area-inset-bottom));width:calc(100% - 12px);gap:3px;padding:4px}
+ .playfield.hunt-scene-active .farm-scene-navigation button{flex:1 1 0;min-width:0;padding:8px 3px;font-size:clamp(9px,2.7vw,11px);min-height:38px;white-space:nowrap}
+}
+@media(prefers-reduced-motion:reduce){.hunt-scene-background>img{transition:filter 2.5s ease!important}}
