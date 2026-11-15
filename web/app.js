@@ -2591,6 +2591,25 @@ const ALBUM_COLLECTIONS=[
 {id:'bouquets',category:'buques',title:'Buquês',icon:'💐',description:'Arranjos florais montados na fazenda.',items:Object.keys(BOUQUETS)}
 ];
 
+const ORDER_NPCS=[
+ {name:'Dona Amélia',icon:'👩‍🌾',line:'Estou preparando uma feira e preciso de alguns produtos da fazenda.'},
+ {name:'Seu Joaquim',icon:'👨‍🌾',line:'Quero encomendar alguns artigos feitos com capricho.'},
+ {name:'Clara',icon:'👩',line:'Estou organizando uma reunião e preciso destes produtos.'},
+ {name:'Bento',icon:'👨',line:'Tenho clientes esperando por estes itens.'},
+ {name:'Helena',icon:'👩‍🌻',line:'Pode separar estes produtos para mim?'},
+ {name:'Antônio',icon:'🧑‍🌾',line:'Estou renovando meu estoque e aceito produtos de qualidade.'},
+ {name:'Marina',icon:'👩',line:'Preciso destes itens para uma ocasião especial.'},
+ {name:'Rafael',icon:'👨',line:'Quero valorizar o trabalho das profissões da fazenda.'}
+];
+const ORDER_PROFESSIONS=[
+ {id:'tailor',label:'Alfaiataria',icon:'🧵',items:farm=>Object.entries(TAILOR_RECIPES).filter(([id,r])=>r.level<=specialistLevelFromXP(farm?.specialistProgress?.tailor?.xp||0)).map(([id,r])=>({type:'tailor',id,name:r.name,icon:r.icon,base:r.sellPrice||220,xp:r.xp||12}))},
+ {id:'carpentry',label:'Marcenaria',icon:'🪚',items:()=>Object.entries(WOODWORK_RECIPES).filter(([id,r])=>!r.lakeBridge).map(([id,r])=>({type:'carpentry',id,name:r.name,icon:'🪚',base:(r.qty||2)*115+150,xp:18}))},
+ {id:'kitchen',label:'Cozinha',icon:'🍲',items:()=>Object.entries(GRILL_RECIPES).filter(([id,r])=>r.kitchenOnly).map(([id,r])=>({type:'kitchen',id,name:r.name,icon:r.icon,base:r.salePrice||260,xp:r.xp||20}))},
+ {id:'grill',label:'Churrasqueira',icon:'🔥',items:()=>Object.entries(GRILL_RECIPES).filter(([id,r])=>!r.kitchenOnly).map(([id,r])=>({type:'grill',id,name:r.name,icon:r.icon,base:r.salePrice||280,xp:r.xp||20}))},
+ {id:'herbs',label:'Mix de Ervas',icon:'🌿',items:()=>Object.entries(MIX_HERB_RECIPES).map(([id,r])=>({type:'herbs',id,name:r.name,icon:r.icon,base:Math.max(180,(r.xp||12)*14),xp:r.xp||18}))},
+ {id:'bouquets',label:'Buquês',icon:'💐',items:()=>Object.entries(BOUQUETS).map(([id,r])=>({type:'bouquets',id,name:r.name,icon:r.icon,base:Math.max(220,r.popularity*1.5),xp:r.xp||20}))}
+];
+
 const MIX_HERB_SALE_PRICES={
  banho_sete_ervas:520,banho_descarrego:420,banho_energizacao:400,banho_protecao:360,
  banho_renovacao_pitangueira:360,banho_folhas_aromaticas:400,banho_mata:460,
