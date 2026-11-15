@@ -645,15 +645,26 @@ async function handleAuthSession(session){
  }
 }
 async function authenticate(mode){
- if(!initSupabase())return notify('A conexão de autenticação não carregou. Verifique sua internet e tente novamente.');
- const email=$('auth-email')?.value.trim()||'',password=$('auth-password')?.value||'';
- if(!email||!password)return notify('Informe e-mail e senha.');
- const result=mode==='signup'
-  ?await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:new URL('/',window.location.origin).toString()}})
-  :await supabaseClient.auth.signInWithPassword({email,password});
- if(result.error)return notify(result.error.message||'Não foi possível autenticar.');
- if(result.data.session){await handleAuthSession(result.data.session);if(currentModal==='account')renderModal();}
- else notify('Cadastro iniciado. Verifique seu e-mail para confirmar a conta antes de entrar.');
+ const button=$(mode==='signup'?'auth-signup':'auth-signin');
+ const originalLabel=mode==='signup'?'Criar conta':'Entrar';
+ if(button?.disabled)return;
+ if(button){button.disabled=true;button.textContent='Conectando...';button.setAttribute('aria-busy','true');}
+ try{
+  if(!initSupabase())throw new Error('A conexão de autenticação não carregou. Verifique sua internet e tente novamente.');
+  const email=$('auth-email')?.value.trim()||'',password=$('auth-password')?.value||'';
+  if(!email||!password){notify('Informe e-mail e senha.');return;}
+  const result=mode==='signup'
+   ?await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:new URL('/',window.location.origin).toString()}})
+   :await supabaseClient.auth.signInWithPassword({email,password});
+  if(result.error)throw result.error;
+  if(result.data.session){await handleAuthSession(result.data.session);if(currentModal==='account')renderModal();}
+  else notify('Cadastro iniciado. Verifique seu e-mail para confirmar a conta antes de entrar.');
+ }catch(error){
+  console.error('Falha na autenticação:',error);
+  notify(error?.message||'Não foi possível concluir a autenticação. Verifique sua conexão e tente novamente.');
+ }finally{
+  if(button?.isConnected){button.disabled=false;button.textContent=originalLabel;button.removeAttribute('aria-busy');}
+ }
 }
 async function disconnectCloud(){
  if(!supabaseClient)return;
