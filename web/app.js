@@ -1916,9 +1916,9 @@ function plantOrchardTree(slot,id){
 function harvestOrchardTree(slot){
  if(writeLocked)return notify('Salvamento protegido.');const tree=state.orchardTrees?.[slot];if(!tree?.type)return openModal('orchard');
  const crop=CROPS[tree.type];if(tree.status!=='ready'&&orchardTreeProgress(tree)<1){return notify(`${crop.name}: faltam ${formatHours((1-orchardTreeProgress(tree))*cropHours(tree.type,!!tree.regrowing))}.`)}
- state.warehouse[tree.type]=(state.warehouse[tree.type]||0)+crop.yield;const orchardLeafMap={manga:'folha_manga',goiaba:'folha_goiaba',acerola:'folha_acerola',eucalipto:'folha_eucalipto',cana:'folha_cana'};if(orchardLeafMap[tree.type]){const leaf='herb_'+orchardLeafMap[tree.type];state.inventory[leaf]=(state.inventory[leaf]||0)+Math.max(1,Math.floor(crop.yield/4));}const xp=Math.floor(crop.xp/(crop.seasons||1));awardXP(xp,'colheita do pomar');playSfx('harvest');tree.harvestsRemaining=Math.max(0,(tree.harvestsRemaining||1)-1);
+ const harvestAmount=foodYield(crop.yield,'harvest');state.warehouse[tree.type]=(state.warehouse[tree.type]||0)+harvestAmount;const orchardLeafMap={manga:'folha_manga',goiaba:'folha_goiaba',acerola:'folha_acerola',eucalipto:'folha_eucalipto',cana:'folha_cana'};if(orchardLeafMap[tree.type]){const leaf='herb_'+orchardLeafMap[tree.type];state.inventory[leaf]=(state.inventory[leaf]||0)+Math.max(1,Math.floor(crop.yield/4));}const xp=Math.floor(crop.xp/(crop.seasons||1));awardXP(xp,'colheita do pomar');playSfx('harvest');tree.harvestsRemaining=Math.max(0,(tree.harvestsRemaining||1)-1);
  if(tree.type==='pinheiro_natal'&&tree.harvestsRemaining<=1){state.decorInventory.christmas_tree=(state.decorInventory.christmas_tree||0)+1;remember('Recebeu um Pinheiro de Natal decorável no Pomar.')}if(tree.harvestsRemaining>0){tree.status='growing';tree.plantedAt=Date.now();tree.regrowing=true}else state.orchardTrees[slot]={type:null,status:'empty',plantedAt:0,harvestsRemaining:0,regrowing:false};
- remember(`Colheu ${crop.yield} ${crop.name} no Pomar.`);markDirty();refresh();notify(`Pomar: ${crop.yield} ${crop.name} recolhidos · +${xp} XP.`)
+ remember(`Colheu ${harvestAmount} ${crop.name} no Pomar.`);markDirty();refresh();notify(`Pomar: ${harvestAmount} ${crop.name} recolhidos · +${xp} XP.`)
 }
 function buyGiftItem(id){
  if(writeLocked)return notify('Salvamento protegido.');const gift=GIFT_ITEMS[id];if(!gift)return;
@@ -2338,12 +2338,12 @@ function syncPendingFishing(){
  if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
   const item=SEA_TYPES[sea.id];state.seaFishing.pendingCatch=null;
   const seaQuantity=activeFoodBuff('fishing')?2:1;if(sea.id!=='caviar')state.seaWarehouse[sea.id]=(state.seaWarehouse[sea.id]||0)+seaQuantity;
-  state.inventory.caviar=(state.inventory.caviar||0)+3;
+  const caviarReward=3+(sea.id==='caviar'&&activeFoodBuff('fishing')?1:0);state.inventory.caviar=(state.inventory.caviar||0)+caviarReward;
   state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
   discoverItem('mar',sea.id,item.name,item.icon);const earnedXP=awardProfessionXP('fisher',item.xp,'pesca no mar');
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
-  remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'. Recompensa adicional: 3 caviares.');
-  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:seaQuantity,reward:'+3 caviares',isExtraordinary:!!sea.isExtraordinary,scene:'sea'});
+  remember((sea.isExtraordinary?'Capturou extraordinariamente ':'Capturou ')+item.name+' com a rede '+net.name+'. Recompensa adicional: '+caviarReward+' caviares.');
+  celebrations.push({name:item.name,icon:item.icon,rarity:item.rarity,xp:earnedXP,quantity:seaQuantity,reward:'+'+caviarReward+' caviares',isExtraordinary:!!sea.isExtraordinary,scene:'sea'});
   changed=true;
  }
  if(changed){markDirty();refresh();celebrations.forEach(queueFishingCelebration)}
