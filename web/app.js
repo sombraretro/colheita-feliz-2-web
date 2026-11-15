@@ -2741,11 +2741,12 @@ function updateDayNight(){
   environment.innerHTML='<g id="environment-sun" pointer-events="none" transform="translate(1370 -42)"><circle r="58" fill="'+glow+'" opacity=".18"/><circle r="40" fill="'+sun+'"/><circle cx="-11" cy="-12" r="11" fill="#fff6a6" opacity=".45"/></g>';
  }
  if(activeScene==='sea'){
+  const seaSun=$('sea-day-sun');if(seaSun)seaSun.style.display=phase==='night'?'none':'';
   if(phase==='night')environment.innerHTML+='<g id="sea-night-sky" pointer-events="none"><g fill="#fff7d6"><circle cx="6650" cy="40" r="4"/><circle cx="7100" cy="155" r="3"/><circle cx="7550" cy="-20" r="4"/><circle cx="7900" cy="110" r="3"/><circle cx="8650" cy="-35" r="4"/><circle cx="9050" cy="125" r="3"/><circle cx="9650" cy="10" r="4"/><circle cx="10100" cy="145" r="3"/></g><g id="sea-moon" transform="translate(6900 105)"><circle r="270" fill="#dcecff" opacity=".13"/><circle r="205" fill="#e9edf0" stroke="#fff" stroke-width="12"/><path d="M-130 -72Q-18 -205 110 -105Q210 -26 135 112Q24 225 -112 126Q-208 28 -130 -72Z" fill="#d0d8df"/><g fill="#b9c4cf"><circle cx="-64" cy="-54" r="34"/><circle cx="74" cy="-92" r="22"/><circle cx="45" cy="70" r="42"/><circle cx="-92" cy="86" r="23"/></g><path d="M-80 -150Q-10 -195 60 -164" fill="none" stroke="#fff" stroke-width="13" opacity=".55"/></g></g>';
   else{
    const sunsetProgress=phase==='sunset'?Math.max(0,Math.min(1,(minutes-1020)/120)):0;
    const sunY=phase==='sunset'?75+sunsetProgress*400:75;
-   const seaSun=$('sea-day-sun');if(seaSun)seaSun.setAttribute('transform','translate(8500 '+sunY+')');
+   if(seaSun)seaSun.setAttribute('transform','translate(8500 '+sunY+')');
   }
  }
 }
@@ -3751,7 +3752,7 @@ $('playfield').addEventListener('pointermove',e=>{
  const dx=point.x-drag.x,dy=point.y-drag.y;
  if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;
  if(drag.mode==='hunt'){
-  const rect=point.rect,panX=Math.max(18,Math.min(82,drag.panX-dx/Math.max(1,rect.width)*64)),panY=Math.max(18,Math.min(82,drag.panY-dy/Math.max(1,rect.height)*64));
+  const rect=point.rect,panX=Math.max(20,Math.min(80,drag.panX-dx/Math.max(1,rect.width)*38)),panY=Math.max(22,Math.min(78,drag.panY-dy/Math.max(1,rect.height)*38));
   const image=$('hunt-scene-background')?.querySelector('img');if(image)image.style.objectPosition=panX+'% '+panY+'%';
   suppressWorldClickUntil=Date.now()+350;e.preventDefault();return;
  }
