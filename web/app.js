@@ -531,8 +531,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:945,y:1050,w:96,h:72},{x:1045,y:1050,w:96,h:72},{x:1145,y:1050,w:96,h:72},{x:1245,y:1050,w:96,h:72},{x:1345,y:1050,w:96,h:72},
-  {x:945,y:1190,w:96,h:72},{x:1045,y:1190,w:96,h:72},{x:1145,y:1190,w:96,h:72},{x:1245,y:1190,w:96,h:72},{x:1345,y:1190,w:96,h:72}
+  {x:995,y:1110,w:96,h:72},{x:1095,y:1110,w:96,h:72},{x:1195,y:1110,w:96,h:72},{x:1295,y:1110,w:96,h:72},{x:1395,y:1110,w:96,h:72},
+  {x:995,y:1250,w:96,h:72},{x:1095,y:1250,w:96,h:72},{x:1195,y:1250,w:96,h:72},{x:1295,y:1250,w:96,h:72},{x:1395,y:1250,w:96,h:72}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -972,7 +972,7 @@ function roadOffsetPoints(side,spacing=118){
  out.push([b[0]-dy/len*side*70,b[1]+dx/len*side*70]);return out;
 }
 function roadFenceMarkup(side){
- const pts=roadOffsetPoints(side),isGate=p=>side<0&&p[0]>1135&&p[0]<1260;
+ const pts=roadOffsetPoints(side),isGate=p=>p[0]>1135&&p[0]<1260;
  const segments=[];let current=[];
  for(const p of pts){if(isGate(p)){if(current.length>1)segments.push(current);current=[]}else current.push(p)}
  if(current.length>1)segments.push(current);
@@ -1099,9 +1099,9 @@ function blocked(x,y){
  if(x>1250&&x<1790&&y>190&&y<790)return true;
  if(insidePoly(x,y,fieldOutline)||insidePoly(x,y,expansionOutline))return true;
  if(x>755&&x<1240&&y>20&&y<485)return true;
- if(x>680&&x<1150&&y>880&&y<1200)return true;
+ if(x>950&&x<1640&&y>1020&&y<1380)return true;
  if(x>-700&&x<-200&&y>665&&y<1080)return true;
- if(x>680&&x<1150&&y>880&&y<1200)return true;
+ if(x>950&&x<1640&&y>1020&&y<1380)return true;
  if(x>350&&x<535&&y>125&&y<290)return true;
  if(x>510&&x<730&&y>125&&y<300)return true;
  if(x>1240&&x<1800&&y>150&&y<785)return true;
@@ -1932,20 +1932,27 @@ function orchardTreeMarkup(slot,tree){
 function renderHarasArea(){
  if(!state?.expansions?.haras)return '';
  const outline='M-1030 -315Q-1030 -385 -955 -385H-465Q-390 -385 -390 -315V-145Q-390 -75 -465 -75H-955Q-1030 -75 -1030 -145Z';
- const posts=[[-1015,-315],[-955,-385],[-485,-385],[-405,-315],[-405,-145],[-485,-75],[-650,-75],[-820,-75],[-955,-75],[-1015,-145]];
+ const fencePaths=[
+  'M-1030 -315Q-1030 -385 -955 -385H-865',
+  'M-745 -385H-465Q-390 -385 -390 -315V-145Q-390 -75 -465 -75H-760',
+  'M-640 -75H-955Q-1030 -75 -1030 -145V-315'
+ ];
+ const posts=[[-1015,-315],[-955,-385],[-405,-315],[-405,-145],[-465,-75],[-955,-75],[-1015,-145],[-1015,-230],[-405,-230]];
  const postMarkup=posts.map(([x,y])=>'<g transform="translate('+x+' '+y+')"><path d="M0 -20V23" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M0 -19V21" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M-4 -17V14" stroke="#e2b777" stroke-width="2.5" opacity=".8"/></g>').join('');
- return '<g id="haras-area" pointer-events="none" transform="translate(1950 1365)">'+
-  '<path d="'+outline+'" fill="#6e9e45" stroke="#426b31" stroke-width="20" stroke-linejoin="round"/>'+
+ const fenceMarkup=fencePaths.map(d=>'<path d="'+d+'" fill="none" stroke="#6b4528" stroke-width="15" stroke-linejoin="round" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="#d5a36a" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>').join('');
+ const gate=(x,y,width,flip)=>'<g transform="translate('+x+' '+y+')'+(flip?' rotate(180)':'')+'"><path d="M'+(-width/2)+' -20V24M'+(width/2)+' -20V24" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M'+(-width/2)+' -19V22M'+(width/2)+' -19V22" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M'+(-width/2+5)+' -12H'+(width/2-5)+'M'+(-width/2+5)+' 13H'+(width/2-5)+'" stroke="#704a2d" stroke-width="10" stroke-linecap="round"/><path d="M'+(-width/2+9)+' -12L'+(width/2-9)+' 13" stroke="#e2b777" stroke-width="4" stroke-linecap="round"/><circle cx="'+(-width/2)+'" cy="-17" r="4" fill="#e4c18b"/><circle cx="'+(width/2)+'" cy="-17" r="4" fill="#e4c18b"/></g>';
+ return '<g id="haras-area" pointer-events="none" transform="translate(2000 1425)">'+
+  '<path d="'+outline+'" fill="#6e9e45" stroke="none"/>'+
+  '<path d="M-805 -520Q-805 -465 -805 -390" fill="none" stroke="#765235" stroke-width="62" stroke-linecap="round"/>'+
+  '<path d="M-805 -520Q-805 -465 -805 -390" fill="none" stroke="#b88c5d" stroke-width="46" stroke-linecap="round"/>'+
   '<path d="M-1000 -315Q-985 -355 -930 -355H-490Q-435 -355 -420 -315V-145Q-435 -105 -490 -105H-930Q-985 -105 -1000 -145Z" fill="#8bb957" stroke="#c3d98a" stroke-width="5"/>'+
   '<path d="M-965 -270Q-700 -320 -455 -270M-965 -180Q-700 -130 -455 -180" fill="none" stroke="#a9c86b" stroke-width="5" opacity=".55"/>'+
   '<ellipse cx="-700" cy="-230" rx="205" ry="76" fill="#c3a174" opacity=".9" stroke="#967047" stroke-width="7"/>'+
   '<ellipse cx="-700" cy="-230" rx="184" ry="57" fill="none" stroke="#e3c79a" stroke-width="4" stroke-dasharray="10 12" opacity=".85"/>'+
-  '<path d="'+outline+'" fill="none" stroke="#6b4528" stroke-width="13" stroke-linejoin="round"/>'+
-  '<path d="M-1030 -300Q-700 -350 -390 -300M-1030 -160Q-700 -110 -390 -160" fill="none" stroke="#d5a36a" stroke-width="9" stroke-linecap="round"/>'+
-  '<path d="M-1030 -245Q-700 -295 -390 -245" fill="none" stroke="#d5a36a" stroke-width="7" stroke-linecap="round"/>'+
+  '<g>'+fenceMarkup+'</g>'+
   '<g>'+postMarkup+'</g>'+
-  '<g transform="translate(-260 -230)"><path d="M-105 0L-86 -38H86L105 0V40H-105Z" fill="#744a2b" stroke="#49301e" stroke-width="6"/><path d="M-92 3H92V29H-92Z" fill="#f0d49a" stroke="#956331" stroke-width="4"/><text y="23" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="2" fill="#70451f">HARAS</text></g>'+
-  '<g transform="translate(-710 -385)"><path d="M-70 -18V26M70 -18V26" stroke="#52371f" stroke-width="18" stroke-linecap="round"/><path d="M-70 -18V26M70 -18V26" stroke="#b77c45" stroke-width="11" stroke-linecap="round"/><path d="M-66 -12L66 -12M-66 15L66 15" stroke="#704a2d" stroke-width="10" stroke-linecap="round"/><path d="M-61 -12L61 15" stroke="#e2b777" stroke-width="4" stroke-linecap="round"/><circle cx="-70" cy="-16" r="4" fill="#e4c18b"/><circle cx="70" cy="-16" r="4" fill="#e4c18b"/></g>'+
+  gate(-805,-385,120,false)+gate(-700,-75,100,true)+
+  '<g transform="translate(-300 -230)"><path d="M-90 0L-74 -34H74L90 0V38H-90Z" fill="#744a2b" stroke="#49301e" stroke-width="6"/><path d="M-79 3H79V28H-79Z" fill="#f0d49a" stroke="#956331" stroke-width="4"/><text y="23" text-anchor="middle" font-size="24" font-weight="900" letter-spacing="2" fill="#70451f">HARAS</text></g>'+
  '</g>';
 }
 function renderOrchardArea(){
