@@ -1568,14 +1568,7 @@ const CLASSIC_CROP_ASSET_SLUGS={"abacaxi":"abacaxi","abobora":"abobora","amendoi
 const CLASSIC_CROP_ASSET_BASE='https://raw.githubusercontent.com/dabb3/colheita-feliz-public/codex/online-core-compartilhado/assets/classic/crops/';
 function cropIconMarkup(id){return cropIconMarkupOriginal(id);}
 
-const ALBUM_COLLECTIONS=[
-{id:'tailoring',category:'alfaiataria',title:'Alfaiataria',icon:'🧵',description:'Roupas, calçados e acessórios criados no ateliê.',items:Object.keys(TAILOR_RECIPES)},
-{id:'carpentry',category:'marcenaria',title:'Marcenaria',icon:'🪚',description:'Móveis e peças produzidos na marcenaria.',items:Object.keys(WOODWORK_RECIPES)},
-{id:'kitchen',category:'cozinha',title:'Cozinha',icon:'🍲',description:'Receitas preparadas na cozinha.',items:Object.keys(GRILL_RECIPES).filter(id=>GRILL_RECIPES[id].kitchenOnly)},
-{id:'grill',category:'churrasqueira',title:'Churrasqueira',icon:'🔥',description:'Preparos feitos na churrasqueira.',items:Object.keys(GRILL_RECIPES).filter(id=>!GRILL_RECIPES[id].kitchenOnly)},
-{id:'herbs',category:'ervas',title:'Mix de Ervas',icon:'🌿',description:'Temperos e banhos preparados com ervas.',items:Object.keys(MIX_HERB_RECIPES)},
-{id:'bouquets',category:'buques',title:'Buquês',icon:'💐',description:'Arranjos florais montados na fazenda.',items:Object.keys(BOUQUETS)}
-];
+
 function albumCollectionProgress(collection){const records=Array.isArray(state?.catalog)?state.catalog:[],found=new Set(records.filter(x=>x.category===collection.category).map(x=>x.id));const discovered=collection.items.filter(id=>found.has(id));return {found:discovered.length,total:collection.items.length,complete:collection.items.length>0&&discovered.length===collection.items.length,discovered}}
 function normalizeAlbumState(data){const valid=new Set(ALBUM_COLLECTIONS.map(x=>x.id));data.albumClaims=Array.isArray(data.albumClaims)?[...new Set(data.albumClaims.filter(id=>valid.has(id)))]:[]}
 function claimAlbumCollection(id){if(!farmWriteAllowed())return;const collection=ALBUM_COLLECTIONS.find(x=>x.id===id);if(!collection)return;const progress=albumCollectionProgress(collection);if(!progress.complete)return notify('Esta coleção ainda não está completa.');if(state.albumClaims.includes(id))return notify('A recompensa desta coleção já foi resgatada.');const count=collection.items.length,reward={coins:count*100,greenCoins:Math.max(1,Math.floor(count/10)),xp:count*25};state.albumClaims.push(id);state.coins+=reward.coins;state.greenCoins+=reward.greenCoins;awardXP(reward.xp,'álbum de coleções');remember('Concluiu a coleção '+collection.title+' e resgatou suas recompensas.');markDirty();refresh();notify(collection.title+' concluída! +'+fmt(reward.coins)+' moedas amarelas · +'+reward.greenCoins+' moedas verdes · +'+fmt(reward.xp)+' XP.')}
@@ -2439,6 +2432,15 @@ const MIX_HERB_RECIPES={
  tempero_pimentoes_coloridos:{name:'Tempero de Pimentões Coloridos',icon:'🌈',yield:3,xp:44,ingredients:[['crop','pimentao_verde',1],['crop','pimentao_vermelho',1],['crop','pimentao_amarelo',1],['herb','alecrim',1]],note:'Mistura tricolor de pimentões e alecrim.'},
  tempero_ervas_provence:{name:'Ervas de Provence',icon:'🌿',yield:2,xp:42,ingredients:[['herb','alecrim',1],['herb','manjericao',1],['herb','folha_louro',1],['supply','lavender',1]],note:'Mistura inspirada nas ervas aromáticas provençais.'}
 };
+const ALBUM_COLLECTIONS=[
+{id:'tailoring',category:'alfaiataria',title:'Alfaiataria',icon:'🧵',description:'Roupas, calçados e acessórios criados no ateliê.',items:Object.keys(TAILOR_RECIPES)},
+{id:'carpentry',category:'marcenaria',title:'Marcenaria',icon:'🪚',description:'Móveis e peças produzidos na marcenaria.',items:Object.keys(WOODWORK_RECIPES)},
+{id:'kitchen',category:'cozinha',title:'Cozinha',icon:'🍲',description:'Receitas preparadas na cozinha.',items:Object.keys(GRILL_RECIPES).filter(id=>GRILL_RECIPES[id].kitchenOnly)},
+{id:'grill',category:'churrasqueira',title:'Churrasqueira',icon:'🔥',description:'Preparos feitos na churrasqueira.',items:Object.keys(GRILL_RECIPES).filter(id=>!GRILL_RECIPES[id].kitchenOnly)},
+{id:'herbs',category:'ervas',title:'Mix de Ervas',icon:'🌿',description:'Temperos e banhos preparados com ervas.',items:Object.keys(MIX_HERB_RECIPES)},
+{id:'bouquets',category:'buques',title:'Buquês',icon:'💐',description:'Arranjos florais montados na fazenda.',items:Object.keys(BOUQUETS)}
+];
+
 
 Object.assign(GRILL_RECIPES,{
  kitchen_chicken_stew:{name:'Frango Ensopado com Mandioca',icon:'🍗',minutes:48,yield:2,salePrice:620,xp:34,kitchenOnly:true,category:'savory',ingredients:[["meat","chicken",1],["crop","mandioca",1],["crop","cebola",1]]},
