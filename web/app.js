@@ -1175,7 +1175,7 @@ for(const [gx,gy,gs] of [
  [-180,376,.55],[-120,382,.65],[-45,385,.58],[65,384,.62],[145,379,.58],[220,375,.5],
  [1760,630,.55],[1935,632,.6]
 ])scenery+=grassClump(gx,gy,gs);
-scenery+=`<g pointer-events="none" transform="translate(0 -45)"><image id="farm-house" href="/assets/casa.png" x="780" y="35" width="440" height="430" preserveAspectRatio="xMidYMid meet"/></g>`;
+scenery+=`<g pointer-events="none" transform="translate(0 -45)"><image id="farm-house" href="${farmHouseAssetHref()}" x="780" y="35" width="440" height="430" preserveAspectRatio="xMidYMid meet"/></g>`;
 scenery+=`<g id="barn-building" pointer-events="none" transform="translate(0 -55)"><image href="/Cenario/Celeiro.jpg" x="-650" y="55" width="430" height="350" preserveAspectRatio="xMidYMid meet"/></g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 -40)">
  <ellipse cx="205" cy="405" rx="220" ry="22" fill="#244d1b" opacity=".22"/>
@@ -3064,7 +3064,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
   </g>
   <g id="sea-lighthouse" transform="translate(10400 0)">
-   <g transform="translate(0 490) scale(1.42) translate(0 -490)"><image href="/Cenario/Farol.jpg" x="-195" y="150" width="390" height="340" preserveAspectRatio="xMidYMid meet"/></g>
+   <g transform="translate(0 490) scale(1.42) translate(0 -490)"><image href="/Cenario/Farol.jpg" x="-175" y="153" width="370" height="337" preserveAspectRatio="xMidYMid meet"/></g>
   </g>
   <g id="sea-birds" fill="none" stroke="#385c64" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
    <g class="bird-position bird-a" transform="translate(7040 165) scale(1.05)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
@@ -3091,7 +3091,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 0)">
-   <g id="sea-boat-motion"><image href="/Cenario/Barco.jpg" x="-1030" y="945" width="2060" height="500" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="/Cenario/Barco.jpg" x="-930" y="975" width="1940" height="455" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
     <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
     <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
     <path d="M-12 -20L-100 78L-8 112L92 20Z" fill="#e7d8ae" fill-opacity=".32" stroke="#f1dfb6" stroke-width="9"/>
@@ -3103,9 +3103,10 @@ function renderSeaLandscapeMarkup(){
   </g>
  </g>`;
 }
+function farmHouseAssetHref(){const now=new Date(),minutes=now.getHours()*60+now.getMinutes(),phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';return phase==='night'?'/Cenario/Casa-Noite.jpg':'/assets/casa.png'}
 function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();const now=Date.now(),grillActive=(state.grill?.queue||[]).some(job=>Number.isFinite(job.startedAt)&&job.startedAt<=now&&Number.isFinite(job.readyAt)&&job.readyAt>now);
  if(state.grill?.owned){const x=700,y=230;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
- <image href="/Cenario/Churrasqueira.jpg" x="-64" y="-72" width="128" height="145" preserveAspectRatio="xMidYMid meet"/>
+ <image href="/Cenario/Churrasqueira.jpg" x="-48" y="-66" width="96" height="132" preserveAspectRatio="xMidYMid meet"/>
  ${grillActive?`<g class="grill-fire" transform="translate(0 30)" pointer-events="none"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g>`:''}
  </g>`}
  const kitchenSmoke=(state.kitchen?.queue||[]).some(job=>job.readyAt>Date.now());
