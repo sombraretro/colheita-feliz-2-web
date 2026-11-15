@@ -1528,3 +1528,24 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 
 /* Alfaiataria: navegação e campos da loja de materiais. */
 .tailor-tabs,.tailor-category-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.tailor-tabs .modal-action,.tailor-category-tabs .modal-action{flex:1 1 auto;min-width:125px}.store-card input[data-tailor-qty],.store-card input[data-sale-qty^="tailor:"]{width:100%;min-height:36px;padding:7px 9px;border:1px solid #c9ad78;border-radius:8px;background:#fffdf6;color:#49351f;font:inherit}.tailor-category-tabs{margin:10px 0 14px}.tailor-category-tabs .modal-action{font-size:12px;padding:7px 9px}
+
+/* Álbum de coleções: progresso permanente das profissões. */
+.album-collection{border:1px solid #d9c39b;border-radius:14px;background:linear-gradient(145deg,#fffdf7,#f5ead4);padding:13px;margin:14px 0;color:#49351f}
+.album-collection.is-complete{border-color:#b58a3c;box-shadow:inset 0 0 0 1px #e8d3a8}
+.album-collection-head{display:flex;align-items:center;gap:10px}
+.album-collection-icon{font-size:27px;flex:0 0 auto}
+.album-collection-title{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.album-collection-title b{font-size:15px}
+.album-collection-title small{font-size:11px;opacity:.8}
+.album-collection-head>strong{font-size:13px;white-space:nowrap}
+.album-progress{height:8px;background:#e6dcc8;border-radius:20px;overflow:hidden;margin:11px 0}
+.album-progress i{display:block;height:100%;background:linear-gradient(90deg,#9c783e,#d4aa58);border-radius:20px}
+.album-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px}
+.album-item{display:flex;align-items:center;gap:6px;min-width:0;padding:7px;border-radius:8px;background:#eee8dd;color:#81796c}
+.album-item.is-found{background:#fff8e9;color:#49351f}
+.album-item>span{font-size:16px;flex:0 0 auto}
+.album-item small{font-size:10px;line-height:1.2;overflow-wrap:anywhere}
+.album-reward{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid #dfcfb2}
+.album-reward>span{font-size:11px;font-weight:600}
+.album-reward .modal-action{min-width:155px}
+@media(max-width:520px){.album-collection{padding:10px}.album-items{grid-template-columns:repeat(2,minmax(0,1fr))}.album-reward{align-items:stretch}.album-reward .modal-action{width:100%}}
