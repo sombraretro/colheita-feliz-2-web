@@ -1387,7 +1387,6 @@ button:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:fo
 
 /* Etapa 4 — adaptação final por faixa de tela, sem alterar cenários ou mecânicas. */
 html,body,.app{min-width:0;min-height:0}
-button,input,select,textarea{font:inherit}
 img,svg,video,canvas{max-width:100%}
 .dialog,.modal-body,.store-card,.animal-card,.queue-line,.list-line,.actions{min-width:0}
 .modal-body{overflow-x:hidden;overflow-y:auto;scrollbar-gutter:stable}
