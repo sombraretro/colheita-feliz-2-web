@@ -1606,17 +1606,24 @@ function farmIntegritySummary(data){
   plots:plots.length,occupiedPlots:plots.filter(p=>p?.status==='growing').length,
   animals:animals.length,inventoryTypes:Object.keys(inventory).filter(k=>(Number(inventory[k])||0)>0).length,
   catalog:Array.isArray(data?.catalog)?data.catalog.length:0,
+  albumClaims:Array.isArray(data?.albumClaims)?data.albumClaims.length:0,
+  tailorItems:Object.values(data?.tailorWarehouse||{}).reduce((n,v)=>n+(Number(v)||0),0),
+  carpentryItems:Object.values(data?.furnitureWarehouse||{}).reduce((n,v)=>n+(Number(v)||0),0),
+  activeOrders:Array.isArray(data?.orders?.active)?data.orders.active.length:0,
+  completedOrders:Number(data?.orders?.completed)||0,
+  foodBuff:data?.foodBuff&&data.foodBuff.expiresAt>Date.now()?data.foodBuff.type:'Nenhum',
   farmName:typeof data?.farmName==='string'?data.farmName:'—'
  };
 }
 function compareFarmIntegrity(local,remote){
  const groups=[
   ['Economia',['coins','greenCoins','flowers','popularity']],
-  ['Progressão',['xp','xpProgressionVersion','farmName','dailyStreak','dailyRewardDate','lastLevelRewarded','claimedAchievements','tutorial','taskProgress','progressCounters']],
+  ['Progressão',['xp','xpProgressionVersion','specialistProgress','farmName','dailyStreak','dailyRewardDate','lastLevelRewarded','claimedAchievements','tutorial','taskProgress','progressCounters']],
   ['Canteiros e árvores',['plots','orchardTrees','forestTrees']],
-  ['Inventário e depósitos',['inventory','warehouse','animalWarehouse','tailorWarehouse','tailor','flowerWarehouse','fishWarehouse','seaWarehouse','meatWarehouse','processedWarehouse','bouquets','giftInventory']],
+  ['Inventário e depósitos',['inventory','warehouse','animalWarehouse','tailorWarehouse','tailor','woodWarehouse','furnitureWarehouse','flowerWarehouse','fishWarehouse','seaWarehouse','meatWarehouse','processedWarehouse','processedLocks','bouquets','giftInventory']],
   ['Animais',['animals','dogBreedsOwned','temporaryDogBreeds']],
-  ['Áreas e estruturas',['expansions','lake','grill','kitchen','herbMix','tailor','fishing','decorInventory','placedDecorations','farmTheme','ownedFarmThemes']],
+  ['Profissões e atividades',['hunter','carpentry','herbMix','fishing','seaFishing']],
+  ['Áreas e estruturas',['expansions','lake','grill','kitchen','decorInventory','placedDecorations','farmTheme','ownedFarmThemes']],
   ['Catálogo, coleções e encomendas',['catalog','albumClaims','orders','foodBuff','history','social']]
  ];
  const differences=[];
@@ -1630,7 +1637,7 @@ function renderFarmIntegrityReport(){
  const report=cloudIntegrityReport;if(!report)return '';
  const stamp=report.checkedAt?new Date(report.checkedAt).toLocaleString('pt-BR'):'—';
  if(!report.localValid||!report.cloudValid)return '<div class="gift-summary"><span class="symbol">⚠️</span><div><b>Verificação inconclusiva</b><small>'+(!report.localValid?'Os dados desta sessão não passaram na validação. ':'')+(!report.cloudValid?'O registro da nuvem não passou na validação.':'')+' Nenhuma alteração foi realizada.</small></div></div>';
- const rows=[['Fazenda',report.localSummary.farmName,report.cloudSummary.farmName],['Moedas amarelas',fmt(report.localSummary.coins),fmt(report.cloudSummary.coins)],['Moedas verdes',fmt(report.localSummary.greenCoins),fmt(report.cloudSummary.greenCoins)],['Experiência',fmt(report.localSummary.xp),fmt(report.cloudSummary.xp)],['Canteiros ocupados',report.localSummary.occupiedPlots,report.cloudSummary.occupiedPlots],['Animais',report.localSummary.animals,report.cloudSummary.animals],['Tipos de itens em estoque',report.localSummary.inventoryTypes,report.cloudSummary.inventoryTypes],['Descobertas no catálogo',report.localSummary.catalog,report.cloudSummary.catalog]];
+ const rows=[['Fazenda',report.localSummary.farmName,report.cloudSummary.farmName],['Moedas amarelas',fmt(report.localSummary.coins),fmt(report.cloudSummary.coins)],['Moedas verdes',fmt(report.localSummary.greenCoins),fmt(report.cloudSummary.greenCoins)],['Experiência',fmt(report.localSummary.xp),fmt(report.cloudSummary.xp)],['Canteiros ocupados',report.localSummary.occupiedPlots,report.cloudSummary.occupiedPlots],['Animais',report.localSummary.animals,report.cloudSummary.animals],['Tipos de itens em estoque',report.localSummary.inventoryTypes,report.cloudSummary.inventoryTypes],['Descobertas no catálogo',report.localSummary.catalog,report.cloudSummary.catalog],['Recompensas do álbum resgatadas',report.localSummary.albumClaims,report.cloudSummary.albumClaims],['Peças da Alfaiataria em estoque',report.localSummary.tailorItems,report.cloudSummary.tailorItems],['Itens da Marcenaria em estoque',report.localSummary.carpentryItems,report.cloudSummary.carpentryItems],['Encomendas ativas',report.localSummary.activeOrders,report.cloudSummary.activeOrders],['Encomendas concluídas',report.localSummary.completedOrders,report.cloudSummary.completedOrders],['Benefício de comida ativo',report.localSummary.foodBuff,report.cloudSummary.foodBuff]];
  return '<div class="gift-summary"><span class="symbol">'+(report.differences.length?'⚠️':'✅')+'</span><div><b>'+(report.differences.length?'Divergências encontradas':'Dados consistentes nos grupos verificados')+'</b><small>Verificação em '+safe(stamp)+'. Revisão da nuvem: '+safe(String(report.revision))+(report.updatedAt?' · Atualizada em '+safe(new Date(report.updatedAt).toLocaleString('pt-BR')):'')+'. Nenhum dado foi alterado.</small></div></div>'+(report.differences.length?'<p><b>Grupos com diferenças:</b> '+report.differences.map(safe).join(', ')+'. Compare os detalhes antes de decidir qualquer recuperação.</p>':'')+'<div class="table-wrap"><table><thead><tr><th>Indicador</th><th>Nesta sessão</th><th>Na nuvem</th></tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(cell=>'<td>'+safe(String(cell))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
 }
 async function runFarmIntegrityCheck(){
@@ -2506,7 +2513,7 @@ function consumeCookedFood(id){
  notify(recipe.name+' consumido! '+cfg.name+' ativo por 2 horas.'+(previous&&previous!==cfg?' O efeito anterior foi substituído.':''));
 }
 
-function createOrderState(){return {active:[],completed:0,nextId:1}}
+function createOrderState(){return {active:[],completed:0,nextId:1,history:[]}}
 function orderStock(item){if(!item)return 0;const source={tailor:state.tailorWarehouse,carpentry:state.furnitureWarehouse,kitchen:state.processedWarehouse,grill:state.processedWarehouse,herbs:state.inventory,bouquets:state.bouquets}[item.type];const key=item.type==='herbs'?'mix_'+item.id:item.id;return Math.max(0,Math.floor(Number(source?.[key])||0))}
 function orderProductInfo(item){const recipes={tailor:TAILOR_RECIPES,carpentry:WOODWORK_RECIPES,kitchen:GRILL_RECIPES,grill:GRILL_RECIPES,herbs:MIX_HERB_RECIPES,bouquets:BOUQUETS};const recipe=recipes[item?.type]?.[item?.id];if(!recipe)return null;const name=recipe.name,icon=recipe.icon||(item.type==='carpentry'?'🪚':'📦');return {id:item.id,type:item.type,name,icon}}
 function createOrderRecord(data){
@@ -2531,21 +2538,23 @@ function createOrderRecord(data){
 }
 function normalizeOrdersState(data){
  const raw=data.orders&&typeof data.orders==='object'?data.orders:createOrderState();
- data.orders={active:Array.isArray(raw.active)?raw.active.filter(o=>o&&typeof o.id==='string'&&typeof o.npc==='string'&&Array.isArray(o.items)&&o.items.length>=2&&o.items.length<=4&&o.items.every(i=>ORDER_PROFESSIONS.some(p=>p.id===i.type)&&orderProductInfo(i)&&Number.isSafeInteger(i.qty)&&i.qty>0)&&Number.isSafeInteger(o.reward?.coins)&&o.reward.coins>=0&&Number.isSafeInteger(o.reward?.xp)&&o.reward.xp>=0).slice(0,3):[],completed:Number.isSafeInteger(raw.completed)?Math.max(0,raw.completed):0,nextId:Number.isSafeInteger(raw.nextId)?Math.max(1,raw.nextId):1};
+ data.orders={active:Array.isArray(raw.active)?raw.active.filter(o=>o&&typeof o.id==='string'&&typeof o.npc==='string'&&Array.isArray(o.items)&&o.items.length>=2&&o.items.length<=4&&o.items.every(i=>ORDER_PROFESSIONS.some(p=>p.id===i.type)&&orderProductInfo(i)&&Number.isSafeInteger(i.qty)&&i.qty>0)&&Number.isSafeInteger(o.reward?.coins)&&o.reward.coins>=0&&Number.isSafeInteger(o.reward?.xp)&&o.reward.xp>=0).slice(0,3):[],completed:Number.isSafeInteger(raw.completed)?Math.max(0,raw.completed):0,nextId:Number.isSafeInteger(raw.nextId)?Math.max(1,raw.nextId):1,history:Array.isArray(raw.history)?raw.history.filter(entry=>entry&&typeof entry.id==='string'&&typeof entry.npc==='string'&&Number.isFinite(entry.completedAt)&&Array.isArray(entry.items)&&entry.items.length>=2&&entry.items.length<=4&&entry.items.every(i=>ORDER_PROFESSIONS.some(p=>p.id===i.type)&&orderProductInfo(i)&&Number.isSafeInteger(i.qty)&&i.qty>0)&&Number.isSafeInteger(entry.reward?.coins)&&entry.reward.coins>=0&&Number.isSafeInteger(entry.reward?.xp)&&entry.reward.xp>=0).slice(0,5000).map(entry=>({...entry,items:entry.items.map(i=>({...i,name:String(i.name||orderProductInfo(i)?.name||i.id),icon:String(i.icon||orderProductInfo(i)?.icon||'📦')})),greenBonus:Number.isSafeInteger(entry.greenBonus)?Math.max(0,entry.greenBonus):0,bonusSeed:typeof entry.bonusSeed==='string'&&CROPS[entry.bonusSeed]?entry.bonusSeed:null})):[]};
  while(data.orders.active.length<3){const order=createOrderRecord(data.orders);if(!order)break;data.orders.active.push(order)}
 }
 function renderOrdersModal(){
  if(!state.orders)state.orders=createOrderState();
  state.orders.active=Array.isArray(state.orders.active)?state.orders.active:[];
+ state.orders.history=Array.isArray(state.orders.history)?state.orders.history:[];
  let generated=false;while(state.orders.active.length<3){const next=createOrderRecord(state.orders);if(!next)break;state.orders.active.push(next);generated=true}
  if(generated)markDirty();
- const orders=state.orders.active||[],completed=state.orders.completed||0;
+ const orders=state.orders.active||[],completed=state.orders.completed||0,history=state.orders.history||[];
+ const historyHtml=history.length?'<details class="order-history"><summary>📚 Histórico de entregas ('+fmt(history.length)+')</summary><div class="order-history-list">'+history.slice(0,20).map(entry=>'<div class="list-line"><span><b>'+safe(entry.npc)+'</b><br/><small>'+safe(entry.items.map(item=>item.name+' × '+item.qty).join(' · '))+'<br/>'+new Date(entry.completedAt).toLocaleString('pt-BR')+'</small></span><span class="order-history-reward">🟡 '+fmt(entry.reward.coins)+' · ⭐ '+fmt(entry.reward.xp)+' XP'+(entry.greenBonus?' · 🟢 +'+entry.greenBonus:'')+(entry.bonusSeed?' · 🌱 +3 '+safe(CROPS[entry.bonusSeed]?.name||entry.bonusSeed):'')+'</span></div>').join('')+'</div><p class="historical-note">Exibindo as 20 entregas mais recentes. O histórico completo permanece salvo na fazenda.</p></details>':'<details class="order-history"><summary>📚 Histórico de entregas (0)</summary><p class="historical-note">As encomendas concluídas aparecerão aqui.</p></details>';
  return '<div class="gift-summary"><span class="symbol">📜</span><div><b>Encomendas da comunidade</b><small>Atenda personagens da região usando produtos fabricados nas profissões da fazenda. Os pedidos ficam disponíveis até você concluí-los.</small></div></div><div class="catalog-stats orders-overview"><div><b>'+orders.length+'/3</b><small>pedidos ativos</small></div><div><b>'+fmt(completed)+'</b><small>encomendas concluídas</small></div><div><b>∞</b><small>sem prazo de validade</small></div></div><p class="historical-note">Separe os produtos solicitados e entregue quando estiver pronto. Não há contagem regressiva, expiração ou penalidade por demora. A cada 3 encomendas concluídas, você recebe 1 moeda verde extra; a cada 5, um bônus de itens.</p>'+orders.map(order=>{
   const ready=order.items.every(item=>orderStock(item)>=item.qty);
   const lines=order.items.map(item=>{const profession=ORDER_PROFESSIONS.find(p=>p.id===item.type);const stock=orderStock(item);return '<div class="order-product"><span>'+item.icon+' <b>'+safe(item.name)+'</b><small>'+safe(profession?.label||'Profissão')+' · necessário: '+item.qty+' · disponível: '+stock+'</small></span><span class="order-stock '+(stock>=item.qty?'is-ready':'')+'">'+stock+'/'+item.qty+'</span></div>'}).join('');
   return '<section class="order-card"><div class="order-person"><span class="order-avatar">'+order.npcIcon+'</span><div><b>'+safe(order.npc)+'</b><small>'+safe(order.message)+'</small></div><span class="order-no-deadline">Sem prazo</span></div><div class="order-products">'+lines+'</div><div class="order-reward"><span>Recompensa: 🟡 '+fmt(order.reward.coins)+' · ⭐ '+fmt(order.reward.xp)+' XP</span><button class="modal-action" data-fulfill-order="'+safe(order.id)+'" '+(ready?'':'disabled')+'>'+(ready?'Entregar encomenda':'Produtos insuficientes')+'</button></div></section>';
- }).join('')+'<p class="historical-note">As recompensas são creditadas imediatamente após a entrega. Os produtos são descontados do estoque; o registro de descoberta no Álbum permanece intacto.</p>';
-}
+ }).join('')+'<p class="historical-note">As recompensas são creditadas imediatamente após a entrega. Os produtos são descontados do estoque; o registro de descoberta no Álbum permanece intacto.</p>'+historyHtml;
+ }
 function fulfillOrder(id){
  if(!farmWriteAllowed())return;
  const order=state.orders?.active?.find(o=>o.id===id);if(!order)return;
@@ -2558,8 +2567,9 @@ function fulfillOrder(id){
  state.orders.completed++;
  const greenBonus=Math.floor(state.orders.completed/3)-Math.floor((state.orders.completed-1)/3);
  if(greenBonus>0)state.greenCoins+=greenBonus;
- let bonusText='';
- if(state.orders.completed%5===0){const bonusSeeds=['nabo','cenoura','feijao','milho','tomate'].filter(id=>CROPS[id]&&Object.prototype.hasOwnProperty.call(state.inventory,id));const seed=bonusSeeds[Math.floor(Math.random()*bonusSeeds.length)]||'nabo';state.inventory[seed]=(state.inventory[seed]||0)+3;bonusText=' · +3 sementes de '+(CROPS[seed]?.name||seed)}
+ let bonusText='',bonusSeed=null;
+ if(state.orders.completed%5===0){const bonusSeeds=['nabo','cenoura','feijao','milho','tomate'].filter(id=>CROPS[id]&&Object.prototype.hasOwnProperty.call(state.inventory,id));const seed=bonusSeeds[Math.floor(Math.random()*bonusSeeds.length)]||'nabo';bonusSeed=seed;state.inventory[seed]=(state.inventory[seed]||0)+3;bonusText=' · +3 sementes de '+(CROPS[seed]?.name||seed)}
+ state.orders.history=Array.isArray(state.orders.history)?state.orders.history:[];state.orders.history.unshift({id:order.id,npc:order.npc,npcIcon:order.npcIcon,items:order.items.map(item=>({...item})),reward:{...order.reward},completedAt:Date.now(),greenBonus,bonusSeed});
  state.orders.active=state.orders.active.filter(o=>o.id!==id);
  while(state.orders.active.length<3){const next=createOrderRecord(state.orders);if(!next)break;state.orders.active.push(next)}
  remember('Concluiu uma encomenda de '+order.npc+'.');markDirty();refresh();
