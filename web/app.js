@@ -1416,7 +1416,7 @@ function renderPlots(){
   if(group===0){farmTiles+=part.tile;farmCrops+=part.crop}
   else{riverTiles+=part.tile;riverCrops+=part.crop}
  }
- $('garden-layer').innerHTML='<g id="first-field-position" transform="translate(0 -55)">'+base(0)+farmTiles+'</g>'+`<g transform="translate(180 -240)">${base(EXPANSION_PLOT_OFFSET_X)}${riverTiles}</g>`;
+ $('garden-layer').innerHTML='<g id="first-field-position" transform="translate(0 -55)">'+base(0)+farmTiles+'</g>'+`<g transform="translate(766 185)">${base(EXPANSION_PLOT_OFFSET_X)}${riverTiles}</g>`;
  $('crop-layer').innerHTML='<g transform="translate(0 -55)">'+farmCrops+'</g>'+`<g transform="translate(180 -240)">${riverCrops}</g>`
 }
 const TUTORIAL_TASKS=[
