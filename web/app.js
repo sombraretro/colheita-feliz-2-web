@@ -2488,7 +2488,10 @@ function normalizeOrdersState(data){
  while(data.orders.active.length<3){const order=createOrderRecord(data.orders);if(!order)break;data.orders.active.push(order)}
 }
 function renderOrdersModal(){
- if(!state.orders)normalizeOrdersState(state);
+ if(!state.orders)state.orders=createOrderState();
+ state.orders.active=Array.isArray(state.orders.active)?state.orders.active:[];
+ let generated=false;while(state.orders.active.length<3){const next=createOrderRecord(state.orders);if(!next)break;state.orders.active.push(next);generated=true}
+ if(generated)markDirty();
  const orders=state.orders.active||[],completed=state.orders.completed||0;
  return '<div class="gift-summary"><span class="symbol">📜</span><div><b>Encomendas da comunidade</b><small>Atenda personagens da região usando produtos fabricados nas profissões da fazenda. Os pedidos ficam disponíveis até você concluí-los.</small></div></div><div class="catalog-stats orders-overview"><div><b>'+orders.length+'/3</b><small>pedidos ativos</small></div><div><b>'+fmt(completed)+'</b><small>encomendas concluídas</small></div><div><b>∞</b><small>sem prazo de validade</small></div></div><p class="historical-note">Separe os produtos solicitados e entregue quando estiver pronto. Não há contagem regressiva, expiração ou penalidade por demora. A cada 3 encomendas concluídas, você recebe 1 moeda verde extra; a cada 5, um bônus de itens.</p>'+orders.map(order=>{
   const ready=order.items.every(item=>orderStock(item)>=item.qty);
