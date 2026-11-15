@@ -531,8 +531,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:1205,y:1050,w:96,h:72},{x:1305,y:1050,w:96,h:72},{x:1405,y:1050,w:96,h:72},{x:1505,y:1050,w:96,h:72},{x:1605,y:1050,w:96,h:72},
-  {x:1205,y:1190,w:96,h:72},{x:1305,y:1190,w:96,h:72},{x:1405,y:1190,w:96,h:72},{x:1505,y:1190,w:96,h:72},{x:1605,y:1190,w:96,h:72}
+  {x:945,y:1050,w:96,h:72},{x:1045,y:1050,w:96,h:72},{x:1145,y:1050,w:96,h:72},{x:1245,y:1050,w:96,h:72},{x:1345,y:1050,w:96,h:72},
+  {x:945,y:1190,w:96,h:72},{x:1045,y:1190,w:96,h:72},{x:1145,y:1190,w:96,h:72},{x:1245,y:1190,w:96,h:72},{x:1345,y:1190,w:96,h:72}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -1699,7 +1699,7 @@ function compareFarmIntegrity(local,remote){
   ['Inventário e depósitos',['inventory','warehouse','animalWarehouse','flowerWarehouse','fishWarehouse','seaWarehouse','meatWarehouse','processedWarehouse','bouquets','giftInventory']],
   ['Animais',['animals','dogBreedsOwned','temporaryDogBreeds']],
   ['Áreas e estruturas',['expansions','lake','grill','kitchen','herbMix','fishing','decorInventory','placedDecorations','farmTheme','ownedFarmThemes']],
-  ['Catálogo e coleções',['catalog','history','social']]
+  ['Catálogo, coleções e encomendas',['catalog','albumClaims','orders','history','social']]
  ];
  const differences=[];
  for(const [label,keys] of groups){
@@ -1932,9 +1932,9 @@ function orchardTreeMarkup(slot,tree){
 function renderHarasArea(){
  if(!state?.expansions?.haras)return '';
  const outline='M-1030 -315Q-1030 -385 -955 -385H-465Q-390 -385 -390 -315V-145Q-390 -75 -465 -75H-955Q-1030 -75 -1030 -145Z';
- const posts=[[-1015,-315],[-955,-385],[-780,-385],[-640,-385],[-485,-385],[-405,-315],[-405,-145],[-485,-75],[-650,-75],[-820,-75],[-955,-75],[-1015,-145]];
+ const posts=[[-1015,-315],[-955,-385],[-485,-385],[-405,-315],[-405,-145],[-485,-75],[-650,-75],[-820,-75],[-955,-75],[-1015,-145]];
  const postMarkup=posts.map(([x,y])=>'<g transform="translate('+x+' '+y+')"><path d="M0 -20V23" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M0 -19V21" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M-4 -17V14" stroke="#e2b777" stroke-width="2.5" opacity=".8"/></g>').join('');
- return '<g id="haras-area" pointer-events="none" transform="translate(2210 1365)">'+
+ return '<g id="haras-area" pointer-events="none" transform="translate(1950 1365)">'+
   '<path d="'+outline+'" fill="#6e9e45" stroke="#426b31" stroke-width="20" stroke-linejoin="round"/>'+
   '<path d="M-1000 -315Q-985 -355 -930 -355H-490Q-435 -355 -420 -315V-145Q-435 -105 -490 -105H-930Q-985 -105 -1000 -145Z" fill="#8bb957" stroke="#c3d98a" stroke-width="5"/>'+
   '<path d="M-965 -270Q-700 -320 -455 -270M-965 -180Q-700 -130 -455 -180" fill="none" stroke="#a9c86b" stroke-width="5" opacity=".55"/>'+
