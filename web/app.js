@@ -531,8 +531,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:995,y:1110,w:96,h:72},{x:1095,y:1110,w:96,h:72},{x:1195,y:1110,w:96,h:72},{x:1295,y:1110,w:96,h:72},{x:1395,y:1110,w:96,h:72},
-  {x:995,y:1250,w:96,h:72},{x:1095,y:1250,w:96,h:72},{x:1195,y:1250,w:96,h:72},{x:1295,y:1250,w:96,h:72},{x:1395,y:1250,w:96,h:72}
+  {x:-1808,y:224,w:96,h:72},{x:-1708,y:224,w:96,h:72},{x:-1608,y:224,w:96,h:72},{x:-1508,y:224,w:96,h:72},{x:-1408,y:224,w:96,h:72},
+  {x:-1808,y:364,w:96,h:72},{x:-1708,y:364,w:96,h:72},{x:-1608,y:364,w:96,h:72},{x:-1508,y:364,w:96,h:72},{x:-1408,y:364,w:96,h:72}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -1891,7 +1891,7 @@ function useFertilizerOnPlot(plot){if(!farmWriteAllowed())return;
  plot.plantedAt-=boost;playSfx('fertilizer');state.inventory[key]--;remember(`Aplicou ${id==='quick'?'fertilizante rápido':cfg.name} em ${CROPS[plot.crop].name}.`);markDirty();refresh();
  notify(`${id==='quick'?'Fertilizante rápido aplicado':cfg.name+' aplicado'}: -${formatHours(boost/HOUR)} no tempo restante.`)
 }
-function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=300;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('river');view.zoom=1.15;view.cx=-1560;view.cy=490;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3600;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
+function focusFarmArea(id,close=true){if(id==='lake'){switchFarmScene('river');view.zoom=1.15;view.cx=-980;view.cy=300;updateView();if(close)closeModal();return}if(id==='haras'){if(!state?.expansions?.haras)return notify('Libere primeiro o Haras nas Expansões.');switchFarmScene('river');view.zoom=1.15;view.cx=-1560;view.cy=305;updateView();if(close)closeModal();return}if(id==='new-fields'){switchFarmScene('river');view.zoom=1.05;view.cx=-1550;view.cy=280;updateView();if(close)closeModal();return}if(id==='orchard'&&!state?.expansions?.orchard)return notify('Libere primeiro o Pomar nas Expansões.');if(id==='pond'&&!state?.expansions?.pond)return notify('Libere primeiro o Rio nas Expansões.');if(id==='forest'){focusForestArea(close);return}if(id==='pond'){switchFarmScene('river');view.zoom=sceneFitZoom('river');view.cx=-1850;view.cy=650;updateView();if(close)closeModal();return}if(id==='orchard'){switchFarmScene('nature');view.zoom=1.0;view.cx=3600;view.cy=300;updateView();if(close)closeModal();return}switchFarmScene('farm');view.zoom=1.45;view.cx=0;view.cy=420;updateView();if(close)closeModal()}
 function buyExpansion(id,currency='coins'){
  if(writeLocked)return notify('Salvamento protegido.');const cfg=AREA_CONFIG[id];if(!cfg)return;
  if(state.expansions[id])return notify(cfg.name+' já está liberado.');
@@ -1941,10 +1941,8 @@ function renderHarasArea(){
  const postMarkup=posts.map(([x,y])=>'<g transform="translate('+x+' '+y+')"><path d="M0 -20V23" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M0 -19V21" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M-4 -17V14" stroke="#e2b777" stroke-width="2.5" opacity=".8"/></g>').join('');
  const fenceMarkup=fencePaths.map(d=>'<path d="'+d+'" fill="none" stroke="#6b4528" stroke-width="15" stroke-linejoin="round" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="#d5a36a" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>').join('');
  const gate=(x,y,width,flip)=>'<g transform="translate('+x+' '+y+')'+(flip?' rotate(180)':'')+'"><path d="M'+(-width/2)+' -20V24M'+(width/2)+' -20V24" stroke="#52371f" stroke-width="17" stroke-linecap="round"/><path d="M'+(-width/2)+' -19V22M'+(width/2)+' -19V22" stroke="#b77c45" stroke-width="10" stroke-linecap="round"/><path d="M'+(-width/2+5)+' -12H'+(width/2-5)+'M'+(-width/2+5)+' 13H'+(width/2-5)+'" stroke="#704a2d" stroke-width="10" stroke-linecap="round"/><path d="M'+(-width/2+9)+' -12L'+(width/2-9)+' 13" stroke="#e2b777" stroke-width="4" stroke-linecap="round"/><circle cx="'+(-width/2)+'" cy="-17" r="4" fill="#e4c18b"/><circle cx="'+(width/2)+'" cy="-17" r="4" fill="#e4c18b"/></g>';
- return '<g id="haras-area" pointer-events="none" transform="translate(-860 720)">'+
+ return '<g id="haras-area" pointer-events="none" transform="translate(-860 535)">'+
   '<path d="'+outline+'" fill="#6e9e45" stroke="none"/>'+
-  '<path d="M-805 -520Q-805 -465 -805 -390" fill="none" stroke="#765235" stroke-width="62" stroke-linecap="round"/>'+
-  '<path d="M-805 -520Q-805 -465 -805 -390" fill="none" stroke="#b88c5d" stroke-width="46" stroke-linecap="round"/>'+
   '<path d="M-1000 -315Q-985 -355 -930 -355H-490Q-435 -355 -420 -315V-145Q-435 -105 -490 -105H-930Q-985 -105 -1000 -145Z" fill="#8bb957" stroke="#c3d98a" stroke-width="5"/>'+
   '<path d="M-965 -270Q-700 -320 -455 -270M-965 -180Q-700 -130 -455 -180" fill="none" stroke="#a9c86b" stroke-width="5" opacity=".55"/>'+
   '<ellipse cx="-700" cy="-230" rx="205" ry="76" fill="#c3a174" opacity=".9" stroke="#967047" stroke-width="7"/>'+
@@ -1952,7 +1950,6 @@ function renderHarasArea(){
   '<g>'+fenceMarkup+'</g>'+
   '<g>'+postMarkup+'</g>'+
   gate(-805,-385,120,false)+gate(-700,-75,100,true)+
-  '<g transform="translate(-300 -230)"><path d="M-90 0L-74 -34H74L90 0V38H-90Z" fill="#744a2b" stroke="#49301e" stroke-width="6"/><path d="M-79 3H79V28H-79Z" fill="#f0d49a" stroke="#956331" stroke-width="4"/><text y="23" text-anchor="middle" font-size="24" font-weight="900" letter-spacing="2" fill="#70451f">HARAS</text></g>'+
  '</g>';
 }
 function renderOrchardArea(){
