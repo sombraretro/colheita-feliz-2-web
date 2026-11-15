@@ -2270,7 +2270,7 @@ function syncPendingFishing(){
  if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
   const item=SEA_TYPES[sea.id];state.seaFishing.pendingCatch=null;
   const seaQty=Number.isSafeInteger(sea.quantity)?Math.max(1,Math.min(5,sea.quantity)):1;if(sea.id!=='caviar')state.seaWarehouse[sea.id]=(state.seaWarehouse[sea.id]||0)+seaQty;
-  state.inventory.caviar=(state.inventory.caviar||0)+3;
+  state.inventory.caviar=(state.inventory.caviar||0)+(sea.id==='caviar'?3*seaQty:3);
   state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
   discoverItem('mar',sea.id,item.name,item.icon);const earnedXP=awardProfessionXP('fisher',item.xp,'pesca no mar');
   const net=SEA_NETS[sea.net]||SEA_NETS.normal;
@@ -2491,7 +2491,7 @@ function foodYield(base,type){
 function foodBuffSummaryHtml(){
  const b=state?.foodBuff;if(!b||!activeFoodBuff())return '<div class="food-buff-summary is-inactive"><span>🍽️</span><div><b>Nenhum efeito de refeição ativo</b><small>Consuma um prato preparado para ativar um benefício temporário de 2 horas.</small></div></div>';
  const cfg=FOOD_BUFFS[b.type],remaining=Math.max(0,b.expiresAt-Date.now()),minutes=Math.ceil(remaining/60000);
- return '<div class="food-buff-summary"><span>'+cfg.icon+'</span><div><b>'+cfg.name+'</b><small>'+cfg.description+' · '+Math.floor(minutes/60)+'h '+String(minutes%60).padStart(2,'0')+'min restantes</small></div></div>';
+ return '<div class="food-buff-summary"><span>'+cfg.icon+'</span><div><b>'+cfg.name+'</b><small>'+cfg.description+' · '+Math.floor(minutes/60)+'h '+String(minutes%60).padStart(2,'0')+'min restantes · outro prato substitui este efeito; benefícios não acumulam</small></div></div>';
 }
 function consumeCookedFood(id){
  if(!farmWriteAllowed())return;
