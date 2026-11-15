@@ -1324,19 +1324,15 @@ function cropPhaseImageMarkup(id,phase){const slug=CLASSIC_CROP_ASSET_SLUGS[id];
 function renderPlots(){
  const perimeter='532,350 1132,620 532,890 -68,620';
  const base=(offset)=>`<g transform="translate(${offset} 0)"><polygon points="${perimeter}" transform="translate(0 18)" fill="#1d4f17" opacity=".28" filter="url(#shadow)" pointer-events="none"/><polygon points="-68,620 532,890 532,907 -68,637" fill="#2e6d20" opacity=".9" pointer-events="none"/><polygon points="532,890 1132,620 1132,637 532,907" fill="#245c19" opacity=".92" pointer-events="none"/></g>`;
- // A primeira plantação permanece na posição original da Fazenda.
- // Somente a segunda área (expansão, no Rio) recebe o deslocamento.
- let html='<g id="first-field-position" transform="translate(0 -55)">'+base(0); 
- html+=`<g transform="translate(180 -240)">${base(EXPANSION_PLOT_OFFSET_X)}</g>`;
- let farmCrops='',riverCrops='';
+ // A primeira plantação é deslocada como um conjunto; a expansão do Rio permanece intacta.
+ let farmTiles='',riverTiles='',farmCrops='',riverCrops='';
  for(let group=0;group<2;group++)for(let r=0;r<6;r++)for(let c=PLOT_COLS-1;c>=0;c--){
   const i=group*36+r*PLOT_COLS+c,p=state.plots[i];if(!p)continue;
   const part=plotGeometry(p,r,c,i);
-  if(group===0){html+=part.tile;farmCrops+=part.crop}
-  else{html+=`<g transform="translate(180 -240)">${part.tile}</g>`;riverCrops+=part.crop}
+  if(group===0){farmTiles+=part.tile;farmCrops+=part.crop}
+  else{riverTiles+=part.tile;riverCrops+=part.crop}
  }
- html+='</g>';
- $('garden-layer').innerHTML=html;
+ $('garden-layer').innerHTML='<g id="first-field-position" transform="translate(0 -55)">'+base(0)+farmTiles+'</g>'+`<g transform="translate(180 -240)">${base(EXPANSION_PLOT_OFFSET_X)}${riverTiles}</g>`;
  $('crop-layer').innerHTML='<g transform="translate(0 -55)">'+farmCrops+'</g>'+`<g transform="translate(180 -240)">${riverCrops}</g>`
 }
 const TUTORIAL_TASKS=[
