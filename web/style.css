@@ -1155,9 +1155,14 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
 }
 @media(prefers-reduced-motion:reduce){.hunt-scene-background>img{transition:filter 2.5s ease!important}}
 
-/* Na Caça mobile, posiciona a navegação acima da barra personalizável inferior. */
+/* Na Mata/Caça mobile, mantém os cinco destinos entre a mochila do caçador e a barra inferior de ferramentas. */
 @media(max-width:760px){
  .playfield.hunt-scene-active .farm-scene-navigation{
-  bottom:calc(64px + env(safe-area-inset-bottom))!important;
+  bottom:calc(88px + env(safe-area-inset-bottom))!important;
+ }
+}
+@media(max-width:760px) and (orientation:landscape){
+ .playfield.hunt-scene-active .farm-scene-navigation{
+  bottom:calc(72px + env(safe-area-inset-bottom))!important;
  }
 }
