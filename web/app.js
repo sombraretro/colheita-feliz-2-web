@@ -1481,7 +1481,7 @@ function startHunt(familyId,animalId,randomMode=false){
   durationMs=huntRandomInt(family.min,family.max)*60000;
  }
  const now=Date.now();
- hunter.activeHunt={id:'hunt-'+now+'-'+Math.random().toString(36).slice(2,8),familyId,animalId:animal.id,resourceId:animal.resource,mode,multiplier,foodBuffBonus:activeFoodBuff('hunting')?.2:0,startedAt:now,endsAt:now+durationMs,durationMs};
+ hunter.activeHunt={id:'hunt-'+now+'-'+Math.random().toString(36).slice(2,8),familyId,animalId:animal.id,resourceId:animal.resource,mode,multiplier,foodBuffBonus:activeFoodBuff('hunting') ? .2 : 0,startedAt:now,endsAt:now+durationMs,durationMs};
  markDirty();updateHuntTimer();closeModal();notify('Expedição iniciada. O tempo continuará contando mesmo que você mude de área.');
 }
 function completeHuntIfReady(){
@@ -2263,7 +2263,7 @@ function syncPendingFishing(){
   discoverItem('rio',river.id,fish.name,fish.icon);const earnedXP=awardProfessionXP('fisher',fish.xp,'pescaria');
   const rod=FISHING_RODS[river.rod]||FISHING_RODS.normal;
   remember((river.isExtraordinary?'Pescou extraordinariamente ':'Pescou ')+fish.name+' com a vara '+rod.name+'.');
-  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:earnedXP,isExtraordinary:!!river.isExtraordinary,scene:'river'});
+  celebrations.push({name:fish.name,icon:fish.icon,rarity:fish.rarity,xp:earnedXP,quantity:catchQty,isExtraordinary:!!river.isExtraordinary,scene:'river'});
   changed=true;
  }
  const sea=state.seaFishing?.pendingCatch;
