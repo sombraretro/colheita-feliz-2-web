@@ -1562,6 +1562,7 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 .animal-manager-tab.curral{background:#82b95b}.animal-manager-tab.viveiro{background:#59a9c7}.animal-manager-tab.haras{background:#c49a55}.animal-manager-tab.cao{background:#9b78ba}
 .animal-manager-tab.is-active{filter:brightness(.68) saturate(1.12);box-shadow:inset 0 3px 7px #0005,0 1px 2px #0002;transform:translateY(1px)}
 .animal-manager-panel{min-width:0}.animal-manager-panel>.animal-list{margin-bottom:16px}
-@keyframes grill-flame-flicker{0%,100%{transform:scaleY(.94) translateY(1px);opacity:.92}50%{transform:scaleY(1.08) translateY(-2px);opacity:1}}
+.food-buff-summary{display:flex;align-items:center;gap:10px;margin:8px 0 14px;padding:10px 12px;border:1px solid #d8c49b;border-radius:12px;background:#fff8e7;color:#59452d}.food-buff-summary>span{font-size:24px}.food-buff-summary small{display:block;line-height:1.4;margin-top:3px}.food-buff-summary.is-inactive{opacity:.76}
+@keyframes grill-flame-flicker{0%,100%{opacity:.88}50%{opacity:1}}
 .grill-fire{transform-origin:center bottom;animation:grill-flame-flicker .55s ease-in-out infinite}
 @media(max-width:560px){.animal-manager-tabs{gap:5px}.animal-manager-tab{flex-basis:76px;padding:7px 6px;font-size:12px}.hunt-backpack-image{width:clamp(110px,34vw,180px)}}
