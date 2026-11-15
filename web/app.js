@@ -531,8 +531,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:-1808,y:224,w:96,h:72},{x:-1708,y:224,w:96,h:72},{x:-1608,y:224,w:96,h:72},{x:-1508,y:224,w:96,h:72},{x:-1408,y:224,w:96,h:72},
-  {x:-1808,y:364,w:96,h:72},{x:-1708,y:364,w:96,h:72},{x:-1608,y:364,w:96,h:72},{x:-1508,y:364,w:96,h:72},{x:-1408,y:364,w:96,h:72}
+  {x:-1808,y:212,w:96,h:72},{x:-1708,y:212,w:96,h:72},{x:-1608,y:212,w:96,h:72},{x:-1508,y:212,w:96,h:72},{x:-1408,y:212,w:96,h:72},
+  {x:-1808,y:352,w:96,h:72},{x:-1708,y:352,w:96,h:72},{x:-1608,y:352,w:96,h:72},{x:-1508,y:352,w:96,h:72},{x:-1408,y:352,w:96,h:72}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -1091,7 +1091,7 @@ $('ground-layer').innerHTML=ground+brickWalkwayMarkup();/* A cena do Mar é mont
 updateSceneLandscapeVisibility();
 let scenery='';
 // Vegetação em áreas livres: sem invadir a plantação, construções, curral ou estrada.
-const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-1400,350],[-800,620],[-1400,890],[-2000,620]];
+const fieldOutline=[[532,350],[1132,620],[532,890],[-68,620]],expansionOutline=[[-468,385],[132,655],[-468,925],[-1068,655]];
 function insidePoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
 const roadLines=[ROAD_POINTS];
 function nearRoad(x,y){for(const line of roadLines)for(let i=1;i<line.length;i++){const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))),px=ax+t*dx,py=ay+t*dy;if(Math.hypot(x-px,y-py)<112)return true}return false}
