@@ -2459,7 +2459,7 @@ const ORDER_NPCS=[
  {name:'Rafael',icon:'👨',line:'Quero valorizar o trabalho das profissões da fazenda.'}
 ];
 const ORDER_PROFESSIONS=[
- {id:'tailor',label:'Alfaiataria',icon:'🧵',items:()=>Object.entries(TAILOR_RECIPES).filter(([id,r])=>r.level<=specialistLevelFromXP(state?.specialistProgress?.tailor?.xp||0)).map(([id,r])=>({type:'tailor',id,name:r.name,icon:r.icon,base:r.sellPrice||220,xp:r.xp||12}))},
+ {id:'tailor',label:'Alfaiataria',icon:'🧵',items:farm=>Object.entries(TAILOR_RECIPES).filter(([id,r])=>r.level<=specialistLevelFromXP(farm?.specialistProgress?.tailor?.xp||0)).map(([id,r])=>({type:'tailor',id,name:r.name,icon:r.icon,base:r.sellPrice||220,xp:r.xp||12}))},
  {id:'carpentry',label:'Marcenaria',icon:'🪚',items:()=>Object.entries(WOODWORK_RECIPES).filter(([id,r])=>!r.lakeBridge).map(([id,r])=>({type:'carpentry',id,name:r.name,icon:'🪚',base:(r.qty||2)*115+150,xp:18}))},
  {id:'kitchen',label:'Cozinha',icon:'🍲',items:()=>Object.entries(GRILL_RECIPES).filter(([id,r])=>r.kitchenOnly).map(([id,r])=>({type:'kitchen',id,name:r.name,icon:r.icon,base:r.salePrice||260,xp:r.xp||20}))},
  {id:'grill',label:'Churrasqueira',icon:'🔥',items:()=>Object.entries(GRILL_RECIPES).filter(([id,r])=>!r.kitchenOnly).map(([id,r])=>({type:'grill',id,name:r.name,icon:r.icon,base:r.salePrice||280,xp:r.xp||20}))},
@@ -2517,7 +2517,7 @@ function createOrderState(){return {active:[],completed:0,nextId:1,history:[]}}
 function orderStock(item){if(!item)return 0;const source={tailor:state.tailorWarehouse,carpentry:state.furnitureWarehouse,kitchen:state.processedWarehouse,grill:state.processedWarehouse,herbs:state.inventory,bouquets:state.bouquets}[item.type];const key=item.type==='herbs'?'mix_'+item.id:item.id;return Math.max(0,Math.floor(Number(source?.[key])||0))}
 function orderProductInfo(item){const recipes={tailor:TAILOR_RECIPES,carpentry:WOODWORK_RECIPES,kitchen:GRILL_RECIPES,grill:GRILL_RECIPES,herbs:MIX_HERB_RECIPES,bouquets:BOUQUETS};const recipe=recipes[item?.type]?.[item?.id];if(!recipe)return null;const name=recipe.name,icon=recipe.icon||(item.type==='carpentry'?'🪚':'📦');return {id:item.id,type:item.type,name,icon}}
 function createOrderRecord(data){
- const pool=ORDER_PROFESSIONS.map(p=>({profession:p,items:p.items()})).filter(p=>p.items.length);
+ const pool=ORDER_PROFESSIONS.map(p=>({profession:p,items:p.items(data)})).filter(p=>p.items.length);
  if(pool.length<2)return null;
  const chosen=[];const usedProfessions=[];
  const first=pool[Math.floor(Math.random()*pool.length)];usedProfessions.push(first.profession.id);
