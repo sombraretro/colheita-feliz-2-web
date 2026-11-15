@@ -2461,7 +2461,7 @@ const ORDER_PROFESSIONS=[
 ];
 function createOrderState(){return {active:[],completed:0,nextId:1}}
 function orderStock(item){if(!item)return 0;const source={tailor:state.tailorWarehouse,carpentry:state.furnitureWarehouse,kitchen:state.processedWarehouse,grill:state.processedWarehouse,herbs:state.inventory,bouquets:state.bouquets}[item.type];const key=item.type==='herbs'?'mix_'+item.id:item.id;return Math.max(0,Math.floor(Number(source?.[key])||0))}
-function orderProductInfo(item){const p=ORDER_PROFESSIONS.find(x=>x.id===item.type);const info=p?.items().find(x=>x.id===item.id);return info||null}
+function orderProductInfo(item){const recipes={tailor:TAILOR_RECIPES,carpentry:WOODWORK_RECIPES,kitchen:GRILL_RECIPES,grill:GRILL_RECIPES,herbs:MIX_HERB_RECIPES,bouquets:BOUQUETS};const recipe=recipes[item?.type]?.[item?.id];if(!recipe)return null;const name=recipe.name,icon=recipe.icon||(item.type==='carpentry'?'🪚':'📦');return {id:item.id,type:item.type,name,icon}}
 function createOrderRecord(data){
  const pool=ORDER_PROFESSIONS.map(p=>({profession:p,items:p.items()})).filter(p=>p.items.length);
  if(pool.length<2)return null;
