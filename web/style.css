@@ -1166,3 +1166,362 @@ body.sea-fishing-open .fishing-rod-card button{min-height:42px}
   bottom:calc(72px + env(safe-area-inset-bottom))!important;
  }
 }
+
+
+/* Etapa 1 — refinamento visual compartilhado da interface (Preview) */
+:root{
+ --ui-cream:#fff5dc;
+ --ui-wood:#bd8954;
+ --ui-green:#75b82d;
+ --ui-gold:#dca94d;
+ --ui-brown:#70491e;
+ --ui-ink:#543713;
+ --ui-focus:#f4cf68;
+}
+.topbar{
+ background:linear-gradient(180deg,#fff9e9 0%,#f8e6bd 58%,#eacb92 100%);
+ border-bottom-color:#8b5727;
+ box-shadow:0 3px 8px rgba(49,80,16,.28),inset 0 1px rgba(255,255,255,.9);
+}
+.brand-name{filter:drop-shadow(0 1px 0 rgba(255,255,255,.65))}
+.tabs button,.iconbtn,.side-menu button,.quick-actions button{
+ transition:background .16s ease,box-shadow .16s ease,transform .16s ease,filter .16s ease;
+}
+.tabs button{box-shadow:inset 0 1px rgba(255,255,255,.85),0 2px 3px rgba(104,70,31,.12)}
+.tabs button.active{box-shadow:inset 0 1px rgba(255,255,255,.28),0 2px 5px rgba(47,91,22,.24)}
+.iconbtn{box-shadow:inset 0 1px rgba(255,255,255,.85),0 2px 3px rgba(104,70,31,.18)}
+.iconbtn:hover,.side-menu button:hover,.quick-actions button:hover:not(:disabled){filter:brightness(1.045);box-shadow:0 4px 7px rgba(75,54,25,.22)}
+.farm-stats{
+ background:linear-gradient(145deg,#fff9e9 0%,#f8e8c7 68%,#f0d9ad 100%);
+ border-color:#c99a5c;
+ box-shadow:0 3px 0 rgba(142,91,38,.42),0 7px 15px rgba(45,58,20,.2),inset 0 1px rgba(255,255,255,.9);
+}
+.avatar{box-shadow:0 2px 5px rgba(87,59,27,.28),inset 0 0 0 1px rgba(255,255,255,.55)}
+.xp-track{height:11px;background:#e8d7b5;border-color:#b9965d;box-shadow:inset 0 1px 2px rgba(88,60,27,.16)}
+.xp-track>div{background:linear-gradient(180deg,#c9ef79 0%,#83c342 55%,#659e2c 100%);box-shadow:inset 0 1px rgba(255,255,255,.42)}
+.currencies{align-items:center}
+.currencies span{padding:2px 5px;border-radius:6px;background:rgba(255,250,230,.5)}
+.tool-bar{
+ background:linear-gradient(180deg,rgba(40,105,19,.96),rgba(12,66,17,.98));
+ border-color:#78ad37;
+ box-shadow:0 4px 0 rgba(16,57,10,.42),0 7px 15px rgba(23,52,12,.22),inset 0 1px 3px rgba(225,255,176,.22);
+}
+.tool{position:relative}
+.tool.active{background:linear-gradient(180deg,rgba(160,218,91,.42),rgba(49,139,36,.28));border-color:#b1e36d;box-shadow:inset 0 1px rgba(255,255,255,.2),0 0 0 1px rgba(30,79,17,.3),0 0 10px rgba(175,227,74,.42)}
+.tool:active{transform:translateY(1px) scale(.97)}
+.dialog{
+ background:linear-gradient(160deg,#fff9e9 0%,#f6e8c6 58%,#eed9aa 100%);
+ border-color:#a97539;
+ box-shadow:0 18px 48px rgba(12,33,0,.48),inset 0 0 0 1px rgba(255,255,255,.5);
+}
+.dialog-head{
+ background:linear-gradient(180deg,#d1e58d 0%,#9fca58 52%,#75ae38 100%);
+ border-bottom-color:#a1763d;
+ box-shadow:inset 0 1px rgba(255,255,255,.55);
+}
+.dialog-head h2{text-shadow:0 1px rgba(255,255,255,.72),0 2px rgba(67,91,35,.12)}
+.dialog-head button{
+ min-width:40px;min-height:40px;
+ display:grid;place-items:center;
+ color:#70491e;
+ box-shadow:inset 0 1px rgba(255,255,255,.9),0 2px 3px rgba(75,54,25,.18);
+ transition:transform .15s ease,filter .15s ease,background .15s ease;
+}
+.dialog-head button:hover{background:#fffdf0;transform:scale(1.04)}
+.modal-body{scrollbar-width:thin;scrollbar-color:#bd9861 #f1e2c1;overscroll-behavior:contain}
+.modal-body h3{padding-bottom:5px;border-bottom:1px solid rgba(185,145,79,.35)}
+.store-card,.animal-card,.queue-line,.history-entry,.welcome-card{
+ box-shadow:0 2px 5px rgba(103,75,34,.07),inset 0 1px rgba(255,255,255,.65);
+ transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.store-card:hover,.animal-card:hover,.welcome-card:hover{
+ border-color:#c49a56;box-shadow:0 4px 10px rgba(103,75,34,.13),inset 0 1px rgba(255,255,255,.7);
+}
+.store-card button,.modal-action,.hunt-start-btn,.hunt-family-btn,.hunt-animal-btn{
+ transition:filter .15s ease,transform .15s ease,box-shadow .15s ease;
+}
+.store-card button:hover:not(:disabled),.modal-action:hover:not(:disabled),.hunt-start-btn:hover:not(:disabled){
+ filter:brightness(1.045);transform:translateY(-1px);box-shadow:0 3px 6px rgba(77,83,34,.17)
+}
+.store-card button:active:not(:disabled),.modal-action:active:not(:disabled){transform:translateY(1px)}
+button:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+ outline:3px solid var(--ui-focus);outline-offset:2px;
+}
+.toast{
+ border-color:#c18a43;
+ background:linear-gradient(145deg,#fff9e8,#f4e2b9);
+ box-shadow:0 8px 24px rgba(37,71,22,.34),inset 0 1px rgba(255,255,255,.9);
+}
+.savedot{box-shadow:0 0 0 2px rgba(255,255,255,.24),0 0 7px currentColor}
+@media(max-width:760px){
+ .dialog{width:min(680px,96vw);max-height:calc(100dvh - 20px);border-width:3px;border-radius:15px}
+ .dialog-head{padding:10px 13px;min-height:56px}
+ .dialog-head h2{font-size:clamp(18px,5vw,22px)}
+ .dialog-head button{width:40px;height:40px}
+ .modal-body{max-height:none;min-height:0;padding:12px;overscroll-behavior:contain}
+ .overlay{padding:10px}
+ .store-card{padding:11px}
+ .store-card button,.modal-action{min-height:40px}
+}
+@media(max-width:430px){
+ .dialog{width:100%;max-height:calc(100dvh - 12px);border-radius:13px}
+ .overlay{padding:6px}
+ .dialog-head{padding:9px 11px}
+ .modal-body{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .tabs button,.iconbtn,.side-menu button,.quick-actions button,.tool,.dialog-head button,.store-card,.animal-card,.queue-line,.history-entry,.welcome-card,.store-card button,.modal-action{transition:none!important}
+}
+
+/* Depósito: botões de venda com largura proporcional ao rótulo curto. */
+.list-line .actions button[data-sell],
+.list-line .actions button[data-sell-flower],
+.list-line .actions button[data-sell-animal-product],
+.list-line .actions button[data-sell-meat],
+.list-line .actions button[data-sell-fish],
+.list-line .actions button[data-sell-sea-fish],
+.list-line .actions button[data-sell-processed]{width:auto;min-width:0;flex:0 0 auto;padding:7px 10px;font-size:12px;white-space:nowrap}
+
+/* Etapa 2 — inventário e gerenciamento: hierarquia visual sem alterar estoques ou ações. */
+.dialog[data-modal="inventory"] .modal-body>h3{margin:20px 0 11px;padding:0 0 8px;border-bottom:2px solid #dfc58f;color:#52772a;font:700 17px Georgia,serif}
+.dialog[data-modal="inventory"] .modal-body>h3:first-of-type{margin-top:12px}
+.dialog[data-modal="inventory"] .grid-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:11px;align-items:stretch}
+.dialog[data-modal="inventory"] .store-card{min-width:0;min-height:166px;padding:13px;background:linear-gradient(150deg,#fffdf4,#f5edda);border-color:#d5bd8c;gap:8px}
+.dialog[data-modal="inventory"] .store-card .symbol{display:grid;place-items:center;min-height:38px;font-size:30px}
+.dialog[data-modal="inventory"] .store-card strong{font-size:13px;line-height:1.3}
+.dialog[data-modal="inventory"] .store-card small{font-size:11px;line-height:1.5;color:#766044}
+.dialog[data-modal="inventory"] .store-card button{width:100%;min-height:38px;margin-top:auto;padding:8px 9px;font-size:11px;line-height:1.25;white-space:normal}
+.dialog[data-modal="inventory"] .actions{gap:8px}
+.dialog[data-modal="inventory"] .modal-select{min-height:38px;max-width:100%;padding:7px 10px;border:1px solid #c7a66e;border-radius:9px;background:#fffaf0;color:#59401f;font:600 12px Verdana,Arial,sans-serif}
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 9px;margin:0;border-bottom:1px solid #dfcba5;border-radius:8px;background:rgba(255,252,241,.55)}
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line:nth-child(even){background:rgba(245,235,211,.48)}
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line>span{min-width:0;line-height:1.45;font-weight:700}
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line>span small{display:inline-block;margin-top:3px;font-size:10px;font-weight:500;color:#806b4c}
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line>.actions{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:6px;margin:0}
+.dialog[data-modal="warehouse"] .sale-qty-input{width:66px;min-width:58px;min-height:36px;padding:6px 4px;font-size:12px}
+.dialog[data-modal="warehouse"] .list-line .modal-action{min-height:36px;padding:6px 9px;font-size:11px;white-space:nowrap}
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line .actions button[data-toggle-crop-lock],
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line .actions button[data-toggle-flower-lock],
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line .actions button[data-toggle-meat-lock],
+.dialog[data-modal="warehouse"] .shop-section-content>.list-line .actions button[data-toggle-processed-lock]{min-width:92px}
+@media(max-width:600px){
+ .dialog[data-modal="inventory"] .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .dialog[data-modal="inventory"] .store-card{min-height:150px;padding:9px}
+ .dialog[data-modal="inventory"] .store-card .symbol{font-size:26px;min-height:32px}
+ .dialog[data-modal="inventory"] .store-card strong{font-size:12px}
+ .dialog[data-modal="inventory"] .store-card small{font-size:10px}
+ .dialog[data-modal="inventory"] .store-card button{font-size:10px;min-height:40px}
+ .dialog[data-modal="warehouse"] .shop-section-content>.list-line{grid-template-columns:minmax(0,1fr);gap:7px;padding:10px 7px}
+ .dialog[data-modal="warehouse"] .shop-section-content>.list-line>.actions{width:100%;justify-content:flex-start;flex-wrap:wrap}
+ .dialog[data-modal="warehouse"] .sale-qty-input{flex:0 0 66px}
+}
+@media(max-width:360px){.dialog[data-modal="inventory"] .grid-cards{grid-template-columns:1fr}.dialog[data-modal="inventory"] .store-card{min-height:0}}
+
+
+/* Etapa 3 — acabamento visual das cinco áreas, sem alterar cenários ou mecânicas. */
+/* Navegação comum: estados mais claros, alvos consistentes e melhor leitura. */
+.farm-scene-navigation{
+ max-width:min(760px,calc(100% - 32px));
+ gap:6px;
+ padding:6px;
+ border-color:rgba(151,105,48,.78);
+ background:linear-gradient(180deg,rgba(255,250,232,.96),rgba(239,216,174,.94));
+ box-shadow:0 5px 14px rgba(44,62,24,.22),inset 0 1px rgba(255,255,255,.85);
+ backdrop-filter:blur(7px);
+}
+.farm-scene-navigation button{
+ min-height:38px;
+ padding:8px 13px;
+ border-radius:9px;
+ box-shadow:inset 0 1px rgba(255,255,255,.75),0 1px 2px rgba(86,60,27,.12);
+ transition:filter .15s ease,box-shadow .15s ease,transform .15s ease;
+}
+.farm-scene-navigation button:hover{filter:brightness(1.06);box-shadow:0 3px 7px rgba(64,70,36,.2)}
+.farm-scene-navigation button:active{transform:translateY(1px)}
+.farm-scene-navigation button:focus-visible{outline:3px solid #fff3bd;outline-offset:2px}
+.farm-scene-navigation button.active{box-shadow:inset 0 1px rgba(255,255,255,.22),0 2px 5px rgba(35,67,20,.2)}
+/* Fazenda: controles laterais e atalhos mantêm leitura sem competir com o mundo. */
+.side-menu{max-height:calc(100% - 150px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(160,119,62,.65) transparent}
+.side-menu button{min-height:40px;line-height:1.25;box-shadow:inset 0 1px rgba(255,255,255,.55),0 2px 4px rgba(74,52,22,.16)}
+.tool-bar{backdrop-filter:blur(5px)}
+.tool{touch-action:manipulation}
+.tool:focus-visible,.zoom-ui button:focus-visible{outline:3px solid #fff2b5;outline-offset:2px}
+/* Rio: pesca e pontos de interação recebem realce uniforme, sem mover os assets. */
+#world [data-river-backpack],#world [data-river-rod],
+#world [data-sea-bag],#world [data-sea-net]{cursor:pointer;touch-action:manipulation}
+#world [data-river-backpack]:focus-visible,#world [data-river-rod]:focus-visible,
+#world [data-sea-bag]:focus-visible,#world [data-sea-net]:focus-visible{
+ outline:none;filter:drop-shadow(0 0 13px #fff0a4) brightness(1.14)
+}
+#river-water-motion{pointer-events:none}
+.sea-fishing-status{max-width:calc(100% - 28px);box-sizing:border-box}
+.sea-fishing-status .fishing-toast-detail{line-height:1.4}
+/* Pomar/Mata: cartões e sementes com estados claros de foco/seleção. */
+.orchard-seed-list button,.forest-slot-card{transition:filter .15s ease,box-shadow .15s ease,transform .15s ease}
+.orchard-seed-list button:hover,.forest-slot-card:hover:not(.is-locked){filter:brightness(1.035);box-shadow:0 3px 8px rgba(81,67,34,.16)}
+.orchard-seed-list button:focus-visible,.forest-slot-card:focus-visible{outline:3px solid #e6b84d;outline-offset:2px}
+.forest-slot-card.is-locked{cursor:not-allowed}
+.forest-slot-card.is-selected{border-color:#d39b32}
+/* Caça: informação de sessão, mochila e seleção de famílias mais legíveis. */
+.hunt-timer-widget{border-color:rgba(208,181,126,.95);box-shadow:0 7px 22px rgba(8,25,16,.34),inset 0 1px rgba(255,255,255,.5);backdrop-filter:blur(7px)}
+.hunt-backpack{min-width:82px;box-shadow:0 4px 12px rgba(9,22,13,.3),inset 0 1px rgba(255,255,255,.18)}
+.hunt-backpack:focus-visible{outline:3px solid #ffe6a6;outline-offset:3px}
+.hunt-family-btn:focus-visible,.hunt-animal-btn:focus-visible{outline:3px solid #d9a943;outline-offset:2px}
+.hunt-family-btn.is-selected,.hunt-animal-btn.is-selected{box-shadow:inset 0 0 0 2px rgba(255,255,255,.65),0 2px 6px rgba(62,55,31,.16)}
+.hunt-material-card,.hunt-result-item{box-shadow:0 2px 6px rgba(68,55,30,.08),inset 0 1px rgba(255,255,255,.65)}
+@media(max-width:760px){
+ .farm-scene-navigation{max-width:calc(100% - 12px);gap:3px;padding:4px}
+ .farm-scene-navigation button{min-width:0;min-height:36px;padding:7px 7px;font-size:clamp(9px,2.4vw,11px)}
+ .side-menu{max-height:calc(100% - 130px)}
+ .hunt-timer-widget{max-width:min(220px,calc(100% - 16px))}
+ .hunt-backpack{min-width:72px}
+}
+@media(max-width:380px){
+ .farm-scene-navigation button{padding-inline:4px;font-size:9px}
+ .hunt-family-btn{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .farm-scene-navigation button,.orchard-seed-list button,.forest-slot-card{transition:none!important}
+}
+
+
+/* Etapa 4 — adaptação final por faixa de tela, sem alterar cenários ou mecânicas. */
+html,body,.app{min-width:0;min-height:0}
+img,svg,video,canvas{max-width:100%}
+.dialog,.modal-body,.store-card,.animal-card,.queue-line,.list-line,.actions{min-width:0}
+.modal-body{overflow-x:hidden;overflow-y:auto;scrollbar-gutter:stable}
+.modal-body :where(input,select,textarea,button){max-width:100%}
+.modal-body :where(input:not([type=checkbox]):not([type=radio]),select,textarea){min-width:0}
+.modal-body :where(p,small,strong,b,span,label){overflow-wrap:anywhere}
+.actions{align-items:center}
+.grid-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.dialog{max-height:min(90dvh,900px)}
+.dialog-head{flex:0 0 auto}
+.modal-body{flex:1 1 auto;max-height:none;min-height:0}
+.toast{width:max-content;max-width:calc(100vw - 24px);overflow-wrap:anywhere}
+.farm-scene-navigation{width:max-content;max-width:calc(100% - 24px)}
+.farm-scene-navigation button{min-width:0}
+.side-menu,.more-menu{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
+@media(min-width:1025px){
+ .topbar{min-width:0;gap:10px;padding-inline:clamp(10px,1.2vw,20px)}
+ .brand{flex:0 0 auto;min-width:clamp(230px,19vw,310px)}
+ .topbar .tabs{flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#b98a4b transparent;padding:0 2px}
+ .topbar .tabs .tab{flex:0 0 auto;padding:10px clamp(7px,.85vw,15px);font-size:clamp(10px,.82vw,12px)}
+ .topright{flex:0 0 auto;gap:4px}
+ .topright .iconbtn{margin-left:3px}
+ .farm-stats{max-width:min(390px,31vw)}
+ .side-menu{max-height:calc(100% - 150px)}
+ .tool-bar{max-width:min(760px,calc(100% - 330px))}
+ .dialog{max-height:min(88dvh,920px)}
+}
+@media(min-width:1025px) and (max-width:1450px){
+ .brand{min-width:220px}
+ .brand-name{font-size:clamp(19px,1.8vw,25px)}
+ .brand-flower{font-size:30px}
+ .topbar .tabs .tab{padding-inline:7px;font-size:10px}
+ .topright #connection-label{display:none}
+}
+@media(min-width:701px) and (max-width:1024px){
+ .topbar{height:auto;min-height:56px;max-height:82px;flex:0 0 auto;flex-wrap:nowrap;align-items:center;gap:8px;padding:6px 12px}
+ .topbar .brand{min-width:0;max-width:none;flex:1 1 auto}
+ .topbar .brand-name{font-size:clamp(19px,2.6vw,26px)}
+ .topbar .tabs{display:none!important}
+ .topright{margin-left:auto;flex:0 0 auto;gap:5px}
+ .topright .iconbtn{margin-left:2px}
+ .playfield{min-height:0}
+ .farm-stats{left:12px;top:12px;transform:scale(.88);transform-origin:top left}
+ .side-menu{max-height:calc(100% - 160px);max-width:min(300px,36vw)}
+ .farm-scene-navigation{top:10px;max-width:calc(100% - 24px);gap:4px}
+ .farm-scene-navigation button{padding:8px 10px;font-size:11px}
+ .tool-bar{bottom:calc(82px + env(safe-area-inset-bottom));width:min(700px,calc(100% - 36px));max-width:none}
+ .quick-actions{bottom:calc(160px + env(safe-area-inset-bottom));max-width:190px}
+ .zoom-ui{bottom:calc(148px + env(safe-area-inset-bottom))}
+ .footer{display:none}
+ .mobile-navigation{min-height:72px;padding-bottom:max(7px,env(safe-area-inset-bottom))}
+}
+@media(max-width:700px){
+ .app{height:100dvh;min-height:0}
+ .topbar{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+ .topright{gap:3px}
+ .topright .iconbtn{margin-left:1px}
+ .farm-stats{max-width:calc(100vw - 58px)}
+ .tool-bar{left:50%;width:calc(100% - 16px);max-width:520px;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+ .tool-bar::-webkit-scrollbar{display:none}
+ .tool{flex:0 0 clamp(36px,10vw,48px);width:auto}
+ .farm-scene-navigation{width:calc(100% - 12px);max-width:calc(100% - 12px);gap:3px}
+ .farm-scene-navigation button{flex:1 1 0;padding-inline:clamp(2px,1.2vw,7px);font-size:clamp(8px,2.45vw,10px);white-space:nowrap}
+ .zoom-ui{max-width:calc(100% - 12px)}
+ .overlay{padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left))}
+ .dialog{width:100%;max-height:calc(100dvh - 12px);border-width:3px}
+ .dialog-head{min-height:52px;padding:7px 10px}
+ .dialog-head h2{min-width:0;overflow-wrap:anywhere}
+ .dialog-head button{flex:0 0 40px}
+ .modal-body{padding:10px}
+ .store-card{min-width:0}
+ .store-card button,.modal-action,.dialog-head button{min-height:42px}
+ .list-line{align-items:flex-start;flex-wrap:wrap}
+ .list-line>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .list-line>.actions{max-width:100%;flex-wrap:wrap}
+ .sale-qty-input{max-width:100%}
+ .mobile-navigation{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(5px,env(safe-area-inset-bottom))}
+ .mobile-navigation button{min-width:0;overflow:hidden}
+ .mobile-navigation button small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media(max-width:430px){
+ .farm-stats{left:6px;max-width:calc(100vw - 54px)}
+ .farm-scene-navigation button{font-size:clamp(7.5px,2.25vw,9px);padding-inline:2px}
+ .mobile-navigation{gap:3px}
+ .mobile-navigation button{padding-inline:1px}
+ .mobile-navigation button span{font-size:18px}
+ .mobile-navigation button small{font-size:9px}
+ .modal-body{padding:8px}
+ .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .store-card{padding:8px}
+ .store-card strong{font-size:11px}
+ .store-card small{font-size:9px}
+ .actions{gap:6px}
+ .actions .modal-action{flex:1 1 auto}
+}
+@media(max-width:380px){
+ .brand-name{font-size:14px}
+ .topright .iconbtn{width:28px;height:28px}
+ .farm-scene-navigation{gap:2px;padding:3px}
+ .farm-scene-navigation button{font-size:7.5px;min-height:34px}
+ .tool-bar{gap:1px;padding-inline:3px}
+ .tool{flex-basis:35px}
+ .zoom-ui{right:4px;gap:1px}
+ .zoom-ui output{font-size:9px;padding:5px}
+ .dialog-head h2{font-size:17px}
+ .grid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .topbar{min-height:42px;height:42px;max-height:42px}
+ .farm-scene-navigation{top:4px}
+ .farm-stats{top:4px;transform:scale(.56)}
+ .tool-bar{height:42px;bottom:calc(54px + env(safe-area-inset-bottom))}
+ .zoom-ui{bottom:calc(100px + env(safe-area-inset-bottom))}
+ .mobile-navigation{min-height:48px}
+ .mobile-navigation button{min-height:38px;flex-direction:row;gap:4px}
+ .dialog{max-height:calc(100dvh - 8px)}
+ .dialog-head{min-height:44px;padding:4px 9px}
+ .dialog-head button{width:36px;height:36px;min-height:36px}
+ .modal-body{padding:7px}
+}
+@media(max-height:560px) and (min-width:701px){
+ .topbar{min-height:48px;height:48px}
+ .farm-stats{transform:scale(.72);transform-origin:top left}
+ .side-menu{max-height:calc(100% - 110px)}
+ .tool-bar{height:52px;bottom:8px}
+ .quick-actions{bottom:72px}
+ .zoom-ui{bottom:68px}
+ .dialog{max-height:calc(100dvh - 12px)}
+}
+@media(min-width:1451px){
+ .topbar .tabs .tab{padding-inline:clamp(10px,.9vw,18px)}
+ .farm-stats{max-width:390px}
+ .side-menu{width:min(390px,22vw)}
+}
+@media(prefers-reduced-motion:reduce){
+ .topbar .tabs,.tool-bar,.farm-scene-navigation,.mobile-navigation,.side-menu,.more-menu{scroll-behavior:auto}
+}
