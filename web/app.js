@@ -531,8 +531,8 @@ const ANIMAL_SLOTS=[
  {x:1280,y:525,w:140,h:105},{x:1440,y:525,w:140,h:105},{x:1600,y:525,w:140,h:105}
  ];
 const HORSE_SLOTS=[
-  {x:-1808,y:212,w:96,h:72},{x:-1708,y:212,w:96,h:72},{x:-1608,y:212,w:96,h:72},{x:-1508,y:212,w:96,h:72},{x:-1408,y:212,w:96,h:72},
-  {x:-1808,y:352,w:96,h:72},{x:-1708,y:352,w:96,h:72},{x:-1608,y:352,w:96,h:72},{x:-1508,y:352,w:96,h:72},{x:-1408,y:352,w:96,h:72}
+  {x:-1808,y:182,w:96,h:72},{x:-1708,y:182,w:96,h:72},{x:-1608,y:182,w:96,h:72},{x:-1508,y:182,w:96,h:72},{x:-1408,y:182,w:96,h:72},
+  {x:-1808,y:322,w:96,h:72},{x:-1708,y:322,w:96,h:72},{x:-1608,y:322,w:96,h:72},{x:-1508,y:322,w:96,h:72},{x:-1408,y:322,w:96,h:72}
  ];
 const BIRD_TYPES=['galinha','pombo','pato','pavao','peru'];
 const isBirdType=type=>BIRD_TYPES.includes(type);
@@ -972,7 +972,7 @@ function roadOffsetPoints(side,spacing=118){
  out.push([b[0]-dy/len*side*70,b[1]+dx/len*side*70]);return out;
 }
 function roadFenceMarkup(side){
- const pts=roadOffsetPoints(side),isGate=p=>p[0]>1135&&p[0]<1260;
+ const pts=roadOffsetPoints(side),isGate=p=>side===-1&&p[0]>1135&&p[0]<1260;
  const segments=[];let current=[];
  for(const p of pts){if(isGate(p)){if(current.length>1)segments.push(current);current=[]}else current.push(p)}
  if(current.length>1)segments.push(current);
