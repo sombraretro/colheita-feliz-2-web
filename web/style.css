@@ -1272,3 +1272,12 @@ button:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:fo
 @media(prefers-reduced-motion:reduce){
  .tabs button,.iconbtn,.side-menu button,.quick-actions button,.tool,.dialog-head button,.store-card,.animal-card,.queue-line,.history-entry,.welcome-card,.store-card button,.modal-action{transition:none!important}
 }
+
+/* Depósito: botões de venda com largura proporcional ao rótulo curto. */
+.list-line .actions button[data-sell],
+.list-line .actions button[data-sell-flower],
+.list-line .actions button[data-sell-animal-product],
+.list-line .actions button[data-sell-meat],
+.list-line .actions button[data-sell-fish],
+.list-line .actions button[data-sell-sea-fish],
+.list-line .actions button[data-sell-processed]{width:auto;min-width:0;flex:0 0 auto;padding:7px 10px;font-size:12px;white-space:nowrap}
