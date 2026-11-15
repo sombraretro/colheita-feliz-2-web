@@ -1569,3 +1569,11 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 .order-reward>span{font-size:11px;font-weight:700;color:#654a2e}
 .order-reward .modal-action{min-width:155px}
 @media(max-width:520px){.order-card{padding:10px}.order-person{align-items:flex-start}.order-no-deadline{font-size:9px}.order-reward{align-items:stretch}.order-reward .modal-action{width:100%}}
+
+.food-buff-summary{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 14px;border:1px solid #c8a76f;border-radius:12px;background:linear-gradient(135deg,#fff5d9,#f2e2bd);color:#5e421f}
+.food-buff-summary>span{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border-radius:50%;background:#ead19b;font-size:24px}
+.food-buff-summary>div{display:flex;min-width:0;flex-direction:column;gap:3px}
+.food-buff-summary b{font-size:13px}
+.food-buff-summary small{font-size:11px;line-height:1.4;color:#755c36}
+.food-buff-summary.is-inactive{border-color:#d9d0bf;background:#f5f1e8;color:#776b59}
+.food-buff-summary.is-inactive>span{background:#e7dfd0}
