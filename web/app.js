@@ -3091,7 +3091,15 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 0)">
-   <g id="sea-boat-motion"><image href="/Cenario/Barco.jpg" x="-930" y="975" width="1940" height="455" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="/Cenario/Barco.jpg" x="-930" y="975" width="1940" height="455" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+    <ellipse cx="0" cy="95" rx="125" ry="24" fill="#3b291d" opacity=".3"/>
+    <path d="M-82 12Q-78 -42 -34 -48H38Q82 -42 84 12L68 98Q0 124 -68 98Z" fill="#9b6034" stroke="#51331f" stroke-width="13"/>
+    <path d="M-53 -40Q-48 -102 0 -102Q48 -102 53 -40" fill="none" stroke="#4e3423" stroke-width="15"/>
+    <path d="M-78 12Q0 35 80 12L70 42Q0 65 -70 42Z" fill="#c28a4d" stroke="#6e4728" stroke-width="8"/>
+    <rect x="-17" y="27" width="34" height="29" rx="7" fill="#e8c16d" stroke="#694526" stroke-width="6"/><path d="M-95 4Q-120 35 -110 72M95 4Q120 35 110 72" fill="none" stroke="#e5c18c" stroke-width="9"/>
+    <rect x="-116" y="-112" width="232" height="250" rx="28" fill="transparent" stroke="transparent"/>
+    <text x="0" y="158" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🎒</text>
+   </g><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
     <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
     <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
     <path d="M-12 -20L-100 78L-8 112L92 20Z" fill="#e7d8ae" fill-opacity=".32" stroke="#f1dfb6" stroke-width="9"/>
