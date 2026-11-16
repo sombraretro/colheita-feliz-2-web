@@ -2303,18 +2303,17 @@ function claimDailyReward(){if(!farmWriteAllowed())return;
 const FARM_RANK_TITLES=['Peão','Campeiro','Capataz','Feitor','Intendente','Estancieiro','Comendador','Patriarca','Magnata','Barão'];
 const SPECIALIST_TITLE_GROUPS=[['chef','Cozinha'],['grill','Churrasqueira'],['lumberjack','Lenhador'],['carpenter','Marcenaria'],['alchemist','Alquimia'],['fisher','Pesca'],['haras','Haras'],['tailor','Alfaiataria']];
 function availablePlayerTitleGroups(data=state){
- // Para a fazenda atual, use exatamente o mesmo cálculo do nível exibido no HUD.
- // Assim, jogadores avançados mantêm acesso a todos os títulos de níveis anteriores.
- const level=data===state?farmLevel():levelFromXP(Math.max(0,Number(data?.xp)||0));
- const unlockedFarmTitleCount=Math.min(FARM_RANK_TITLES.length,Math.max(0,Math.floor((level-1)/15)+1));
- const farm=FARM_RANK_TITLES.slice(0,unlockedFarmTitleCount);
+ // A lista do perfil sempre acompanha o nível atual calculado pelo HUD.
+ const level=farmLevel();
+ const farm=FARM_RANK_TITLES.filter((_,index)=>level>=(index===0?1:index*15));
  const achievements=Array.isArray(data?.unlockedTitles)?data.unlockedTitles:[];
  const professions=[];
  for(const [key,label] of SPECIALIST_TITLE_GROUPS){
   const progress=data?.specialistProgress?.[key]||{xp:0};
   const specialistLevel=specialistLevelFromXP(progress.xp);
   const names=SPECIALIST_TITLES[key]||[];
-  const earned=Number(progress.xp)>0?names.filter((_,index)=>specialistLevel>=specialistTitleLevel(key,index)):[];
+  // O primeiro título profissional é de nível 1, inclusive antes do primeiro XP.
+  const earned=names.filter((_,index)=>specialistLevel>=specialistTitleLevel(key,index));
   if(earned.length)professions.push({label,titles:earned});
  }
  return {farm,achievements,professions};
