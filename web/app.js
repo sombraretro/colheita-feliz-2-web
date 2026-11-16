@@ -1189,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" pointer-events="none" transform="translate(0 -50)">${svgImage('casinha-cachorro',450,245,145,140)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',450,245,145,140)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=675;y=285;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=610;y=260;w=150;h=112.5;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -3091,14 +3091,9 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 0)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-930" y="975" width="1940" height="455" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
-    <ellipse cx="0" cy="95" rx="125" ry="24" fill="#3b291d" opacity=".3"/>
-    <path d="M-82 12Q-78 -42 -34 -48H38Q82 -42 84 12L68 98Q0 124 -68 98Z" fill="#9b6034" stroke="#51331f" stroke-width="13"/>
-    <path d="M-53 -40Q-48 -102 0 -102Q48 -102 53 -40" fill="none" stroke="#4e3423" stroke-width="15"/>
-    <path d="M-78 12Q0 35 80 12L70 42Q0 65 -70 42Z" fill="#c28a4d" stroke="#6e4728" stroke-width="8"/>
-    <rect x="-17" y="27" width="34" height="29" rx="7" fill="#e8c16d" stroke="#694526" stroke-width="6"/><path d="M-95 4Q-120 35 -110 72M95 4Q120 35 110 72" fill="none" stroke="#e5c18c" stroke-width="9"/>
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+    <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-116" y="-112" width="232" height="250" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-116" y="-112" width="232" height="250" rx="28" fill="transparent" stroke="transparent"/>
-    <text x="0" y="158" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🎒</text>
    </g><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
     <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
     <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
@@ -3132,7 +3127,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
  </g>
  <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)"><rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-62" y="-66" width="124" height="132" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>
- <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900)"><rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/VaraDePesca.png" x="-32" y="-210" width="76" height="230" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900)"><rect x="-42" y="-225" width="96" height="250" fill="#fff" opacity=".01" pointer-events="all"/><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/VaraDePesca.png" x="-42" y="-225" width="96" height="250" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
 function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
