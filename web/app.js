@@ -921,7 +921,8 @@ function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('c
 function setMusicVolume(value){musicVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.musicVolume',String(musicVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('music-volume-value');if(out)out.textContent=musicVolume+'%'}
 function setSfxVolume(value){sfxVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.sfxVolume',String(sfxVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('sfx-volume-value');if(out)out.textContent=sfxVolume+'%'}
 function setMusicMode(value){musicMode=value==='sequential'?'sequential':'random';try{localStorage.setItem('cf2.musicMode',musicMode)}catch{}musicTrackOrder=[];musicTrackPosition=0}
-let landscapeModeActive=false;
+let landscapeModeActive=false,updateViewFrame=0;
+function scheduleUpdateView(){if(updateViewFrame)return;updateViewFrame=requestAnimationFrame(()=>{updateViewFrame=0;updateView()})}
 function syncLandscapeControls(active){
  const desktop=$('orientation-toggle'),mobile=$('orientation-toggle-mobile');
  if(desktop){desktop.setAttribute('aria-pressed',String(active));desktop.title=active?'Voltar ao modo retrato':'Girar para modo paisagem';desktop.setAttribute('aria-label',active?'Voltar ao modo retrato':'Ativar modo paisagem')}
@@ -934,7 +935,7 @@ async function toggleLandscapeMode(){
   root.classList.remove('orientation-landscape-fallback');
   try{screen.orientation?.unlock?.()}catch{}
   syncLandscapeControls(false);
-  requestAnimationFrame(updateView);
+  scheduleUpdateView();
   notify('Modo paisagem desativado.');return;
  }
  let locked=false;
@@ -942,7 +943,7 @@ async function toggleLandscapeMode(){
  landscapeModeActive=true;
  if(!locked)root.classList.add('orientation-landscape-fallback');
  syncLandscapeControls(true);
- requestAnimationFrame(updateView);
+ scheduleUpdateView();
  notify(locked?'Modo paisagem ativado.':'Modo paisagem visual ativado. Se o aparelho não girar fisicamente, o jogo será ajustado para a horizontal.');
 }
 window.addEventListener('orientationchange',()=>requestAnimationFrame(updateView));
@@ -2930,16 +2931,22 @@ function enableLocalWeather(){
  try{localStorage.setItem('cf2.localWeatherConsent','yes')}catch{}
  weatherStatus='loading';if(currentModal==='welcome')renderModal();startLocalWeatherRefresh();updateWeatherFromLocation()
 }
+const weatherRainMarkupCache=new Map();
 function renderWeatherRain(){
  const layer=$('weather-layer');if(!layer)return;
- if(!weatherRainActive||!weatherLocation||!SCENE_BOUNDS[activeScene]){layer.innerHTML='';return}
- const b=SCENE_BOUNDS[activeScene],w=b.right-b.left,h=b.bottom-b.top;
- const drops=(offset,count)=>Array.from({length:count},(_,i)=>{
-  const x=b.left+(((i*137.508+offset*31)%1000)/1000)*w,y=b.top+(((i*83.173+offset*67)%1000)/1000)*h;
-  const lean=(i+offset)%2===0?-7:7,len=18+(i%4)*4;
-  return '<path d="M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+lean+' '+len+'" />';
- }).join('');
- layer.innerHTML='<g class="rain-wind-a" opacity=".64"><g class="rain-fall" fill="none" stroke="#e4f4ff" stroke-width="1.25" stroke-linecap="round">'+drops(0,190)+'</g></g><g class="rain-wind-b" opacity=".43"><g class="rain-fall" fill="none" stroke="#c8e6f5" stroke-width="1.05" stroke-linecap="round">'+drops(7,150)+'</g></g>';
+ if(!weatherRainActive||!weatherLocation||!SCENE_BOUNDS[activeScene]){if(layer.childElementCount)layer.replaceChildren();return}
+ let markup=weatherRainMarkupCache.get(activeScene);
+ if(!markup){
+  const b=SCENE_BOUNDS[activeScene],w=b.right-b.left,h=b.bottom-b.top;
+  const drops=(offset,count)=>Array.from({length:count},(_,i)=>{
+   const x=b.left+(((i*137.508+offset*31)%1000)/1000)*w,y=b.top+(((i*83.173+offset*67)%1000)/1000)*h;
+   const lean=(i+offset)%2===0?-7:7,len=18+(i%4)*4;
+   return '<path d="M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+lean+' '+len+'" />';
+  }).join('');
+  markup='<g class="rain-wind-a" opacity=".64"><g class="rain-fall" fill="none" stroke="#e4f4ff" stroke-width="1.25" stroke-linecap="round">'+drops(0,190)+'</g></g><g class="rain-wind-b" opacity=".43"><g class="rain-fall" fill="none" stroke="#c8e6f5" stroke-width="1.05" stroke-linecap="round">'+drops(7,150)+'</g></g>';
+  weatherRainMarkupCache.set(activeScene,markup);
+ }
+ if(layer.dataset.rainScene!==activeScene||!layer.childElementCount){layer.innerHTML=markup;layer.dataset.rainScene=activeScene}
 }
 async function updateWeatherFromLocation(){
  if(!localWeatherConsent())return;
