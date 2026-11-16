@@ -1189,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',350,180,125,120)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',350,165,125,120)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=485;y=195;w=120;h=90;}
+  if(a.type==='cachorro'){x=485;y=180;w=120;h=90;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -2969,19 +2969,22 @@ function applyMenuThemeColors(){
 let lakeFishJumpTimer=null;
 function scheduleLakeFishJump(){
  if(lakeFishJumpTimer!==null)return;
- const scheduleNext=()=>{
+ const scheduleNext=(delay)=>{
   lakeFishJumpTimer=setTimeout(()=>{
    lakeFishJumpTimer=null;
    const fish=[...document.querySelectorAll('#artificial-lake .lake-fish-shadow')];
    if(fish.length){
-    const count=Math.min(fish.length,Math.random()<.72?1:2),chosen=[];
+    const count=Math.min(fish.length,Math.random()<.62?1:2),chosen=[];
     while(chosen.length<count){const candidate=fish[Math.floor(Math.random()*fish.length)];if(!chosen.includes(candidate))chosen.push(candidate)}
-    chosen.forEach(node=>{node.classList.remove('is-jumping');void node.getBoundingClientRect();node.classList.add('is-jumping');setTimeout(()=>node.classList.remove('is-jumping'),1250)});
+    chosen.forEach(node=>{
+     node.classList.remove('is-jumping');void node.getBoundingClientRect();node.classList.add('is-jumping');
+     setTimeout(()=>node.classList.remove('is-jumping'),1550);
+    });
    }
-   scheduleNext();
-  },18000+Math.random()*17000);
+   scheduleNext(8000+Math.random()*5000);
+  },delay);
  };
- scheduleNext();
+ scheduleNext(2500+Math.random()*2500);
 }
 function renderLakeArea(){
  const x=-960,y=760,waterY=y-8;
@@ -3109,7 +3112,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 -110)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 900)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-267 1306)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
     <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
    </g><g transform="translate(420 1150)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
@@ -3123,7 +3126,7 @@ function farmHouseAssetHref(){const now=new Date(),minutes=now.getHours()*60+now
 function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();const now=Date.now(),grillActive=(state.grill?.queue||[]).some(job=>Number.isFinite(job.startedAt)&&job.startedAt<=now&&Number.isFinite(job.readyAt)&&job.readyAt>now);
  if(state.grill?.owned){const x=700,y=230;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Churrasqueira.png" x="-48" y="-66" width="96" height="132" preserveAspectRatio="xMidYMid meet"/>
- ${grillActive?`<g transform="translate(0 18) scale(.82)" pointer-events="none"><g class="grill-fire"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g></g>`:''}
+ ${grillActive?`<g transform="translate(-12 18) scale(.41)" pointer-events="none"><g class="grill-fire"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g></g>`:''}
  </g>`}
  const kitchenSmoke=(state.kitchen?.queue||[]).some(job=>job.readyAt>Date.now());
  const grillSmoke=grillActive;
