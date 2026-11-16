@@ -1189,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',350,245,125,120)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',350,210,125,120)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=485;y=260;w=120;h=90;}
+  if(a.type==='cachorro'){x=485;y=225;w=120;h=90;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -2966,6 +2966,22 @@ function applyMenuThemeColors(){
  root.dataset.menuTheme=state.farmTheme;
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
+let lakeFishJumpTimer=null;
+function scheduleLakeFishJump(){
+ if(lakeFishJumpTimer!==null)return;
+ const scheduleNext=()=>{lakeFishJumpTimer=setTimeout(()=>{
+  lakeFishJumpTimer=null;
+  const fish=[...document.querySelectorAll('#lake-fish-jump-layer [data-lake-fish-jump]')];
+  if(fish.length){
+   const count=Math.min(fish.length,Math.random()<.72?1:2),chosen=[];
+   while(chosen.length<count){const candidate=fish[Math.floor(Math.random()*fish.length)];if(!chosen.includes(candidate))chosen.push(candidate)}
+   chosen.forEach(node=>{node.classList.remove('is-jumping');void node.getBoundingClientRect();node.classList.add('is-jumping');setTimeout(()=>node.classList.remove('is-jumping'),1250)});
+  }
+  scheduleNext();
+ },18000+Math.random()*17000)};
+ };
+ scheduleNext();
+}
 function renderLakeArea(){
  const x=-960,y=760,waterY=y-8;
  let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-960 300) scale(1.08) translate(980 -760)">
@@ -2995,8 +3011,13 @@ function renderLakeArea(){
    </g>
   </g>`;
  });
+ s+=`</g><g id="lake-fish-jump-layer" pointer-events="none">`;
+ (state.lake?.fish||[]).slice(0,10).forEach((f,i)=>{
+  const pos=positions[i],sc=sizes[i],shape=shapes[i%shapes.length];
+  s+=`<g class="lake-fish-jump" data-lake-fish-jump="${i}" transform="translate(${x+pos[0]} ${waterY+pos[1]}) scale(${sc})"><g class="lake-fish-leap"><path d="${shape.body}" fill="#17191b"/><path d="${shape.tail}" fill="#17191b"/><path d="M-2 -7L5 -15L10 -6Z" fill="#17191b"/></g></g>`;
+ });
  s+=`</g>
- <ellipse cx="${x}" cy="${waterY}" rx="201" ry="125" fill="#58b8b7" opacity=".13"/>
+ <ellipse cx="${x}" cy="${waterY}" rx="201" ry="125" fill="#58b8b7" opacity=".13"/>`;
  <g class="lake-ripples" clip-path="url(#lake-clip)">
   <path d="M${x-190} ${y-45}q65-22 130 0t130 0t130 0M${x-180} ${y+24}q60-18 120 0t120 0t120 0M${x-140} ${y+75}q45-14 90 0t90 0t90 0" fill="none" stroke="#e2ffff" stroke-width="7" opacity=".34"/>
   <path d="M${x-90} ${y-95}q55-15 110 0t110 0M${x-175} ${y+5}q38-12 76 0t76 0" fill="none" stroke="#d8ffff" stroke-width="4" opacity=".38"/>
@@ -3091,12 +3112,12 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 -110)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 900)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 760)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
     <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
-   </g><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
-    <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/RedePesca.png" x="-135" y="-135" width="270" height="270" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
-    <rect x="-142" y="-125" width="284" height="280" rx="28" fill="transparent" stroke="transparent"/>
+   </g><g transform="translate(420 1190)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
+    <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/RedePesca.png" x="-202.5" y="-202.5" width="405" height="405" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
+    <rect x="-213" y="-187" width="426" height="420" rx="36" fill="transparent" stroke="transparent"/>
    </g></g>
   </g>
  </g>`;
@@ -3105,13 +3126,13 @@ function farmHouseAssetHref(){const now=new Date(),minutes=now.getHours()*60+now
 function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();const now=Date.now(),grillActive=(state.grill?.queue||[]).some(job=>Number.isFinite(job.startedAt)&&job.startedAt<=now&&Number.isFinite(job.readyAt)&&job.readyAt>now);
  if(state.grill?.owned){const x=700,y=230;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
  <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Churrasqueira.png" x="-48" y="-66" width="96" height="132" preserveAspectRatio="xMidYMid meet"/>
- ${grillActive?`<g class="grill-fire" transform="translate(0 48) scale(.55)" pointer-events="none"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g>`:''}
+ ${grillActive?`<g transform="translate(0 18) scale(.82)" pointer-events="none"><g class="grill-fire"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g></g>`:''}
  </g>`}
  const kitchenSmoke=(state.kitchen?.queue||[]).some(job=>job.readyAt>Date.now());
  const grillSmoke=grillActive;
- if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 53)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
- if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(700 158)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
+ if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 36)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
+ if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(696 162)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;scheduleLakeFishJump();const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
   <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
