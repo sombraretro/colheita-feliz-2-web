@@ -1594,5 +1594,6 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 @media(max-width:380px){.hunt-bottom-actions .hunt-backpack{left:3%}.hunt-start-button{right:5%}}
 @media(prefers-reduced-motion:reduce){#world .lake-fish-jump.is-jumping .lake-fish-leap{animation-duration:.01ms}}
 
-#world .lake-fish-shadow.is-jumping{animation:lake-fish-leap 1.2s ease-out both;transform-box:fill-box;transform-origin:center}
-@keyframes lake-fish-leap{0%{opacity:.2;transform:translateY(0) scale(.88)}12%{opacity:1}48%{opacity:1;transform:translateY(-58px) scale(1.08)}78%{opacity:.9;transform:translateY(-30px) scale(1)}100%{opacity:.2;transform:translateY(0) scale(.9)}}
+#world .lake-fish-shadow.is-jumping{animation:lake-fish-leap 1.55s cubic-bezier(.2,.75,.25,1) both!important;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 5px 3px rgba(0,0,0,.55))}
+@keyframes lake-fish-leap{0%{opacity:0;transform:translateY(0) scale(.75)}12%{opacity:1}32%{opacity:1;transform:translateY(-78px) scale(1.24)}52%{opacity:1;transform:translateY(-92px) scale(1.16)}76%{opacity:.95;transform:translateY(-42px) scale(1.04)}100%{opacity:0;transform:translateY(0) scale(.82)}}
+@media(min-width:381px){.hunt-bottom-actions .hunt-backpack{left:1.5%!important}}
