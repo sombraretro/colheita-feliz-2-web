@@ -509,6 +509,12 @@ const DOG_BREEDS={
  shetland:{name:'Pastor de Shetland',id:'56_0',asset:'dog-shetland',price:4300,ext:'png'},
  sharpei:{name:'Shar-Pei',id:'57_0',asset:'dog-sharpei',price:4100,ext:'png'},
  mastiff:{name:'Mastiff',id:'58_0',asset:'dog-mastiff',price:5800,ext:'png'},
+ chowchow:{name:'Chow-Chow',id:'59_0',asset:'dog-chow-chow',price:5200,ext:'png'},
+ golden:{name:'Golden Retriever',id:'60_0',asset:'dog-golden-retriever',price:5000,ext:'png'},
+ pastor_alemao:{name:'Pastor Alemão',id:'61_0',asset:'dog-pastor-alemao',price:4800,ext:'png'},
+ rotweiller:{name:'Rottweiler',id:'62_0',asset:'dog-rotweiller',price:5500,ext:'png'},
+ border_collie:{name:'Border Collie',id:'63_0',asset:'dog-border-collie',price:5200,ext:'png'},
+ dobermann:{name:'Dobermann',id:'64_0',asset:'dog-dobermann',price:5400,ext:'png'},
 };
 const RETIRED_DOG_BREED_IDS=['renas','apaixonado','namorados'];
 const ANIMAL_RATIONS={
@@ -1411,7 +1417,7 @@ if(hasFruit){
 return a;
 }
 
-function cropPhaseImageMarkup(id,phase){const slug=CLASSIC_CROP_ASSET_SLUGS[id];if(!slug)return '';const safePhase=Math.max(1,Math.min(5,Math.floor(phase)||1));const src=CLASSIC_CROP_ASSET_BASE+'plants_phase_one_to_five/'+slug+'_'+safePhase+'.png';return '<image decoding="async" href="'+src+'" x="-66" y="-112" width="132" height="132" preserveAspectRatio="xMidYMid meet" style="opacity:1;mix-blend-mode:normal"/>';}
+function cropPhaseImageMarkup(id,phase){const slug=CLASSIC_CROP_ASSET_SLUGS[id];if(!slug)return '';const compactViewport=window.matchMedia('(max-width: 900px), (pointer: coarse), (any-pointer: coarse)').matches;if(compactViewport)return '';const safePhase=Math.max(1,Math.min(5,Math.floor(phase)||1));const src=CLASSIC_CROP_ASSET_BASE+'plants_phase_one_to_five/'+slug+'_'+safePhase+'.png';return '<image decoding="async" href="'+src+'" x="-66" y="-112" width="132" height="132" preserveAspectRatio="xMidYMid meet" style="opacity:1;mix-blend-mode:normal"/>';}
 
 function plotRenderSignature(){
  if(!state||!Array.isArray(state.plots))return '';
