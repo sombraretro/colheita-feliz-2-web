@@ -3093,7 +3093,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 -110)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-152 1291)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-112 1291)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
     <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
    </g><g transform="translate(420 1150)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
@@ -3905,3 +3905,6 @@ setInterval(()=>{updateHuntTimer();completeHuntIfReady()},1000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateHuntTimer();completeHuntIfReady()}});
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(error=>console.warn('PWA: registro indisponível.',error)));
 let deferredInstallPrompt=null;window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;const button=$('install-app');if(button)button.hidden=false});window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;const button=$('install-app');if(button)button.hidden=true});document.addEventListener('click',async event=>{const button=event.target.closest('#install-app');if(!button||!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;button.hidden=true});
+
+// Pausa animações ambientais quando o jogo perde foco, reduzindo disputa de GPU/CPU com vídeos em outra janela.
+(()=>{const syncAmbientMotion=()=>document.documentElement.classList.toggle('ambient-motion-paused',document.hidden||!document.hasFocus());window.addEventListener('blur',syncAmbientMotion);window.addEventListener('focus',syncAmbientMotion);document.addEventListener('visibilitychange',syncAmbientMotion);syncAmbientMotion()})();
