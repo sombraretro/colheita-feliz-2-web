@@ -1,0 +1,371 @@
+{
+  "format": "WebP",
+  "settings": {
+    "quality": 90,
+    "alphaQuality": 100,
+    "effort": 6
+  },
+  "files": [
+    {
+      "source": "web/assets/animal-burro.png",
+      "output": "web/assets/animal-burro.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 927821,
+      "webpBytes": 158556,
+      "savedBytes": 769265,
+      "savedPercent": 82.91
+    },
+    {
+      "source": "web/assets/animal-cachorro.png",
+      "output": "web/assets/animal-cachorro.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 921867,
+      "webpBytes": 147142,
+      "savedBytes": 774725,
+      "savedPercent": 84.04
+    },
+    {
+      "source": "web/assets/animal-galinha.png",
+      "output": "web/assets/animal-galinha.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 642296,
+      "webpBytes": 105212,
+      "savedBytes": 537084,
+      "savedPercent": 83.62
+    },
+    {
+      "source": "web/assets/animal-ovelha.png",
+      "output": "web/assets/animal-ovelha.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 1086698,
+      "webpBytes": 137360,
+      "savedBytes": 949338,
+      "savedPercent": 87.36
+    },
+    {
+      "source": "web/assets/animal-porco.png",
+      "output": "web/assets/animal-porco.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 812692,
+      "webpBytes": 95720,
+      "savedBytes": 716972,
+      "savedPercent": 88.22
+    },
+    {
+      "source": "web/assets/animal-vaca.png",
+      "output": "web/assets/animal-vaca.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 1076845,
+      "webpBytes": 154232,
+      "savedBytes": 922613,
+      "savedPercent": 85.68
+    },
+    {
+      "source": "web/assets/arvore.png",
+      "output": "web/assets/arvore.webp",
+      "width": 1122,
+      "height": 1402,
+      "alpha": true,
+      "sourceBytes": 1246637,
+      "webpBytes": 236082,
+      "savedBytes": 1010555,
+      "savedPercent": 81.06
+    },
+    {
+      "source": "web/assets/cabana.png",
+      "output": "web/assets/cabana.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "sourceBytes": 1583310,
+      "webpBytes": 235728,
+      "savedBytes": 1347582,
+      "savedPercent": 85.11
+    },
+    {
+      "source": "web/assets/casa.png",
+      "output": "web/assets/casa.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "sourceBytes": 1678769,
+      "webpBytes": 241352,
+      "savedBytes": 1437417,
+      "savedPercent": 85.62
+    },
+    {
+      "source": "web/assets/casinha-cachorro.png",
+      "output": "web/assets/casinha-cachorro.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "sourceBytes": 1130546,
+      "webpBytes": 130122,
+      "savedBytes": 1000424,
+      "savedPercent": 88.49
+    },
+    {
+      "source": "web/assets/celeiro.png",
+      "output": "web/assets/celeiro.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 140042,
+      "webpBytes": 58166,
+      "savedBytes": 81876,
+      "savedPercent": 58.47
+    },
+    {
+      "source": "web/assets/dog-dalmata.png",
+      "output": "web/assets/dog-dalmata.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 679558,
+      "webpBytes": 179852,
+      "savedBytes": 499706,
+      "savedPercent": 73.53
+    },
+    {
+      "source": "web/assets/dog-husky.png",
+      "output": "web/assets/dog-husky.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 680267,
+      "webpBytes": 143626,
+      "savedBytes": 536641,
+      "savedPercent": 78.89
+    },
+    {
+      "source": "web/assets/dog-mastiff.png",
+      "output": "web/assets/dog-mastiff.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 644702,
+      "webpBytes": 159480,
+      "savedBytes": 485222,
+      "savedPercent": 75.26
+    },
+    {
+      "source": "web/assets/dog-papillon.png",
+      "output": "web/assets/dog-papillon.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 732091,
+      "webpBytes": 151358,
+      "savedBytes": 580733,
+      "savedPercent": 79.33
+    },
+    {
+      "source": "web/assets/dog-poodle.png",
+      "output": "web/assets/dog-poodle.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 654906,
+      "webpBytes": 144380,
+      "savedBytes": 510526,
+      "savedPercent": 77.95
+    },
+    {
+      "source": "web/assets/dog-salsichinha.png",
+      "output": "web/assets/dog-salsichinha.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 658310,
+      "webpBytes": 202664,
+      "savedBytes": 455646,
+      "savedPercent": 69.21
+    },
+    {
+      "source": "web/assets/dog-sharpei.png",
+      "output": "web/assets/dog-sharpei.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 728118,
+      "webpBytes": 167290,
+      "savedBytes": 560828,
+      "savedPercent": 77.02
+    },
+    {
+      "source": "web/assets/dog-shetland.png",
+      "output": "web/assets/dog-shetland.webp",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "sourceBytes": 691057,
+      "webpBytes": 147550,
+      "savedBytes": 543507,
+      "savedPercent": 78.65
+    },
+    {
+      "source": "web/assets/grama-textura.png",
+      "output": "web/assets/grama-textura.webp",
+      "width": 256,
+      "height": 256,
+      "alpha": false,
+      "sourceBytes": 73033,
+      "webpBytes": 7836,
+      "savedBytes": 65197,
+      "savedPercent": 89.27
+    },
+    {
+      "source": "web/assets/pimentao-amarelo.png",
+      "output": "web/assets/pimentao-amarelo.webp",
+      "width": 55,
+      "height": 45,
+      "alpha": false,
+      "sourceBytes": 2184,
+      "webpBytes": 618,
+      "savedBytes": 1566,
+      "savedPercent": 71.7
+    },
+    {
+      "source": "web/assets/pimentao-verde.png",
+      "output": "web/assets/pimentao-verde.webp",
+      "width": 55,
+      "height": 45,
+      "alpha": true,
+      "sourceBytes": 2706,
+      "webpBytes": 638,
+      "savedBytes": 2068,
+      "savedPercent": 76.42
+    },
+    {
+      "source": "web/assets/pimentao-vermelho.png",
+      "output": "web/assets/pimentao-vermelho.webp",
+      "width": 55,
+      "height": 45,
+      "alpha": false,
+      "sourceBytes": 2163,
+      "webpBytes": 644,
+      "savedBytes": 1519,
+      "savedPercent": 70.23
+    },
+    {
+      "source": "Cenario/PNG/Barco.png",
+      "output": "web/Cenario/PNG/Barco.webp",
+      "width": 1525,
+      "height": 906,
+      "alpha": true,
+      "sourceBytes": 453567,
+      "webpBytes": 61156,
+      "savedBytes": 392411,
+      "savedPercent": 86.52
+    },
+    {
+      "source": "Cenario/PNG/Casa-Noite.png",
+      "output": "web/Cenario/PNG/Casa-Noite.webp",
+      "width": 1681,
+      "height": 1310,
+      "alpha": true,
+      "sourceBytes": 1984137,
+      "webpBytes": 214344,
+      "savedBytes": 1769793,
+      "savedPercent": 89.2
+    },
+    {
+      "source": "Cenario/PNG/Celeiro.png",
+      "output": "web/Cenario/PNG/Celeiro.webp",
+      "width": 1724,
+      "height": 1280,
+      "alpha": true,
+      "sourceBytes": 948197,
+      "webpBytes": 126994,
+      "savedBytes": 821203,
+      "savedPercent": 86.61
+    },
+    {
+      "source": "Cenario/PNG/Churrasqueira.png",
+      "output": "web/Cenario/PNG/Churrasqueira.webp",
+      "width": 1176,
+      "height": 1180,
+      "alpha": true,
+      "sourceBytes": 658252,
+      "webpBytes": 68722,
+      "savedBytes": 589530,
+      "savedPercent": 89.56
+    },
+    {
+      "source": "Cenario/PNG/Farol.png",
+      "output": "web/Cenario/PNG/Farol.webp",
+      "width": 1120,
+      "height": 2240,
+      "alpha": true,
+      "sourceBytes": 403377,
+      "webpBytes": 67232,
+      "savedBytes": 336145,
+      "savedPercent": 83.33
+    },
+    {
+      "source": "Cenario/PNG/MochilaCaca.png",
+      "output": "web/Cenario/PNG/MochilaCaca.webp",
+      "width": 1008,
+      "height": 1269,
+      "alpha": true,
+      "sourceBytes": 993065,
+      "webpBytes": 127840,
+      "savedBytes": 865225,
+      "savedPercent": 87.13
+    },
+    {
+      "source": "Cenario/PNG/MochilaPesca.png",
+      "output": "web/Cenario/PNG/MochilaPesca.webp",
+      "width": 1009,
+      "height": 1193,
+      "alpha": true,
+      "sourceBytes": 893805,
+      "webpBytes": 120816,
+      "savedBytes": 772989,
+      "savedPercent": 86.48
+    },
+    {
+      "source": "Cenario/PNG/Pergolado.png",
+      "output": "web/Cenario/PNG/Pergolado.webp",
+      "width": 1263,
+      "height": 1277,
+      "alpha": true,
+      "sourceBytes": 808274,
+      "webpBytes": 113726,
+      "savedBytes": 694548,
+      "savedPercent": 85.93
+    },
+    {
+      "source": "Cenario/PNG/VaraDePesca.png",
+      "output": "web/Cenario/PNG/VaraDePesca.webp",
+      "width": 1158,
+      "height": 1437,
+      "alpha": true,
+      "sourceBytes": 271151,
+      "webpBytes": 58318,
+      "savedBytes": 212833,
+      "savedPercent": 78.49
+    }
+  ],
+  "summary": {
+    "converted": 32,
+    "sourceBytes": 24210443,
+    "webpBytes": 3964756,
+    "savedBytes": 20245687,
+    "savedPercent": 83.62,
+    "sourceBytesMB": 23.09,
+    "webpBytesMB": 3.78
+  }
+}
