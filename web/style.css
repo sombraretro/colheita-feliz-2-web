@@ -1617,5 +1617,5 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 /* Ao alternar para o YouTube ou outra janela, pausamos efeitos ambientais para liberar renderização. */
 html.ambient-motion-paused #sea-water-ripples,html.ambient-motion-paused #sea-birds,html.ambient-motion-paused #sea-birds *,html.ambient-motion-paused #sea-boat-motion,html.ambient-motion-paused .lake-ripples,html.ambient-motion-paused .lake-fish-shadow,html.ambient-motion-paused .river-flow,html.ambient-motion-paused .river-leaf,html.ambient-motion-paused .smoke-puff{animation-play-state:paused!important}
 
-/* Pausa também os efeitos ambientais da Caça quando a janela perde foco; evita competir com a decodificação de vídeo do navegador. */
-html.ambient-motion-paused .hunt-atmosphere,html.ambient-motion-paused .hunt-foliage-motion,html.ambient-motion-paused .hunt-ground-breeze{animation-play-state:paused!important}
+/* Ao perder foco, suspende toda animação interna das cenas Mar e Caça para liberar CPU/GPU ao vídeo em outra janela. */
+html.ambient-motion-paused #sea-landscape,html.ambient-motion-paused #sea-landscape *,html.ambient-motion-paused #hunt-scene-background,html.ambient-motion-paused #hunt-scene-background *{animation-play-state:paused!important}
