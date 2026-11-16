@@ -1625,3 +1625,6 @@ html.ambient-motion-paused #sea-water-ripples,html.ambient-motion-paused #sea-bi
 
 /* Ao perder foco, suspende toda animação interna das cenas Mar e Caça para liberar CPU/GPU ao vídeo em outra janela. */
 html.ambient-motion-paused #sea-landscape,html.ambient-motion-paused #sea-landscape *,html.ambient-motion-paused #hunt-scene-background,html.ambient-motion-paused #hunt-scene-background *{animation-play-state:paused!important}
+
+/* Otimização v16: suspende animações decorativas de toda a cena enquanto a janela perde foco. */
+html.ambient-motion-paused #world *,html.ambient-motion-paused #weather-layer *,html.ambient-motion-paused #hunt-scene-background *{animation-play-state:paused!important}
