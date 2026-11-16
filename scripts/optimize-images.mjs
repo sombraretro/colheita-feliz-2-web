@@ -34,7 +34,7 @@ for (const job of jobs) {
     if (inputMeta.width !== outputMeta.width || inputMeta.height !== outputMeta.height) {
       throw new Error(`Dimensões divergentes após conversão: ${job.source}/${name}`);
     }
-    if (!!inputMeta.hasAlpha !== !!outputMeta.hasAlpha) {
+    if (inputMeta.hasAlpha && !outputMeta.hasAlpha) {
       throw new Error(`Canal alfa não preservado: ${job.source}/${name}`);
     }
 
