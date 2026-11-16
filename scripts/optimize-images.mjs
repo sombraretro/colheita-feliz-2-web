@@ -34,8 +34,10 @@ for (const job of jobs) {
     if (inputMeta.width !== outputMeta.width || inputMeta.height !== outputMeta.height) {
       throw new Error(`Dimensões divergentes após conversão: ${job.source}/${name}`);
     }
-    if (inputMeta.hasAlpha && !outputMeta.hasAlpha) {
-      throw new Error(`Canal alfa não preservado: ${job.source}/${name}`);
+    const inputStats = inputMeta.hasAlpha ? await sharp(input).stats() : null;
+    const sourceHasTransparency = !!inputStats && inputStats.channels.at(-1).min < 255;
+    if (sourceHasTransparency && !outputMeta.hasAlpha) {
+      throw new Error(`Transparência real não preservada: ${job.source}/${name}`);
     }
 
     report.files.push({
