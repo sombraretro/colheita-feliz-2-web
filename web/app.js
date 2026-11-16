@@ -2966,6 +2966,23 @@ function applyMenuThemeColors(){
  root.dataset.menuTheme=state.farmTheme;
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
+let lakeFishJumpTimer=null;
+function scheduleLakeFishJump(){
+ if(lakeFishJumpTimer!==null)return;
+ const scheduleNext=()=>{
+  lakeFishJumpTimer=setTimeout(()=>{
+   lakeFishJumpTimer=null;
+   const fish=[...document.querySelectorAll('#artificial-lake .lake-fish-shadow')];
+   if(fish.length){
+    const count=Math.min(fish.length,Math.random()<.72?1:2),chosen=[];
+    while(chosen.length<count){const candidate=fish[Math.floor(Math.random()*fish.length)];if(!chosen.includes(candidate))chosen.push(candidate)}
+    chosen.forEach(node=>{node.classList.remove('is-jumping');void node.getBoundingClientRect();node.classList.add('is-jumping');setTimeout(()=>node.classList.remove('is-jumping'),1250)});
+   }
+   scheduleNext();
+  },18000+Math.random()*17000);
+ };
+ scheduleNext();
+}
 function renderLakeArea(){
  const x=-960,y=760,waterY=y-8;
  let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-960 300) scale(1.08) translate(980 -760)">
@@ -3112,7 +3129,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
  const grillSmoke=grillActive;
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 36)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(696 162)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;scheduleLakeFishJump();const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
   <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
