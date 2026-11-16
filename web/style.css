@@ -1574,3 +1574,17 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 .hunt-backpack small{font-size:clamp(8px,.72vw,10px);text-shadow:0 1px 3px #142116;}
 .hunt-backpack:hover,.hunt-backpack:focus-visible{transform:translate(-50%,-54%) scale(1.04);background:rgba(30,48,30,.25);outline:2px solid #ffe4a0}
 @media(max-width:760px){#hunt-backpack{top:calc(100% - 92px)}.hunt-backpack-image{width:clamp(54px,14vw,82px);max-height:12vh}.hunt-backpack small{font-size:8px}}
+
+
+/* Ajustes de interação e composição — etapa v7. */
+.playfield.sea-scene-active .tool-bar,
+.playfield.sea-scene-active .tip{display:none!important}
+.playfield.hunt-scene-active .farm-scene-navigation{top:3px!important;bottom:auto!important}
+.hunt-bottom-actions{position:absolute;left:50%;bottom:12px;z-index:35;display:flex;align-items:flex-end;justify-content:center;gap:14px;transform:translateX(-50%);padding:7px 12px;border-radius:16px;background:rgba(20,42,27,.24);backdrop-filter:blur(3px)}
+.hunt-bottom-actions .hunt-backpack{position:relative;left:auto;top:auto;min-width:72px;min-height:64px;transform:none;padding:4px 7px;gap:2px}
+.hunt-bottom-actions .hunt-backpack-image{width:clamp(58px,7vw,86px);max-height:10vh}
+.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:11px;font-weight:900;white-space:nowrap}
+.hunt-start-button{display:flex;min-width:72px;min-height:64px;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 12px;border:1px solid rgba(242,218,159,.85);border-radius:12px;background:rgba(30,48,30,.82);color:#fff4d2;text-shadow:0 1px 3px #1c2818;font-size:30px;cursor:pointer;box-shadow:0 3px 9px #14211688}
+.hunt-start-button:hover,.hunt-start-button:focus-visible{filter:brightness(1.15);outline:2px solid #ffe4a0}
+.hunt-bottom-actions .hunt-backpack:hover,.hunt-bottom-actions .hunt-backpack:focus-visible{transform:scale(1.04);background:rgba(30,48,30,.72)}
+@media(max-width:700px){.playfield.hunt-scene-active .farm-scene-navigation{top:2px!important}.hunt-bottom-actions{bottom:max(8px,env(safe-area-inset-bottom));gap:10px;padding:5px 9px}.hunt-bottom-actions .hunt-backpack,.hunt-start-button{min-width:66px;min-height:58px}.hunt-bottom-actions .hunt-backpack-image{width:clamp(48px,12vw,70px);max-height:9vh}.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:10px}}
