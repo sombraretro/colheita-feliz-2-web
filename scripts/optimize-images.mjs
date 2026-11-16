@@ -134,13 +134,13 @@ let html = await readFile(htmlPath, 'utf8');
 const huntPack = 'https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaCaca.png';
 html = html.replaceAll(huntPack, '/Cenario/PNG/MochilaCaca.webp');
 for (const asset of remoteAssets) html = html.replaceAll(asset.url, asset.publicPath);
-html = html.replaceAll('20261116-optimization-v16', '20261116-images-v18');
+html = html.replaceAll('20261116-optimization-v16', '20261116-images-v19');
 await writeFile(htmlPath, html);
 
 const swPath = path.join(root, 'web/sw.js');
 let sw = await readFile(swPath, 'utf8');
-sw = sw.replaceAll('20261116-optimization-v16', '20261116-images-v18');
-sw = sw.replaceAll('cf2-shell-20261116-optimization-v16', 'cf2-shell-20261116-images-v18');
+sw = sw.replaceAll('20261116-optimization-v16', '20261116-images-v19');
+sw = sw.replaceAll('cf2-shell-20261116-optimization-v16', 'cf2-shell-20261116-images-v19');
 await writeFile(swPath, sw);
 
 await writeFile(
