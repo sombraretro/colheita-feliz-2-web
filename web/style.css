@@ -1609,3 +1609,8 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 .hunt-access-menu button:hover,.hunt-access-menu button:focus-visible{filter:brightness(1.12);outline:2px solid #fff0b0;outline-offset:2px}
 .overlay{z-index:2000!important}
 @media(max-width:700px){.hunt-access-menu{left:1%;bottom:calc(100% + 6px);gap:5px;padding:6px;max-width:98%;}.hunt-access-menu button{padding:8px 9px;font-size:11px;white-space:normal}}
+
+
+/* Preview v13 — os peixes do lago permanecem estáticos, sem nado ou saltos. */
+#world .lake-fish-shadow{animation:none!important;translate:none!important;rotate:none!important;transform:none!important;filter:none!important}
+#world .lake-fish-shadow.is-jumping,#world .lake-fish-jump.is-jumping .lake-fish-leap{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
