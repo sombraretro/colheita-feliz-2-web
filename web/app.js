@@ -3091,17 +3091,12 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 -110)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
-    <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-116" y="-112" width="232" height="250" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
-    <rect x="-116" y="-112" width="232" height="250" rx="28" fill="transparent" stroke="transparent"/>
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 900)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+    <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
+    <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
    </g><g transform="translate(420 1155)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
-    <ellipse cx="0" cy="105" rx="132" ry="22" fill="#3b291d" opacity=".28"/>
-    <path d="M-100 78L-12 -20L98 -102" fill="none" stroke="#67452b" stroke-width="22" stroke-linecap="round"/>
-    <path d="M-12 -20L-100 78L-8 112L92 20Z" fill="#e7d8ae" fill-opacity=".32" stroke="#f1dfb6" stroke-width="9"/>
-    <path d="M-72 59L51 -53M-42 83L76 -24M-90 30L20 93M-60 1L49 64M-30 -27L78 35" fill="none" stroke="#d7c69c" stroke-width="6" opacity=".9"/>
-    <path d="M-115 92Q-10 140 112 38" fill="none" stroke="#7b5837" stroke-width="13"/>
+    <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/RedePesca.png" x="-135" y="-135" width="270" height="270" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-142" y="-125" width="284" height="280" rx="28" fill="transparent" stroke="transparent"/>
-    <text x="0" y="178" text-anchor="middle" font-size="42" fill="#fff4d7" stroke="#5a3b25" stroke-width="5" paint-order="stroke">🪢</text>
    </g></g>
   </g>
  </g>`;
@@ -3815,6 +3810,7 @@ document.addEventListener('click',event=>{
  if(event.target.closest('[data-hunt-ack]')){if(state?.hunter){state.hunter.pendingResult=null;markDirty()}closeModal();return}
 });
 $('hunt-backpack')?.addEventListener('click',()=>openModal('hunt-inventory'));
+$('hunt-start-button')?.addEventListener('click',()=>openModal('hunt'));
 
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
 window.addEventListener('resize',()=>{if(activeScene==='sea'){const b=SCENE_BOUNDS.sea;view.zoom=sceneFitZoom('sea');view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2}updateView()});
