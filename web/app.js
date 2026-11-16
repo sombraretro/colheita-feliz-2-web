@@ -478,7 +478,7 @@ const DUAL_PURPOSE_ANIMALS=Object.keys(ANIMAL_MEAT_SOURCE);
 const GRILL_TIME_FACTOR=1; // minutos reais de espera para assar
 const KITCHEN_TIME_FACTOR=1; // minutos reais de espera para cozinhar
 const ANIMAL_TIME_FACTOR=.2; // mantém o ritmo reduzido de 1/5 também para ciclos de produção/criação
-const HORSE_ASSETS={horse:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/cavalo/cavalo.png',robot:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/cachorro-robo/cachorro-robo.png',peacock:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/pavao/pavao-aberto.png',goat:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/cabra/cabra.png',coin:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/icons/moeda-comum.png',green:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/icons/moeda-verde.png',day:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/background/background.png',night:'https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/background/background-night.png'};
+const HORSE_ASSETS={horse:'/assets/legacy-cavalo.webp',robot:'/assets/legacy-cachorro-robo.webp',peacock:'/assets/legacy-pavao.webp',goat:'/assets/legacy-cabra.webp',coin:'/assets/legacy-moeda-comum.webp',green:'/assets/legacy-moeda-verde.webp',day:'/assets/legacy-background.webp',night:'/assets/legacy-background-night.webp'};
 const HORSE_BREEDS={horse_percheron:{name:'Percheron',price:12000,sellPrice:36000,coat:'Cinza, com crina e cauda brancas'},horse_quarto_milha:{name:'Quarto de Milha',price:15000,sellPrice:45000,coat:'Marrom, com crina e cauda pretas'},horse_puro_sangue:{name:'Puro Sangue',price:18000,sellPrice:54000,coat:'Marrom avermelhado, em tom terracota'},horse_frisio:{name:'Frísio',price:22000,sellPrice:66000,coat:'Pelagem inteiramente preta'},horse_andaluz:{name:'Andaluz',price:26000,sellPrice:78000,coat:'Pelagem inteiramente branca'}};
 const ANIMALS={
  cachorro:{name:'Cachorro',icon:'🐕',role:'guard',feedKey:'feed_dog',feedName:'Alimento do cachorro',feedPrice:2000,guardHours:24,feedHistorical:false},
@@ -805,7 +805,7 @@ function playSfx(kind){
 // Trilhas MP3: nove músicas gerais e temas próprios para as pescarias.
 const GENERAL_MUSIC_FILES=Array.from({length:9},(_,i)=>'/song/general/NewFarmSong'+(i?i+1:'')+'.mp3');
 const SPECIAL_MUSIC_FILES={river:'/song/river/PescaRio.mp3',sea:'/song/sea/PescaMar.mp3',hunt:'https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Forest/Floresta.mp3'};
-const HUNT_IMAGE_URL='https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Forest/Floresta.jpg';
+const HUNT_IMAGE_URL='/Forest/Floresta.webp';
 const HUNT_MATERIALS=[
  {id:'feather_red',name:'Pena Vermelha',icon:'🪶',family:'birds'},{id:'feather_green',name:'Pena Verde',icon:'🪶',family:'birds'},
  {id:'feather_blue',name:'Pena Azul',icon:'🪶',family:'birds'},{id:'feather_yellow',name:'Pena Amarela',icon:'🪶',family:'birds'},
@@ -1018,7 +1018,7 @@ const ground=`<defs>
 </defs>
 <!-- Cenário-base da Fazenda: arte panorâmica externa, sem interação. -->
 <g id="farm-landscape" pointer-events="none">
- <image decoding="async" href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
+ <image decoding="async" href="/Cenario/Area-da-Fazenda.webp" x="-2100" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none"/>
 </g>
 <!-- Cenário panorâmico do Rio: a borda direita recebe uma mesclagem gradual com a Fazenda. -->
 <g id="river-landscape" pointer-events="none">
@@ -1033,7 +1033,7 @@ const ground=`<defs>
    <rect x="-3950" y="-250" width="4200" height="2362" fill="url(#river-farm-seam-gradient)"/>
   </mask>
  </defs>
- <image decoding="async" href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#river-farm-seam-mask)"/>
+ <image decoding="async" href="/Cenario/Area-do-Rio.webp" x="-3950" y="-250" width="4200" height="2362" preserveAspectRatio="none" pointer-events="none" mask="url(#river-farm-seam-mask)"/>
  <!-- Reflexos animados da correnteza: traços mais visíveis, restritos à superfície do rio. -->
  <g id="river-water-motion" class="river-water-motion" pointer-events="none" transform="translate(-3950 -250) scale(2.5485 2.502)">
   <g fill="none" stroke-linecap="round">
@@ -1068,7 +1068,7 @@ const ground=`<defs>
  <defs>
   <linearGradient id="nature-farm-seam-gradient" gradientUnits="userSpaceOnUse" x1="1300" y1="0" x2="2200" y2="0"><stop offset="0" stop-color="white" stop-opacity="0"/><stop offset=".22" stop-color="white" stop-opacity=".12"/><stop offset=".48" stop-color="white" stop-opacity=".42"/><stop offset=".76" stop-color="white" stop-opacity=".82"/><stop offset="1" stop-color="white" stop-opacity="1"/></linearGradient><mask id="nature-farm-seam-mask" maskUnits="userSpaceOnUse" x="1245" y="-250" width="4955" height="2475"><rect x="1300" y="-250" width="4900" height="2475" fill="url(#nature-farm-seam-gradient)"/><rect x="1245" y="175" width="550" height="630" fill="black"/></mask>
  </defs>
- <image decoding="async" href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg" x="1300" y="-250" width="4900" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
+ <image decoding="async" href="/Cenario/Area-do-Pomar-e-Mata.webp" x="1300" y="-250" width="4900" height="2475" preserveAspectRatio="none" pointer-events="none" mask="url(#nature-farm-seam-mask)"/>
 <!-- Estrada própria do Pomar e Mata, prolongada até a extremidade direita do cenário. -->
 <g id="nature-road-network" pointer-events="none">
 <path d="M4400 890L4750 900L5100 890L5450 900L5800 890L6200 900" fill="none" stroke="#77512e" stroke-width="94" stroke-linecap="round" stroke-linejoin="round" opacity=".10"/>
@@ -3151,7 +3151,7 @@ function renderSeaLandscapeMarkup(){
     <image decoding="async" href="/Cenario/PNG/MochilaPesca.webp" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
    </g><g transform="translate(420 1150)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
-    <image decoding="async" href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/RedePesca.png" x="-202.5" y="-202.5" width="405" height="405" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
+    <image decoding="async" href="/Cenario/PNG/RedePesca.webp" x="-202.5" y="-202.5" width="405" height="405" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-213" y="-187" width="426" height="420" rx="36" fill="transparent" stroke="transparent"/>
    </g></g>
   </g>

@@ -357,15 +357,158 @@
       "webpBytes": 58318,
       "savedBytes": 212833,
       "savedPercent": 78.49
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/cavalo/cavalo.png",
+      "output": "web/assets/legacy-cavalo.webp",
+      "width": 1420,
+      "height": 1108,
+      "alpha": true,
+      "sourceBytes": 703298,
+      "webpBytes": 113386,
+      "savedBytes": 589912,
+      "savedPercent": 83.88
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/cachorro-robo/cachorro-robo.png",
+      "output": "web/assets/legacy-cachorro-robo.webp",
+      "width": 1420,
+      "height": 1108,
+      "alpha": true,
+      "sourceBytes": 834945,
+      "webpBytes": 128382,
+      "savedBytes": 706563,
+      "savedPercent": 84.62
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/pavao/pavao-aberto.png",
+      "output": "web/assets/legacy-pavao.webp",
+      "width": 1509,
+      "height": 1042,
+      "alpha": true,
+      "sourceBytes": 1368514,
+      "webpBytes": 250452,
+      "savedBytes": 1118062,
+      "savedPercent": 81.7
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/animals/cabra/cabra.png",
+      "output": "web/assets/legacy-cabra.webp",
+      "width": 1491,
+      "height": 1055,
+      "alpha": true,
+      "sourceBytes": 416170,
+      "webpBytes": 80018,
+      "savedBytes": 336152,
+      "savedPercent": 80.77
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/icons/moeda-comum.png",
+      "output": "web/assets/legacy-moeda-comum.webp",
+      "width": 1344,
+      "height": 1170,
+      "alpha": true,
+      "sourceBytes": 785998,
+      "webpBytes": 92084,
+      "savedBytes": 693914,
+      "savedPercent": 88.28
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/icons/moeda-verde.png",
+      "output": "web/assets/legacy-moeda-verde.webp",
+      "width": 1368,
+      "height": 1149,
+      "alpha": true,
+      "sourceBytes": 771002,
+      "webpBytes": 91362,
+      "savedBytes": 679640,
+      "savedPercent": 88.15
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/background/background.png",
+      "output": "web/assets/legacy-background.webp",
+      "width": 1478,
+      "height": 1064,
+      "alpha": false,
+      "sourceBytes": 1512203,
+      "webpBytes": 134940,
+      "savedBytes": 1377263,
+      "savedPercent": 91.08
+    },
+    {
+      "source": "https://raw.githubusercontent.com/dabb3/colheita-feliz-public/299dd2d05754a97bccbc0e7b0a86db3c5c8d4396/assets/classic/background/background-night.png",
+      "output": "web/assets/legacy-background-night.webp",
+      "width": 1478,
+      "height": 1064,
+      "alpha": false,
+      "sourceBytes": 1741145,
+      "webpBytes": 140802,
+      "savedBytes": 1600343,
+      "savedPercent": 91.91
+    },
+    {
+      "source": "https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Forest/Floresta.jpg",
+      "output": "web/Forest/Floresta.webp",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "sourceBytes": 1067401,
+      "webpBytes": 660878,
+      "savedBytes": 406523,
+      "savedPercent": 38.09
+    },
+    {
+      "source": "https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/3ce64423590ea3ea6b630b9cf96d351a21ddb75a/Cenario/Area%20da%20Fazenda.jpg",
+      "output": "web/Cenario/Area-da-Fazenda.webp",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "sourceBytes": 628552,
+      "webpBytes": 371868,
+      "savedBytes": 256684,
+      "savedPercent": 40.84
+    },
+    {
+      "source": "https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Rio.jpg",
+      "output": "web/Cenario/Area-do-Rio.webp",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "sourceBytes": 844671,
+      "webpBytes": 496810,
+      "savedBytes": 347861,
+      "savedPercent": 41.18
+    },
+    {
+      "source": "https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/Area%20do%20Pomar%20e%20Mata.jpg",
+      "output": "web/Cenario/Area-do-Pomar-e-Mata.webp",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "sourceBytes": 603100,
+      "webpBytes": 357942,
+      "savedBytes": 245158,
+      "savedPercent": 40.65
+    },
+    {
+      "source": "https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/RedePesca.png",
+      "output": "web/Cenario/PNG/RedePesca.webp",
+      "width": 500,
+      "height": 500,
+      "alpha": true,
+      "sourceBytes": 193929,
+      "webpBytes": 64816,
+      "savedBytes": 129113,
+      "savedPercent": 66.58
     }
   ],
   "summary": {
-    "converted": 32,
-    "sourceBytes": 24210443,
-    "webpBytes": 3964756,
-    "savedBytes": 20245687,
-    "savedPercent": 83.62,
-    "sourceBytesMB": 23.09,
-    "webpBytesMB": 3.78
+    "converted": 45,
+    "sourceBytes": 35681371,
+    "webpBytes": 6948496,
+    "savedBytes": 28732875,
+    "savedPercent": 80.53,
+    "sourceBytesMB": 34.03,
+    "webpBytesMB": 6.63
   }
 }
