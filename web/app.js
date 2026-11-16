@@ -2303,8 +2303,11 @@ function claimDailyReward(){if(!farmWriteAllowed())return;
 const FARM_RANK_TITLES=['Peão','Campeiro','Capataz','Feitor','Intendente','Estancieiro','Comendador','Patriarca','Magnata','Barão'];
 const SPECIALIST_TITLE_GROUPS=[['chef','Cozinha'],['grill','Churrasqueira'],['lumberjack','Lenhador'],['carpenter','Marcenaria'],['alchemist','Alquimia'],['fisher','Pesca'],['haras','Haras'],['tailor','Alfaiataria']];
 function availablePlayerTitleGroups(data=state){
- const level=levelFromXP(Math.max(0,Number(data?.xp)||0));
- const farm=FARM_RANK_TITLES.filter((_,index)=>level>=(index===0?1:index*15));
+ // Para a fazenda atual, use exatamente o mesmo cálculo do nível exibido no HUD.
+ // Assim, jogadores avançados mantêm acesso a todos os títulos de níveis anteriores.
+ const level=data===state?farmLevel():levelFromXP(Math.max(0,Number(data?.xp)||0));
+ const unlockedFarmTitleCount=Math.min(FARM_RANK_TITLES.length,Math.max(0,Math.floor((level-1)/15)+1));
+ const farm=FARM_RANK_TITLES.slice(0,unlockedFarmTitleCount);
  const achievements=Array.isArray(data?.unlockedTitles)?data.unlockedTitles:[];
  const professions=[];
  for(const [key,label] of SPECIALIST_TITLE_GROUPS){
