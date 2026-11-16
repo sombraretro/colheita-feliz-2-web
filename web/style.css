@@ -1576,15 +1576,20 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 @media(max-width:760px){#hunt-backpack{top:calc(100% - 92px)}.hunt-backpack-image{width:clamp(54px,14vw,82px);max-height:12vh}.hunt-backpack small{font-size:8px}}
 
 
-/* Ajustes de interação e composição — etapa v7. */
-.playfield.sea-scene-active .tool-bar,
-.playfield.sea-scene-active .tip{display:none!important}
+/* Ajustes de interação e composição — etapa v8. */
+.playfield.sea-scene-active .tool-bar,.playfield.sea-scene-active .tip{display:none!important}
 .playfield.hunt-scene-active .farm-scene-navigation{top:3px!important;bottom:auto!important}
-.hunt-bottom-actions{position:absolute;left:50%;bottom:12px;z-index:35;display:flex;align-items:flex-end;justify-content:center;gap:14px;transform:translateX(-50%);padding:7px 12px;border-radius:16px;background:rgba(20,42,27,.24);backdrop-filter:blur(3px)}
-.hunt-bottom-actions .hunt-backpack{position:relative;left:auto;top:auto;min-width:72px;min-height:64px;transform:none;padding:4px 7px;gap:2px}
-.hunt-bottom-actions .hunt-backpack-image{width:clamp(58px,7vw,86px);max-height:10vh}
-.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:11px;font-weight:900;white-space:nowrap}
-.hunt-start-button{display:flex;min-width:72px;min-height:64px;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 12px;border:1px solid rgba(242,218,159,.85);border-radius:12px;background:rgba(30,48,30,.82);color:#fff4d2;text-shadow:0 1px 3px #1c2818;font-size:30px;cursor:pointer;box-shadow:0 3px 9px #14211688}
-.hunt-start-button:hover,.hunt-start-button:focus-visible{filter:brightness(1.15);outline:2px solid #ffe4a0}
-.hunt-bottom-actions .hunt-backpack:hover,.hunt-bottom-actions .hunt-backpack:focus-visible{transform:scale(1.04);background:rgba(30,48,30,.72)}
-@media(max-width:700px){.playfield.hunt-scene-active .farm-scene-navigation{top:2px!important}.hunt-bottom-actions{bottom:max(8px,env(safe-area-inset-bottom));gap:10px;padding:5px 9px}.hunt-bottom-actions .hunt-backpack,.hunt-start-button{min-width:66px;min-height:58px}.hunt-bottom-actions .hunt-backpack-image{width:clamp(48px,12vw,70px);max-height:9vh}.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:10px}}
+.hunt-bottom-actions{position:absolute;inset:auto 0 12px;width:100%;height:112px;z-index:35;display:block;pointer-events:none;padding:0;background:transparent}
+.hunt-bottom-actions .hunt-backpack,.hunt-start-button{position:absolute;top:50%;display:flex;width:108px;min-width:108px;height:96px;min-height:96px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px;border:1px solid rgba(242,218,159,.9);border-radius:14px;background:rgba(30,48,30,.84);color:#fff4d2;text-shadow:0 1px 3px #1c2818;box-shadow:0 4px 12px #14211688;transform:translateY(-50%);pointer-events:auto}
+.hunt-bottom-actions .hunt-backpack{left:9%;right:auto}
+.hunt-bottom-actions .hunt-backpack-image{width:clamp(76px,9vw,112px);max-height:12vh;object-fit:contain}
+.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:13px;font-weight:900;white-space:nowrap}
+.hunt-start-button{left:auto;right:9%;font-size:42px;cursor:pointer}
+.hunt-start-button:hover,.hunt-start-button:focus-visible,.hunt-bottom-actions .hunt-backpack:hover,.hunt-bottom-actions .hunt-backpack:focus-visible{filter:brightness(1.14);outline:2px solid #ffe4a0}
+#world [data-river-backpack] image{filter:saturate(1.2) contrast(1.07) brightness(1.04)}
+#world .lake-fish-jump{opacity:0;pointer-events:none}
+#world .lake-fish-jump.is-jumping .lake-fish-leap{animation:lake-fish-leap 1.2s ease-out both}
+@keyframes lake-fish-leap{0%{opacity:0;transform:translateY(0) scale(.86)}12%{opacity:1}48%{opacity:1;transform:translateY(-58px) scale(1.04)}78%{opacity:.9;transform:translateY(-30px) scale(1)}100%{opacity:0;transform:translateY(0) scale(.9)}}
+@media(max-width:700px){.playfield.hunt-scene-active .farm-scene-navigation{top:2px!important}.hunt-bottom-actions{bottom:max(6px,env(safe-area-inset-bottom));height:94px}.hunt-bottom-actions .hunt-backpack,.hunt-start-button{width:96px;min-width:96px;height:86px;min-height:86px}.hunt-bottom-actions .hunt-backpack{left:7%}.hunt-bottom-actions .hunt-backpack-image{width:clamp(68px,16vw,92px);max-height:10vh}.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:12px}.hunt-start-button{right:7%;font-size:38px}}
+@media(max-width:380px){.hunt-bottom-actions .hunt-backpack{left:5%}.hunt-start-button{right:5%}}
+@media(prefers-reduced-motion:reduce){#world .lake-fish-jump.is-jumping .lake-fish-leap{animation-duration:.01ms}}
