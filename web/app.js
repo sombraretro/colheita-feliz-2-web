@@ -946,8 +946,8 @@ async function toggleLandscapeMode(){
  scheduleUpdateView();
  notify(locked?'Modo paisagem ativado.':'Modo paisagem visual ativado. Se o aparelho não girar fisicamente, o jogo será ajustado para a horizontal.');
 }
-window.addEventListener('orientationchange',()=>requestAnimationFrame(updateView));
-window.addEventListener('resize',()=>{if(landscapeModeActive)requestAnimationFrame(updateView)});
+window.addEventListener('orientationchange',scheduleUpdateView);
+window.addEventListener('resize',()=>{if(landscapeModeActive)scheduleUpdateView()});
 document.addEventListener('pointerdown',()=>{if(musicEnabled&&!musicPlaying)startCurrentMusic()},{once:true});
 
 const seedNoise=n=>{const x=Math.sin(n*91.13+17.37)*29341.715;return x-Math.floor(x)};
@@ -3876,7 +3876,7 @@ $('hunt-backpack')?.addEventListener('click',()=>openModal('hunt-inventory'));
 $('hunt-start-button')?.addEventListener('click',()=>openModal('hunt'));
 
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
-window.addEventListener('resize',()=>{if(activeScene==='sea'){const b=SCENE_BOUNDS.sea;view.zoom=sceneFitZoom('sea');view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2}updateView()});
+window.addEventListener('resize',()=>{if(activeScene==='sea'){const b=SCENE_BOUNDS.sea;view.zoom=sceneFitZoom('sea');view.cx=(b.left+b.right)/2;view.cy=(b.top+b.bottom)/2}scheduleUpdateView()});
 window.addEventListener('keydown',e=>{if($('overlay').classList.contains('hidden')===false&&e.key!=='Escape')return;if(e.key==='Escape'){closeModal();return}if(e.key==='0'){view.cx=950;view.cy=490;setZoom(1)}if(e.key==='ArrowLeft'){e.preventDefault();panView(-1)}if(e.key==='ArrowRight'){e.preventDefault();panView(1)}if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();const rect=svg.getBoundingClientRect(),visibleH=WORLD.h/view.zoom;view.cy+=(e.key==='ArrowUp'?-1:1)*visibleH*.16;updateView()}if(e.key==='+'||e.key==='=')setZoom(view.zoom+.1);if(e.key==='-'||e.key==='_')setZoom(view.zoom-.1)});
 const pointerGeometry=e=>{
  const rect=svg.getBoundingClientRect();
