@@ -1189,7 +1189,7 @@ scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-18
  <path d="M180 390V280Q205 250 230 280V390" fill="#704a2b" stroke="#563720" stroke-width="6"/>
  <path d="M12 390H398" stroke="#e6d5b6" stroke-width="8"/>
  </g>`;
-scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',350,165,125,120)}</g>`;
+scenery+=`<g id="dog-house-position" pointer-events="none">${svgImage('casinha-cachorro',350,135,125,120)}</g>`;
 scenery+=fencePath([[1260,200],[1780,200]],'rear')+fencePath([[1260,200],[1260,780]],'side')+fencePath([[1780,200],[1780,780]],'side');
 
 $('scenery-layer').innerHTML=scenery;
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=485;y=180;w=120;h=90;}
+  if(a.type==='cachorro'){x=485;y=150;w=120;h=90;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -3112,7 +3112,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 -110)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-267 1306)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-197 1306)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
     <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
    </g><g transform="translate(420 1150)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
@@ -3830,7 +3830,8 @@ document.addEventListener('click',event=>{
  if(event.target.closest('[data-show-hunt-result]')){openModal('hunt-result');return}
  if(event.target.closest('[data-hunt-ack]')){if(state?.hunter){state.hunter.pendingResult=null;markDirty()}closeModal();return}
 });
-$('hunt-backpack')?.addEventListener('click',()=>openModal('hunt-inventory'));
+$('hunt-backpack')?.addEventListener('click',()=>{const menu=$('hunt-access-menu');if(menu)menu.hidden=!menu.hidden;});
+$('hunt-access-menu')?.addEventListener('click',e=>{const choice=e.target.closest('[data-hunt-menu-choice]');if(!choice)return;const kind=choice.dataset.huntMenuChoice;$('hunt-access-menu').hidden=true;if(kind==='inventory')openModal('hunt-inventory');else if(kind==='hunt')openModal('hunt');});
 $('hunt-start-button')?.addEventListener('click',()=>openModal('hunt'));
 
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
