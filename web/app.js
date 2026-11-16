@@ -2966,22 +2966,6 @@ function applyMenuThemeColors(){
  root.dataset.menuTheme=state.farmTheme;
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
-let lakeFishJumpTimer=null;
-function scheduleLakeFishJump(){
- if(lakeFishJumpTimer!==null)return;
- const scheduleNext=()=>{lakeFishJumpTimer=setTimeout(()=>{
-  lakeFishJumpTimer=null;
-  const fish=[...document.querySelectorAll('#lake-fish-jump-layer [data-lake-fish-jump]')];
-  if(fish.length){
-   const count=Math.min(fish.length,Math.random()<.72?1:2),chosen=[];
-   while(chosen.length<count){const candidate=fish[Math.floor(Math.random()*fish.length)];if(!chosen.includes(candidate))chosen.push(candidate)}
-   chosen.forEach(node=>{node.classList.remove('is-jumping');void node.getBoundingClientRect();node.classList.add('is-jumping');setTimeout(()=>node.classList.remove('is-jumping'),1250)});
-  }
-  scheduleNext();
- },18000+Math.random()*17000)};
- };
- scheduleNext();
-}
 function renderLakeArea(){
  const x=-960,y=760,waterY=y-8;
  let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-960 300) scale(1.08) translate(980 -760)">
@@ -3011,13 +2995,9 @@ function renderLakeArea(){
    </g>
   </g>`;
  });
- s+=`</g><g id="lake-fish-jump-layer" pointer-events="none">`;
- (state.lake?.fish||[]).slice(0,10).forEach((f,i)=>{
-  const pos=positions[i],sc=sizes[i],shape=shapes[i%shapes.length];
-  s+=`<g class="lake-fish-jump" data-lake-fish-jump="${i}" transform="translate(${x+pos[0]} ${waterY+pos[1]}) scale(${sc})"><g class="lake-fish-leap"><path d="${shape.body}" fill="#17191b"/><path d="${shape.tail}" fill="#17191b"/><path d="M-2 -7L5 -15L10 -6Z" fill="#17191b"/></g></g>`;
- });
  s+=`</g>
- <ellipse cx="${x}" cy="${waterY}" rx="201" ry="125" fill="#58b8b7" opacity=".13"/>`;
+ <ellipse cx="${x}" cy="${waterY}" rx="201" ry="125" fill="#58b8b7" opacity=".13"/>
+
  <g class="lake-ripples" clip-path="url(#lake-clip)">
   <path d="M${x-190} ${y-45}q65-22 130 0t130 0t130 0M${x-180} ${y+24}q60-18 120 0t120 0t120 0M${x-140} ${y+75}q45-14 90 0t90 0t90 0" fill="none" stroke="#e2ffff" stroke-width="7" opacity=".34"/>
   <path d="M${x-90} ${y-95}q55-15 110 0t110 0M${x-175} ${y+5}q38-12 76 0t76 0" fill="none" stroke="#d8ffff" stroke-width="4" opacity=".38"/>
@@ -3132,7 +3112,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
  const grillSmoke=grillActive;
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 36)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(696 162)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;scheduleLakeFishJump();const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
   <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
