@@ -1176,7 +1176,7 @@ for(const [gx,gy,gs] of [
  [1760,630,.55],[1935,632,.6]
 ])scenery+=grassClump(gx,gy,gs);
 scenery+=`<g pointer-events="none" transform="translate(0 -45)"><image id="farm-house" href="${farmHouseAssetHref()}" x="780" y="35" width="440" height="430" preserveAspectRatio="xMidYMid meet"/></g>`;
-scenery+=`<g id="barn-building" pointer-events="none" transform="translate(0 -55)"><image href="/Cenario/PNG/Celeiro.png" x="-650" y="55" width="430" height="350" preserveAspectRatio="xMidYMid meet"/></g>`;
+scenery+=`<g id="barn-building" pointer-events="none" transform="translate(0 -55)"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Celeiro.png" x="-650" y="55" width="430" height="350" preserveAspectRatio="xMidYMid meet"/></g>`;
 scenery+=`<g id="aviary-building" pointer-events="none" transform="translate(-180 -40)">
  <ellipse cx="205" cy="405" rx="220" ry="22" fill="#244d1b" opacity=".22"/>
  <path d="M12 55L205 0L398 55V390H12Z" fill="#9bdcf0" fill-opacity=".12" stroke="#76563a" stroke-width="10"/>
@@ -1245,7 +1245,7 @@ function renderAnimals(scheduleBlink=true){
  for(const a of animals){
   const cfg=ANIMALS[a.type];if(!cfg)continue;
   let x,y,w,h;
-  if(a.type==='cachorro'){x=610;y=260;w=150;h=112.5;}
+  if(a.type==='cachorro'){x=675;y=285;w=150;h=112.5;}
   else if(cfg.role==='horse'){
    const pos=HORSE_SLOTS[Number.isInteger(a.slot)?a.slot:0];if(!pos)continue;
    const stage=Math.max(1,Math.min(5,Number(a.stage)||1)),horseScale=stage>=5?1:stage>=3?.88:.76;
@@ -2016,7 +2016,7 @@ function renderPondArea(){
 }
 function renderRiverLandmarks(){
  return `
- <g id="river-hut" pointer-events="none" transform="translate(-1770 590) scale(1.95 2.2)"><image href="/Cenario/PNG/Pergolado.png" x="0" y="-42" width="238" height="210" preserveAspectRatio="xMidYMid meet"/></g>
+ <g id="river-hut" pointer-events="none" transform="translate(-1770 590) scale(1.95 2.2)"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Pergolado.png" x="0" y="-42" width="238" height="210" preserveAspectRatio="xMidYMid meet"/></g>
 `;
 }
 
@@ -2915,7 +2915,7 @@ function updateDayNight(){
  const layer=$('day-night-layer');if(!layer)return;
  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
  const phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';
- const farmHouse=$('farm-house');if(farmHouse)farmHouse.setAttribute('href',phase==='night'?'/Cenario/PNG/Casa-Noite.png':'/assets/casa.png');
+ const farmHouse=$('farm-house');if(farmHouse)farmHouse.setAttribute('href',phase==='night'?'https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Casa-Noite.png':'/assets/casa.png');
  const huntBackdrop=$('hunt-scene-background');
  if(huntBackdrop)huntBackdrop.dataset.phase=phase;
  if(layer.dataset.phase===phase&&layer.dataset.scene===activeScene&&!(activeScene==='sea'&&phase==='sunset'))return;
@@ -3064,7 +3064,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M11900 475Q12120 430 12320 464Q12550 390 12790 458Q13020 420 13900 480V520H11900Z"/>
   </g>
   <g id="sea-lighthouse" transform="translate(10400 0)">
-   <g transform="translate(0 490) scale(1.42) translate(0 -490)"><image href="/Cenario/PNG/Farol.png" x="-175" y="153" width="370" height="337" preserveAspectRatio="xMidYMid meet"/></g>
+   <g transform="translate(0 490) scale(1.42) translate(0 -490)"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Farol.png" x="-175" y="153" width="370" height="337" preserveAspectRatio="xMidYMid meet"/></g>
   </g>
   <g id="sea-birds" fill="none" stroke="#385c64" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
    <g class="bird-position bird-a" transform="translate(7040 165) scale(1.05)"><g class="sea-bird"><path class="bird-wing-left" d="M0 3Q-18 -15 -34 7"/><path class="bird-wing-right" d="M0 3Q18 -15 34 7"/></g></g>
@@ -3091,7 +3091,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 0)">
-   <g id="sea-boat-motion"><image href="/Cenario/PNG/Barco.png" x="-930" y="975" width="1940" height="455" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-930" y="975" width="1940" height="455" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-430 1155)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
     <ellipse cx="0" cy="95" rx="125" ry="24" fill="#3b291d" opacity=".3"/>
     <path d="M-82 12Q-78 -42 -34 -48H38Q82 -42 84 12L68 98Q0 124 -68 98Z" fill="#9b6034" stroke="#51331f" stroke-width="13"/>
     <path d="M-53 -40Q-48 -102 0 -102Q48 -102 53 -40" fill="none" stroke="#4e3423" stroke-width="15"/>
@@ -3111,10 +3111,10 @@ function renderSeaLandscapeMarkup(){
   </g>
  </g>`;
 }
-function farmHouseAssetHref(){const now=new Date(),minutes=now.getHours()*60+now.getMinutes(),phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';return phase==='night'?'/Cenario/PNG/Casa-Noite.png':'/assets/casa.png'}
+function farmHouseAssetHref(){const now=new Date(),minutes=now.getHours()*60+now.getMinutes(),phase=minutes>=360&&minutes<1020?'day':minutes>=1020&&minutes<1140?'sunset':'night';return phase==='night'?'https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Casa-Noite.png':'/assets/casa.png'}
 function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');if(!layer||!state)return;const brandIcon=$('brand-theme-icon');if(!previewOnly&&brandIcon)brandIcon.textContent=FARM_THEMES[state.farmTheme||'classic']?.icon||'🌿';const world=$('world');if(world)world.setAttribute('data-farm-theme',state.farmTheme||'classic');if(!previewOnly)applyMenuThemeColors();const groundWinter=$('theme-ground-layer');if(groundWinter)groundWinter.innerHTML=state.farmTheme==='christmas'?'<rect x="-2600" y="-400" width="7000" height="1700" fill="#f2f8fc" opacity=".78"/>':'';const winterLayer=$('theme-overlay-layer');if(winterLayer)winterLayer.innerHTML=state.farmTheme==='christmas'?'<g pointer-events="none"><path d="M-68 620L532 350L1132 620L532 890Z" fill="#f4fbff" opacity=".48"/><path d="M-45 620L532 370L1108 620L532 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/><path d="M-2000 620L-1400 350L-800 620L-1400 890Z" fill="#f4fbff" opacity=".48"/><path d="M-1977 620L-1400 370L-823 620L-1400 870Z" fill="none" stroke="#ffffff" stroke-width="12" opacity=".48"/></g>':'';updateDayNight();let html=renderThemeScenery(state.farmTheme)+renderHouseThemeDecor(state.farmTheme)+renderPondArea()+renderRiverLandmarks()+renderLakeArea()+renderHarasArea()+renderOrchardArea()+renderForestArea();const now=Date.now(),grillActive=(state.grill?.queue||[]).some(job=>Number.isFinite(job.startedAt)&&job.startedAt<=now&&Number.isFinite(job.readyAt)&&job.readyAt>now);
  if(state.grill?.owned){const x=700,y=230;html+=`<g id="grill-building" transform="translate(${x} ${y}) scale(.92)">
- <image href="/Cenario/PNG/Churrasqueira.png" x="-48" y="-66" width="96" height="132" preserveAspectRatio="xMidYMid meet"/>
+ <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Churrasqueira.png" x="-48" y="-66" width="96" height="132" preserveAspectRatio="xMidYMid meet"/>
  ${grillActive?`<g class="grill-fire" transform="translate(0 30)" pointer-events="none"><path d="M-24 20Q-30 5 -17 -9Q-15 5 -7 9Q-7 -8 1 -22Q8 -5 9 9Q18 3 18 -10Q31 8 22 20Z" fill="#f47a20" stroke="#8e3b19" stroke-width="3"/><path d="M-9 18Q-13 8 -4 -3Q0 4 2 10Q8 4 10 -2Q16 12 7 18Z" fill="#ffd24c"/></g>`:''}
  </g>`}
  const kitchenSmoke=(state.kitchen?.queue||[]).some(job=>job.readyAt>Date.now());
@@ -3131,8 +3131,8 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
   <text x="0" y="-22" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="1" fill="#4d3928">PESCA</text>
   <path d="M-42 -43H42" stroke="#fff0c7" stroke-width="2" opacity=".7"/>
  </g>
- <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)"><rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/PNG/MochilaPesca.png" x="-62" y="-66" width="124" height="132" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>
- <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900)"><rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/><image href="/Cenario/PNG/VaraDePesca.png" x="-32" y="-210" width="76" height="230" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
+ <g id="river-fishing-backpack" data-river-backpack="true" tabindex="0" role="button" aria-label="Abrir mochila de pesca" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2125 1010)"><rect x="-62" y="-66" width="124" height="132" fill="#fff" opacity=".01" pointer-events="all"/><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-62" y="-66" width="124" height="132" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>
+ <g id="river-fishing-rod" data-river-rod="true" tabindex="0" role="button" aria-label="Iniciar pesca no Rio" pointer-events="all" style="cursor:pointer;touch-action:manipulation" transform="translate(-2180 900)"><rect x="-32" y="-210" width="76" height="230" fill="#fff" opacity=".01" pointer-events="all"/><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/VaraDePesca.png" x="-32" y="-210" width="76" height="230" preserveAspectRatio="xMidYMid meet" pointer-events="none"/></g>`)}}
 
 function forestProgress(tree){if(!tree?.type||!tree.plantedAt)return 0;return Math.max(0,Math.min(1,(Date.now()-tree.plantedAt)/(FOREST_TREES[tree.type].hours*FOREST_TIME_FACTOR*HOUR)))}
 function forestTreeMarkup(slot,tree){const [x,y]=FOREST_SLOT_POS[slot],cfg=tree?.type?FOREST_TREES[tree.type]:null;if(!cfg)return '<g data-forest-slot="'+slot+'" transform="translate('+x+' '+y+')" style="cursor:pointer"><ellipse cy="8" rx="46" ry="13" fill="#3e6b2d" opacity=".25"/><ellipse cy="0" rx="38" ry="15" fill="#9a7046" stroke="#704b2d" stroke-width="4"/><text y="-25" text-anchor="middle" font-size="14" fill="#fff3ce" stroke="#5c421f" stroke-width="3" paint-order="stroke">＋ Plantar</text></g>';
