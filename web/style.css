@@ -1597,3 +1597,15 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 #world .lake-fish-shadow.is-jumping{animation:lake-fish-leap 1.55s cubic-bezier(.2,.75,.25,1) both!important;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 5px 3px rgba(0,0,0,.55))}
 @keyframes lake-fish-leap{0%{opacity:0;transform:translateY(0) scale(.75)}12%{opacity:1}32%{opacity:1;transform:translateY(-78px) scale(1.24)}52%{opacity:1;transform:translateY(-92px) scale(1.16)}76%{opacity:.95;transform:translateY(-42px) scale(1.04)}100%{opacity:0;transform:translateY(0) scale(.82)}}
 @media(min-width:381px){.hunt-bottom-actions .hunt-backpack{left:1.5%!important}}
+
+
+/* Preview v12 — fundo da caça estático, centralizado e cobrindo o playfield. */
+.hunt-scene-background>img{inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:50% 50%!important;animation:none!important;transform:none!important;transform-origin:center!important}
+/* Menu de acesso da caça; permanece acima da navegação superior e dos controles. */
+.hunt-bottom-actions{z-index:45!important}
+.hunt-access-menu{position:absolute;left:1.5%;bottom:calc(100% + 8px);z-index:80;display:flex;gap:8px;padding:8px;border:1px solid #e4c783;border-radius:13px;background:rgba(27,43,29,.96);box-shadow:0 6px 20px #09150dcc;pointer-events:auto}
+.hunt-access-menu[hidden]{display:none!important}
+.hunt-access-menu button{min-height:42px;padding:9px 13px;border:1px solid #d9b66d;border-radius:9px;background:linear-gradient(#fff0c7,#d5a95c);color:#493017;font-weight:900;white-space:nowrap;cursor:pointer}
+.hunt-access-menu button:hover,.hunt-access-menu button:focus-visible{filter:brightness(1.12);outline:2px solid #fff0b0;outline-offset:2px}
+.overlay{z-index:2000!important}
+@media(max-width:700px){.hunt-access-menu{left:1%;bottom:calc(100% + 6px);gap:5px;padding:6px;max-width:98%;}.hunt-access-menu button{padding:8px 9px;font-size:11px;white-space:normal}}
