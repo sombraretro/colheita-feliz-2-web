@@ -1593,3 +1593,6 @@ button,.modal-action,.tool,.zoom-ui button{touch-action:manipulation}
 @media(max-width:700px){.playfield.hunt-scene-active .farm-scene-navigation{top:2px!important}.hunt-bottom-actions{bottom:max(6px,env(safe-area-inset-bottom));height:94px}.hunt-bottom-actions .hunt-backpack,.hunt-start-button{width:96px;min-width:96px;height:86px;min-height:86px}.hunt-bottom-actions .hunt-backpack{left:7%}.hunt-bottom-actions .hunt-backpack-image{width:clamp(68px,16vw,92px);max-height:10vh}.hunt-bottom-actions .hunt-backpack small,.hunt-start-button small{font-size:12px}.hunt-start-button{right:7%;font-size:38px}}
 @media(max-width:380px){.hunt-bottom-actions .hunt-backpack{left:5%}.hunt-start-button{right:5%}}
 @media(prefers-reduced-motion:reduce){#world .lake-fish-jump.is-jumping .lake-fish-leap{animation-duration:.01ms}}
+
+#world .lake-fish-shadow.is-jumping{animation:lake-fish-leap 1.2s ease-out both;transform-box:fill-box;transform-origin:center}
+@keyframes lake-fish-leap{0%{opacity:.2;transform:translateY(0) scale(.88)}12%{opacity:1}48%{opacity:1;transform:translateY(-58px) scale(1.08)}78%{opacity:.9;transform:translateY(-30px) scale(1)}100%{opacity:.2;transform:translateY(0) scale(.9)}}
