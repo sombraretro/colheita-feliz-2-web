@@ -1,0 +1,54 @@
+name: Optimize preview image assets
+
+on:
+  push:
+    branches:
+      - feature/otimizacao-etapa-1-preview-2026-11-16
+    paths:
+      - 'scripts/optimize-images.mjs'
+      - 'Cenario/PNG/**'
+      - 'web/assets/**'
+      - 'web/app.js'
+      - 'web/index.html'
+      - 'web/sw.js'
+      - '.github/workflows/optimize-preview-images.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: preview-image-optimization
+  cancel-in-progress: false
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/otimizacao-etapa-1-preview-2026-11-16
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install image processor
+        run: npm install --no-save --no-package-lock sharp
+
+      - name: Convert PNG assets and update references
+        run: node scripts/optimize-images.mjs
+
+      - name: Commit optimized assets to preview branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/app.js web/index.html web/sw.js web/assets web/Cenario/PNG web/asset-optimization-report.json
+          if git diff --cached --quiet; then
+            echo "No image changes to commit."
+          else
+            git commit -m "Optimize PNG assets as WebP for preview"
+            git push origin HEAD:feature/otimizacao-etapa-1-preview-2026-11-16
+          fi
