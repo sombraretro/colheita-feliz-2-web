@@ -2966,26 +2966,7 @@ function applyMenuThemeColors(){
  root.dataset.menuTheme=state.farmTheme;
  for(const [key,value] of Object.entries(palette))root.style.setProperty('--menu-'+key,value);
 }
-let lakeFishJumpTimer=null;
-function scheduleLakeFishJump(){
- if(lakeFishJumpTimer!==null)return;
- const scheduleNext=(delay)=>{
-  lakeFishJumpTimer=setTimeout(()=>{
-   lakeFishJumpTimer=null;
-   const fish=[...document.querySelectorAll('#artificial-lake .lake-fish-shadow')];
-   if(fish.length){
-    const count=Math.min(fish.length,Math.random()<.62?1:2),chosen=[];
-    while(chosen.length<count){const candidate=fish[Math.floor(Math.random()*fish.length)];if(!chosen.includes(candidate))chosen.push(candidate)}
-    chosen.forEach(node=>{
-     node.classList.remove('is-jumping');void node.getBoundingClientRect();node.classList.add('is-jumping');
-     setTimeout(()=>node.classList.remove('is-jumping'),1550);
-    });
-   }
-   scheduleNext(8000+Math.random()*5000);
-  },delay);
- };
- scheduleNext(2500+Math.random()*2500);
-}
+
 function renderLakeArea(){
  const x=-960,y=760,waterY=y-8;
  let s=`<g id="artificial-lake" data-lake-open="true" style="cursor:pointer" transform="translate(-960 300) scale(1.08) translate(980 -760)">
@@ -3112,7 +3093,7 @@ function renderSeaLandscapeMarkup(){
    <path d="M7168 470H7300" stroke="#425b58" stroke-width="6"/>
   </g>
   <g id="sea-boat" transform="translate(8500 -110)">
-   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-197 1306)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
+   <g id="sea-boat-motion"><image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/Barco.png" x="-2385" y="580" width="4850" height="1137.5" preserveAspectRatio="xMidYMid meet" pointer-events="none"/><g transform="translate(-152 1291)" data-sea-bag role="button" tabindex="0" aria-label="Abrir bolsa de pesca" style="cursor:pointer" pointer-events="all">
     <image href="https://raw.githubusercontent.com/sombraretro/colheita-feliz-2-web/main/Cenario/PNG/MochilaPesca.png" x="-90" y="-98" width="180" height="196" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>
     <rect x="-90" y="-98" width="180" height="196" rx="24" fill="transparent" stroke="transparent"/>
    </g><g transform="translate(420 1150)" data-sea-net role="button" tabindex="0" aria-label="Lançar rede e pescar" style="cursor:pointer" pointer-events="all">
@@ -3132,7 +3113,7 @@ function renderFarmAddons(previewOnly=false){const layer=$('decoration-layer');i
  const grillSmoke=grillActive;
  if(kitchenSmoke)html+=`<g class="production-smoke house-smoke" transform="translate(1060 36)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="9"/><circle class="smoke-puff puff-b" cx="7" cy="-8" r="7"/><circle class="smoke-puff puff-c" cx="-4" cy="-15" r="8"/><circle class="smoke-puff puff-d" cx="5" cy="-23" r="6"/></g>`;
  if(grillSmoke)html+=`<g class="production-smoke grill-smoke" transform="translate(696 162)" pointer-events="none"><circle class="smoke-puff puff-a" cx="0" cy="0" r="7"/><circle class="smoke-puff puff-b" cx="5" cy="-8" r="6"/><circle class="smoke-puff puff-c" cx="-3" cy="-15" r="7"/></g>`;
- for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;scheduleLakeFishJump();const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
+ for(const d of state.placedDecorations){const [x,y]=DECORATION_SLOTS[d.slot]||[0,0];html+=renderDecorationMarkup(d.id,x,y)}layer.innerHTML=html;const worldSvg=$('world');if(worldSvg){worldSvg.querySelector('#river-fishing-sign')?.remove();worldSvg.querySelector('#river-fishing-backpack')?.remove();worldSvg.querySelector('#river-fishing-rod')?.remove();worldSvg.insertAdjacentHTML('beforeend',` <g id="river-fishing-sign" aria-hidden="true" pointer-events="none" transform="translate(-1950 880)">
   <rect x="-82" y="-76" width="164" height="142" fill="#ffffff" opacity="0.01" pointer-events="none"/>
   <ellipse cx="0" cy="48" rx="50" ry="9" fill="#244b21" opacity=".25"/>
   <path d="M0 35V-7" stroke="#68452c" stroke-width="9" stroke-linecap="round"/>
@@ -3830,8 +3811,7 @@ document.addEventListener('click',event=>{
  if(event.target.closest('[data-show-hunt-result]')){openModal('hunt-result');return}
  if(event.target.closest('[data-hunt-ack]')){if(state?.hunter){state.hunter.pendingResult=null;markDirty()}closeModal();return}
 });
-$('hunt-backpack')?.addEventListener('click',()=>{const menu=$('hunt-access-menu');if(menu)menu.hidden=!menu.hidden;});
-$('hunt-access-menu')?.addEventListener('click',e=>{const choice=e.target.closest('[data-hunt-menu-choice]');if(!choice)return;const kind=choice.dataset.huntMenuChoice;$('hunt-access-menu').hidden=true;if(kind==='inventory')openModal('hunt-inventory');else if(kind==='hunt')openModal('hunt');});
+$('hunt-backpack')?.addEventListener('click',()=>openModal('hunt-inventory'));
 $('hunt-start-button')?.addEventListener('click',()=>openModal('hunt'));
 
 $('playfield').addEventListener('wheel',e=>{if(e.target.closest('.modal-body,.side-menu'))return;e.preventDefault();setZoom(view.zoom+(e.deltaY>0?-.1:.1))},{passive:false});
