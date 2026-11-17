@@ -384,7 +384,7 @@ const FOREST_TREES={
 };
 const FOREST_TREE_SPRITES={pau_brasil:"Pau-Brasil.png",ipe_amarelo:"Ipê-Amarelo.png",ipe_roxo:"Ipê-Roxo.png",jatoba:"Jatoba.png",jequitiba:"Jequitiba-Rosa.png",peroba_rosa:"Peroba-Rosa.png",cedro:"Cedro-Rosa.png",mogno:"Mogno-Brasileiro.png",aroeira:"Aroeira.png",angico:"Angico.png",seringueira:"Seringueira.png",castanheira:"Castanheira-do-para.png",guapuruvu:"Guapuruvu.png",copaiba:"Copaíba.png",pequizeiro:"Pequizeiro.png",pitangueira:"Pitangueira.png",araucaria:"Araucaria.png",guabiroba:"Guabirobeira.png",cambuci:"Cambucizeiro.png",imbuia:"Imbuia.png",guanandi:"Guanandi.png",pinheiro_natal:"Pinheiro de Natal.png",pinha:"Pinha.png",uvaia:"Uvaia.png",cambuca:"Cambucá.png"};
 function forestSpritePath(id){const herb=FOREST_HERB_SPRITES[id],file=herb||FOREST_TREE_SPRITES[id];return file?'/Cenario/'+(herb?'Ervas/':'Mata/')+encodeURI(file):''}
-const FOREST_HERB_SPRITES={alecrim:"Alecrim.png",arruda:"Arruda.png",boldo:"Boldo.png",embauba:"Embauba.png",eucalipto:"Eucalipto.png",guine:"Guine.png",jureminha:"Jureminha.png",manjericao:"Manjericao.png",pata_vaca:"Pata-de-vaca.png",peregum_verde:"Peregum Verde.png"};
+const FOREST_HERB_SPRITES={alecrim:"Alecrim.png",arruda:"Arruda.png",boldo:"Boldo.png",embauba:"Embauba.png",eucalipto:"Eucalipto.png",guine:"Guine.png",jureminha:"Jureminha.png",manjericao:"Manjericao.png",pata_vaca:"Pata-de-vaca.png",peregum_verde:"Peregum Verde.png",pega_pinto:"Pega-Pinto.png"};
 const FOREST_TREE_IDS=Object.keys(FOREST_TREES).filter(id=>!FOREST_TREES[id].retired),FOREST_TIME_FACTOR=.2,FOREST_PLOTS=36;
 const FOREST_SLOT_POS=Array.from({length:36},(_,i)=>[3906+(i%12)*104,305+Math.floor(i/12)*120]);
 const SEA_TYPES={
