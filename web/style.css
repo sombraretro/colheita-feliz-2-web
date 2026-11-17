@@ -501,8 +501,8 @@ html[data-cf2-next-ui="enabled"] .side-menu{top:51px;right:12px;z-index:13;max-h
 @media(prefers-reduced-motion:reduce){.smoke-puff{animation:none;opacity:.18}}
 
 /* Mata: grade compacta de canteiros e rolagem estável */
-.forest-slot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 18px}.forest-slot-card{min-width:0;min-height:104px;padding:9px 5px;border:2px solid #b58b4d;border-radius:10px;background:linear-gradient(160deg,#fff8e7,#ead7ad);color:#5c4829;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;cursor:pointer}.forest-slot-card .forest-slot-icon{font-size:25px;line-height:1.2}.forest-slot-card strong{font-size:12px}.forest-slot-card small,.forest-slot-card em{font-size:10px;line-height:1.25;font-style:normal}.forest-slot-card.is-locked{background:linear-gradient(160deg,#e2e0d8,#bcb9ae);border-color:#77766f;color:#55534d;opacity:.86}.forest-slot-card.is-selected{outline:3px solid #e0a92f;outline-offset:1px;box-shadow:0 0 0 2px #fff1bd inset}.modal-body{overflow-anchor:none;scroll-behavior:auto;}
-@media(max-width:700px){.forest-slot-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.forest-slot-card{min-height:94px;padding:7px 3px}}
+.forest-slot-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:12px 0 18px}.forest-slot-card{min-width:0;min-height:104px;padding:9px 5px;border:2px solid #b58b4d;border-radius:10px;background:linear-gradient(160deg,#fff8e7,#ead7ad);color:#5c4829;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;cursor:pointer}.forest-slot-card .forest-slot-icon{font-size:25px;line-height:1.2}.forest-slot-card strong{font-size:12px}.forest-slot-card small,.forest-slot-card em{font-size:10px;line-height:1.25;font-style:normal}.forest-slot-card.is-locked{background:linear-gradient(160deg,#e2e0d8,#bcb9ae);border-color:#77766f;color:#55534d;opacity:.86}.forest-slot-card.is-selected{outline:3px solid #e0a92f;outline-offset:1px;box-shadow:0 0 0 2px #fff1bd inset}.modal-body{overflow-anchor:none;scroll-behavior:auto;}
+@media(max-width:700px){.forest-slot-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.forest-slot-card{min-height:94px;padding:7px 3px}}
 
 
 /* Otimização: janelas internas pausam animações do cenário que está atrás do modal. */
@@ -1639,3 +1639,8 @@ html.battery-saver #world *,html.battery-saver #hunt-scene-background *{filter:n
 html.battery-saver .animal-shadow,html.battery-saver .animal-shadow-core{opacity:.18!important}
 .battery-settings{display:flex;flex-direction:column;gap:8px;margin:0 0 14px;padding:13px;background:linear-gradient(145deg,#f2f8df,#e2edc9);border:1px solid #a9c47b;border-radius:12px;color:#405c2c}
 .battery-settings h3{margin:0;color:#45652d}.battery-settings label{display:flex;align-items:center;gap:9px;font-weight:700}.battery-settings input{width:18px;height:18px;accent-color:#548b36}.battery-settings small{line-height:1.5;color:#60744c}
+
+/* Organização compacta dos menus da Mata, cozinha e churrasqueira. */
+.forest-plant-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr));gap:10px}
+.dialog[data-modal="forest"] details.shop-section .grid-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr));gap:10px}
+.dialog[data-modal="kitchen"] details.shop-section .grill-recipes,.dialog[data-modal="grill"] details.shop-section .grill-recipes{align-items:stretch}
