@@ -813,7 +813,7 @@ function stopFishingLoop(kind=null){
  }
 }
 function startFishingLoop(kind){
- if(!soundEnabled||!fishingLoops[kind])return;
+ if(!soundEnabled||!Object.hasOwn(fishingLoops,kind))return;
  if(fishingLoops[kind])return;
  const ctx=ensureAudio();if(!ctx||!sfxBus)return;
  const length=Math.max(1,Math.floor(ctx.sampleRate*.6)),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);
