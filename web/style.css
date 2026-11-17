@@ -1631,3 +1631,11 @@ html.ambient-motion-paused #world *,html.ambient-motion-paused #weather-layer *,
 
 /* Sprites das espécies da Mata: miniaturas padronizadas na loja e escala uniforme no cenário. */
 .store-card .forest-seed-icon{display:block;width:31px;height:31px;object-fit:contain;object-position:center;}
+
+
+/* Economia de bateria: desativa movimento decorativo e reduz filtros pesados em celulares e tablets. */
+html.battery-saver #world *,html.battery-saver #weather-layer *,html.battery-saver #hunt-scene-background *,html.battery-saver #sea-landscape *,html.battery-saver .river-flow,html.battery-saver .river-leaf,html.battery-saver .smoke-puff,html.battery-saver .lake-ripples,html.battery-saver .lake-fish-shadow,html.battery-saver #sea-water-ripples,html.battery-saver #sea-birds,html.battery-saver #sea-boat-motion{animation:none!important;transition:none!important}
+html.battery-saver #world *,html.battery-saver #hunt-scene-background *{filter:none!important}
+html.battery-saver .animal-shadow,html.battery-saver .animal-shadow-core{opacity:.18!important}
+.battery-settings{display:flex;flex-direction:column;gap:8px;margin:0 0 14px;padding:13px;background:linear-gradient(145deg,#f2f8df,#e2edc9);border:1px solid #a9c47b;border-radius:12px;color:#405c2c}
+.battery-settings h3{margin:0;color:#45652d}.battery-settings label{display:flex;align-items:center;gap:9px;font-weight:700}.battery-settings input{width:18px;height:18px;accent-color:#548b36}.battery-settings small{line-height:1.5;color:#60744c}
