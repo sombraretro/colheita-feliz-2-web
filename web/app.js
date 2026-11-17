@@ -802,6 +802,31 @@ function playNoise(duration=.12,volume=.025,frequency=900){
  gain.gain.setValueAtTime(volume,now);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
  source.connect(filter);filter.connect(gain);gain.connect(sfxBus||ctx.destination);source.start(now);source.stop(now+duration);
 }
+
+let fishingLoop=null;
+function stopFishingLoop(kind=null){
+ if(!fishingLoop||(kind&&fishingLoop.kind!==kind))return;
+ const loop=fishingLoop;fishingLoop=null;
+ try{const now=audioCtx?.currentTime||0;loop.gain.gain.cancelScheduledValues(now);loop.gain.gain.setTargetAtTime(.0001,now,.025);loop.source.stop(now+.14);loop.modulator.stop(now+.14)}catch{}
+ setTimeout(()=>{for(const node of [loop.source,loop.filter,loop.gain,loop.modulator,loop.modGain])try{node.disconnect()}catch{}},220);
+}
+function startFishingLoop(kind){
+ if(!soundEnabled)return;
+ if(fishingLoop?.kind===kind)return;
+ stopFishingLoop();const ctx=ensureAudio();if(!ctx||!sfxBus)return;
+ const length=Math.max(1,Math.floor(ctx.sampleRate*.6)),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);
+ for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(kind==='river'?.72:.9);
+ const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain(),modulator=ctx.createOscillator(),modGain=ctx.createGain(),now=ctx.currentTime;
+ source.buffer=buffer;source.loop=true;filter.type=kind==='river'?'bandpass':'lowpass';filter.frequency.value=kind==='river'?1650:620;filter.Q.value=kind==='river'?1.1:.65;
+ gain.gain.setValueAtTime(kind==='river'?.024:.019,now);modulator.type='sine';modulator.frequency.value=kind==='river'?6.8:1.15;modGain.gain.value=kind==='river'?.012:.008;
+ modulator.connect(modGain);modGain.connect(gain.gain);source.connect(filter);filter.connect(gain);gain.connect(sfxBus);
+ source.start(now);modulator.start(now);fishingLoop={kind,source,filter,gain,modulator,modGain};
+}
+function syncFishingLoopState(){
+ const river=!!state?.fishing?.pendingCatch,sea=!!state?.seaFishing?.pendingCatch;
+ if(!soundEnabled||(!river&&!sea)){stopFishingLoop();return}
+ if(river)startFishingLoop('river');else if(sea)startFishingLoop('sea');
+}
 function playSfx(kind){
  if(!soundEnabled)return;ensureAudio();
  const patterns={
@@ -930,7 +955,7 @@ function stopMusicPlayback(){
   if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;for(const audio of [active,spare])if(audio){if(audio.dataset.musicContext==='general'&&musicGeneralPath)musicGeneralTime=audio.currentTime;audio.pause()}musicFadeLevel=1;musicOutFadeLevel=0;applyAudioVolumes();musicPlaying=false}
  },35);
 }
-function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled)playTone(660,.1,'sine',.04)}
+function setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('cf2.sound',soundEnabled?'on':'off')}catch{}if(soundEnabled){playTone(660,.1,'sine',.04);syncFishingLoopState()}else stopFishingLoop()}
 function setMusicEnabled(value){musicEnabled=!!value;try{localStorage.setItem('cf2.music',musicEnabled?'on':'off')}catch{}if(musicEnabled)startCurrentMusic();else stopMusicPlayback()}
 function setMusicVolume(value){musicVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.musicVolume',String(musicVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('music-volume-value');if(out)out.textContent=musicVolume+'%'}
 function setSfxVolume(value){sfxVolume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem('cf2.sfxVolume',String(sfxVolume))}catch{}ensureAudio();applyAudioVolumes();const out=$('sfx-volume-value');if(out)out.textContent=sfxVolume+'%'}
@@ -2394,7 +2419,7 @@ function syncPendingFishing(){
  const now=Date.now();let changed=false;const celebrations=[];
  const river=state.fishing?.pendingCatch;
  if(river&&river.readyAt<=now&&FISH_TYPES[river.id]){
-  const fish=FISH_TYPES[river.id];state.fishing.pendingCatch=null;
+  stopFishingLoop('river');const fish=FISH_TYPES[river.id];state.fishing.pendingCatch=null;
   const fishQuantity=activeFoodBuff('fishing')?2:1;state.fishWarehouse[river.id]=(state.fishWarehouse[river.id]||0)+fishQuantity;
   state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
   discoverItem('rio',river.id,fish.name,fish.icon);const earnedXP=awardProfessionXP('fisher',fish.xp,'pescaria');
@@ -2405,7 +2430,7 @@ function syncPendingFishing(){
  }
  const sea=state.seaFishing?.pendingCatch;
  if(sea&&sea.readyAt<=now&&SEA_TYPES[sea.id]){
-  const item=SEA_TYPES[sea.id];state.seaFishing.pendingCatch=null;
+  stopFishingLoop('sea');const item=SEA_TYPES[sea.id];state.seaFishing.pendingCatch=null;
   const seaQuantity=activeFoodBuff('fishing')?2:1;if(sea.id!=='caviar')state.seaWarehouse[sea.id]=(state.seaWarehouse[sea.id]||0)+seaQuantity;
   const caviarReward=3+(sea.id==='caviar'&&activeFoodBuff('fishing')?1:0);state.inventory.caviar=(state.inventory.caviar||0)+caviarReward;
   state.progressCounters.fish=(state.progressCounters.fish||0)+1;bumpMissionProgress('fish',1);
@@ -2418,8 +2443,7 @@ function syncPendingFishing(){
  if(changed){markDirty();if(pageCanRender())refresh();celebrations.forEach(queueFishingCelebration)}
  return changed;
 }
-function updateFishingCooldownButtons(){
- syncPendingFishing();
+function updateFishingCooldownButtons(){syncPendingFishing();syncFishingLoopState();
  if(!pageCanRender())return;
  const now=Date.now(),body=$('modal-body');
  if(body){
@@ -2477,8 +2501,7 @@ function castFishingRod(){
  if(!fishId)return notify('Nenhum peixe disponível para este equipamento.');
  state.fishing.lastCastAt=now;
  state.fishing.extraordinaryMisses=isExtraordinary?0:Math.min(40,misses+1);
- state.fishing.pendingCatch={id:fishId,readyAt:now+FISH_COOLDOWN,isExtraordinary,rod:state.fishing.rod};
- markDirty();refresh();
+ state.fishing.pendingCatch={id:fishId,readyAt:now+FISH_COOLDOWN,isExtraordinary,rod:state.fishing.rod};startFishingLoop('river');markDirty();refresh();
  notify('🎣 Linha lançada! Aguarde a contagem para descobrir o peixe.');
 }
 
@@ -3230,8 +3253,7 @@ function castSeaNet(){
  if(!id)return notify('Nenhum item disponível para esta rede.');
  state.seaFishing.lastCastAt=now;
  state.seaFishing.extraordinaryMisses=isExtraordinary?0:Math.min(50,misses+1);
- state.seaFishing.pendingCatch={id,readyAt:now+SEA_FISH_COOLDOWN,isExtraordinary,quantity:1,net:state.seaFishing.net};
- markDirty();refresh();
+ state.seaFishing.pendingCatch={id,readyAt:now+SEA_FISH_COOLDOWN,isExtraordinary,quantity:1,net:state.seaFishing.net};startFishingLoop('sea');markDirty();refresh();
  notify('🌊 Rede lançada! Aguarde a contagem para descobrir a captura.');
 }
 function tailorMaterialCount(type,id){if(type==='animal')return state.animalWarehouse?.[id]||0;if(type==='hunt')return state.hunter?.materials?.[id]||0;if(type==='thread'||type==='fabric')return state.tailor?.materials?.[type]?.[id]||0;if(type==='buttons'||type==='buckles')return state.tailor?.materials?.[type]||0;return 0}
