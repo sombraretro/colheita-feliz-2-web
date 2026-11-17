@@ -1986,7 +1986,7 @@ function plantOrchardTree(slot,id){
  awardXP(8,'plantio de árvore no pomar');playSfx('plant');remember(`Plantou ${crop.name} no Pomar.`);markDirty();refresh();notify(`${crop.name} plantada no Pomar. O ciclo segue a redução de 1/5.`)
 }
 function harvestOrchardTree(slot,silent=false){
- if(writeLocked)return false;const tree=state.orchardTrees?.[slot];if(!tree?.type)return false;
+ if(writeLocked)return false;const tree=state.orchardTrees?.[slot];if(!tree?.type)return silent?false:openModal('orchard');
  const crop=CROPS[tree.type];if(tree.status!=='ready'&&orchardTreeProgress(tree)<1){if(!silent)notify(`${crop.name}: faltam ${formatHours((1-orchardTreeProgress(tree))*cropHours(tree.type,!!tree.regrowing))}.`);return false}
  const harvestAmount=foodYield(crop.yield,'harvest');state.warehouse[tree.type]=(state.warehouse[tree.type]||0)+harvestAmount;const orchardLeafMap={manga:'folha_manga',goiaba:'folha_goiaba',acerola:'folha_acerola',eucalipto:'folha_eucalipto',cana:'folha_cana'};if(orchardLeafMap[tree.type]){const leaf='herb_'+orchardLeafMap[tree.type];state.inventory[leaf]=(state.inventory[leaf]||0)+Math.max(1,Math.floor(crop.yield/4));}const xp=Math.floor(crop.xp/(crop.seasons||1));awardXP(xp,'colheita do pomar');playSfx('harvest');tree.harvestsRemaining=Math.max(0,(tree.harvestsRemaining||1)-1);
  if(tree.type==='pinheiro_natal'&&tree.harvestsRemaining<=1){state.decorInventory.christmas_tree=(state.decorInventory.christmas_tree||0)+1;remember('Recebeu um Pinheiro de Natal decorável no Pomar.')}if(tree.harvestsRemaining>0){tree.status='growing';tree.plantedAt=Date.now();tree.regrowing=true}else state.orchardTrees[slot]={type:null,status:'empty',plantedAt:0,harvestsRemaining:0,regrowing:false};
