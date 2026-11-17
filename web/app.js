@@ -803,29 +803,32 @@ function playNoise(duration=.12,volume=.025,frequency=900){
  source.connect(filter);filter.connect(gain);gain.connect(sfxBus||ctx.destination);source.start(now);source.stop(now+duration);
 }
 
-let fishingLoop=null;
+let fishingLoops={river:null,sea:null};
 function stopFishingLoop(kind=null){
- if(!fishingLoop||(kind&&fishingLoop.kind!==kind))return;
- const loop=fishingLoop;fishingLoop=null;
- try{const now=audioCtx?.currentTime||0;loop.gain.gain.cancelScheduledValues(now);loop.gain.gain.setTargetAtTime(.0001,now,.025);loop.source.stop(now+.14);loop.modulator.stop(now+.14)}catch{}
- setTimeout(()=>{for(const node of [loop.source,loop.filter,loop.gain,loop.modulator,loop.modGain])try{node.disconnect()}catch{}},220);
+ const kinds=kind?[kind]:['river','sea'];
+ for(const key of kinds){
+  const loop=fishingLoops[key];if(!loop)continue;fishingLoops[key]=null;
+  try{const now=audioCtx?.currentTime||0;loop.gain.gain.cancelScheduledValues(now);loop.gain.gain.setTargetAtTime(.0001,now,.025);loop.source.stop(now+.14);loop.modulator.stop(now+.14)}catch{}
+  setTimeout(()=>{for(const node of [loop.source,loop.filter,loop.gain,loop.modulator,loop.modGain])try{node.disconnect()}catch{}},220);
+ }
 }
 function startFishingLoop(kind){
- if(!soundEnabled)return;
- if(fishingLoop?.kind===kind)return;
- stopFishingLoop();const ctx=ensureAudio();if(!ctx||!sfxBus)return;
+ if(!soundEnabled||!fishingLoops[kind])return;
+ if(fishingLoops[kind])return;
+ const ctx=ensureAudio();if(!ctx||!sfxBus)return;
  const length=Math.max(1,Math.floor(ctx.sampleRate*.6)),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);
  for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(kind==='river'?.72:.9);
  const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain(),modulator=ctx.createOscillator(),modGain=ctx.createGain(),now=ctx.currentTime;
  source.buffer=buffer;source.loop=true;filter.type=kind==='river'?'bandpass':'lowpass';filter.frequency.value=kind==='river'?1650:620;filter.Q.value=kind==='river'?1.1:.65;
  gain.gain.setValueAtTime(kind==='river'?.024:.019,now);modulator.type='sine';modulator.frequency.value=kind==='river'?6.8:1.15;modGain.gain.value=kind==='river'?.012:.008;
  modulator.connect(modGain);modGain.connect(gain.gain);source.connect(filter);filter.connect(gain);gain.connect(sfxBus);
- source.start(now);modulator.start(now);fishingLoop={kind,source,filter,gain,modulator,modGain};
+ source.start(now);modulator.start(now);fishingLoops[kind]={source,filter,gain,modulator,modGain};
 }
 function syncFishingLoopState(){
  const river=!!state?.fishing?.pendingCatch,sea=!!state?.seaFishing?.pendingCatch;
- if(!soundEnabled||(!river&&!sea)){stopFishingLoop();return}
- if(river)startFishingLoop('river');else if(sea)startFishingLoop('sea');
+ if(!soundEnabled){stopFishingLoop();return}
+ if(river)startFishingLoop('river');else stopFishingLoop('river');
+ if(sea)startFishingLoop('sea');else stopFishingLoop('sea');
 }
 function playSfx(kind){
  if(!soundEnabled)return;ensureAudio();
