@@ -1628,3 +1628,6 @@ html.ambient-motion-paused #sea-landscape,html.ambient-motion-paused #sea-landsc
 
 /* Otimização v16: suspende animações decorativas de toda a cena enquanto a janela perde foco. */
 html.ambient-motion-paused #world *,html.ambient-motion-paused #weather-layer *,html.ambient-motion-paused #hunt-scene-background *{animation-play-state:paused!important}
+
+/* Sprites das espécies da Mata: miniaturas padronizadas na loja e escala uniforme no cenário. */
+.store-card .forest-seed-icon{display:block;width:31px;height:31px;object-fit:contain;object-position:center;}
