@@ -2601,7 +2601,7 @@ function normalizeFoodBuffState(data){
  if(data.bathBuff&&data.bathBuff.expiresAt<=Date.now())data.bathBuff=null;
 }
 function activeFoodBuff(type){const b=state?.foodBuff;return !!b&&b.expiresAt>Date.now()&&(!type||b.type===type)}
-function foodYield(base,type){const amount=Math.max(0,Math.floor(Number(base)||0)),boosted=activeFoodBuff(type)||((type==='harvest'||type==='animals')&&vipActive());return boosted?amount+Math.max(1,Math.ceil(amount*.2)):amount}
+function foodYield(base,type){const amount=Math.max(0,Math.floor(Number(base)||0)),bonus=amount>0?Math.max(1,Math.ceil(amount*.2)):0,foodBonus=activeFoodBuff(type)?bonus:0,vipBonus=(type==='harvest'||type==='animals')&&vipActive()?bonus:0;return amount+foodBonus+vipBonus}
 function foodBuffSummaryHtml(){
  const b=state?.foodBuff;if(!b||!activeFoodBuff())return '<div class="food-buff-summary is-inactive"><span>🍽️</span><div><b>Nenhum efeito de refeição ativo</b><small>Consuma um prato preparado para ativar um benefício temporário de 2 horas.</small></div></div>';
  const cfg=FOOD_BUFFS[b.type],minutes=Math.ceil(Math.max(0,b.expiresAt-Date.now())/60000);
