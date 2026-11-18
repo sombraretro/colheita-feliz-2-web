@@ -1274,7 +1274,7 @@ function renderAnimals(scheduleBlink=true){
   const breed=a.type==='cachorro'?(DOG_BREEDS[a.breed]||DOG_BREEDS.classico):null;
    const dogBlinkEnabled=a.type!=='cachorro'||!a.breed||a.breed==='classico';
   const dogWalkEnabled=a.type==='cachorro'&&(!a.breed||a.breed==='classico');
-  const dogWalkMotion=dogWalkEnabled?'<animateTransform attributeName="transform" additive="sum" type="translate" values="0 0;4 0;8 0;12 0;16 0;20 0;24 0;28 0;24 0;20 0;16 0;12 0;8 0;4 0;0 0;0 0" keyTimes="0;0.06;0.12;0.18;0.24;0.30;0.36;0.42;0.48;0.54;0.60;0.66;0.72;0.78;0.84;1" dur="6s" repeatCount="indefinite" calcMode="discrete"/>':'';
+  const dogWalkMotion=dogWalkEnabled?'<animateTransform attributeName="transform" additive="sum" type="translate" values="0 0;4 0;8 0;12 0;16 0;20 0;24 0;28 0;24 0;20 0;16 0;12 0;8 0;4 0;0 0;0 0;0 0;0 0;0 0" keyTimes="0;0.035;0.07;0.105;0.14;0.175;0.21;0.245;0.28;0.315;0.35;0.385;0.42;0.455;0.49;0.62;0.75;0.875;1" dur="4s" repeatCount="indefinite" calcMode="discrete"/>':'';
   const assetName=breed?.asset||('animal-'+a.type);
   const assetExt=breed?(breed.ext||(breed.asset==='animal-cachorro'?'png':'svg')):(['pato','pombo'].includes(a.type)?'svg':'png');
   const assetUrl=cfg.role==='horse'?HORSE_ASSETS.horse:(a.type==='cachorro'&&breed?.image?breed.image:a.type==='pavao'?HORSE_ASSETS.peacock:a.type==='cabra'?HORSE_ASSETS.goat:null);
