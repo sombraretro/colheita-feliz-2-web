@@ -1628,3 +1628,7 @@ html.ambient-motion-paused #sea-landscape,html.ambient-motion-paused #sea-landsc
 
 /* Otimização v16: suspende animações decorativas de toda a cena enquanto a janela perde foco. */
 html.ambient-motion-paused #world *,html.ambient-motion-paused #weather-layer *,html.ambient-motion-paused #hunt-scene-background *{animation-play-state:paused!important}
+
+/* Movimento horizontal do cachorro: usa a propriedade individual translate porque .animal-wrap bloqueia transform. */
+.animal-wrap.dog-walk-enabled{animation:dog-walk-horizontal 4s steps(14,end) infinite!important;translate:0 0;will-change:translate}
+@keyframes dog-walk-horizontal{0%,100%{translate:0 0}50%{translate:28px 0}}
